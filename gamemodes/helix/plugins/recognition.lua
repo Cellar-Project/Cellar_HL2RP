@@ -45,6 +45,10 @@ do
 			if (faction and faction.isGloballyRecognized) then
 				return true
 			end
+
+			if (faction and faction.isLocallyRecognized) then
+				return char:GetFaction() == other:GetFaction()
+			end
 		end
 
 		local recognized = char:GetData("rgn", "")
