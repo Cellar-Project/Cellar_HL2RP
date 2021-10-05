@@ -16,4 +16,8 @@ function FACTION:GetModels(client, gender)
 	return self.models
 end
 
+function FACTION:OnSpawn(client)
+	client:SetBloodColor(BLOOD_COLOR_YELLOW)
+end
+
 FACTION_VORTIGAUNT = FACTION.index

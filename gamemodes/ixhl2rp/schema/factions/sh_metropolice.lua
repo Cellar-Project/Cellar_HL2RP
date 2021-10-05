@@ -4,7 +4,7 @@ FACTION.color = Color(50, 100, 150)
 FACTION.isDefault = false
 FACTION.bCanUseRations = true
 FACTION.bAllowDatafile = true
-FACTION.isGloballyRecognized = true
+FACTION.isLocallyRecognized = true
 FACTION.models = {
 	[1] = {
 		"models/cellar/characters/oldcitizens/male_01.mdl",

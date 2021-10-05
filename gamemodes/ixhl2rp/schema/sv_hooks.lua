@@ -187,6 +187,10 @@ function Schema:GetPlayerPainSound(client)
 	if (client:IsCombine()) then
 		return "NPC_MetroPolice.Pain"
 	end
+
+	if client:GetCharacter():GetFaction() == FACTION_VORTIGAUNT then
+		return "npc_vortigaunt.vort_pain10"
+	end
 end
 
 function Schema:GetPlayerDeathSound(client)
