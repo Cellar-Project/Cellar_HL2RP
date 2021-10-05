@@ -965,12 +965,23 @@ local painSounds = {
 	Sound("vo/npc/male01/pain06.wav")
 }
 
+local painSoundsVort = {
+	Sound("vo/npc/vortigaunt/vortigese03.wav"),
+	Sound("vo/npc/vortigaunt/vortigese02.wav"),
+	Sound("vo/npc/vortigaunt/vortigese08.wav"),
+	Sound("vo/npc/vortigaunt/vortigese04.wav")
+}
+  
 function PLUGIN:PlayerAdvancedHurt(client, attacker, damage, blood, shock, limb)
 	if (client.ixNextPain or 0) < CurTime() then
 		local painSound = hook.Run("GetPlayerPainSound", client) or painSounds[math.random(1, #painSounds)]
 
 		if (client:IsFemale() and !painSound:find("female")) then
 			painSound = painSound:gsub("male", "female")
+		end
+		
+		if (client:GetCharacter():GetFaction() == FACTION_VORTIGAUNT) then
+			painSound = painSoundsVort[math.random(1, #painSoundsVort)]
 		end
 
 		client:EmitSound(painSound)
@@ -1286,7 +1297,7 @@ function PLUGIN:CalculatePlayerDamage(client, lastHitGroup, dmgInfo, multiplier)
 		end
 
 		if !inflictor.IsVortibeam and character:GetData("armored") then
-			dmgReduction = 10
+			dmgReduction = 5
 		end
 		
 		if IsValid(attackerWeapon) and attackerWeapon.IsDominator and character:GetData("armored") then

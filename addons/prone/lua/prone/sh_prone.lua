@@ -381,7 +381,7 @@ end)
 ------------------------------------------------------------
 -- Check if the player should still be prone at these events
 ------------------------------------------------------------
-hook.Add("PlayerNoClip", "prone.ExitOnNoclip", function(ply)
+hook.Add("OnPlayerObserve", "prone.ExitOnNoclip", function(ply)
 	if IsProne(ply) then
 		prone.Exit(ply)
 	end
