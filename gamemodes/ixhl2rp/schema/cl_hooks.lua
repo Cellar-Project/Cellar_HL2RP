@@ -125,8 +125,8 @@ function Schema:IsPlayerRecognized(target)
 	if !IsValid(target) then
 		return
 	end
-
-	if target:IsCityAdmin() or target:IsCombine() then
+	-- target:IsCombine()
+	if target:IsCityAdmin() then
 		return true
 	end
 
