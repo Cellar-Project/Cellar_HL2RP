@@ -4,9 +4,9 @@
 
 local PLUGIN = PLUGIN
 
-PLUGIN.name = "Vendors"
-PLUGIN.author = "Chessnut"
-PLUGIN.description = "Adds NPC vendors that can sell things."
+PLUGIN.name = "Jewish Vendors"
+PLUGIN.author = "Rodial (rework), Chessnut (original)"
+PLUGIN.description = "Adds jewish NPC vendors that can sell things."
 
 CAMI.RegisterPrivilege({
 	Name = "Helix - Manage Vendors",
@@ -72,6 +72,8 @@ if (SERVER) then
 				money = entity.money,
 				scale = entity.scale,
 				anim = entity.anim,
+				card_access = entity.card_access,
+				password = entity.password
 			}
 		end
 
@@ -117,6 +119,9 @@ if (SERVER) then
 			entity.classes = v.classes or {}
 			entity.money = v.money
 			entity.scale = v.scale or 0.5
+			entity.card_access = v.card_access or ""
+			entity.password = v.password or ""
+			entity.Sessions = {}
 
 			if v.anim and isstring(v.anim) then
 				entity:OnChangedAnim(v.anim)
@@ -431,6 +436,8 @@ else
 		end
 
 		entity.money = net.ReadUInt(16)
+		entity.password = net.ReadString()
+		entity.card_access = net.ReadString()
 		entity.items = net.ReadTable()
 		entity.scale = net.ReadFloat()
 
@@ -447,6 +454,8 @@ else
 		end
 
 		entity.money = net.ReadUInt(16)
+		entity.password = net.ReadString()
+		entity.card_access = net.ReadString()
 		entity.items = net.ReadTable()
 		entity.scale = net.ReadFloat()
 		entity.messages = net.ReadTable()
@@ -537,6 +546,9 @@ else
 		local key = net.ReadString()
 		local data = net.ReadType()
 
+		editor.card_access:SetText(entity.card_access)
+		editor.password:SetText(entity.password)
+
 		if (key == "name") then
 			editor.name:SetText(data)
 		elseif (key == "description") then
@@ -608,6 +620,9 @@ else
 
 		local editor = ix.gui.vendorEditor
 
+		editor.card_access:SetText(entity.card_access)
+		editor.password:SetText(entity.password)
+
 		if (IsValid(editor)) then
 			local useMoney = tonumber(value) != nil
 
@@ -637,6 +652,9 @@ else
 		entity.items[uniqueID][VENDOR_STOCK] = amount
 
 		local editor = ix.gui.vendorEditor
+
+		editor.card_access:SetText(entity.card_access)
+		editor.password:SetText(entity.password)
 
 		if (IsValid(editor)) then
 			local _, max = entity:GetStock(uniqueID)
@@ -694,6 +712,8 @@ properties.Add("vendor_edit", {
 		net.Start("ixVendorEditor")
 			net.WriteEntity(entity)
 			net.WriteUInt(entity.money or 0, 16)
+			net.WriteString(entity.password)
+			net.WriteString(entity.card_access)
 			net.WriteTable(itemsTable)
 			net.WriteFloat(entity.scale or 0.5)
 			net.WriteTable(entity.messages)
