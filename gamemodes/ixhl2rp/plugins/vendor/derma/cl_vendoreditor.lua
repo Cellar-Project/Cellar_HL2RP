@@ -32,6 +32,16 @@ function PANEL:Init()
 		end
 	end
 
+	self.card_access = self:Add("DLabel")
+	self.card_access:Dock(TOP)
+	self.card_access:DockMargin(0, 4, 0, 0)
+	self.card_access:SetText(entity.card_access)
+
+	self.password = self:Add("DLabel")
+	self.password:Dock(TOP)
+	self.password:DockMargin(0, 4, 0, 0)
+	self.password:SetText(entity.password)
+
 	self.model = self:Add("DTextEntry")
 	self.model:Dock(TOP)
 	self.model:DockMargin(0, 4, 0, 0)
