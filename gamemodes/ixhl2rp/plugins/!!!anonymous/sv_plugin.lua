@@ -44,15 +44,10 @@ do
 	end
 
 	function AnonIDToSteamID(anonID)
-		if anonID == "BOT" then return "BOT" end
-
-		anonID = (m(anonID, "ANON:(%d+)") - SECRET)
-
-		local raw = decodeID(anonID)
-		local a = band(raw + COMMUNITY_ID, 1)
-
-		return f("STEAM_0:%i:%i", a, (raw / 2) - a)
-	end
+        if anonID == "BOT" then return "BOT" end
+        
+        return util.SteamIDFrom64(AnonIDToSteamID64(anonID))
+    end
 
 	function AnonIDToSteamID64(anonID)
 		if anonID == "BOT" then return "BOT" end
