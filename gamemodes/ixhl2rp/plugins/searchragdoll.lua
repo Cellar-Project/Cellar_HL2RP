@@ -1,4 +1,4 @@
-local PLUGIN = PLUGIN
+local PLUGIN = PLUGIN or {}
 
 PLUGIN.name = "Ragdoll Looting"
 PLUGIN.author = "maxxoft"
