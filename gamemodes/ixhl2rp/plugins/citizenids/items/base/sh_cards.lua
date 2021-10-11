@@ -128,7 +128,7 @@ ITEM.functions.devEdit = {
 		return false
 	end,
 	OnCanRun = function(item)
-		return item.player:IsSuperAdmin() or item.player:IsAdmin()
+		return item.player:IsAdmin()
 	end
 }
 
@@ -151,6 +151,6 @@ ITEM.combine.devTransfer = {
 		ix.plugin.list["datafile"].stored[datafileID] = nil
 	end,
 	OnCanRun = function(item)
-		return item.player:IsSuperAdmin() or item.player:IsAdmin()
+		return item.player:IsAdmin()
 	end
 }
