@@ -1,7 +1,7 @@
 ITEM.name = "Epinephrine"
 ITEM.PrintName = "iEpine"
 ITEM.description = "iEpineDesc"
-ITEM.model = Model("models/items/adrenaline.mdl")
+ITEM.model = Model("models/items/w_eq_adrenaline.mdl")
 ITEM.useSound = "items/medshot4.wav"
 ITEM.dUses = 1
 ITEM.dIsInject = true
