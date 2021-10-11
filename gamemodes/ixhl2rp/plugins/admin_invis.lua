@@ -25,4 +25,4 @@ ix.command.Add("Invis", {
 			end
 		end
 	end
-})
+end})
