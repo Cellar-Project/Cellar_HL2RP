@@ -813,6 +813,7 @@ ix.anim.SetModelClass("models/vintagethief/retribution/retribution_fem.mdl", "ce
 ix.anim.SetModelClass("models/vintagethief/retribution/retribution_men.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/lemay.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/hazmat_worker.mdl", "cellarMale")
+ix.anim.SetModelClass("models/vintagethief/hazmat_armor.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/vertexsecond.mdl", "cellarMale")
 
 ix.anim.SetModelClass("models/vintagethief/hunk.mdl", "cellarMaleMPF")
