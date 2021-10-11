@@ -1,8 +1,8 @@
 local PLUGIN = PLUGIN
 
-PLUGIN.name = "Ragdoll Search"
+PLUGIN.name = "Ragdoll Looting"
 PLUGIN.author = "maxxoft"
-PLUGIN.description = ""
+PLUGIN.description = "Plugin for ragdoll looting, dependent on damage system plugin by SchwarzKruppzo."
 
 
 if SERVER then
