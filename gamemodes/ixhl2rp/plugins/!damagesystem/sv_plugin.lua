@@ -485,8 +485,8 @@ do
 			self:SetNetVar("doll", entity:EntIndex())
 			hook.Run("OnCharacterFallover", self, entity, true)
 			net.Start('RagdollMenu')
-				net.WriteInt(self:UserID(), 32)
-				net.WriteInt(entity:EntIndex(), 32)
+				net.WriteUInt(self:EntIndex(), 32)
+				net.WriteUInt(entity:EntIndex(), 32)
 			net.Broadcast()
 		elseif (IsValid(self.ixRagdoll)) then
 			self.ixRagdoll:Remove()
