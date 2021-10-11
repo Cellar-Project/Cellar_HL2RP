@@ -45,6 +45,8 @@ function Schema:GetPlayerEntityMenu(client, options)
 	elseif (!callingPlayer:IsRestricted() and !client:IsRestricted() and !client:GetNetVar("tying") and
 		callingPlayer:GetCharacter():GetInventory():HasItem("zip_tie")) then
 			options["Ziptie"] = true
+	elseif (!callingPlayer:IsRestricted() and client:GetNetVar("crit")) then
+		options["Search"] = true
 	end
 end
 
