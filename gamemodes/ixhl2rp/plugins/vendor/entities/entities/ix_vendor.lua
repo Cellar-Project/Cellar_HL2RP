@@ -53,6 +53,10 @@ function ENT:CanAccess(client)
 	local uniqueID = ix.faction.indices[client:Team()].uniqueID
 	local free_access = true
 
+	if (self.password != "") then
+		free_access = false
+	end
+
 	if (self.card_access != "") then
 		free_access = false
 		if (client:GetCharacter():HasIDAccess(self.card_access)) then
@@ -71,11 +75,11 @@ function ENT:CanAccess(client)
 		local class = ix.class.list[client:GetCharacter():GetClass()]
 		local classID = class and class.uniqueID
 
-		if (not (classID and !self.classes[classID])) then
-			return true
+		if (classID and !self.classes[classID]) then
+			bAccess = false
 		end
 	end
-	if (free_access) then
+	if (free_access or bAccess) then
 		return true
 	end
 	if (self.password == "") then
