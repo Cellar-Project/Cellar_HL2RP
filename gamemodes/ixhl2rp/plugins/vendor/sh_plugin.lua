@@ -436,8 +436,6 @@ else
 		end
 
 		entity.money = net.ReadUInt(16)
-		entity.password = net.ReadString()
-		entity.card_access = net.ReadString()
 		entity.items = net.ReadTable()
 		entity.scale = net.ReadFloat()
 
