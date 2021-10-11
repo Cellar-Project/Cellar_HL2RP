@@ -3,6 +3,7 @@ util.AddNetworkString("ixBleedingEffect")
 util.AddNetworkString("ixCritData")
 util.AddNetworkString("ixCritUse")
 util.AddNetworkString("ixCritApply")
+util.AddNetworkString('RagdollMenu')
 
 function PLUGIN:TakeAdvancedDamage(entity, bloodDmgInfo)
 	if !entity:IsPlayer() or !entity:Alive() then
@@ -483,6 +484,10 @@ do
 			self:SetLocalVar("ragdoll", entity:EntIndex())
 			self:SetNetVar("doll", entity:EntIndex())
 			hook.Run("OnCharacterFallover", self, entity, true)
+			net.Start('RagdollMenu')
+				net.WriteUInt(self:EntIndex(), 32)
+				net.WriteUInt(entity:EntIndex(), 32)
+			net.Broadcast()
 		elseif (IsValid(self.ixRagdoll)) then
 			self.ixRagdoll:Remove()
 
