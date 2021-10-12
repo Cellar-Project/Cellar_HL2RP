@@ -618,10 +618,9 @@ else
 
 		local editor = ix.gui.vendorEditor
 
-		editor.card_access:SetText(entity.card_access)
-		editor.password:SetText(entity.password)
-
 		if (IsValid(editor)) then
+			editor.card_access:SetText(entity.card_access)
+			editor.password:SetText(entity.password)
 			local useMoney = tonumber(value) != nil
 
 			editor.money:SetDisabled(!useMoney)
