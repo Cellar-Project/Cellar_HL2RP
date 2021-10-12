@@ -6,11 +6,11 @@ ITEM.genderReplacement = {
 }
 ITEM.Stats = {
 	[HITGROUP_GENERIC] = 0,
-	[HITGROUP_HEAD] = 5,
-	[HITGROUP_CHEST] = 10,
-	[HITGROUP_STOMACH] = 5,
-	[4] = 5,
-	[5] = 5,
+	[HITGROUP_HEAD] = 7,
+	[HITGROUP_CHEST] = 14,
+	[HITGROUP_STOMACH] = 8,
+	[4] = 7,
+	[5] = 7,
 }
 ITEM.WeaponSkillBuff = 3
 ITEM.uniform = 2
