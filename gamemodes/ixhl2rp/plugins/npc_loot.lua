@@ -50,7 +50,7 @@ if SERVER then
     function PLUGIN:OnNPCKilled(NPC)
 
         local isHasLootType = npcs[NPC:GetClass()]
-		local spos = NPC:GetPos()
+		local spos = NPC:GetPos() + (Vector( 0, 0, 36 )) -- Если вектор убрать некоторые айтемы застревают в земле, колхоз но работает
 
         if !isHasLootType then
             return
