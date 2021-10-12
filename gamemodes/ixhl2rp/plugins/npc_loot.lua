@@ -44,10 +44,12 @@ if SERVER then
         ["npc_zombie"] = TYPE_ZOMBIES,
         ["npc_zombie_torso"] = TYPE_ZOMBIES,
         ["npc_rebels"] = TYPE_REBELS,
-        ["npc_citizen"] = TYPE_DEFAULT,
+        ["npc_citizen"] = TYPE_DEFAULT
     }
 
     function PLUGIN:OnNPCKilled(NPC)
+	
+	print(NPC:GetClass())
 
         local isHasLootType = npcs[NPC:GetClass()]
 		local spos = NPC:GetPos() + (Vector( 0, 0, 36 )) -- Если вектор убрать некоторые айтемы застревают в земле, колхоз но работает
