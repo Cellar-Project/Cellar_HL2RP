@@ -38,7 +38,6 @@ ITEM.functions.View = {
 
         return false
     end
-    
 }
 
 /*
