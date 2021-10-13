@@ -11,7 +11,7 @@ ITEM.functions.Eat = {
         
         for _, uniqueID in pairs(client:GetCharacter():GetInventory()) do
             //print(ix.item.Get(uniqueID):GetName())
-            if (client:GetCharacter():GetInventory():HasItem("uuciggiebox")) then
+            if (client:GetCharacter():GetInventory():HasItem("tool_matches")) then
                 hascigbox = true
             end
         end
@@ -22,7 +22,7 @@ ITEM.functions.Eat = {
             
             return true
         else
-            client:Notify("Вам нужна пачка, чтобы поджечь сигарету!")
+            client:Notify("Вам нужны спички, чтобы поджечь сигарету!")
             return false
         end
 
