@@ -1,6 +1,6 @@
-ITEM.name = "Drug"
+ITEM.name = "Drugs"
 ITEM.description = "Simple."
-ITEM.category = "Drug"
+ITEM.category = "Drugs"
 ITEM.model = "models/props/furnitures/gob/l6_jar_oil/l6_jar_oil.mdl"
 ITEM.width = 1
 ITEM.height = 1
