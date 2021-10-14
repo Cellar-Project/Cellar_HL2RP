@@ -767,6 +767,7 @@ ix.anim.SetModelClass("models/cellar/characters/combine/soldier_female.mdl", "ce
 ix.anim.SetModelClass("models/cellar/characters/combine/elite_female.mdl", "cellarFemaleMPF")
 ix.anim.SetModelClass("models/cellar/characters/combine/sniper_female.mdl", "cellarFemaleMPF")
 ix.anim.SetModelClass("models/cellar/characters/combine/stripped_male.mdl", "cellarOTA")
+ix.anim.SetModelClass("models/vintagethief/combine/ota/ota_27.mdl", "cellarOTA")
 
 ix.anim.SetModelClass("models/cellar/characters/walker.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/solomon.mdl", "cellarMale")
