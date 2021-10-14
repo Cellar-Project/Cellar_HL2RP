@@ -7,3 +7,5 @@ PLUGIN.author = "Vintage Thief"
 if SERVER then 
 	return
 end
+
+-- ЗАЧЕМ НУЖЕН ЭТОТ ФАЙЛ????
