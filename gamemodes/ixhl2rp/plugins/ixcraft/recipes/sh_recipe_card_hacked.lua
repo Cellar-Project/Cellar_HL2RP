@@ -4,8 +4,7 @@ RECIPE.requirements = {
 	["electro_circuit"] = 1,
 	["electro_reclaimed"] = 1,
 	["card_mpf"] = 1,
-	["card_cwu"] = 1,
-	["card"] = 1,
+	["card"] = 1
 }
 RECIPE.results = {
 	["card_hacked"] = 1
