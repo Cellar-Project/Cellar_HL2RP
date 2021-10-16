@@ -781,6 +781,8 @@ ix.anim.SetModelClass("models/cellar/characters/prohorov.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/krasnov.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/solomon_armor.mdl", "cellarMale")
 
+
+ix.anim.SetModelClass("models/cellar/characters/female_terdavis.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/patricia.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/violetta.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/vintagethief/brave_squad.mdl", "cellarMaleMPF")
