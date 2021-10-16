@@ -439,7 +439,7 @@ timer.Create("ixVignetteChecker", 1, 0, function()
 
 		-- this timer could run before InitPostEntity is called, so we have to check for the validity of the trace table
 		if (trace and trace.Hit) then
-			vignetteAlphaGoal = 80
+			vignetteAlphaGoal = 150
 		else
 			vignetteAlphaGoal = 0
 		end
