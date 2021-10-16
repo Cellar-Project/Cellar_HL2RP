@@ -626,7 +626,7 @@ Schema.voices.Add("Combine", "ВРАГ ЖИВ", "Противник жив, пр
 Schema.voices.Add("Combine", "НАВОДКА", "Подтверждаю наведение на цель.", "HLAComVoice/grunt/refindenemy_13.wav")
 Schema.voices.Add("Combine", "НАВОДКА2", "Навелся на цель номер один.", "HLAComVoice/grunt/refindenemy_14.wav")
 Schema.voices.Add("Combine", "ПОДТВЕРЖДАЮ ЛОКАЦИЮ", "Локация подтверждена, провожу стабилизацию.", "HLAComVoice/grunt/refindenemy_16.wav")
- 
+
 -- Reload
 
 Schema.voices.Add("Combine", "ПЕРЕЗАРЯДКА", "Перезарядка!", "HLAComVoice/grunt/reload_01.wav")
