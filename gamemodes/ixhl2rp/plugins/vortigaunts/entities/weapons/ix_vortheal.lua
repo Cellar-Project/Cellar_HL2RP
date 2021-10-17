@@ -1,7 +1,3 @@
-if ( SERVER ) then
-	AddCSLuaFile( "shared.lua" )
-end
-
 if (CLIENT) then
 	SWEP.Slot = 5
 	SWEP.SlotPos = 5
