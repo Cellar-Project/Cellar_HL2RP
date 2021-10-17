@@ -107,25 +107,23 @@ ix.dialogues.Add("mark_pootisman", {
 			},
 		},
 		choices = function(client, npc, dialogue) 
-            local choices = {}
-            for k, v in pairs(client:GetCharacter():GetInventory():GetItemsByUniqueID("cid")) do
-            	local citizenID = v:GetData("id", "0000")
+			local choices = {}
+			for k, v in pairs(client:GetCharacter():GetInventory():GetItemsByUniqueID("cid")) do
+				local citizenID = v:GetData("id", "0000")
 
-                choices[#choices + 1] = {label = L("t_mail_check_id", client, citizenID), cid = citizenID}
-            end
+				choices[#choices + 1] = {label = L("t_mail_check_id", client, citizenID), cid = citizenID}
+			end
 
-            choices[#choices + 1] = {label = (client:GetCharacter():GetGender() == GENDER_MALE and "@t_checkmail_no_m" or "@t_checkmail_no_f")}
+			choices[#choices + 1] = {label = client:GetCharacter():GetGender() == GENDER_MALE and "@t_checkmail_no_m" or "@t_checkmail_no_f"}
 
-            return choices
-        end,
-        choose = function(choice, client, npc, dialogue)
-            if SERVER then
-            	if choice.cid then
-            		client:OpenMailbox(choice.cid)
-            	end
-            end
-            return choice.cid and "GOODBYE" or "GREETINGS"
-        end,
+			return choices
+		end,
+		choose = function(choice, client, npc, dialogue)
+			if SERVER and choice.cid then
+				client:OpenMailbox(choice.cid)
+			end
+			return choice.cid and "GOODBYE" or "GREETINGS"
+		end,
 		condition = function(client, npc, self) return self.data.mailtopic end,
 		flags = DFLAG_DYNAMIC
 	},
@@ -206,31 +204,31 @@ ix.dialogues.Add("mark_pootis", {
 			},
 		},
 		choices = function(client, npc, dialogue) 
-            local choices = {}
+			local choices = {}
 
-            if (!dialogue.data.workcooldown or (dialogue.data.workcooldown and os.time() > dialogue.data.workcooldown)) and !dialogue.data.haswork then
-            	choices = {
+			if (!dialogue.data.workcooldown or (dialogue.data.workcooldown and os.time() > dialogue.data.workcooldown)) and !dialogue.data.haswork then
+				choices = {
 					--{label = "Влажная уборка.", work = 1, topic = "GET_WORK1"}, 
-					{label = "Уборка мусора в городе.", work = 2, topic = "GET_WORK2"}, 
+					{label = "Уборка мусора в городе.", work = 2, topic = "GET_WORK2"},
 					--{label = "Разнос корреспонденции.", topic = "GET_WORK3"}, 
 					--{label = "Пополнение картриджей автоматов с водой.", topic = "GET_WORK4"}, 
 					--{label = "Перенос стройматериалов.", topic = "GET_WORK5"}, 
 					{label = "Я передумал, извини.", topic = "OKAY_NO_WORK"}
-            	}
-            else
-            	choices = {
-            		{label = "...", topic = "OKAY_NO_WORK"}
-            	}
-            end
+				}
+			else
+				choices = {
+					{label = "...", topic = "OKAY_NO_WORK"}
+				}
+			end
 
-            return choices
-        end,
-        choose = function(choice, client, npc, dialogue)
-    		local character = client:GetCharacter()
+			return choices
+		end,
+		choose = function(choice, client, npc, dialogue)
+			local character = client:GetCharacter()
 
-    		if choice.work == 2 then
-    			if SERVER then
-	    			local quests = character:GetData("quests", {})
+			if choice.work == 2 then
+				if SERVER then
+					local quests = character:GetData("quests", {})
 					quests["cwu_garbage"] = true
 					character:SetData("cwuGarbage", 0)
 					character:SetData("quests", quests)
@@ -241,10 +239,10 @@ ix.dialogues.Add("mark_pootis", {
 				dialogue.data.haswork = true
 
 				return "GarbageWork"
-    		end
+			end
 
-            return choice.topic and choice.topic or "OKAY_NO_WORK"
-        end,
+			return choice.topic and choice.topic or "OKAY_NO_WORK"
+		end,
 		flags = DFLAG_DYNAMIC
 	},
 	["GarbageWorkDone"] = {
@@ -325,10 +323,10 @@ ix.dialogues.Add("cp", {
 						return "Служу Покровителям!"
 					else
 						return {
-									"Проходи.", 
-									"...", 
-									"Двигай отсюда.", 
-									"Гражданин.", 
+									"Проходи.",
+									"...",
+									"Двигай отсюда.",
+									"Гражданин.",
 									"Не трать моё время.",
 									"Чего ты хочешь?",
 								}
