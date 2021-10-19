@@ -798,6 +798,7 @@ ix.anim.SetModelClass("models/cellar/characters/female_15_eyepatch.mdl", "cellar
 ix.anim.SetModelClass("models/cellar/characters/porter.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/riff_shirt.mdl", "cellarMale")
 
+ix.anim.SetModelClass("models/cellar/characters/male_valtan.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/voinsparti.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/ksenax.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/yellowapple.mdl", "cellarFemale")
