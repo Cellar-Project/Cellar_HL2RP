@@ -806,6 +806,8 @@ ix.anim.SetModelClass("models/vintagethief/dushman.mdl", "cellarFemale")
 
 ix.anim.SetModelClass("models/vintagethief/rocky.mdl", "cellarMale")
 
+
+ix.anim.SetModelClass("models/vintagethief/f4_rebel.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/zimmerman.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/ksenax_bo.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/328.mdl", "cellarMaleMPF")
