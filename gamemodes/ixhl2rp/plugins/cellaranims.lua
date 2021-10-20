@@ -759,6 +759,8 @@ ix.anim.SetModelClass("models/cellar/characters/tno/male_14.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/tno/male_16.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/tno/male_17.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/tno/male_18.mdl", "cellarMale")
+ix.anim.SetModelClass("models/vintagethief/malogo.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/ynb.mdl", "cellarMale")
 
 ix.anim.SetModelClass("models/cellar/characters/combine/soldier_male.mdl", "cellarOTA")
 ix.anim.SetModelClass("models/cellar/characters/combine/elite_male.mdl", "cellarOTA")
