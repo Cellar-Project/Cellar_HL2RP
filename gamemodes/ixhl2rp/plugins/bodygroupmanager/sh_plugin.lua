@@ -20,10 +20,11 @@ ix.command.Add("CharEditBodygroup", {
 	arguments = {
 		bit.bor(ix.type.player, ix.type.optional)
 	},
-	OnCheckAccess = function(client)
-		return client:GetCharacter():HasFlags("b")
+	OnCheckAccess = function(self, client)
+		return client:GetCharacter():HasFlags("b") or client:IsAdmin()
 	end,
 	OnRun = function(self, client, target)
+		if client != target and !client:IsAdmin() then return end
 		net.Start("ixBodygroupView")
 			net.WriteEntity(target or client)
 		net.Send(client)
