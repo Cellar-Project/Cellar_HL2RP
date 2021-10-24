@@ -719,6 +719,7 @@ ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_hawke.mdl", "cel
 ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_rochelle.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_wraith.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_zoey.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/ecmopd/myra.mdl", "cellarFemale")
 
 ix.anim.SetModelClass("models/cellar/characters/metropolice/male.mdl", "cellarMaleMPF")
 ix.anim.SetModelClass("models/cellar/characters/metropolice/female.mdl", "cellarFemaleMPF")
@@ -760,7 +761,7 @@ ix.anim.SetModelClass("models/cellar/characters/tno/male_16.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/tno/male_17.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/tno/male_18.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/malogo.mdl", "cellarMale")
-ix.anim.SetModelClass("models/cellar/characters/ynb.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/ynb.mdl", "cellarMaleMPF")
 
 ix.anim.SetModelClass("models/cellar/characters/combine/soldier_male.mdl", "cellarOTA")
 ix.anim.SetModelClass("models/cellar/characters/combine/elite_male.mdl", "cellarOTA")
