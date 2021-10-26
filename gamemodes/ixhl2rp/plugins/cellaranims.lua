@@ -719,7 +719,7 @@ ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_hawke.mdl", "cel
 ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_rochelle.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_wraith.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_zoey.mdl", "cellarFemale")
-ix.anim.SetModelClass("models/ecmopd/myra.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/ecompd/myra.mdl", "cellarFemale")
 
 ix.anim.SetModelClass("models/cellar/characters/metropolice/male.mdl", "cellarMaleMPF")
 ix.anim.SetModelClass("models/cellar/characters/metropolice/female.mdl", "cellarFemaleMPF")
