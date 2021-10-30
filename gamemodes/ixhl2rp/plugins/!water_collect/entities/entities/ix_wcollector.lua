@@ -30,19 +30,19 @@ if (SERVER) then
 		--timer
 		local conf_time = ix.config.Get("watertimer")
 
-		timer.Create( watertimer, conf_time, 0, function(WaterDrip) )
-
-		function WaterDrip()
+		timer.Create( watertimer, conf_time, 0, function()
 
 			local conf_limit = ix.config.Get("waterlimit")
 			local conf_tick = ix.config.Get("watertick")
 			local water_n = 0
-
+		
 			if water_n <= conf_limit then
 				water_n = water_n + conf_tick
 			end
+			
 			print(water_n)
-		end
+
+		end)
 
 	end
 
