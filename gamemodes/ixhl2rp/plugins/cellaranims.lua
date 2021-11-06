@@ -853,6 +853,8 @@ ix.anim.SetModelClass("models/vintagethief/ksenax.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/yellowapple.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/vintagethief/dushman.mdl", "cellarFemale")
 
+ix.anim.SetModelClass("models/cellar/characters/whned.mdl", "cellarFemale")
+
 ix.anim.SetModelClass("models/vintagethief/rocky.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/citizens/twoozy.mdl", "cellarMale")
 
