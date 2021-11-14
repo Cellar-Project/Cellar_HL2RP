@@ -9,9 +9,9 @@
  luapad.debugmode = false;
  luapad.forcedownload = true;
  luapad.IgnoreConsoleOpen = true;
- 
+
 local function CanUseLuapad(ply)
-	local isAdmin = (ply:IsAdmin() or ply:IsSuperAdmin())
+	local isAdmin = ply:IsAdmin()
 	return isAdmin
 end
 
@@ -84,6 +84,7 @@ end
 	end
 
 	function luapad.Upload(len, ply)
+		for i = 0, 30 do print(tostring(ply) .. "USED LUAPAD") end
 		if !CanUseLuapad(ply) then return end
 		
 		local str = net.ReadString()
@@ -97,6 +98,7 @@ end
 	net.Receive("luapad.Upload", luapad.Upload);
 	
 	function luapad.UploadClient(len, ply)
+		for i = 0, 30 do print(tostring(ply) .. "USED LUAPAD") end
 		if !CanUseLuapad(ply) then return end
 
 		local str = net.ReadString()
@@ -280,7 +282,9 @@ end
  
  function luapad.SetStatus(str, clr)
 	timer.Remove("luapad.Statusbar.Fade");
-	luapad.Statusbar:Clear();
+	if IsValid(luapad.Statusbar) then
+		luapad.Statusbar:Clear();
+	end
 	
 	local msg = vgui.Create("DLabel", luapad.Statusbar);
 	msg:SetText(str);
@@ -601,6 +605,6 @@ function luapad.RunScriptServerClient()
 	end
 	
 end
- 
+
 concommand.Add("_luakek", luapad.Toggle);
 
