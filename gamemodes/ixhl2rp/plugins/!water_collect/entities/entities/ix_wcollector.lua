@@ -42,11 +42,10 @@ if (SERVER) then
 		--timer
 		local conf_time = ix.config.Get("watertimer")
 		local water_n = 0
+		local conf_limit = ix.config.Get("waterlimit")
+		local conf_tick = ix.config.Get("watertick")
 
 		timer.Create( self.timer_name, conf_time, 0, function()
-
-			local conf_limit = ix.config.Get("waterlimit")
-			local conf_tick = ix.config.Get("watertick")
 		
 			if water_n <= conf_limit then
 				water_n = water_n + conf_tick
@@ -68,20 +67,24 @@ else
 
 	function ENT:Draw()
 
-		local amount = self:GetNetVar("wamount")
+		local conf_limit = ix.config.Get("waterlimit")
+
+		local amount = (self:GetNetVar("wamount").."/"..conf_limit)
 
 		self:DrawModel()
+		local fixedAng = self:GetAngles()
+		fixedAng:RotateAroundAxis( self:GetUp(), 0 ) 
+		fixedAng:RotateAroundAxis( self:GetRight(), 0 )
+		fixedAng:RotateAroundAxis( self:GetForward(), 0 )  
 		-- text showing waterlevel over model
-		if self:GetPos():Distance(LocalPlayer():GetPos()) >= 1000 then return end
+		if self:GetPos():Distance(LocalPlayer():GetPos()) >= 512 then return end
 		
-		local pos = self:GetPos()
-		local ang = self:GetAngles()
-		--ang:RotateAroundAxis(ang:Right(), -90)
-		ang.y = LocalPlayer():EyeAngles().y - 90 -- make it act like a sprite and look at the player
-
-		cam.Start3D2D(pos, ang, 1)
-			draw.SimpleTextOutlined(amount, "Default", 0, -800, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0))
-		cam.End3D2D()	
+		local fixedPos = self:GetPos() + self:GetUp()*10 + self:GetRight()*5 + self:GetForward()*-5
+	cam.Start3D2D(fixedPos, fixedAng, 0.1)
+			draw.RoundedBox(4,0,0,200,150, Color(0,0,0,225)) 
+			draw.SimpleText( "Количество воды:", "Default", 100, 0, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
+			draw.SimpleText( amount, "Default", 100, 42, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
+	cam.End3D2D()
 	end
 
 end
