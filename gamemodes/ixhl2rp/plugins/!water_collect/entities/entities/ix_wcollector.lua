@@ -1,5 +1,6 @@
 local PLUGIN = PLUGIN
 
+
 PLUGIN.emptycont = {
 	["empty_can"] = 6,
 	["empty_glass_bottle"] = 8,
@@ -8,6 +9,16 @@ PLUGIN.emptycont = {
 	["empty_plastic_can"] = 12,
 	["empty_tin_can"] = 6
 }
+
+PLUGIN.fullcont = {
+	["empty_can"] = "water_breen", --test
+	["empty_glass_bottle"] = "water_breen",
+	["empty_jug"] = "water_breen",
+	["empty_plastic_bottle"] = "water_breen",
+	["empty_plastic_can"] = "water_breen",
+	["empty_tin_can"] = "water_breen"
+}
+
 
 ENT.Type = "anim"
 ENT.PrintName = "Water Collector"
@@ -47,16 +58,34 @@ if (SERVER) then
 
 		timer.Create( self.timer_name, conf_time, 0, function()
 
-			if water_n <= conf_limit then
-				water_n = water_n + conf_tick
-			else
+			if water_n >= conf_limit then
 				water_n = conf_limit
+			else
+				water_n = water_n + conf_tick
 			end
 
 			self:SetNetVar("wamount", water_n)
 
 		end)
 
+	end
+
+	function ENT:StartTouch(entity)
+		for k,v in pairs(emptycont) do
+			if entity:GetName() == k then
+				local capacity = v
+				if self:GetNetVar("wamount") >= capacity then
+					self:GetNetVar("wamount") = self:GetNetVar("wamount") - capacity
+					
+					enitity:Remove()
+
+					local fixpos = self:GetPos() + (0, 0, 30)
+
+					ix.item.Spawn(PLUGIN.fullcont[k], fixpos)
+
+				end
+			end
+		end
 	end
 
 	function ENT:OnRemove()
@@ -73,13 +102,12 @@ else
 
 		self:DrawModel()
 		local fixedAng = self:GetAngles()
-		fixedAng:RotateAroundAxis( self:GetUp(), 0 )
-		fixedAng:RotateAroundAxis( self:GetRight(), 0 )
-		fixedAng:RotateAroundAxis( self:GetForward(), 0 )
+		fixedAng:RotateAroundAxis( self:GetRight(), -90 )
+		fixedAng:RotateAroundAxis( self:GetForward(), 90 )
 		-- text showing waterlevel over model
 		if self:GetPos():Distance(LocalPlayer():GetPos()) >= 512 then return end
 
-		local fixedPos = self:GetPos() + self:GetUp() * 10 + self:GetRight() * 5 + self:GetForward() * -5
+		local fixedPos = self:GetPos() + self:GetUp() * 5 + self:GetRight() * 5 + self:GetForward() * 5
 		cam.Start3D2D(fixedPos, fixedAng, 0.1)
 			draw.RoundedBox(4, 0, 0, 200, 150, Color(0,0,0,225))
 			draw.SimpleText( "Количество воды:", "Default", 100, 0, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
