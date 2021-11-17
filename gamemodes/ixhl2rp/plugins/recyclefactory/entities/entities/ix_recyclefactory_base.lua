@@ -31,18 +31,21 @@ end
 function ENT:GetWorkTime()
 	return 5
 end
+function ENT:Use(player)
+	netstream.Start(player, "aw_recyclemenu", self:EntIndex())
+end
 
 function ENT:GetStartCost()
 	return 5
-end	
+end
 
 function ENT:GetWorkItem()
 	return ""
-end	
+end
 
 function ENT:GetDisplay()
 	return ""
-end	
+end
 
 function ENT:Initialize()
 	if SERVER then
@@ -51,7 +54,7 @@ function ENT:Initialize()
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetSolid(SOLID_VPHYSICS)
 		self:SetUseType(SIMPLE_USE)
-		self:SetMaterial(mat)
+		-- self:SetMaterial(mat)
 
 		local phys = self:GetPhysicsObject()
 
@@ -114,43 +117,15 @@ if SERVER then
 		self:EmitSound("plats/elevator_large_start1.wav")
 		self.NextWorkSound = CurTime() + 1.4
 	end
-
 	function ENT:Eject()
 		if self:GetIsWorking() then return end
 		if self:GetStopWorkTime() > 0 then return end
 
-		local id = self:GetEjectStorage()
-		local ent = nil
-		for k, v in pairs( ents.GetAll() ) do
-			if v:GetCreationID() == id then
-				ent = v
-				break
-			end
-		end
-		if !IsValid(ent) then return end
+		local pos = self:GetProductPos()
 
-		if !ent.cwInventory then
-			cwStorage.storage[ent] = ent
-		
-			ent.cwInventory = {}
-		end
-
-		for k, v in pairs( self.Garbages ) do
-			local itemTable = Clockwork.item:FindByID(v)
-
-			local weight = itemTable("storageWeight", itemTable("weight"));
-			local space = itemTable("storageSpace", itemTable("space"));
-
-			local model = string.lower(ent:GetModel());
-			if cwStorage.containerList[model] then
-				local containerWeight = cwStorage.containerList[model][1]
-				if ( Clockwork.inventory:CalculateWeight(ent.cwInventory) + math.max(weight, 0) > containerWeight) then
-					Clockwork.entity:CreateItem( nil, v, ent:GetPos() + ent:GetUp() * 20)
-					continue
-				end
-			end
-
-			Clockwork.inventory:AddInstance(ent.cwInventory, Clockwork.item:CreateInstance(v))
+		for k,v in pairs(self.Garbages)do
+			ix.item.Spawn(v, self:GetProductPos())
+			pos = pos + Vector(0,2,2)
 		end
 
 		self:SetGarbageCount(0)
@@ -184,28 +159,32 @@ if SERVER then
 	end
 
 	function ENT:Touch(ent)
-		if self:GetIsWorking() then
-			return
-		end
-		
-		if self:GetStopWorkTime() > 0 then
-			return
-		end
-		
-		if !ent.GetItemID then
-			return
-		end
+		if !self.LastTouch or CurTime() > self.LastTouch then
+			if self:GetIsWorking() then
+				return
+			end
 
-		local item = ent:GetItemTable()
+			if self:GetStopWorkTime() > 0 then
+				return
+			end
 
-		if !self:CanGarbageUsed(item.uniqueID) then
-			return
+			if !ent.GetItemID then
+				return
+			end
+
+			local item = ent:GetItemTable()
+
+			if !self:CanGarbageUsed(item.uniqueID) then
+				return
+			end
+
+			ent:Remove()
+
+			-- self:SetGarbageCount(self:GetGarbageCount() + self:GetGarbageCost(item.uniqueID))\
+			self:SetGarbageCount(self:GetGarbageCount() + (item.weight and item.weight > 1 and item.weight or 1))
+			self.Garbages[#self.Garbages + 1] = item.uniqueID
+			self.LastTouch = CurTime() +.1
 		end
-		
-		ent:Remove()
-
-		self:SetGarbageCount(self:GetGarbageCount() + self:GetGarbageCost(item.uniqueID))
-		self.Garbages[#self.Garbages + 1] = item.uniqueID
 	end
 
 	function ENT:Think()

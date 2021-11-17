@@ -277,7 +277,7 @@ function ITEM:OnEquipped(client, slot)
 	local model = false
 
 	if isfunction(self.OnGetReplacement) then
-		model = self:OnGetReplacement()
+		model = self:OnGetReplacement(client, client:GetModel())
 	elseif (self.replacement or self.replacements) then
 		if (istable(self.replacements)) then
 			if (#self.replacements == 2 and isstring(self.replacements[1])) then
@@ -298,6 +298,7 @@ function ITEM:OnEquipped(client, slot)
 		char.outfit:AddItem(self, model, self.bodyGroups)
 
 		local a, b = char.outfit:GetResult()
+		client.ChangeModel = false
 		char.outfit:UpdateModel(char:GetPlayer(), a, b)
 	end
 

@@ -624,7 +624,17 @@ function PLUGIN:DoPluginIncludes(path)
 end
 
 function PLUGIN:CharacterMaxStamina(character)
-	return 30 + (12 * character:GetSpecial("en"))
+	local base = 30 + (12 * character:GetSpecial("en"))
+	local mod = 1
+	local thirst = character:GetThirst()
+
+	if thirst < 75 and thirst >= 25 then
+		mod = 0.75
+	elseif thirst < 25 then
+		mod = 0.2
+	end
+
+	return base * mod
 end
 
 -- Athletics Skill Related code

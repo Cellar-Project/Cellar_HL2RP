@@ -375,3 +375,16 @@ do
 		end
 	end
 end
+
+hook.Add("prone.CanExit", "bsBrokenLegs", function(player)
+	local character = player:GetCharacter()
+
+	if character then
+		local rightLeg = character:GetLimbDamage(HITGROUP_RIGHTLEG)
+		local leftLeg = character:GetLimbDamage(HITGROUP_LEFTLEG)
+
+		if rightLeg > 99 or leftLeg > 99 then
+			return false
+		end
+	end
+end)

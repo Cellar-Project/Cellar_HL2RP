@@ -188,7 +188,7 @@ ITEM.functions.Equip = {
 
 		if (isfunction(item.OnGetReplacement)) then
 			char:SetData("oldModel" .. item.outfitCategory, char:GetData("oldModel" .. item.outfitCategory, item.player:GetModel()))
-			char:SetModel(item:OnGetReplacement())
+			char:SetModel(item:OnGetReplacement(client:GetModel()))
 		elseif (item.replacement or item.replacements) then
 			char:SetData("oldModel" .. item.outfitCategory, char:GetData("oldModel" .. item.outfitCategory, item.player:GetModel()))
 
