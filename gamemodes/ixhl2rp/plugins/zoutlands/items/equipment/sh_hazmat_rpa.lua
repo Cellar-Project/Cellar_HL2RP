@@ -12,11 +12,11 @@ ITEM.genderReplacement = {
 }
 ITEM.Stats = {
 	[HITGROUP_GENERIC] = 0,
-	[HITGROUP_HEAD] = 3,
-	[HITGROUP_CHEST] = 10,
+	[HITGROUP_HEAD] = 2,
+	[HITGROUP_CHEST] = 5,
 	[HITGROUP_STOMACH] = 5,
-	[4] = 5, -- hands
-	[5] = 5, -- legs
+	[4] = 3, -- hands
+	[5] = 3, -- legs
 }
 ITEM.RadResist = 99.75
 ITEM.rarity = 2

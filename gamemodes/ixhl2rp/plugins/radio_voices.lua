@@ -6,27 +6,10 @@ PLUGIN.description = "Adds radio voicelines support."
 
 if SERVER then
 	util.AddNetworkString("PlayVRadio")
-
-	function PLUGIN:AdjustRadioTransmitListeners(info, listeners)
-		local speaker = info.player
-		local character = speaker:GetCharacter()
-		local class = Schema.voices.GetClass(speaker, "radio")
-		local faction = ix.faction.indices[character:GetFaction()]
-		local beeps = faction.typingBeeps or {}
-		local voiceinfo = Schema.voices.Get(class, info.text)
-		local snd = istable(voiceinfo.sound) and voiceinfo.sound[character:GetGender() or 1] or voiceinfo.sound
-
-		for k, listener in pairs(listeners) do
-			net.Start("PlayVRadio")
-				-- net.WriteEntity(speaker)
-				net.WriteString(snd)
-				net.WriteString(beeps[2] or " ")
-			net.Send(listener)
-		end
-	end
 else
 	net.Receive("PlayVRadio", function(len, ply)
 		-- local speaker = net.ReadEntity()
+		print("playing")
 		local snd = net.ReadString()
 		local beep = net.ReadString()
 		local sounds = {snd, beep}

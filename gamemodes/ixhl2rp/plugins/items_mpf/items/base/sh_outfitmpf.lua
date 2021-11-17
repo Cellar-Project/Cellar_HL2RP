@@ -101,7 +101,7 @@ function ITEM:OnItemEquipped(client)
 	end
 end
 
-function ITEM:OnItemUnequipped(client) 
+function ITEM:OnItemUnequipped(client)
 	client:SetNWInt("sg_uniform", 0)
 	client:SetNWInt("sg_armband", self:GetData("armband", 0))
 
@@ -111,4 +111,25 @@ function ITEM:OnItemUnequipped(client)
 	if client:Team() == FACTION_MPF then
 		client:GetCharacter():SetName(client:GetCharacter():GetVar("oldName") or client:GetName())
 	end
+end
+
+function ITEM:OnGetReplacement(client, model)
+	if self.genderReplacement then
+		return self.genderReplacement[client:GetCharacter():GetGender()]
+	end
+
+	local gender = nil
+	if string.find(model, "female") then
+		gender = "female"
+	elseif string.find(model, "male") then
+		gender = "male"
+	end
+
+	if !gender then return "models/cellar/characters/metropolice/male/cca_male_07.mdl" end
+
+	local base = "models/cellar/characters/metropolice/" .. gender .. "/"
+	local elements = string.Explode("/", model)
+	local mdl = elements[#elements]
+
+	return base .. "cca_" .. mdl
 end

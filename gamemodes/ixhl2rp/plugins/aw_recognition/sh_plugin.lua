@@ -42,12 +42,26 @@ function PLUGIN:IsCharacterRecognized(char, id) -- char кто знает, id к
 		return true
 	end
 end
+function debug.dumptotable()
+	local level = 1
+	local tbl = {}
+	while true do
+		local info = debug.getinfo(level,"Sln")
+		if !info or info.name then break end
 
+		tbl[info.name] = true
+
+		level = level + 1
+	end
+	return tbl
+end
 local CharMeta = ix.meta.character
 ix.meta.character.OriginalGetName = ix.meta.character.GetName
 
 function ix.meta.character:GetName()
-	if CLIENT then
+	local tbl = debug.dumptotable()
+	tbl = (tbl.Name or tbl.Nick) and true
+	if CLIENT and !tbl then
 		local char = LocalPlayer():GetCharacter()
 		if !char then
 			return self:OriginalGetName()
