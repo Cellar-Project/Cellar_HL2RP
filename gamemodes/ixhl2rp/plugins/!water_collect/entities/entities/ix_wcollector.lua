@@ -75,7 +75,7 @@ if (SERVER) then
 			if entity:GetName() == k then
 				local capacity = v
 				if self:GetNetVar("wamount") >= capacity then
-					self:GetNetVar("wamount") = self:GetNetVar("wamount") - capacity
+					self:SetNetVar("wamount", self:GetNetVar("wamount") - capacity)
 					
 					enitity:Remove()
 
