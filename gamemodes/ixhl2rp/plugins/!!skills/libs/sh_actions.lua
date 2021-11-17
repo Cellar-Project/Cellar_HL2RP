@@ -44,6 +44,24 @@ do
 	end
 
 	if SERVER then
+
+		function CHAR:XPStarvationMod(experience)
+			local hunger = self:GetHunger()
+			local mod = 1
+
+			if hunger < 75 and hunger >= 50 then
+				mod = 0.75
+			elseif hunger < 50 and hunger >= 25 then
+				mod = 0.5
+			elseif hunger < 25 and hunger > 2 then
+				mod = 0.25
+			elseif hunger < 3 then
+				mod = 0
+			end
+
+			return experience * mod
+		end
+
 		function CHAR:DoAction(actionID, ...)
 			local action = ix.action:Get(actionID)
 			local result = self:GetActionResult(action, ...)
@@ -53,7 +71,9 @@ do
 				local intFactor = 0.15 + math.Clamp(math.Remap(int, 1, 5, 0, 0.85), 0, 0.85) + math.Clamp(math.Remap(int, 5, 10, 0, 0.5), 0, 0.5)
 
 				result = result * intFactor
-				
+
+				result = self:XPStarvationMod(result)
+
 				self:UpdateSkillProgress(action.skill, result)
 
 				if !action.noLogging then

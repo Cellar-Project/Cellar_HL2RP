@@ -1316,4 +1316,8 @@ do
 	Schema.voices.AddClass("Vortigaunt", function(client)
 		return client:Team() == FACTION_VORTIGAUNT or client:Team() == FACTION_CONSCRIPT_BIOTIC
 	end)
+
+	Schema.voices.AddClass("Ordinal", function(client)
+		return client:IsCombine() and client:Team() != FACTION_EOW
+	end, {"ic", "w", "y", "radio", "radio_eavesdrop"})
 end

@@ -1,3 +1,4 @@
+local PLUGIN = PLUGIN
 function PLUGIN:SaveData()
 	local data = {}
 
@@ -81,3 +82,12 @@ function PLUGIN:LoadData()
 		end
 	end
 end
+netstream.Hook("aw_recyclemenuresult",function(player,data)
+	if !player.TimeToNextUseRecycle or CurTime() > player.TimeToNextUseRecycle then
+		player.TimeToNextUseRecycle = CurTime()+0.2
+		local ent = Entity(data[1])
+		if IsValid(ent) and player:GetPos():Distance(ent:GetPos()) < 250 then
+			local act = PLUGIN.VariantsUse[data[2]] and PLUGIN.VariantsUse[data[2]](ent)
+		end
+	end
+end)

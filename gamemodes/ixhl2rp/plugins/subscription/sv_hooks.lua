@@ -47,6 +47,15 @@ function PLUGIN:CharacterLoaded(character)
 			client:SetData("vault", inventory:GetID())
 		end)
 	end
+
+	if client:IsSuperAdmin() then return end
+
+	for k, faction in pairs(ix.faction.indices) do
+		if faction.bSubscriber then
+			client:SetWhitelisted(k, client:IsDonator())
+		end
+	end
+
 end
 
 function PLUGIN:PlayerInitialSpawn(client)
@@ -125,7 +134,7 @@ function PLUGIN:SetDonateSubscription(steamid64, timeLeft, callback)
 				if !whitelists then
 					whitelists = {}
 				end
-				
+
 				for k, faction in pairs(ix.faction.indices) do
 					if faction.bSubscriber then
 						whitelists[faction.uniqueID] = true
@@ -157,7 +166,7 @@ function PLUGIN:SetDonateSubscription(steamid64, timeLeft, callback)
 								continue
 							end
 						end
-						
+
 						v:GiveDonatorWeapons()
 
 						net.Start("donateNotify")

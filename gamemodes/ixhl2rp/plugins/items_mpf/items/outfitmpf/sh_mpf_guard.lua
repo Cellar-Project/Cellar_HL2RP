@@ -6,11 +6,11 @@ ITEM.genderReplacement = {
 }
 ITEM.Stats = {
 	[HITGROUP_GENERIC] = 0,
-	[HITGROUP_HEAD] = 5,
-	[HITGROUP_CHEST] = 10,
-	[HITGROUP_STOMACH] = 10,
-	[4] = 5,
-	[5] = 5,
+	[HITGROUP_HEAD] = 0,
+	[HITGROUP_CHEST] = 14,
+	[HITGROUP_STOMACH] = 8,
+	[4] = 7,
+	[5] = 7,
 }
 ITEM.category = "Уникальное"
 ITEM.uniform = 0
@@ -18,5 +18,14 @@ ITEM.primaryVisor = Vector(0, 0, 0)
 ITEM.secondaryVisor = Vector(0.5, 0.5, 0.5)
 ITEM.specialization = "g"
 ITEM.bodyGroups = {
-	[8] = 1
+	[0] = 0,
+	[1] = 0,
+	[2] = 0,
+	[3] = 0,
+	[4] = 0,
+	[5] = 0,
+	[6] = 0,
+	[7] = 0,
+	[8] = 1,
+	[9] = 0
 }

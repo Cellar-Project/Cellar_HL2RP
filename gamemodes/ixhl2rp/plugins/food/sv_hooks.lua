@@ -11,7 +11,7 @@ function PLUGIN:FoodTick(client)
 	local curTime = CurTime()
 	local tickTime = ix.config.Get("needsTickTime", 4)
 	local scale = 1
-	
+
 	character:SetHunger(math.Clamp(character:GetHunger() - (60 * scale * tickTime / (3600 * ix.config.Get("needsHungerHours", 6))), 0, 100))
 	character:SetThirst(math.Clamp(character:GetThirst() - (60 * scale * tickTime / (3600 * ix.config.Get("needsThirstHours", 4))), 0, 100))
 end
@@ -28,7 +28,7 @@ function PLUGIN:SetupFoodTimer(client)
 			return
 		end
 	end
-	
+
 	timer.Create(uniqueID, ix.config.Get("needsTickTime", 4), 0, function()
 		if !IsValid(client) then
 			timer.Remove(uniqueID)
