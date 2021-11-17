@@ -25,8 +25,9 @@ ix.command.Add("CharEditBodygroup", {
 	end,
 	OnRun = function(self, client, target)
 		if client != target and !client:IsAdmin() then return end
+		if !IsValid(target) then target = client end
 		net.Start("ixBodygroupView")
-			net.WriteEntity(target or client)
+			net.WriteEntity(target)
 		net.Send(client)
 	end
 })

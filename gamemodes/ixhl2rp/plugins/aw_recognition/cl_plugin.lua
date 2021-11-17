@@ -163,7 +163,7 @@ function PANEL:Paint(w, h)
 
 	surface.SetDrawColor(color[2])
 	surface.DrawLine(x, 0, w - 1, 0)
-	surface.DrawLine(0,0,0,h-1)
+    surface.DrawLine(0,0,0,h-1)
 	surface.DrawLine(x, h - 1, w - 1, h - 1)
 	surface.DrawLine(w - 1, 1, w - 1, h - 1)
 
@@ -197,13 +197,15 @@ vgui.Register("cellar.main.btn", PANEL, "DButton")
 
 
 local PANEL = {}
-
-local Buttons = {
+local Buttons = {}
+timer.Simple(0.1,function()
+	Buttons = 	{
 	[0] = L"rgnLookingAt",
 	[1] = L"rgnWhisper",
 	[2] = L"rgnTalk",
 	[3] = L"rgnYell",
-}
+	}
+end)
 
 local VariantsSetsName = {
 	["Новое имя"] = function(panel)
@@ -224,13 +226,13 @@ local VariantsSetsName = {
 AW_RECOGNIZE_SELECTEDNAME = nil;
 AW_RECOGNIZE_MENU = nil
 function PANEL:Init()
-	if IsValid(AW_RECOGNIZE_MENU) then
-		self:Remove()
-		return
-	end
-	AW_RECOGNIZE_MENU = self
-	local data = LocalPlayer():GetCharacter():GetData("aw_UsedNames",{})
-	AW_RECOGNIZE_SELECTEDNAME = (LocalPlayer():Name() == AW_RECOGNIZE_SELECTEDNAME or data[AW_RECOGNIZE_SELECTEDNAME]) and AW_RECOGNIZE_SELECTEDNAME or nil 
+    if IsValid(AW_RECOGNIZE_MENU) then
+        self:Remove()
+        return
+    end
+    AW_RECOGNIZE_MENU = self
+    local data = LocalPlayer():GetCharacter():GetData("aw_UsedNames",{})
+    AW_RECOGNIZE_SELECTEDNAME = (LocalPlayer():Name() == AW_RECOGNIZE_SELECTEDNAME or data[AW_RECOGNIZE_SELECTEDNAME]) and AW_RECOGNIZE_SELECTEDNAME or nil 
 
 	self:SetSize(600,400)
 	-- self:SetPos(ScrW()*.81,ScrH()/2-125)
@@ -250,55 +252,63 @@ function PANEL:Init()
 		surface.DrawLine(x, h - 1, w - 1, h - 1)
 		surface.DrawLine(w - 1, 1, w - 1, h - 1)
 	end
-
-
+	
+	
 	local CloseButton = self:Add("cellar.main.btn")
-	CloseButton:SetPos(2,2)
-	CloseButton:SetSize(596,20)
+	CloseButton:SetPos(572,3)
+	CloseButton:SetSize(25,25)
 	CloseButton:SetText("")
 	CloseButton.DoClick = function()
 		self:AlphaTo(0,0.3,0,function()
 			self:Remove()
 		end)
 	end
+	CloseButton.PaintOver = function(_,w,h)
+		draw.NoTexture()
+		local clr = _:IsHovered() and 2 or 1
+		local color = btnColors[clr][2]
+		surface.SetDrawColor(color)
+		surface.DrawLine(1,1,w-1,h-1)
+		surface.DrawLine(w-1,1,1,h-1)
+	end
 
 	self.list = self:Add("DPanelList")
 	self.list:SetPos(5,30)
 	self.list:SetSize(345,215)
 	self.list:EnableVerticalScrollbar()
-	self.list:SetSpacing(5)
-
+    self.list:SetSpacing(5)
+	
 	self:LoadNames()
 	self.PaintOver = function(this,w,h)
-		local color = btnColors[1]
-		local text = "Представляетесь как:"
-		local pos = {350+122.5,55}
-		local textw = select(1,surface.GetTextSize(text))/2
+        local color = btnColors[1]
+        local text = "Представляетесь как:"
+        local pos = {350+122.5,55}
+        local textw = select(1,surface.GetTextSize(text))/2
 
-		surface.SetFont("cellar.main.btn.blur")
-		surface.SetTextColor(color[5])
-		surface.SetTextPos(pos[1]-textw,pos[2])
-		surface.DrawText(text)
+        surface.SetFont("cellar.main.btn.blur")
+        surface.SetTextColor(color[5])
+        surface.SetTextPos(pos[1]-textw,pos[2])
+        surface.DrawText(text)
 
-		surface.SetFont("cellar.main.btn")
-		surface.SetTextColor(color[1])
-		surface.SetTextPos(pos[1]-textw,pos[2])
-		surface.DrawText(text, true)
+        surface.SetFont("cellar.main.btn")
+        surface.SetTextColor(color[1])
+        surface.SetTextPos(pos[1]-textw,pos[2])
+        surface.DrawText(text, true)
 
-		local text = AW_RECOGNIZE_SELECTEDNAME or "не выбрано"
-		-- color = AW_RECOGNIZE_SELECTEDNAME and AW_RECOGNIZE_SELECTEDNAME == LocalPlayer():Name() and btnColors[1] or !AW_RECOGNIZE_SELECTEDNAME and btnColors[1] or btnColors[2]
-		color = btnColors[2]
-		textw = select(1,surface.GetTextSize(text))/2
+        local text = AW_RECOGNIZE_SELECTEDNAME or "не выбрано"
+        -- color = AW_RECOGNIZE_SELECTEDNAME and AW_RECOGNIZE_SELECTEDNAME == LocalPlayer():Name() and btnColors[1] or !AW_RECOGNIZE_SELECTEDNAME and btnColors[1] or btnColors[2]
+        color = btnColors[2]
+        textw = select(1,surface.GetTextSize(text))/2
 
-		surface.SetFont("cellar.main.btn.blur")
-		surface.SetTextColor(color[5])
-		surface.SetTextPos(pos[1]-textw,pos[2]+25)
-		surface.DrawText(text)
+        surface.SetFont("cellar.main.btn.blur")
+        surface.SetTextColor(color[5])
+        surface.SetTextPos(pos[1]-textw,pos[2]+25)
+        surface.DrawText(text)
 
-		surface.SetFont("cellar.main.btn")
-		surface.SetTextColor(color[1])
-		surface.SetTextPos(pos[1]-textw,pos[2]+25)
-		surface.DrawText(text, true)
+        surface.SetFont("cellar.main.btn")
+        surface.SetTextColor(color[1])
+        surface.SetTextPos(pos[1]-textw,pos[2]+25)
+        surface.DrawText(text, true)
 
 		-- draw.DrawText(AW_RECOGNIZE_SELECTEDNAME or "Введите имя под которым хотите представляться!","cellar.main.btn",5,30,Color(248, 56, 56),TEXT_ALIGN_LEFT)
 	end
@@ -326,7 +336,7 @@ function PANEL:Init()
 		-- 	draw.DrawText(v,"ixGenericFont",w/2,2,Color(65,182,143),TEXT_ALIGN_CENTER)
 		-- end
 		self.buttons[k].DoClick = function(this)
-			self:Close()
+			self:Remove()
 			Recognize(k,AW_RECOGNIZE_SELECTEDNAME)
 		end
 		self.buttons[k]:SetDisabled(!AW_RECOGNIZE_SELECTEDNAME)
@@ -335,6 +345,9 @@ function PANEL:Init()
 end
 
 function PANEL:LoadNames()
+	for k,v in pairs(self.buttons or {})do
+		v:SetDisabled(!AW_RECOGNIZE_SELECTEDNAME)
+	end
 	for k,v in pairs(self.list:GetItems())do
 		v:Remove()
 	end
@@ -346,12 +359,12 @@ function PANEL:LoadNames()
 		button.Text = k
 		button.DoClick = function(this)
 			Derma_Query("Представляться под именем "..k.."?","Выберите операцию","Выбрать",function() AW_RECOGNIZE_SELECTEDNAME = k end,"Удалить",
-			function() 
-				netstream.Start("aw_ActionName",{k,true})
-				timer.Simple(0.1,function()
+            function() 
+                netstream.Start("aw_ActionName",{k,true})
+                timer.Simple(0.1,function()
 					self:LoadNames()
 				end)
-			end,"Отменить")
+            end,"Отменить")
 		end
 		-- button.PaintOver = function(this,w,h)
 		-- 	draw.DrawText(this.Text,"ixGenericFont",w/2,2,Color(182,122,65),TEXT_ALIGN_CENTER)

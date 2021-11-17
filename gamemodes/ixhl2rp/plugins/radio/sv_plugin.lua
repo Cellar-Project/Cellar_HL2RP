@@ -1,3 +1,5 @@
+util.AddNetworkString("PlayVRadio")
+
 function ix.radio:HasPlayerChannel(player, channelID, channelNumber)
 	local channel = self:FindByID(channelID)
 
@@ -24,7 +26,7 @@ function ix.radio:SetPlayerChannels(player)
 	if !player.tempChannels then
 		player.tempChannels = {}
 	end
-	
+
 	local success
 
 	-- Add faction channels
@@ -153,6 +155,32 @@ function ix.radio:RegisterSayType(sayType, range, typetext)
 	end
 end
 
+function ix.radio:SendVoiceline(info, listeners)
+
+	local speaker = info.player
+	local character = speaker:GetCharacter()
+	local class = Schema.voices.GetClass(speaker, "radio")
+	local faction = ix.faction.indices[character:GetFaction()]
+	local beeps = faction.typingBeeps or {}
+
+
+	if !isstring(info.text) then return end
+
+	local voiceinfo = Schema.voices.Get(class[1], info.text)
+
+	if !istable(voiceinfo) then return end
+
+	local snd = istable(voiceinfo.sound) and voiceinfo.sound[character:GetGender() or 1] or voiceinfo.sound
+
+	for k, listener in pairs(listeners) do
+		net.Start("PlayVRadio")
+			net.WriteEntity(speaker)
+			net.WriteString(snd)
+			net.WriteString(beeps[2] or " ")
+		net.Send(listener)
+	end
+end
+
 function ix.radio:SayRadio(client, text, data, bNoErrors)
 	if text == "" then
 		if !bNoErrors then	
@@ -272,6 +300,7 @@ function ix.radio:SayRadio(client, text, data, bNoErrors)
 		hook.Run("AdjustRadioTransmitListeners", info, listeners)
 
 		if #listeners > 0 then
+			ix.radio:SendVoiceline(info, listeners)
 			ix.chat.Send(info.player, "radio", info.text, false, listeners, info.data)
 		end
 

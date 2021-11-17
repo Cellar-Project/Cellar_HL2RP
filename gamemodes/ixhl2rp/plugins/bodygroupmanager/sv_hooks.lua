@@ -12,14 +12,16 @@ net.Receive("ixBodygroupTableSet", function(length, client)
 	end
 
 	local target = net.ReadEntity()
+	
+	if !client:IsAdmin() then target = client end
 
 	if (!IsValid(target) or !target:IsPlayer() or !target:GetCharacter()) then
 		return
 	end
 
-	if !client:IsAdmin() and client != target then return end
-
 	local bodygroups = net.ReadTable()
+
+	local skindex = net.ReadUInt(8)
 
 	local groups = {}
 
@@ -28,6 +30,7 @@ net.Receive("ixBodygroupTableSet", function(length, client)
 		groups[tonumber(k) or 0] = tonumber(v) or 0
 	end
 
+	target:SetSkin(skindex)
 	target:GetCharacter():SetData("groups", groups)
 	target:GetCharacter():Save()
 

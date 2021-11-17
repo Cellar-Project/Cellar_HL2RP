@@ -1005,7 +1005,7 @@ do
 	end
 
 	function PLUGIN:PlayerLimbTakeDamage(client, limb, damage, character, hitgroup)
-		if character:GetData("armored") then
+		if character:GetData("armored") or istable(client.ixObsData) then
 			return
 		end
 
@@ -1048,6 +1048,8 @@ local names = {
 }
 
 function PLUGIN:CalculateCreatureDamage(client, lastHitGroup, dmgInfo, multiplier)
+	if istable(client.ixObsData) then dmgInfo:SetDamage(0) return end
+
 	local baseDamage = dmgInfo:GetDamage()
 
 	if baseDamage <= 0 then
@@ -1118,6 +1120,8 @@ function PLUGIN:CalculateCreatureDamage(client, lastHitGroup, dmgInfo, multiplie
 end
 
 function PLUGIN:CalculatePlayerDamage(client, lastHitGroup, dmgInfo, multiplier)
+	if istable(client.ixObsData) then dmgInfo:SetDamage(0) return end
+
 	local baseDamage = dmgInfo:GetBaseDamage()
 
 	if baseDamage <= 0 then

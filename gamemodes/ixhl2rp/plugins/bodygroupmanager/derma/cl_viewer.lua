@@ -29,6 +29,7 @@ function PANEL:Display(target)
 	self.saveButton:SetText("Save Changes")
 	self.saveButton.DoClick = function()
 		local bodygroups = {}
+		local skindex = self.skinIndex.index or 0
 		for _, v in pairs(self.bodygroupIndex) do
 			table.insert(bodygroups, v.index, v.value)
 		end
@@ -36,6 +37,7 @@ function PANEL:Display(target)
 		net.Start("ixBodygroupTableSet")
 			net.WriteEntity(self.target)
 			net.WriteTable(bodygroups)
+			net.WriteUInt(skindex, 8)
 		net.SendToServer()
 	end
 
@@ -116,7 +118,7 @@ function PANEL:PopulateBodygroupOptions()
 
 	for k, v in pairs(self.target:GetBodyGroups()) do
 		-- Disregard the model bodygroup.
-		if !(v.id == 0) then
+		if v.id != 0 then
 			local index = v.id
 
 			self.bodygroupBox[v.id] = self.bodygroups:Add("DPanel")
@@ -172,6 +174,56 @@ function PANEL:PopulateBodygroupOptions()
 
 			self.model.Entity:SetBodygroup(index, self.target:GetBodygroup(index))
 		end
+	end
+
+	if self.target:SkinCount() > 0 then
+		local skinCount = self.target:SkinCount()
+		local toyCurrent = self.target:GetSkin()
+
+		self.skinBox = self.bodygroups:Add("DPanel")
+		self.skinBox:Dock(TOP)
+		self.skinBox:DockMargin(20, 20, 20, 0)
+		self.skinBox:SetHeight(50)
+
+		self.skinBoxName = self.skinBox:Add("DLabel")
+		self.skinBoxName:SetText("Skins")
+		self.skinBoxName:SetFont("ixMediumFont")
+		self.skinBoxName:Dock(LEFT)
+		self.skinBoxName:DockMargin(30, 0, 0, 0)
+		self.skinBoxName:SetWidth(200)
+
+		self.skinNext = self.skinBox:Add("DButton")
+		self.skinNext:Dock(RIGHT)
+		self.skinNext:SetText("Next")
+		self.skinNext.DoClick = function()
+			if toyCurrent >= skinCount then return end
+			toyCurrent = toyCurrent + 1
+
+			self.skinIndex.index = toyCurrent
+			self.skinIndex:SetText(toyCurrent)
+			self.model.Entity:SetSkin(toyCurrent)
+		end
+
+		self.skinIndex = self.skinBox:Add("DLabel")
+		self.skinIndex.index = toyCurrent
+		self.skinIndex:SetText(self.skinIndex.index)
+		self.skinIndex:SetFont("ixMediumFont")
+		self.skinIndex:Dock(RIGHT)
+		self.skinIndex:SetContentAlignment(5)
+
+		self.skinPrevious = self.skinBox:Add("DButton")
+		self.skinPrevious:Dock(RIGHT)
+		self.skinPrevious:SetText("Previous")
+		self.skinPrevious.DoClick = function()
+			if toyCurrent <= 0 then return end
+			toyCurrent = toyCurrent - 1
+
+			self.skinIndex.index = toyCurrent
+			self.skinIndex:SetText(toyCurrent)
+			self.model.Entity:SetSkin(toyCurrent)
+		end
+
+		self.model.Entity:SetSkin(toyCurrent)
 	end
 end
 

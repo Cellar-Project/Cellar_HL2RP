@@ -42,7 +42,7 @@ do
 		if gasmask then
 			resist = resist + 10
 		end
-		
+
 		if filter and filter:GetFilterQuality() > 0 then
 			resist = resist + 89
 		end
@@ -68,6 +68,17 @@ do
 		return self:GetInventory():HasItem("geiger_counter")
 	end
 end
+
+ix.command.Add("PlySetRad", {
+	description = "Установить игроку уровень радиации",
+	adminOnly = true,
+	arguments = {ix.type.character, ix.type.number},
+	OnRun = function(self, client, target, rad)
+		target:SetRadLevel(rad)
+		return "Rad level changed."
+	end
+
+})
 
 ix.util.Include("cl_plugin.lua")
 ix.util.Include("cl_hooks.lua")

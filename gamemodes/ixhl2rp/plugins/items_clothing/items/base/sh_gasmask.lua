@@ -8,3 +8,12 @@ ITEM.width = 1
 ITEM.height = 1
 ITEM.business = false
 ITEM.CanBreakDown = false
+
+function ITEM:CanTransferEquipment(oldinv, newinv, slot)
+	if !self.CPMask then return true end
+	if slot != self.slot then return false end
+	local client = newinv:GetOwner()
+	local canEquip = string.find(client:GetModel(), "cca_") or string.find(client:GetModel(), "guard")
+	canEquip = tobool(canEquip)
+	return canEquip
+end

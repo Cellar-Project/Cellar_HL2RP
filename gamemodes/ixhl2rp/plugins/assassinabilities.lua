@@ -43,4 +43,15 @@ if SERVER then
 
 
 	concommand.Add("cmb_cloak", PLUGIN.CloakToggle)
+else
+	function PLUGIN:PlayerWithinBounds(ply, target, dist)
+		local distSqr = dist * dist
+		return ply:GetPos():DistToSqr(target:GetPos()) < distSqr
+	end
+
+	function PLUGIN:DrawOverlay()
+		-- local players = player.GetAll()
+
+	end
+
 end
