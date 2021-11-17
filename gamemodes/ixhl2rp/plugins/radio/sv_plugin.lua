@@ -300,8 +300,8 @@ function ix.radio:SayRadio(client, text, data, bNoErrors)
 		hook.Run("AdjustRadioTransmitListeners", info, listeners)
 
 		if #listeners > 0 then
-			ix.radio:SendVoiceline(info, listeners)
 			ix.chat.Send(info.player, "radio", info.text, false, listeners, info.data)
+			ix.radio:SendVoiceline(info, lsisteners)
 		end
 
 		hook.Run("AdjustRadioTransmitEavesdroppers", info, eavesdroppers)
