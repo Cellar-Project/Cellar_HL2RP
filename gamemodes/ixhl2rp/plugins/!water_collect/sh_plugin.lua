@@ -18,3 +18,20 @@ ix.config.Add("watertick", 2, "How much water you collect on time. (ONLY COUNTAB
     data = {min = 2, max = 100},
     category = "watercollector"
 })
+
+
+PLUGIN.emptycont = {
+	["empty_can"] = 6,
+	["empty_glass_bottle"] = 8,
+	["empty_plastic_bottle"] = 12,
+	["empty_plastic_can"] = 12,
+	["empty_tin_can"] = 6
+}
+
+PLUGIN.fullcont = {
+	["empty_can"] = "breens_water", --test
+	["empty_glass_bottle"] = "purified_water",
+	["empty_plastic_bottle"] = "old_soda",
+	["empty_plastic_can"] = "breens_water",
+	["empty_tin_can"] = "spoiled_beer"
+}
