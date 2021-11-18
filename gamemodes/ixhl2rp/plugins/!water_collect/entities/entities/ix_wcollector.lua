@@ -1,25 +1,6 @@
 local PLUGIN = PLUGIN
 
 
-PLUGIN.emptycont = {
-	["empty_can"] = 6,
-	["empty_glass_bottle"] = 8,
-	["empty_jug"] = 16,
-	["empty_plastic_bottle"] = 12,
-	["empty_plastic_can"] = 12,
-	["empty_tin_can"] = 6
-}
-
-PLUGIN.fullcont = {
-	["empty_can"] = "water_breen", --test
-	["empty_glass_bottle"] = "water_breen",
-	["empty_jug"] = "water_breen",
-	["empty_plastic_bottle"] = "water_breen",
-	["empty_plastic_can"] = "water_breen",
-	["empty_tin_can"] = "water_breen"
-}
-
-
 ENT.Type = "anim"
 ENT.PrintName = "Water Collector"
 ENT.Category = "vintagethief"
@@ -70,16 +51,26 @@ if (SERVER) then
 
 	end
 
+	local PLUGIN = PLUGIN
 	function ENT:StartTouch(entity)
-		for k,v in pairs(emptycont) do
-			if entity:GetName() == k then
+
+		local item = nil
+
+		if isfunction(entity.GetItemTable) then
+			item = entity:GetItemTable()
+		else
+			return
+		end
+		print(item.uniqueID)
+		for k,v in pairs(PLUGIN.emptycont) do
+			if item.uniqueID == k then
 				local capacity = v
 				if self:GetNetVar("wamount") >= capacity then
 					self:SetNetVar("wamount", self:GetNetVar("wamount") - capacity)
 					
-					enitity:Remove()
+					entity:Remove()
 
-					local fixpos = self:GetPos() + (0, 0, 30)
+					local fixpos = self:GetPos() + Vector(0, 0, 30)
 
 					ix.item.Spawn(PLUGIN.fullcont[k], fixpos)
 
@@ -107,9 +98,9 @@ else
 		-- text showing waterlevel over model
 		if self:GetPos():Distance(LocalPlayer():GetPos()) >= 512 then return end
 
-		local fixedPos = self:GetPos() + self:GetUp() * 5 + self:GetRight() * 5 + self:GetForward() * 5
+		local fixedPos = self:GetPos() + self:GetUp() * 5 + self:GetRight() * 5 + self:GetForward() * 26
 		cam.Start3D2D(fixedPos, fixedAng, 0.1)
-			draw.RoundedBox(4, 0, 0, 200, 150, Color(0,0,0,225))
+			draw.RoundedBox(4, 0, 0, 100, 100, Color(0,0,0,225))
 			draw.SimpleText( "Количество воды:", "Default", 100, 0, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
 			draw.SimpleText( amount, "Default", 100, 42, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
 		cam.End3D2D()
