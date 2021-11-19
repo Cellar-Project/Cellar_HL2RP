@@ -53,28 +53,27 @@ if (SERVER) then
 
 	local PLUGIN = PLUGIN
 	function ENT:StartTouch(entity)
-
+		
 		local item = nil
-
+	
 		if isfunction(entity.GetItemTable) then
 			item = entity:GetItemTable()
 		else
 			return
 		end
-		print(item.uniqueID)
-		for k,v in pairs(PLUGIN.emptycont) do
-			if item.uniqueID == k then
-				local capacity = v
-				if self:GetNetVar("wamount") >= capacity then
-					self:SetNetVar("wamount", self:GetNetVar("wamount") - capacity)
-					
-					entity:Remove()
-
-					local fixpos = self:GetPos() + Vector(0, 0, 30)
-
-					ix.item.Spawn(PLUGIN.fullcont[k], fixpos)
-
-				end
+	
+		local capacity = PLUGIN.emptycont[item.uniqueID]
+		local result = PLUGIN.fullcont[item.uniqueID]
+	
+		if capacity and result then
+			if self:GetNetVar("wamount") >= capacity then
+				self:SetNetVar("wamount", self:GetNetVar("wamount") - capacity)
+				
+				entity:Remove()
+	
+				local fixpos = self:GetPos() + Vector(0, 0, 30)
+	
+				ix.item.Spawn(result, fixpos)
 			end
 		end
 	end
@@ -101,8 +100,8 @@ else
 		local fixedPos = self:GetPos() + self:GetUp() * 5 + self:GetRight() * 5 + self:GetForward() * 26
 		cam.Start3D2D(fixedPos, fixedAng, 0.1)
 			draw.RoundedBox(4, 0, 0, 100, 100, Color(0,0,0,225))
-			draw.SimpleText( "Количество воды:", "Default", 100, 0, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
-			draw.SimpleText( amount, "Default", 100, 42, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
+			draw.SimpleText( "Количество воды:", "Default", 0, 0, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
+			draw.SimpleText( amount, "Default", 0, 42, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
 		cam.End3D2D()
 	end
 
