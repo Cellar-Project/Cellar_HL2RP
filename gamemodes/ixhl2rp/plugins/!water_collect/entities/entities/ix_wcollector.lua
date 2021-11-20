@@ -51,15 +51,9 @@ if (SERVER) then
 		if skyhit and (StormFox2.Weather:IsRaining() or StormFox2.Weather:IsSnowing()) then
 
 			water_n = math.Clamp( water_n + conf_tick, 0, conf_limit)
-			
-			--[[if water_n >= conf_limit then
-				water_n = conf_limit
-			else
 
-				water_n = water_n + conf_tick
-			end
-			]]--
 			self:SetNetVar("wamount", water_n)
+			
 		end
 
 		end)
