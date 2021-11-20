@@ -11,11 +11,6 @@ ENT.bNoPersist = true
 
 
 if (SERVER) then
-	
-	--function ENT:SpawnFunction(entity, trace)
-	--	local wcollectorent = ents.Create("ix_wcollector")
-	--	entity:GetPos 
-	--end
 
 	function ENT:Initialize()
 
@@ -31,13 +26,28 @@ if (SERVER) then
 
 		self.timer_name = "watertimer" .. self:EntIndex()
 
-		--timer
 		local conf_time = ix.config.Get("watertimer")
 		local water_n = 0
 		local conf_limit = ix.config.Get("waterlimit")
 		local conf_tick = ix.config.Get("watertick")
 
 		timer.Create( self.timer_name, conf_time, 0, function()
+		
+		local pos = self:GetPos()
+		local skyhit = false
+		local tr = util.TraceLine( {
+			start = pos,
+			endpos = pos + self:GetUp() * 10000,
+			filter = self
+		})
+
+		if tr.HitSky then
+				skyhit = true
+			else
+				skyhit = false 
+		end
+
+		if skyhit then
 
 			if water_n >= conf_limit then
 				water_n = conf_limit
@@ -47,10 +57,14 @@ if (SERVER) then
 
 			self:SetNetVar("wamount", water_n)
 
+		--else
+			--print ("Object is not touching the sky!")
+		end
+
 		end)
 
 	end
-
+	
 	local PLUGIN = PLUGIN
 	function ENT:StartTouch(entity)
 		
@@ -100,8 +114,8 @@ else
 		local fixedPos = self:GetPos() + self:GetUp() * 5 + self:GetRight() * 5 + self:GetForward() * 26
 		cam.Start3D2D(fixedPos, fixedAng, 0.1)
 			draw.RoundedBox(4, 0, 0, 100, 100, Color(0,0,0,225))
-			draw.SimpleText( "Количество воды:", "Default", 0, 0, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
-			draw.SimpleText( amount, "Default", 0, 42, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
+			draw.SimpleText( "Количество воды:", "Default", 50, 0, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
+			draw.SimpleText( amount, "Default", 50, 42, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
 		cam.End3D2D()
 	end
 
