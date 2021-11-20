@@ -28,10 +28,11 @@ if (SERVER) then
 
 		local conf_time = ix.config.Get("watertimer")
 		local water_n = 0
-		local conf_limit = ix.config.Get("waterlimit")
-		local conf_tick = ix.config.Get("watertick")
 
 		timer.Create( self.timer_name, conf_time, 0, function()
+
+		local conf_limit = ix.config.Get("waterlimit")
+		local conf_tick = ix.config.Get("watertick")
 		
 		local pos = self:GetPos()
 		local skyhit = false
@@ -47,18 +48,18 @@ if (SERVER) then
 				skyhit = false 
 		end
 
-		if skyhit then
+		if skyhit and (StormFox2.Weather:IsRaining() or StormFox2.Weather:IsSnowing()) then
 
-			if water_n >= conf_limit then
+			water_n = math.Clamp( water_n + conf_tick, 0, conf_limit)
+			
+			--[[if water_n >= conf_limit then
 				water_n = conf_limit
 			else
+
 				water_n = water_n + conf_tick
 			end
-
+			]]--
 			self:SetNetVar("wamount", water_n)
-
-		--else
-			--print ("Object is not touching the sky!")
 		end
 
 		end)
