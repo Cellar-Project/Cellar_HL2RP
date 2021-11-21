@@ -69,8 +69,9 @@ do
 	end
 end
 
-ix.command.Add("PlySetRad", {
+ix.command.Add("CharSetRad", {
 	description = "Установить игроку уровень радиации",
+	privilege = "Edit Rad Level",
 	adminOnly = true,
 	arguments = {ix.type.character, ix.type.number},
 	OnRun = function(self, client, target, rad)
