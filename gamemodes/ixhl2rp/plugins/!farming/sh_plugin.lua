@@ -26,7 +26,7 @@ ix.config.Add("phases", 4, "How many phases a plant needs to fully grow.", nil, 
 })
 
 PLUGIN.seedplant = {
-	["sh_potato"] = "breens_water", --test
+	["ix_seeds_potato"] = "breens_water", --test
 }
 
 PLUGIN.growmodel = {

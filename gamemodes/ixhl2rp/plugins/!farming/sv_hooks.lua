@@ -12,7 +12,7 @@ function PLUGIN:LoadData()
 			local entity = ents.Create("ix_seeds_potato")
 			entity:SetPos(v[1])
 			entity:SetAngles(v[2])
-			entity:SetModel(v[8] or "models/props_lab/citizenradio.mdl")
+			entity:SetModel(v[8] or "models/props/de_train/bush2.mdl")
 			entity:Spawn()
 			entity:SetSeedItem(v[7])
 
