@@ -1,5 +1,3 @@
-local PLUGIN = PLUGIN
-
 ENT.Type = "anim"
 ENT.Author = "Vintage Thief"
 ENT.PrintName = "Семена картошки"
@@ -38,9 +36,9 @@ if (SERVER) then
 	    	local conf_phaseamount = ix.config.Get("phaseamount")
 	    	local conf_phaserate = ix.config.Get("phaserate")
 	    	local conf_phases = ix.config.Get("phases")
-
+			-- for в списке текстур. ибо не валид
 	    	if self:OnGround() and (SurfaceInfo:GetMaterial() == ("de_cbble/grassdirt_blend" or "nature/blenddirtdirt001a" or "highdef/metro2033/floor/floor_beton_pol_dirt3")) then
-		    	growth_n = math.Clamp( growth_n + conf_phaserate, 0, phase_amount)
+		    	growth_n = math.Clamp( growth_n + conf_phaserate, 0, conf_phaseamount)
 		    	phase = 1
 		    	if growth_n == conf_phaseamount then
 		    		phase = math.Clamp( phase + 1, 0, conf_phases)
@@ -50,9 +48,7 @@ if (SERVER) then
 		    	end
 	    	end
 	
-	    	for k, v in pairs(self.growmodel) do
-                print(k)
-                print(v)
+	    	for k, v in ipairs(PLUGIN.growmodel) do
 	    		self:SetModel( v )
 	    	end
       end)
@@ -81,7 +77,9 @@ if (SERVER) then
 				self:SetNetVar("grown", 0)
 				entity:Remove()
 
-				for i=0,self.dropamount do
+				local amount = math.random(3, 6)
+
+				for i=0,amount do
 					ix.item.Spawn(result, fixpos)
 				end
 			end
@@ -99,7 +97,7 @@ else
         
         cam.Start2D()
         local pos = self:GetPos():ToScreen()
-        local growth = ix.config.Get("grown")
+        local growth = self:GetNetVar("grown")
         draw.DrawText(growth, "Default", pos.x, pos.y, color_white, TEXT_ALIGN_CENTER)
         cam.End2D()
 
