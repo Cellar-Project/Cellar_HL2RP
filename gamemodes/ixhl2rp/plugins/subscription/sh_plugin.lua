@@ -143,3 +143,81 @@ do
 
 	serverguard.command:Add(command)
 end
+
+do
+	ix.command.Add("WipeVault", {
+		description = "Очищает донатное хранилище указанного персонажа.",
+		superAdminOnly = true,
+		arguments = {
+			ix.type.character
+		},
+		OnRun = function(self, client, target)
+			local index = target:GetPlayer():GetData("vault", 0) or 0
+
+			if index == 0 then
+				return "Хранилище не найдено."
+			end
+
+			local inventory_instance = ix.item.inventories[index]
+
+			if inventory_instance then
+				ix.storage.Close(inventory_instance)
+			end
+			
+			local query = mysql:Delete("ix_items")
+				query:Where("inventory_id", index)
+			query:Execute()
+
+			return string.format("Хранилище игрока %s было успешно очищено.", target:GetName())
+		end
+	})
+
+	ix.command.Add("WipeVaultOffline", {
+		description = "Очищает донатное хранилище указанного игрока (SteamID 32/64 или AnonID).",
+		superAdminOnly = true,
+		arguments = {
+			ix.type.string
+		},
+		OnRun = function(self, client, text)
+			local steamid64
+			
+			if text:match("STEAM_(%d+):(%d+):(%d+)") then
+				steamid64 = util.SteamIDTo64(text)
+			elseif text:match("ANON:(%d+)") then
+				steamid64 = AnonIDToSteamID64(text)
+			elseif text:match("(%d+)") then
+				steamid64 = text
+			end
+
+			if steamid64 then
+				local query = mysql:Select("ix_players")
+					query:Select("data")
+					query:Where("steamid", steamid64)
+					query:Limit(1)
+					query:Callback(function(result)
+						if istable(result) and #result > 0 then
+							local data = util.JSONToTable(result[1].data or "[]")
+							local index = tonumber(data.vault) or 0
+
+							if index == 0 then
+								return client:Notify("Хранилище указанного игрока не найдено.")
+							end
+
+							local inventory_instance = ix.item.inventories[index]
+
+							if inventory_instance then
+								ix.storage.Close(inventory_instance)
+							end
+							
+							local itemQuery = mysql:Delete("ix_items")
+								itemQuery:Where("inventory_id", index)
+							itemQuery:Execute()
+
+							return client:Notify(string.format("Хранилище %s было успешно очищено.", text))
+						end
+					end)
+				query:Execute()
+			end
+		end
+	})
+end
