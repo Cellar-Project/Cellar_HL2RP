@@ -771,6 +771,8 @@ ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_17
 ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_18.mdl", "cellarFemaleMPF")
 -- BLYAT YA TUT ZOKONCHIL
 
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_valtan.mdl", "cellarMaleMPF")
+
 ix.anim.SetModelClass("models/cellar/characters/female_02.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/chong.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/leaguemovement.mdl", "cellarMale")
