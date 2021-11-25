@@ -778,6 +778,9 @@ ix.anim.SetModelClass("models/cellar/characters/chong.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/leaguemovement.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/leaguemovement_coat.mdl", "cellarMale")
 
+ix.anim.SetModelClass("models/vintagethief/killjoy.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/vintagethief/durham.mdl", "cellarMale")
+
 for i = 1, 9 do
 	ix.anim.SetModelClass("models/cellar/characters/oldsuits/male_0"..i.."_closed_coat_tie.mdl", "cellarMale")
 	ix.anim.SetModelClass("models/cellar/characters/oldsuits/male_0"..i.."_closed_tie.mdl", "cellarMale")
