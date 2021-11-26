@@ -778,6 +778,10 @@ ix.anim.SetModelClass("models/cellar/characters/chong.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/leaguemovement.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/leaguemovement_coat.mdl", "cellarMale")
 
+ix.anim.SetModelClass("models/cellar/characters/zelen.mdl", "cellarMale") -- jessy
+
+ix.anim.SetModelClass("models/vintagethief/ota/ota_ordinal.mdl", "cellarOTA")
+
 ix.anim.SetModelClass("models/vintagethief/killjoy.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/vintagethief/durham.mdl", "cellarMale")
 
