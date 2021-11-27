@@ -1318,6 +1318,6 @@ do
 	end)
 
 	Schema.voices.AddClass("Ordinal", function(client)
-		return client:IsCombine() and client:Team() != FACTION_EOW
+		return client:IsCombine() and client:Team() == FACTION_EOW
 	end, {"ic", "w", "y", "radio", "radio_eavesdrop"})
 end
