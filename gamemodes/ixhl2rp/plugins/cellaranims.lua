@@ -818,6 +818,10 @@ ix.anim.SetModelClass("models/cellar/characters/ynb.mdl", "cellarMaleMPF")
 ix.anim.SetModelClass("models/cellar/characters/rodney.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/lubitar.mdl", "cellarMale")
 
+
+ix.anim.SetModelClass("models/cellar/characters/female_lalalar.mdl" "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/dance.mdl" "cellarMale")
+
 ix.anim.SetModelClass("models/cellar/characters/combine/soldier_male.mdl", "cellarOTA")
 ix.anim.SetModelClass("models/cellar/characters/combine/elite_male.mdl", "cellarOTA")
 ix.anim.SetModelClass("models/cellar/characters/combine/sniper_male.mdl", "cellarOTA")
