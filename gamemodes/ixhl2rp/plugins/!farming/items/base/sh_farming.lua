@@ -5,7 +5,6 @@ ITEM.category = "categoryFarming"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.rarity = 1
-ITEM.dropamount = math.random(1, 4)
 
 ITEM:Hook("drop", function(item)
 	local seed = ents.Create("ix_seeds_" .. item.seedclass)
