@@ -795,6 +795,8 @@ for i = 1, 9 do
 	ix.anim.SetModelClass("models/cellar/characters/oldsuits/male_0"..i.."_shirt_tie.mdl", "cellarMale")
 end
 
+ix.anim.SetModelClass("models/cellar/characters/malogo.mdl", "cellarMale")
+
 ix.anim.SetModelClass("models/cellar/characters/tno/chancellor.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/tno/male_02.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/tno/male_04.mdl", "cellarMale")
