@@ -892,6 +892,13 @@ ix.anim.SetModelClass("models/vintagethief/hazmat_worker.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/hazmat_armor.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/vertexsecond.mdl", "cellarMale")
 
+--why zoutlands update's uniform was never writed in animations... why? WHY??
+
+ix.anim.SetModelClass("models/cellar/characters/hazmat/medic_male.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/hazmat/medic_female.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/hazmat/hazard_male.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/hazmat/hazard_female.mdl", "cellarFemale")
+
 ix.anim.SetModelClass("models/vintagethief/hunk.mdl", "cellarMaleMPF")
 
 ix.anim.SetModelClass("models/cellar/characters/ciri.mdl", "cellarFemale")
