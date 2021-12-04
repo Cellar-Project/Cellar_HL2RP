@@ -26,6 +26,8 @@ dispatch = dispatch or {
 	squads = {}
 }
 
+ix.util.Include("meta/sh_squads.lua")
+
 function dispatch.GetReceivers()
 	local recvs = {}
 
@@ -38,4 +40,44 @@ function dispatch.GetReceivers()
 	return recvs
 end
 
-ix.util.Include("meta/sh_squads.lua")
+function dispatch.GetFreeSquadTag()
+	for tag = 1, #dispatch.available_tags do
+		if dispatch.squads[tag] == nil then
+			return tag
+		end
+	end
+
+	return false
+end
+
+function dispatch.CreateSquad(leader, tagID)
+	tagID = tagID or dispatch.GetFreeSquadTag()
+
+	if !tagID then
+		return "No free tvs" --TODO: localize this
+	end
+	
+	local SQUAD = setmetatable({}, ix.meta.squad)
+	SQUAD:Setup(tagID, leader)
+
+	if SERVER then
+		SQUAD:Sync()
+
+		ix.log.AddRaw(string.format("%s has created squad %s", leader:GetName(), SQUAD:GetTagName()))  --TODO: switch raw to localized
+	end
+
+	dispatch.squads[tagID] = SQUAD
+
+	return SQUAD
+end
+
+ix.command.Add("SquadCreate", {
+	description = "@cmdPTCreate",
+	OnRun = function(self, client, index)
+		if !client:IsCombine() then
+			return "@CannotUseTeamCommands"
+		end
+
+		return dispatch.CreateSquad(client:GetCharacter())
+	end
+})
