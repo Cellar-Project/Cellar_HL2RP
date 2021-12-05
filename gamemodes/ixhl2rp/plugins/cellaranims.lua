@@ -908,6 +908,9 @@ ix.anim.SetModelClass("models/vintagethief/leon_battle.mdl", "cellarFemale")
 
 ix.anim.SetModelClass("models/vintagethief/kenneth.mdl", "cellarMale")
 
+ix.anim.SetModelClass("models/cellar/characters/rolton.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_6664.mdl", "cellarMaleMPF")
+
 ix.anim.SetModelClass("models/cellar/blum.mdl", "cellarFemale")
 
 ix.anim.SetModelClass("models/vintagethief/natsume.mdl", "cellarFemale")
