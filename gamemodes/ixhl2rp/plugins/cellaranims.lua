@@ -907,6 +907,7 @@ ix.anim.SetModelClass("models/vintagethief/leon_fem.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/vintagethief/leon_battle.mdl", "cellarFemale")
 
 ix.anim.SetModelClass("models/vintagethief/teresa.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/earl_krutoi/female_oberg.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/yan/bebra.mdl", "cellarMale")
 
 ix.anim.SetModelClass("models/vintagethief/kenneth.mdl", "cellarMale")
