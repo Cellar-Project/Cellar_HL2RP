@@ -5,17 +5,29 @@ PLUGIN.author = "maxxoft"
 PLUGIN.description = "Temperatures system based on areas plugin."
 
 
-ix.config.Add("temptick", 5, "Tickrate for temperature calculations.", nil, {
-	data = {min = 1, max = 20},
+ix.config.Add("tempTickTime", 4, "How many seconds between each time a character's body temperature is calculated.", function(_, new)
+	for _, client in ipairs(player.GetAll()) do
+		PLUGIN:SetupTempTimer(client)
+	end
+end, {
+	data = {min = 1, max = 24},
 	category = "temperature"
 })
 
-ix.command.Add("SetTemperature", {
+ix.command.Add("SetAreaTemperature", {
 	OnRun = function(self, client, areaType, temperature, name)
-		PLUGIN:SetTemperature(areaType, temperature, name)
+		PLUGIN:SetAreaTemperature(areaType, temperature, name)
 	end,
 	privilege = "Edit Area Temperature",
 	superAdminOnly = true
+})
+
+ix.char.RegisterVar("temperature", {
+	field = "temperature",
+	fieldType = ix.type.number,
+	default = 37.2,
+	isLocal = true,
+	bNoDisplay = true
 })
 
 function PLUGIN:SetupAreaProperties()
@@ -29,7 +41,7 @@ function PLUGIN:SetupAreaProperties()
 	ix.area.AddProperty("temperature", ix.type.number, 20)
 end
 
-function PLUGIN:SetTemperature(areaType, temperature, name)
+function PLUGIN:SetAreaTemperature(areaType, temperature, name)
 	if not temperature then return end
 	if not areaType or name then return end
 
@@ -45,18 +57,3 @@ function PLUGIN:SetTemperature(areaType, temperature, name)
 		end
 	end
 end
-
-function PLUGIN:OnPlayerAreaChanged(client, oldID, newID)
-	local area = ix.area.stored[newID]
-	local temp = area.properties.temperature
-
-	-- do temperature calculations depending on clothing (try adding a function to use
-	-- it in Think too maybe), move it to sv
-end
-
-function PLUGIN:Think()
-	local tickrate = ix.config.Get("temptick", 1)
-
-	-- perform temp thinking, move it to sv
-end
-
