@@ -1,22 +1,28 @@
 local PLUGIN = PLUGIN
 
 
-
 function PLUGIN:ThermalLimbDamage(temperature, client, equipment)
+	character = client:GetCharacter()
 	local outfit = equipment["torso"].isOutfit
-	local positive = temperature > 0
-	local scale = 4
-	if not positive then scale = -scale end -- I'm not a mathematician, sorry
+	local dangerous = temperature < 8
+	local scale = 1
+
 
 	-- calculate damage through outfit:
 	if outfit then
-		local resist = equipment["torso"].thermalIsolation * 0.01 or 0
+		local resist = equipment["torso"].thermalIsolation -- * 0.01 or 0
 		local damage
 
 		if not positive then
+			print("scale = " .. scale)
+			print("resist = " .. resist)
+			print("temperature = " .. temperature)
 			damage = resist - (temperature / scale)
+			print("damage = " .. tostring(damage))
 			if damage > 0 then
+				print("TakeOverallLimbDamage")
 				character:TakeOverallLimbDamage(damage)
+				character:AddShockDamage(damage * 5)
 			end
 		end
 	end
@@ -24,9 +30,13 @@ function PLUGIN:ThermalLimbDamage(temperature, client, equipment)
 	-- TODO: all the other limbs
 end
 
+function PLUGIN:GetTempDamage(temperature)
+
+end
+
 function PLUGIN:CalculateThermalDamage(temperature, client)
-	if not client.ixArea then return end
-	if 20 <= temperature <= 29 then return end
+	if not client.ixInArea then return end
+	if temperature >= 0 and temperature <= 29 then return end
 
 	local positive = temperature > 0
 	local character = client:GetCharacter()
@@ -42,9 +52,11 @@ function PLUGIN:CalculateThermalDamage(temperature, client)
 end
 
 function PLUGIN:TempTick(client)
-	if not client.ixArea then return end
-
-	local temperature = client.ixArea.properties.temperature
-
-	self:CalculateThermalDamage(temperature, client)
+	local area = ix.area.stored[client.ixArea]
+	print("TempTick")
+	if area then
+		PrintTable(area)
+		local temperature = area.properties.temperature
+		self:CalculateThermalDamage(temperature, client)
+	end
 end
