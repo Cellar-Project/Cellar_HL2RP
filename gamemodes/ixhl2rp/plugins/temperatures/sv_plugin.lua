@@ -22,7 +22,7 @@ function PLUGIN:ThermalLimbDamage(temperature, client, equipment)
 			if damage > 0 then
 				print("TakeOverallLimbDamage")
 				character:TakeOverallLimbDamage(damage)
-				character:AddShockDamage(damage * 5)
+				character:AddShockDamage(damage * 10)
 			end
 		end
 	end
@@ -31,7 +31,24 @@ function PLUGIN:ThermalLimbDamage(temperature, client, equipment)
 end
 
 function PLUGIN:GetTempDamage(temperature)
+	local tempToDamage = {
+		[8] = {dmg = 1, offset = 0.09},
+		[0] = {dmg = 2, offset = 0.1},
+		[-8] = {dmg = 4, offset = 0.3},
+		[-15] = {dmg = 8, offset = 0.7},
+		[-25] = {dmg = 12, offset = 0.9},
+		[-35] = {dmg = 17, offset = 1.1},
+		[-50] = {dmg = 21, offset = 2.01}
+	}
+	local index = 8
 
+	for temp, tab in pairs(tempToDamage) do
+		if math.abs(temperature - index) > math.abs(temperature - temp) then
+			index = temp
+		end
+	end
+
+	return tempToDamage[index]
 end
 
 function PLUGIN:CalculateThermalDamage(temperature, client)
