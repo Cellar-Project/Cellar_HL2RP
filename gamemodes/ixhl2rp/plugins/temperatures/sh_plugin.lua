@@ -17,7 +17,13 @@ end, {
 ix.command.Add("SetAreaTemperature", {
 	OnRun = function(self, client, areaType, temperature, name)
 		PLUGIN:SetAreaTemperature(areaType, temperature, name)
+		return "Температура для " .. areaType .. " была изменена."
 	end,
+	arguments = {
+		ix.type.string,
+		ix.type.number,
+		bit.bor(ix.type.string, ix.type.optional)
+	},
 	privilege = "Edit Area Temperature",
 	superAdminOnly = true
 })
@@ -57,3 +63,6 @@ function PLUGIN:SetAreaTemperature(areaType, temperature, name)
 		end
 	end
 end
+
+ix.util.Include("sv_plugin.lua")
+ix.util.Include("sv_hooks.lua")

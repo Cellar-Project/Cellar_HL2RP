@@ -2,10 +2,14 @@ local PLUGIN = PLUGIN
 
 
 function PLUGIN:OnPlayerAreaChanged(client, oldID, newID)
-	-- local area = ix.area.stored[newID]
-	-- local temp = area.properties.temperature
+	local valid = string.StartWith(ix.area.stored[newID].type, "temperature")
+	local bTimer = timer.Exists("ixTemp" .. client:SteamID())
 
-	-- adjust timer maybe? or remove func?
+	if valid and not bTimer then
+		self:SetupTempTimer(client)
+	elseif not valid and bTimer then
+		timer.Remove("ixTemp" .. client:SteamID())
+	end
 end
 
 function PLUGIN:SetupTempTimer(client)
@@ -22,7 +26,7 @@ function PLUGIN:SetupTempTimer(client)
 	end
 
 	timer.Create(uniqueID, ix.config.Get("tempTickTime", 4), 0, function()
-		if !IsValid(client) then
+		if not IsValid(client) or not client.ixInArea then
 			timer.Remove(uniqueID)
 			return
 		end
