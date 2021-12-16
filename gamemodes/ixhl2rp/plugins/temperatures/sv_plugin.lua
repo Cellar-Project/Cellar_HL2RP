@@ -1,11 +1,17 @@
 local PLUGIN = PLUGIN
-
+PLUGIN.tempMin = -50
+PLUGIN.tempMax = 8
+PLUGIN.dmgMin = 1
+PLUGIN.dmgMax = 21
+PLUGIN.offMin = 0.09
+PLUGIN.offMax = 21.01
 
 function PLUGIN:ThermalLimbDamage(temperature, client, equipment)
 	character = client:GetCharacter()
 	local outfit = equipment["torso"].isOutfit
 	local dangerous = temperature < 8
 	local scale = 1
+	if not dangerous then return end
 
 
 	-- calculate damage through outfit:
@@ -31,24 +37,11 @@ function PLUGIN:ThermalLimbDamage(temperature, client, equipment)
 end
 
 function PLUGIN:GetTempDamage(temperature)
-	local tempToDamage = {
-		[8] = {dmg = 1, offset = 0.09},
-		[0] = {dmg = 2, offset = 0.1},
-		[-8] = {dmg = 4, offset = 0.3},
-		[-15] = {dmg = 8, offset = 0.7},
-		[-25] = {dmg = 12, offset = 0.9},
-		[-35] = {dmg = 17, offset = 1.1},
-		[-50] = {dmg = 21, offset = 2.01}
-	}
-	local index = 8
-
-	for temp, tab in pairs(tempToDamage) do
-		if math.abs(temperature - index) > math.abs(temperature - temp) then
-			index = temp
-		end
-	end
-
-	return tempToDamage[index]
+	local allDmg = self.dmgMin + self.dmgMax
+	local allOff = self.offMin + self.offMax
+	local dmg = math.abs(temperature - self.tempMax) * allDmg / (math.abs(self.tempMin) + self.tempMax)
+	local offset = math.abs(temperature - self.tempMax) * allOff / (math.abs(self.tempMin) + self.tempMax)
+	return {dmg = dmg, offset = offset}
 end
 
 function PLUGIN:CalculateThermalDamage(temperature, client)
@@ -66,6 +59,11 @@ function PLUGIN:CalculateThermalDamage(temperature, client)
 	}
 
 	self:ThermalLimbDamage(temperature, client, equipment)
+	-- todo:
+	-- dmg = dmg - isolation * 0.8 (if isolation >= dmg then dmg = 0)
+	-- also we should probably do isolation calculation once on equip
+	-- to get rid of doing GetItemAtSlot every tick
+	-- and write it somewhere in character (SetData? NetVar?)
 end
 
 function PLUGIN:TempTick(client)
