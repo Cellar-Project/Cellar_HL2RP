@@ -42,7 +42,7 @@ function PLUGIN:CheckAmmo(client)
 end
 
 function PLUGIN:PlayerButtonDown(ply, button)
-	if button == KEY_T and IsFirstTimePredicted() then
+	if button == KEY_T and ply:GetCharacter() and IsFirstTimePredicted() then
 		self:CheckAmmo(ply)
 	end
 end

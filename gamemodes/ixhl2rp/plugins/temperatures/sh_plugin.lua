@@ -5,7 +5,10 @@ PLUGIN.author = "maxxoft"
 PLUGIN.description = "Temperatures system based on areas plugin."
 
 
-ix.config.Add("tempTickTime", 4, "How many seconds between each time a character's body temperature is calculated.", function(_, new)
+ix.util.Include("sv_plugin.lua")
+ix.util.Include("sv_hooks.lua")
+
+ix.config.Add("tempTickTime", 6, "How many seconds between each time a character's body temperature is calculated.", function(_, new)
 	for _, client in ipairs(player.GetAll()) do
 		PLUGIN:SetupTempTimer(client)
 	end
@@ -44,7 +47,7 @@ function PLUGIN:SetupAreaProperties()
 	ix.area.AddType("temperature_underground")
 	ix.area.AddType("temperature_nexus")
 
-	ix.area.AddProperty("temperature", ix.type.number, 20)
+	ix.area.AddProperty("temperature", ix.type.number, 10)
 end
 
 function PLUGIN:SetAreaTemperature(areaType, temperature, name)
@@ -63,6 +66,3 @@ function PLUGIN:SetAreaTemperature(areaType, temperature, name)
 		end
 	end
 end
-
-ix.util.Include("sv_plugin.lua")
-ix.util.Include("sv_hooks.lua")
