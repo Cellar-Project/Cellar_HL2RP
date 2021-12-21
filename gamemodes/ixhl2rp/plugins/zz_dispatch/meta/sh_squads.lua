@@ -4,7 +4,10 @@ if SERVER then
 	util.AddNetworkString("ixSquadLeader")
 	util.AddNetworkString("ixSquadSync")
 	util.AddNetworkString("ixSquadSyncFull")
+	util.AddNetworkString("ixSquadDestroy")
 end
+
+ix.util.Include("sh_player.lua")
 
 local SQUAD = ix.meta.squad or {}
 	SQUAD.__index = SQUAD
@@ -12,75 +15,169 @@ local SQUAD = ix.meta.squad or {}
 	SQUAD.tag = 0
 	SQUAD.leader = nil
 	SQUAD.members = {}
-	SQUAD.counter = 0
+	SQUAD.member_counter = 0 -- used for limit condition
+	SQUAD.counter = 0 -- used for UNIT TAGS
+	SQUAD.players = {} -- cache of player entities, for fastest operating in UI
 
 	function SQUAD:GetTagName()
 		return dispatch.available_tags[self.tag] or "ERROR"
+	end
+
+	function SQUAD:GetLimitCount()
+		return self.member_counter
+	end
+
+	function SQUAD:GetPlayers()
+		return self.players
+	end
+
+	function SQUAD:HasMember(character)
+		return self.members[character]
+	end
+	
+	function SQUAD:HasPlayer(client)
+		return self.members[client:GetCharacter()]
+	end
+
+	function SQUAD:IsLeader(character)
+		return self.leader == character
 	end
 
 	function SQUAD:Setup(tag, character)
 		self.tag = tag
 		self.leader = character
 		self.members = {}
-		self.counter = 0
+		self.counter = 0  
+		self.member_counter = 0
+		self.players = {}
 
 		self:AddMember(character, true)
 	end
 
+	function SQUAD:RecachePlayers()
+		self.players = {}
+
+		for character, _ in pairs(self.members) do
+			local client = character:GetPlayer()
+			if !client then continue end
+			
+			self.players[#self.players + 1] = client
+		end
+	end
+	
 	function SQUAD:AddMember(character, noNetwork)
-		self.counter = self.counter + 1 
+		if self:GetLimitCount() >= dispatch.GetMemberLimit() then
+			return false, "its full lmao"
+		end
+		
+		self.counter = self.counter + 1
+
 		self.members[character] = self.counter
+		self.member_counter = self.member_counter + 1 
+
+		character:SetSquad(self)
 
 		if SERVER and !noNetwork then
 			net.Start("ixSquadAddMember")
 				net.WriteUInt(self.tag, 4)
 				net.WriteUInt(character:GetID(), 32)
-			net.Send(receivers)
+			net.Send(dispatch.GetReceivers())
 		end
+
+		self:RecachePlayers()
+
+		return true
 	end
 
 	function SQUAD:RemoveMember(character, noNetwork)
-		if !IsValid(client) then
-			return
-		end
-		
-		self.members[character] = nil
+		if !character or !self:HasMember(character) then
+			return false
+		end 
 
-		if SERVER and !noNetwork then
-			net.Start("ixSquadKickMember")
-				net.WriteUInt(self.tag, 4)
-				net.WriteUInt(character:GetID(), 32)
-			net.Send(receivers)
+		self.members[character] = nil
+		self.member_counter = self.member_counter - 1 
+
+		character:SetSquad()
+
+		if SERVER then
+			if self:GetLimitCount() <= 0 then
+				self:Destroy(character)
+
+				return true
+			end
+
+			if !noNetwork then
+				net.Start("ixSquadKickMember")
+					net.WriteUInt(self.tag, 4)
+					net.WriteUInt(character:GetID(), 32)
+				net.Send(dispatch.GetReceivers())
+			end
+
+			if self:IsLeader(character) then -- he was 
+				self:SwitchLeader()
+			end
 		end
+
+		self:RecachePlayers()
+
+		return true
 	end
 
 	function SQUAD:SetLeader(character, noNetwork)
+		if !self:HasMember(character) then
+			return false
+		end 
+
 		self.leader = character
 
 		if SERVER and !noNetwork then
 			net.Start("ixSquadLeader")
 				net.WriteUInt(self.tag, 4)
 				net.WriteUInt(character:GetID(), 32)
-			net.Send(receivers)
+			net.Send(dispatch.GetReceivers())
 		end
+
+		return true
 	end
 
-	function SQUAD:Destroy()
+	function SQUAD:Destroy(lastCharacter)
+		if SERVER then
+			net.Start("ixSquadDestroy")
+				net.WriteUInt(self.tag, 4)
+			net.Send(dispatch.GetReceivers())
+
+			ix.log.Add(lastCharacter, "squadDestroy", self:GetTagName())
+		else
+			for character, _ in pairs(self.members) do
+				character:SetSquad()
+			end
+		end
+
+		dispatch.squads[self.tag] = nil
 	end
 	
 	if SERVER then
+		function SQUAD:SwitchLeader()
+			for character, _ in pairs(self.members) do
+				self:SetLeader(character)
+				break
+			end
+		end
+
 		function SQUAD:Sync(full, receivers)
 			receivers = receivers or dispatch.GetReceivers()
+
+			local leaderID = self.leader:GetID()
 
 			if !full then
 				net.Start("ixSquadSync")
 					net.WriteUInt(self.tag, 4)
-					net.WriteUInt(self.leader:GetID(), 32)
+					net.WriteUInt(leaderID, 32)
 				net.Send(receivers)
 			else
 				net.Start("ixSquadSyncFull")
 					net.WriteUInt(self.tag, 4)
-					net.WriteUInt(self.leader:GetID(), 32)
+					net.WriteUInt(leaderID, 32)
 					net.WriteUInt(self.counter, 8)
 
 					local members = {}
@@ -99,6 +196,15 @@ local SQUAD = ix.meta.squad or {}
 ix.meta.squad = SQUAD
 
 if CLIENT then
+	net.Receive("ixSquadDestroy", function(len)
+		local tagID = net.ReadUInt(4)
+		local squad = dispatch.squads[tagID]
+
+		if squad then
+			squad:Destroy()
+		end
+	end)
+
 	net.Receive("ixSquadSync", function(len)
 		local tagID = net.ReadUInt(4)
 		local leaderID = net.ReadUInt(32)
