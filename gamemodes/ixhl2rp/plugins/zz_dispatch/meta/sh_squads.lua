@@ -17,6 +17,7 @@ local SQUAD = ix.meta.squad or {}
 	SQUAD.members = {}
 	SQUAD.member_counter = 0 -- used for limit condition
 	SQUAD.counter = 0 -- used for UNIT TAGS
+	SQUAD.players = {} -- cache of player entities, for fastest operating in UI
 
 	function SQUAD:GetTagName()
 		return dispatch.available_tags[self.tag] or "ERROR"
@@ -24,6 +25,10 @@ local SQUAD = ix.meta.squad or {}
 
 	function SQUAD:GetLimitCount()
 		return self.member_counter
+	end
+
+	function SQUAD:GetPlayers()
+		return self.players
 	end
 
 	function SQUAD:HasMember(character)
@@ -44,10 +49,22 @@ local SQUAD = ix.meta.squad or {}
 		self.members = {}
 		self.counter = 0  
 		self.member_counter = 0
+		self.players = {}
 
 		self:AddMember(character, true)
 	end
 
+	function SQUAD:RecachePlayers()
+		self.players = {}
+
+		for character, _ in pairs(self.members) do
+			local client = character:GetPlayer()
+			if !client then continue end
+			
+			self.players[#self.players + 1] = client
+		end
+	end
+	
 	function SQUAD:AddMember(character, noNetwork)
 		if self:GetLimitCount() >= dispatch.GetMemberLimit() then
 			return false, "its full lmao"
@@ -66,6 +83,8 @@ local SQUAD = ix.meta.squad or {}
 				net.WriteUInt(character:GetID(), 32)
 			net.Send(dispatch.GetReceivers())
 		end
+
+		self:RecachePlayers()
 
 		return true
 	end
@@ -98,6 +117,8 @@ local SQUAD = ix.meta.squad or {}
 				self:SwitchLeader()
 			end
 		end
+
+		self:RecachePlayers()
 
 		return true
 	end
