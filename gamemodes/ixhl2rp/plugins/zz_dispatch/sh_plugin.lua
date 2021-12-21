@@ -26,7 +26,21 @@ dispatch = dispatch or {
 	squads = {}
 }
 
+if SERVER then
+	ix.log.AddType("squadCreate", function(client, tagname)
+		return string.format("%s создал подразделение '%s'", client:GetName(), tagname)
+	end)
+
+	ix.log.AddType("squadDestroy", function(client, tagname)
+		return string.format("%s расформировал подразделение '%s'", client:GetName(), tagname)
+	end)
+end
+
 ix.util.Include("meta/sh_squads.lua")
+
+function dispatch.GetMemberLimit()
+	return 5
+end
 
 function dispatch.GetReceivers()
 	local recvs = {}
@@ -63,13 +77,15 @@ function dispatch.CreateSquad(leader, tagID)
 	if SERVER then
 		SQUAD:Sync()
 
-		ix.log.AddRaw(string.format("%s has created squad %s", leader:GetName(), SQUAD:GetTagName()))  --TODO: switch raw to localized
+		ix.log.Add(leader, "squadCreate", SQUAD:GetTagName())
 	end
 
 	dispatch.squads[tagID] = SQUAD
 
 	return SQUAD
 end
+
+ix.util.Include("sv_hooks.lua")
 
 ix.command.Add("SquadCreate", {
 	description = "@cmdPTCreate",
