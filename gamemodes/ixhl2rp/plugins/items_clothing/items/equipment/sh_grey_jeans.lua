@@ -13,3 +13,4 @@ ITEM.iconCam = {
 	ang = Angle(90, 10, 0),
 	fov = 5,
 }
+ITEM.thermalIsolation = 30

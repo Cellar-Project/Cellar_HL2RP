@@ -16,6 +16,7 @@ ITEM.uniform = 0
 ITEM.primaryVisor = Vector(0.05, 0.2, 0.5)
 ITEM.secondaryVisor = Vector(0.05, 0.2, 0.5)
 ITEM.specialization = nil
+ITEM.thermalIsolation = 50
 ITEM.bodyGroups = {
 	[0] = 0,
 	[1] = 0,

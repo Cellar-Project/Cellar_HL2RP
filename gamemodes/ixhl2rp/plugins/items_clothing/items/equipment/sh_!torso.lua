@@ -526,6 +526,7 @@ local ITEM = ix.item.New2("base_equipment")
 	ITEM.bodyGroups = {
 		[1] = 26
 	}
+	ITEM.thermalIsolation = 30
 ITEM:Register()
 
 local ITEM = ix.item.New2("base_equipment")
