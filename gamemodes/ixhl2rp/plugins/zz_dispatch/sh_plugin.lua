@@ -4,7 +4,7 @@ PLUGIN.author = "Schwarz Kruppzo"
 PLUGIN.description = ""
 
 dispatch = dispatch or {
-	name_format = "CCA:c08.%s",
+	name_format = "CCA:c03.%s-%i",
 	unassigned_tag = "UNIT",
 	available_tags = {
 		"DEFENDER",
@@ -27,12 +27,12 @@ dispatch = dispatch or {
 }
 
 if SERVER then
-	ix.log.AddType("squadCreate", function(client, tagname)
-		return string.format("%s создал подразделение '%s'", client:GetName(), tagname)
+	ix.log.AddType("squadCreate", function(char, tagname)
+		return string.format("%s создал подразделение '%s'", char:GetOriginalName(), tagname)
 	end)
 
-	ix.log.AddType("squadDestroy", function(client, tagname)
-		return string.format("%s расформировал подразделение '%s'", client:GetName(), tagname)
+	ix.log.AddType("squadDestroy", function(char, tagname)
+		return string.format("%s расформировал подразделение '%s'", char:GetOriginalName(), tagname)
 	end)
 end
 
@@ -65,6 +65,11 @@ function dispatch.GetFreeSquadTag()
 end
 
 function dispatch.CreateSquad(leader, tagID)
+	if !leader:GetCharacter() then
+		return
+	end
+	
+	leader = leader:GetCharacter()
 	tagID = tagID or dispatch.GetFreeSquadTag()
 
 	if !tagID then
@@ -85,6 +90,7 @@ function dispatch.CreateSquad(leader, tagID)
 	return SQUAD
 end
 
+ix.util.Include("cl_hooks.lua")
 ix.util.Include("sv_hooks.lua")
 
 ix.command.Add("SquadCreate", {
@@ -94,6 +100,6 @@ ix.command.Add("SquadCreate", {
 			return "@CannotUseTeamCommands"
 		end
 
-		return dispatch.CreateSquad(client:GetCharacter())
+		return dispatch.CreateSquad(client)
 	end
 })
