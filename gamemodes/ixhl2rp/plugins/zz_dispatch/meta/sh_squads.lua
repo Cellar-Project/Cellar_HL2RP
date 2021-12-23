@@ -23,6 +23,10 @@ local SQUAD = ix.meta.squad or {}
 		return dispatch.available_tags[self.tag] or "ERROR"
 	end
 
+	function SQUAD:GetMemberTag(character)
+		return string.format(dispatch.name_format, self:GetTagName(), self.members[character] or 0)
+	end
+	
 	function SQUAD:GetLimitCount()
 		return self.member_counter
 	end
@@ -241,7 +245,7 @@ if CLIENT then
 		local squad = dispatch.squads[tagID]
 
 		if squad then
-			local character = ix.char.loaded[leaderID]
+			local character = ix.char.loaded[charID]
 
 			squad:AddMember(character)
 		end
@@ -255,7 +259,7 @@ if CLIENT then
 		local squad = dispatch.squads[tagID]
 
 		if squad then
-			local character = ix.char.loaded[leaderID]
+			local character = ix.char.loaded[charID]
 			
 			squad:RemoveMember(character)
 		end
@@ -269,7 +273,7 @@ if CLIENT then
 		local squad = dispatch.squads[tagID]
 
 		if squad then
-			local character = ix.char.loaded[leaderID]
+			local character = ix.char.loaded[charID]
 			
 			squad:SetLeader(character)
 		end
