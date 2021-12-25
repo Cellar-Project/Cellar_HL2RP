@@ -150,7 +150,7 @@ ix.command.Add("CharFallOver", {
 ix.command.Add("DoorKick", {
 	description = "Выбить дверь.",
 	OnCheckAccess = function(self, client)
-		if (!client:IsCombine()) then
+		if (!client:IsCombine()) or (!client:GetData("zombie")) then
 			return false
 		end
 
