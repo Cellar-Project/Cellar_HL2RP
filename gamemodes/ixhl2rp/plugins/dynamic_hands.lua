@@ -56,7 +56,7 @@ end
 
 function PLUGIN:PlayerLoadedCharacter(client, character, lastchar)
 	timer.Simple(3, function()
-		character:SetData("mld_ld", false)
+		character:SetData("mdl_ld", false)
 		hook.Run("PlayerSetHandsModel", client, client:GetHands())
 	end)
 end
