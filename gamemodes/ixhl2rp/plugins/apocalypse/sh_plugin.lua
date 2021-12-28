@@ -3,31 +3,36 @@ PLUGIN.name = "Apocalypse"
 PLUGIN.author = "maxxoft"
 PLUGIN.description = "The end of times."
 
-function PLUGIN:StartApocalypse()
-	local players = player.GetAll()
 
-	for _, ply in ipairs(players) do
-		self:InfectPlayer(ply)
+if SERVER then
+	function PLUGIN:StartApocalypse()
+		local players = player.GetAll()
+
+		for _, ply in ipairs(players) do
+			self:InfectPlayer(ply)
+		end
 	end
-end
 
-function PLUGIN:InfectPlayer(client)
-	local character = client:GetCharacter()
-	local hasVaccine = character:GetData("hasVaccine", false)
+	function PLUGIN:InfectPlayer(client)
+		local character = client:GetCharacter()
+		local hasVaccine = character:GetData("hasVaccine", false)
 
-	if not hasVaccine then
-		character:SetData("zombie", true)
+		if not hasVaccine then
+			character:SetData("zombie", true)
+			character:SetData("zstage", 1)
+		end
+	end
 
-		-- the following block of code probably should be moved to AdvanceDisease
-		local items = character:GetInventory():GetItemsByBase("base_weaponstest", true)
+	function PLUGIN:AdvanceDisease(client)
 
-		for _, item in pairs(items) do
-			if isfunction(item.Unequip) then
-				item:Unequip(character)
+		if client:GetCharacter():GetData("zstage") == 3 then
+			local items = character:GetInventory():GetItemsByBase("base_weaponstest", true)
+
+			for _, item in pairs(items) do
+				if isfunction(item.Unequip) then
+					item:Unequip(character)
+				end
 			end
 		end
 	end
-end
-
-function PLUGIN:AdvanceDisease(client)
 end
