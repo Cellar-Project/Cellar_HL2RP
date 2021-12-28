@@ -882,7 +882,7 @@ end
 function PLUGIN:EntityTraceAttack(attacker, target, trace, dmgInfo)
 	local weapon = dmgInfo:GetInflictor()
 	if IsValid(weapon) then
-		if weapon.IsFists then
+		if weapon.IsFists and !attacker:GetCharacter():GetData("zombie", false) then
 			if !self:DoFistsAttack(attacker, attacker:GetCharacter(), dmgInfo:GetInflictor(), target, trace, dmgInfo) then
 				dmgInfo:SetDamage(0)
 
