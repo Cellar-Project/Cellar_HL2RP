@@ -80,7 +80,7 @@ if SERVER then
 		for k, model in ipairs(PLUGIN.ZombieModels) do
 			local shortname = string.Explode("/", model)
 			player_manager.AddValidModel(shortname, model)
-			player_manager.AddValidHands(shortname, "models/weapons/c_arms_citizen.mdl", 1, "0000000")
+			player_manager.AddValidHands(shortname, "models/weapons/c_arms_citizen.mdl", 2, "0000000")
 		end
 	end
 

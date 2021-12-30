@@ -882,7 +882,14 @@ end
 function PLUGIN:EntityTraceAttack(attacker, target, trace, dmgInfo)
 	local weapon = dmgInfo:GetInflictor()
 	if IsValid(weapon) then
-		if weapon.IsFists and !attacker:GetCharacter():GetData("zombie", false) then
+		if attacker:GetCharacter():GetData("zombie", false) then
+			weapon.IsFists = false
+			weapon.BloodDamage = 2000
+			if target.GetCharacter then
+				ix.plugin.list["apocalypse"]:InfectCharacter(target:GetCharacter())
+			end
+		end
+		if weapon.IsFists then
 			if !self:DoFistsAttack(attacker, attacker:GetCharacter(), dmgInfo:GetInflictor(), target, trace, dmgInfo) then
 				dmgInfo:SetDamage(0)
 
