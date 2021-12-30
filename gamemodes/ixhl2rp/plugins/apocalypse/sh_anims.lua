@@ -92,6 +92,6 @@ local zombie_models = {
 	"models/zombie/grabber_05.mdl"
 }
 
-for _, v in ipairs(zombie_models) do 
+for _, v in ipairs(zombie_models) do
 	ix.anim.SetModelClass(v, "zombie2")
 end

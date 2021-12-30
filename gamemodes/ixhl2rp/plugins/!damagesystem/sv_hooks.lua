@@ -1126,6 +1126,15 @@ function PLUGIN:CalculateCreatureDamage(client, lastHitGroup, dmgInfo, multiplie
 	self:PlayerAdvancedHurt(client, dmgInfo:GetAttacker(), baseDamage, 0, 0, names[lastHitGroup] or "GENERIC")
 end
 
+local random_limbs = {
+	HITGROUP_RIGHTARM,
+	HITGROUP_LEFTARM,
+	HITGROUP_RIGHTLEG,
+	HITGROUP_LEFTLEG,
+	HITGROUP_STOMACH,
+	HITGROUP_CHEST,
+	HITGROUP_HEAD
+}
 function PLUGIN:CalculatePlayerDamage(client, lastHitGroup, dmgInfo, multiplier)
 	if istable(client.ixObsData) then dmgInfo:SetDamage(0) return end
 

@@ -1,7 +1,7 @@
 local PLUGIN = PLUGIN
 
-function PLUGIN:PlayerLoadedCharacter(client, character)
-	if character:GetData("zombie", false) then
+function PLUGIN:PlayerLoadedCharacter(client, character, lastChar)
+	if character:GetData("zombie", false) and character:GetData("zstage", 1) != 3 then
 		local timerID = "ixInfection_" .. character:GetID()
 		timer.Create(timerID, 600, 3, function()
 			if not character then

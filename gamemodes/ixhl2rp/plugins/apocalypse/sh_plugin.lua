@@ -85,12 +85,12 @@ if SERVER then
 		if character:GetFaction() == FACTION_VORTIGAUNT then return end
 		if character:GetData("zombie") then return end
 
-		local hasVaccine = character:GetData("hasVaccine", false)
+		local hasVaccine = character:GetData("hasVaccine")
 
 		if not hasVaccine then
 			character:SetData("zombie", true)
 
-			local timerID = "infection_" .. character:GetID()
+			local timerID = "ixInfection_" .. character:GetID()
 			timer.Create(timerID, 600, 3, function()
 				if not character then
 					timer.Remove(timerID)
@@ -102,6 +102,8 @@ if SERVER then
 
 	function PLUGIN:AdvanceDisease(character)
 		if character:IsOTA() then return end
+		if character:GetFaction() == FACTION_VORTIGAUNT then return end
+		if not character:GetData("zombie") then return end
 		print("AdvanceDisease")
 
 		local stage = character:GetData("zstage", 0)
@@ -109,20 +111,23 @@ if SERVER then
 		character:SetData("zstage", stage)
 
 		if stage == 1 then
-			timer.Simple(4, function()
+			timer.Simple(40, function()
 				ix.chat.Send(character:GetPlayer(), "me", "начинает непроизвольно кашлять.")
-				timer.Simple(4, function()
+				timer.Simple(40, function()
 					ix.chat.Send(character:GetPlayer(), "me", "дрожит и нервно осматривается, постукивая зубами.")
 				end)
 			end)
 		elseif stage == 2 then
-			timer.Simple(4, function()
+			timer.Simple(40, function()
 				ix.chat.Send(character:GetPlayer(), "me", "кашляет кровью и тяжело дышит.")
 			end)
 
 		elseif stage == 3 then
 			ix.chat.Send(character:GetPlayer(), "me", "теряет свой рассудок и впадает в бешенство.")
 			local items = character:GetInventory():GetItemsByBase("base_weaponstest", true)
+			character:HealLimbs(100)
+			character:GetPlayer():SetHealth(100)
+			character:SetBlood(10000)
 
 			for _, item in pairs(items) do
 				if isfunction(item.Unequip) then
@@ -155,4 +160,68 @@ function PLUGIN:CanPlayerInteractEntity(client, entity)
 	if IsValid(client) and client:GetCharacter():GetData("zstage") == 3 then
 		return false
 	end
+end
+
+local ENT = scripted_ents.GetStored("nz_base").t
+
+local nb_use_ragdolls = GetGlobalBool("nb_use_ragdolls")
+local nb_npc = GetConVar("nb_npc")
+local ai_ignoreplayers = GetConVar("ai_ignoreplayers")
+local nb_attackprop = GetConVar("nb_attackprop")
+local nb_targetmethod = GetConVar("nb_targetmethod")
+local nb_ignoreteam = GetConVar("nb_ignoreteam")
+
+function ENT:SearchForEnemy( ents )
+	for k,v in pairs( ents ) do
+		if nb_targetmethod:GetInt() == 1 then
+			if self:IsLineOfSightClear( v ) then
+
+			else
+
+				return end
+
+		end
+
+		if nb_npc:GetInt() == 1 then
+
+			local enemy = math.random(1,2)
+
+			if enemy == 1 then
+				if v:IsPlayer() and v:Alive() then
+					if ai_ignoreplayers:GetInt() == 0 then
+						if v:GetCharacter():GetData("zstage") != 3 then
+							self:SetEnemy( v )
+							return true
+						end
+					end
+				else
+					if v:IsNPC() and v != self and !string.find(v:GetClass(), "npc_nextbot_*") and !string.find(v:GetClass(), "npc_bullseye") and !string.find(v:GetClass(), "npc_grenade_frag") and !string.find(v:GetClass(), "animprop_generic") then
+						self:SetEnemy( v )
+						return true
+					end
+				end
+			else
+				if v:IsNPC() and v != self and !string.find(v:GetClass(), "npc_nextbot_*") and !string.find(v:GetClass(), "npc_bullseye") and !string.find(v:GetClass(), "npc_grenade_frag") and !string.find(v:GetClass(), "animprop_generic") then
+					self:SetEnemy( v )
+					return true
+				end
+			end
+
+		else
+
+			if v:IsPlayer() and v:Alive() then
+				if ai_ignoreplayers:GetInt() == 0 then
+					if v:GetCharacter():GetData("zstage") != 3 then
+						self:SetEnemy( v )
+						return true
+					end
+				end
+			end
+
+		end
+
+	end
+
+	self:SetEnemy( nil )
+	return false
 end
