@@ -1159,7 +1159,31 @@ function PLUGIN:CalculatePlayerDamage(client, lastHitGroup, dmgInfo, multiplier)
 
 	multiplier = inflictor.IsVortibeam and 1 or multiplier
 
-	if dmgInfo:IsDamageType(DMG_ACID) then
+	if attacker:IsNextBot() then
+		baseDamage = 5
+
+		local limb = random_limbs[math.random(1, #random_limbs)]
+		local bloodDmg = (5000 * (baseDamage / 100))
+		local shockDmg = bloodDmg * 2
+
+		baseDamage = baseDamage * 2
+		
+		character:TakeLimbDamage(limb, baseDamage)
+
+		bloodDmgInfo:SetBlood(250)
+		bloodDmgInfo:SetShock(500)
+		bloodDmgInfo:SetBleedChance(50)
+		bloodDmgInfo:SetBleedDmg(math.min(math.floor(character:GetDmgData().bleedDmg + (bloodDmg * 0.3)), 100))
+
+		local infect = false
+
+		if math.random(0, 100) <= 10 then
+			infect = true
+			ix.plugin.Get("apocalypse"):InfectCharacter(character)
+		end
+		
+		self:PlayerAdvancedHurt(client, attacker, baseDamage, bloodDmgInfo:GetBlood(), bloodDmgInfo:GetShock(), (names[limb] or "GENERIC")..(infect and " INFECT" or ""))
+	elseif dmgInfo:IsDamageType(DMG_ACID) then
 		character:TakeOverallLimbDamage(baseDamage * 2)
 		character:SetRadLevel(character:GetRadLevel() + (baseDamage * 10))
 

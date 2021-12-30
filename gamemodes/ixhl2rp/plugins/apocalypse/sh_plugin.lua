@@ -4,6 +4,9 @@ PLUGIN.name = "Apocalypse"
 PLUGIN.author = "maxxoft"
 PLUGIN.description = "The end of times."
 
+ix.util.Include("cl_hooks.lua")
+ix.util.Include("sv_hooks.lua")
+ix.util.Include("sh_anims.lua")
 
 ix.command.Add("StartApocalypse", {
 	description = "Start the apocalypse.",
@@ -135,14 +138,9 @@ if SERVER then
 		end
 	end
 end
+
 function PLUGIN:CanPlayerEquipItem(client, item, slot)
 	if IsValid(client) and client:GetCharacter():GetData("zstage") == 3 then
-		return false
-	end
-end
-
-function PLUGIN:CanPlayerViewInventory()
-	if LocalPlayer():GetCharacter():GetData("zstage") == 3 then
 		return false
 	end
 end
