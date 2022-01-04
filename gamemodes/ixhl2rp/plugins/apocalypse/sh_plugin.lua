@@ -34,6 +34,17 @@ ix.command.Add("ZAdvance", {
 	end
 })
 
+ix.command.Add("ZRemove", {
+	description = "Remove disease.",
+	superAdminOnly = true,
+	arguments = ix.type.character,
+	OnRun = function(self, client, character)
+		character:SetData("zombie", nil)
+		character:SetData("zstage", nil)
+		timer.Remove("ixInfection_" .. character:GetID())
+	end
+})
+
 if SERVER then
 	PLUGIN.models = {
 		["models/cellar/characters/oldcitizens/female_01.mdl"] = "models/freshdead/freshdead_05.mdl",
