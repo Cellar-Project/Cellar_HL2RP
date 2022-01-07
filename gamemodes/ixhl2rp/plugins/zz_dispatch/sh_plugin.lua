@@ -65,11 +65,14 @@ function dispatch.GetFreeSquadTag()
 end
 
 function dispatch.CreateSquad(leader, tagID)
-	if !leader:GetCharacter() then
-		return
+	if getmetatable(leader) != ix.meta.character then
+		if !leader:GetCharacter() then
+			return
+		end
+		
+		leader = leader:GetCharacter()
 	end
 	
-	leader = leader:GetCharacter()
 	tagID = tagID or dispatch.GetFreeSquadTag()
 
 	if !tagID then
@@ -92,6 +95,7 @@ end
 
 ix.util.Include("cl_hooks.lua")
 ix.util.Include("sv_hooks.lua")
+ix.util.Include("sh_spectate.lua")
 
 ix.command.Add("SquadCreate", {
 	description = "@cmdPTCreate",
