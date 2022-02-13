@@ -1446,7 +1446,6 @@ function PLUGIN:CalculatePlayerDamage(client, lastHitGroup, dmgInfo, multiplier)
 			dmgInfo:SetDamage(0)
 		end
 	end
-
 	character:TakeAdvancedDamage(bloodDmgInfo)
 end
 

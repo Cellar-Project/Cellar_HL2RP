@@ -35,7 +35,7 @@ do
 			if !player:Alive() then
 				return
 			end
-			
+
 			local shock = self:GetShock()
 
 			if shock > 0 then
@@ -43,8 +43,9 @@ do
 			end
 
 			local blood = self:GetBlood()
+			local hp = PLUGIN:GetMinimalHealth(self)
 
-			if blood >= 3000 then
+			if (blood >= 3000) and (hp >= 20) then
 				if player:IsUnconscious() and !player.ixUnconsciousOut then
 					player:SetAction("@wakingUp", 100, function(player)
 						player.ixUnconsciousOut = nil
@@ -293,6 +294,13 @@ do
 		end
 
 		self:HandleBrokenBones()
+
+		local owner = self:GetPlayer()
+		local hp = PLUGIN:GetMinimalHealth(self)
+
+		if hp < 20 and !owner:IsUnconscious() then
+			owner:SetCriticalState(true)
+		end
 	end
 
 	local PLAYER = FindMetaTable("Player")
