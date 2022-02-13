@@ -18,8 +18,10 @@ function Schema.voices.Add(class, key, text, sound, global)
 end
 
 function Schema.voices.Get(class, key)
-	class = string.lower(class)
-	key = string.lower(key)
+	if (class and key) then
+		class = string.lower(class)
+		key = string.lower(key)
+	end
 
 	if (Schema.voices.stored[class]) then
 		return Schema.voices.stored[class][key]
