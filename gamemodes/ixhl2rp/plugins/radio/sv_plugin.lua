@@ -166,6 +166,8 @@ function ix.radio:SendVoiceline(info, listeners)
 
 	if !isstring(info.text) then return end
 
+	if !(class[1] and info.text) then return end
+
 	local voiceinfo = Schema.voices.Get(class[1], info.text)
 
 	if !istable(voiceinfo) then return end
