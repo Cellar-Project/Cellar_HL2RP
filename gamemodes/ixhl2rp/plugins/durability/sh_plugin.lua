@@ -21,16 +21,16 @@ ix.config.Add("unequipItemDurability", false, "Unequip the item if durability is
 })
 
 ix.lang.AddTable("russian", {
-	['Repair'] = "Починить",
-	['RepairKitWrong'] = 'У вас нет ремкомплекта!',
-	['DurabilityUnusableTip'] = 'Оружие теперь полностью сломано!',
-	['DurabilityText'] = 'Прочность',
+	["Repair"] = "Починить",
+	["RepairKitWrong"] = "У вас нет ремкомплекта!",
+	["DurabilityUnusableTip"] = "Оружие теперь полностью сломано!",
+	["DurabilityText"] = "Прочность"
 })
 
 ix.lang.AddTable("english", {
-	['RepairKitWrong'] = 'You do not have a repair kit!',
-	['DurabilityUnusableTip'] = 'Your weapon is now completely broken!',
-	['DurabilityText'] = 'Durability',
+	["RepairKitWrong"] = "You do not have a repair kit!",
+	["DurabilityUnusableTip"] = "Your weapon is now completely broken!",
+	["DurabilityText"] = "Durability"
 })
 
 if (SERVER) then
@@ -85,11 +85,30 @@ if (SERVER) then
 
 					if (oldDurability > 0 and durability == 0) then
 						entity:SetNetVar("canShoot", false)
-						entity:NotifyLocalized('DurabilityUnusableTip')
+						entity:NotifyLocalized("DurabilityUnusableTip")
 					end
 
 					if (ix.config.Get("unequipItemDurability", false) and durability < 1 and item.Unequip) then
 						item:Unequip(entity)
+						local itemname = item.uniqueID
+						item:Remove()
+
+						local brokenItemsTable = {
+							["shotgun"] = "broken_shotgun",
+							["uspmatch"] = "broken_pistol",
+							["mp7"] = "broken_mp7",
+							["magnum"] = "broken_357",
+						}
+						local newname = brokenItemsTable[itemname]
+						local inventory = entity:GetCharacter():GetInventory()
+
+						if (newname) then
+							local result, _ = inventory:Add(newname)
+							if (!result) then
+								-- Transfer(nil, nil, nil, entity)
+								ix.item.Spawn(newname, entity:EyePos())
+							end
+						end
 					end
 				end
 			end
@@ -167,7 +186,7 @@ function PLUGIN:InitializedPlugins()
 
 					itemKit = nil
 				else
-					client:NotifyLocalized('RepairKitWrong')
+					client:NotifyLocalized("RepairKitWrong")
 				end
 
 				return false
