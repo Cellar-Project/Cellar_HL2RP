@@ -1,30 +1,37 @@
 AddCSLuaFile()
 
-ENT.Base = "base_gmodentity"
 ENT.Type = "anim"
-ENT.PrintName = "warmthbox"
+ENT.PrintName = "WarmZone"
 ENT.Category = "Helix"
-ENT.Spawnable = true
+ENT.Spawnable = false
 
-if SERVER then
+
+if (SERVER) then
 	function ENT:Initialize()
 		self:SetModel("models/hunter/blocks/cube4x4x2.mdl")
-		self:SetColor(0, 0, 0, 0)
-		self:SetMoveType(MOVETYPE_VPHYSICS)
+		self:PhysicsInit(SOLID_VPHYSICS)
+		self:SetMoveType(MOVETYPE_NONE)
+		self:SetSolid(SOLID_VPHYSICS)
+
+		self:GetPhysicsObject():Wake()
+
+		self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 		self:SetTrigger(true)
 	end
 
 	function ENT:StartTouch(entity)
 		if entity:IsPlayer() then
 			entity.inWarmth = true
-			print("starttouch")
+			entity:ChatPrint("Touched ent!")
 		end
 	end
 
 	function ENT:EndTouch(entity)
 		if entity:IsPlayer() then
 			entity.inWarmth = false
-			print("endtouch")
+			entity:ChatPrint("Left ent!")
 		end
 	end
+else
+	function ENT:Draw() end
 end
