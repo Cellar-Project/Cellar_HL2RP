@@ -175,19 +175,14 @@ end
 
 local ENT = scripted_ents.GetStored("nz_base").t
 
-local nb_use_ragdolls = GetGlobalBool("nb_use_ragdolls")
 local nb_npc = GetConVar("nb_npc")
 local ai_ignoreplayers = GetConVar("ai_ignoreplayers")
-local nb_attackprop = GetConVar("nb_attackprop")
 local nb_targetmethod = GetConVar("nb_targetmethod")
-local nb_ignoreteam = GetConVar("nb_ignoreteam")
 
 function ENT:SearchForEnemy( ents )
 	for k,v in pairs( ents ) do
 		if nb_targetmethod:GetInt() == 1 then
-			if self:IsLineOfSightClear( v ) then
-
-			else
+			if not self:IsLineOfSightClear( v ) then
 
 				return end
 
@@ -206,13 +201,13 @@ function ENT:SearchForEnemy( ents )
 						end
 					end
 				else
-					if v:IsNPC() and v != self and !string.find(v:GetClass(), "npc_nextbot_*") and !string.find(v:GetClass(), "npc_bullseye") and !string.find(v:GetClass(), "npc_grenade_frag") and !string.find(v:GetClass(), "animprop_generic") then
+					if v:IsNPC() and v != self and not string.find(v:GetClass(), "npc_nextbot_*") and not string.find(v:GetClass(), "npc_bullseye") and not string.find(v:GetClass(), "npc_grenade_frag") and not string.find(v:GetClass(), "animprop_generic") then
 						self:SetEnemy( v )
 						return true
 					end
 				end
 			else
-				if v:IsNPC() and v != self and !string.find(v:GetClass(), "npc_nextbot_*") and !string.find(v:GetClass(), "npc_bullseye") and !string.find(v:GetClass(), "npc_grenade_frag") and !string.find(v:GetClass(), "animprop_generic") then
+				if v:IsNPC() and v != self and not string.find(v:GetClass(), "npc_nextbot_*") and not string.find(v:GetClass(), "npc_bullseye") and not string.find(v:GetClass(), "npc_grenade_frag") and not string.find(v:GetClass(), "animprop_generic") then
 					self:SetEnemy( v )
 					return true
 				end
