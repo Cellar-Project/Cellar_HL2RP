@@ -692,7 +692,8 @@ function GM:GetInjuredText(client)
 end
 
 function GM:PopulateImportantCharacterInfo(client, character, container)
-	local color = team.GetColor(client:Team())
+	--local color = team.GetColor(client:Team()) -- СТАРАЯ ПЕРЕМЕННАЯ 
+	local color = hook.Run("IsPlayerRecognized", client) and team.GetColor(client:Team()) or ix.config.Get("color") -- ПОЧИНЕННАЯ НОВАЯ ПЕРЕМЕННАЯ
 	container:SetArrowColor(color)
 
 	-- name
@@ -713,6 +714,7 @@ function GM:PopulateImportantCharacterInfo(client, character, container)
 		injure:SizeToContents()
 	end
 end
+
 
 function GM:PopulateCharacterInfo(client, character, container)
 	-- description
