@@ -51,22 +51,6 @@ local function Recognize(level,name)
 end
 
 net.Receive("ixRecognizeMenu", function(length)
-	-- local menu = DermaMenu()
-	-- 	menu:AddOption(L"rgnLookingAt", function()
-	-- 		Recognize(0)
-	-- 	end)
-	-- 	menu:AddOption(L"rgnWhisper", function()
-	-- 		Recognize(1)
-	-- 	end)
-	-- 	menu:AddOption(L"rgnTalk", function()
-	-- 		Recognize(2)
-	-- 	end)
-	-- 	menu:AddOption(L"rgnYell", function()
-	-- 		Recognize(3)
-	-- 	end)
-	-- menu:Open()
-	-- menu:MakePopup()
-	-- menu:Center()
 	vgui.Create("aw_recognitionmenu")
 end)
 
@@ -79,7 +63,6 @@ function PLUGIN:CharacterRecognized(client, recogCharID)
 end
 
 
--- DEFINE_BASECLASS("DButton")
 local PANEL = {}
 local btnHeight = 40
 local btnColors = {
@@ -108,7 +91,7 @@ local icons = {
 	Material("cellar/main/content.png"),
 	Material("cellar/main/exit.png"),
 }
-surface.CreateFont("cellar.main.btn", {
+surface.CreateFont("cellar.f3.btn", {
 	font = "Nagonia",
 	extended = true,
 	size = 24,
@@ -117,7 +100,7 @@ surface.CreateFont("cellar.main.btn", {
 	scanlines = 0,
 	antialias = true,
 })
-surface.CreateFont("cellar.main.btn.blur", {
+surface.CreateFont("cellar.f3.btn.blur", {
 	font = "Nagonia",
 	extended = true,
 	size = 24,
@@ -134,7 +117,7 @@ function PANEL:Init()
 	self:SetSize(32, 40)
 
 	self:SetTextColor(btnColors[1][1])
-	self:SetFont("cellar.main.btn")
+	self:SetFont("cellar.f3.btn")
 	self:SetTextInset(32 + 13, 0)
 	self:SetContentAlignment(4)
 
@@ -152,14 +135,7 @@ function PANEL:Paint(w, h)
 	local clr = self:IsHovered() and 2 or 1
 	local color = btnColors[clr]
 
-	-- surface.SetDrawColor(color[1])
-	-- surface.DrawRect(0, 0, 32, h)
-
 	local x = 0
-
-	-- surface.SetDrawColor(color[6])
-	-- surface.SetMaterial(bg)
-	-- surface.DrawTexturedRect(32, 1, w - 1, h - 2)
 
 	surface.SetDrawColor(color[2])
 	surface.DrawLine(x, 0, w - 1, 0)
@@ -172,16 +148,16 @@ function PANEL:Paint(w, h)
 	surface.DrawLine(w - 1, 0, x + w, 0)
 
 
-	surface.SetFont("cellar.main.btn")
+	surface.SetFont("cellar.f3.btn")
 	local textW, textH = surface.GetTextSize(self.text)
 	local x, y = 13, h / 2 - textH / 2
 
 	surface.SetTextColor(color[5])
 	surface.SetTextPos(x, y)
-	surface.SetFont("cellar.main.btn.blur")
+	surface.SetFont("cellar.f3.btn.blur")
 	surface.DrawText(self.text)
 
-	surface.SetFont("cellar.main.btn")
+	surface.SetFont("cellar.f3.btn")
 	surface.SetTextColor(color[1])
 	surface.SetTextPos(x, y)
 	surface.DrawText(self.text, true)
@@ -192,7 +168,7 @@ function PANEL:Paint(w, h)
 		surface.DrawTexturedRect(0, h / 2 - 16, 32, 32)
 	end
 end
-vgui.Register("cellar.main.btn", PANEL, "DButton")
+vgui.Register("cellar.f3.btn", PANEL, "DButton")
 
 
 
@@ -235,10 +211,7 @@ function PANEL:Init()
     AW_RECOGNIZE_SELECTEDNAME = (LocalPlayer():Name() == AW_RECOGNIZE_SELECTEDNAME or data[AW_RECOGNIZE_SELECTEDNAME]) and AW_RECOGNIZE_SELECTEDNAME or nil 
 
 	self:SetSize(600,400)
-	-- self:SetPos(ScrW()*.81,ScrH()/2-125)
-	-- self:Center()
 	self:SetPos(ScrW()/2-300,ScrH()/2-200)
-	-- self:SetTitle("")
 	self:SetAlpha(0)
 	self:AlphaTo(255,0.3)
 	self:MakePopup()
@@ -254,7 +227,7 @@ function PANEL:Init()
 	end
 	
 	
-	local CloseButton = self:Add("cellar.main.btn")
+	local CloseButton = self:Add("cellar.f3.btn")
 	CloseButton:SetPos(572,3)
 	CloseButton:SetSize(25,25)
 	CloseButton:SetText("")
@@ -285,56 +258,49 @@ function PANEL:Init()
         local pos = {350+122.5,55}
         local textw = select(1,surface.GetTextSize(text))/2
 
-        surface.SetFont("cellar.main.btn.blur")
+        surface.SetFont("cellar.f3.btn.blur")
         surface.SetTextColor(color[5])
         surface.SetTextPos(pos[1]-textw,pos[2])
         surface.DrawText(text)
 
-        surface.SetFont("cellar.main.btn")
+        surface.SetFont("cellar.f3.btn")
         surface.SetTextColor(color[1])
         surface.SetTextPos(pos[1]-textw,pos[2])
         surface.DrawText(text, true)
 
         local text = AW_RECOGNIZE_SELECTEDNAME or "не выбрано"
-        -- color = AW_RECOGNIZE_SELECTEDNAME and AW_RECOGNIZE_SELECTEDNAME == LocalPlayer():Name() and btnColors[1] or !AW_RECOGNIZE_SELECTEDNAME and btnColors[1] or btnColors[2]
         color = btnColors[2]
         textw = select(1,surface.GetTextSize(text))/2
 
-        surface.SetFont("cellar.main.btn.blur")
+        surface.SetFont("cellar.f3.btn.blur")
         surface.SetTextColor(color[5])
         surface.SetTextPos(pos[1]-textw,pos[2]+25)
         surface.DrawText(text)
 
-        surface.SetFont("cellar.main.btn")
+        surface.SetFont("cellar.f3.btn")
         surface.SetTextColor(color[1])
         surface.SetTextPos(pos[1]-textw,pos[2]+25)
         surface.DrawText(text, true)
 
-		-- draw.DrawText(AW_RECOGNIZE_SELECTEDNAME or "Введите имя под которым хотите представляться!","cellar.main.btn",5,30,Color(248, 56, 56),TEXT_ALIGN_LEFT)
 	end
+
 	local xpos = 125
+
 	for k,v in pairs(VariantsSetsName)do
-		local SetName = self:Add("cellar.main.btn")
+		local SetName = self:Add("cellar.f3.btn")
 		SetName:SetPos(355,xpos)
 		SetName:SetSize(240,25)
 		SetName:SetText(k)
-		-- SetName.Text = k
-		-- SetName.PaintOver = function(this,w,h)
-		-- 	draw.DrawText(this.Text,"ixGenericFont",w/2,2,Color(65,182,143),TEXT_ALIGN_CENTER)
-		-- end
 		SetName.DoClick = v
 		xpos = xpos + 30
 	end
 	self.buttons = {}
 	xpos = 280
 	for k,v in pairs(Buttons)do
-		self.buttons[k] = self:Add("cellar.main.btn")
+		self.buttons[k] = self:Add("cellar.f3.btn")
 		self.buttons[k]:SetSize(590,25)
 		self.buttons[k]:SetPos(5,xpos)
 		self.buttons[k]:SetText(v)
-		-- self.buttons[k].PaintOver = function(this,w,h)
-		-- 	draw.DrawText(v,"ixGenericFont",w/2,2,Color(65,182,143),TEXT_ALIGN_CENTER)
-		-- end
 		self.buttons[k].DoClick = function(this)
 			self:Remove()
 			Recognize(k,AW_RECOGNIZE_SELECTEDNAME)
@@ -353,7 +319,7 @@ function PANEL:LoadNames()
 	end
 	local Names = LocalPlayer():GetCharacter():GetData("aw_UsedNames",{})
 	for k,v in pairs(Names) do
-		local button = self.list:Add("cellar.main.btn")
+		local button = self.list:Add("cellar.f3.btn")
 		button:SetSize(320,30)
 		button:SetText(k)
 		button.Text = k
@@ -366,9 +332,6 @@ function PANEL:LoadNames()
 				end)
             end,"Отменить")
 		end
-		-- button.PaintOver = function(this,w,h)
-		-- 	draw.DrawText(this.Text,"ixGenericFont",w/2,2,Color(182,122,65),TEXT_ALIGN_CENTER)
-		-- end
 		self.list:AddItem(button)
 	end
 end

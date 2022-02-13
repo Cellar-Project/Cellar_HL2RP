@@ -47,7 +47,7 @@ function debug.dumptotable()
 	local tbl = {}
 	while true do
 		local info = debug.getinfo(level,"Sln")
-		if !info or info.name then break end
+		if !info or !info.name then break end
 
 		tbl[info.name] = true
 
