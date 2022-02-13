@@ -90,5 +90,4 @@ netstream.Hook("aw_ActionName",function(player,table)
 	local usednames = char:GetData("aw_UsedNames",{})
 	usednames[table[1]] = !table[2] or nil
 	char:SetData("aw_UsedNames",usednames)
-	-- netstream.Start(player,"") мб перезагрузка
 end)
