@@ -10,12 +10,13 @@ ITEM.rarity = 2
 ITEM.dUseTime = 5
 
 function ITEM:OnConsume(player, injector, mul, character)
+	if (not mul) then mul = 1 end
 	local client = character:GetPlayer()
 	local blood, shock, rad = character:GetBlood(), character:GetShock(), character:GetRadLevel()
 	local isBleeding, isPain, bleedDmg = false, character:IsFeelPain(), 0
-	local newBlood = math.Clamp(blood + 300, -1, 5000)
-	local newShock = math.max(shock - 500, 0)
-	local newRad = math.max(rad - 125, 0)
+	local newBlood = math.Clamp(blood + (300 * mul), -1, 5000)
+	local newShock = math.max(shock - (500 * mul), 0)
+	local newRad = math.max(rad - (125 * mul), 0)
 
 	character:SetBlood(newBlood)
 
@@ -49,9 +50,9 @@ function ITEM:OnConsume(player, injector, mul, character)
 	character:SetRadLevel(newRad)
 
 	return {
-		bleed = isBleeding, 
+		bleed = isBleeding,
 		bleedDmg = bleedDmg,
-		blood = (newBlood - blood),
+		blood = newBlood - blood,
 		shock = math.abs(newShock - shock),
 		rad = math.abs(newRad - rad),
 		limbs = healedLimbs,
