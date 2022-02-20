@@ -24,6 +24,7 @@ local function CalcStaminaChange(client)
 		return 0
 	end
 
+	local walkSpeed = client:GetWalkSpeed()
 	local offset = 0
 
 	if (!client:GetNetVar("brth", false) and client:KeyDown(IN_SPEED) and
