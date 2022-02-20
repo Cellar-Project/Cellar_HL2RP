@@ -105,7 +105,12 @@ end, {
 })
 ix.config.Add("runSpeed", 235, "How fast a player normally runs.", function(oldValue, newValue)
 	for _, v in ipairs(player.GetAll())	do
-		v:SetRunSpeed(newValue)
+		local character = v:GetCharacter()
+
+		if (character) then
+			-- TODO: don't replicate code from skills plugin
+			v:SetRunSpeed(newValue * (1 + character:GetSkillModified("athletics") * 0.1 * 0.25))
+		end
 	end
 end, {
 	data = {min = 75, max = 500},
