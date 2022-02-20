@@ -23,7 +23,8 @@ function PANEL:SetFont(font)
 end
 
 function PANEL:Paint(width, height)
-	derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, self.backgroundColor)
+	--derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, self.backgroundColor)
+	draw.RoundedBox(0, 0, 0, width, height, Color(43, 157, 189, 21.5))
 	BaseClass.Paint(self, width, height)
 end
 
@@ -276,7 +277,8 @@ function PANEL:Init()
 
 	self.enabledText = L("yes"):utf8upper()
 	self.disabledText = L("no"):utf8upper()
-	self.font = "ixMenuButtonFont"
+	self.font = "cellar.derma.large"
+	self.fontblur = "cellar.derma.large.blur"
 	self.animationTime = 0.5
 	self.bChecked = false
 	self.labelPadding = 8
@@ -338,17 +340,31 @@ function PANEL:Paint(width, height)
 	local textWidth, textHeight = surface.GetTextSize(text)
 	local y = offset * -textHeight
 
+	surface.SetFont(self.fontblur)
 	surface.SetTextColor(250, 60, 60, 255)
 	surface.SetTextPos(width * 0.5 - textWidth * 0.5, y + height * 0.5 - textHeight * 0.5)
 	surface.DrawText(text)
+
+	surface.SetFont(self.font)
+	surface.SetTextColor(250, 60, 60, 255)
+	surface.SetTextPos(width * 0.5 - textWidth * 0.5, y + height * 0.5 - textHeight * 0.5)
+	surface.DrawText(text)
+
 
 	text = self.enabledText
 	y = y + textHeight
 	textWidth, textHeight = surface.GetTextSize(text)
 
-	surface.SetTextColor(30, 250, 30, 255)
+	surface.SetFont(self.fontblur)
+	surface.SetTextColor(56, 61, 248, 225)
 	surface.SetTextPos(width * 0.5 - textWidth * 0.5, y + height * 0.5 - textHeight * 0.5)
 	surface.DrawText(text)
+
+	surface.SetFont(self.font)
+	surface.SetTextColor(56, 207, 248)
+	surface.SetTextPos(width * 0.5 - textWidth * 0.5, y + height * 0.5 - textHeight * 0.5)
+	surface.DrawText(text)
+
 end
 
 vgui.Register("ixCheckBox", PANEL, "EditablePanel")
@@ -361,17 +377,19 @@ AccessorFunc(PANEL, "labelPadding", "LabelPadding", FORCE_NUMBER)
 function PANEL:Init()
 	self.labelPadding = 8
 
-	surface.SetFont("ixMenuButtonFont")
+	surface.SetFont("cellar.derma.large")
 	local totalWidth = surface.GetTextSize("999") -- start off with 3 digit width
 
 	self.label = self:Add("DLabel")
 	self.label:Dock(RIGHT)
 	self.label:SetWide(totalWidth + self.labelPadding)
 	self.label:SetContentAlignment(5)
-	self.label:SetFont("ixMenuButtonFont")
+	self.label:SetFont("cellar.derma.large")
+	self.label:SetColor(Color(56, 207, 248))
 	self.label.Paint = function(panel, width, height)
 		surface.SetDrawColor(derma.GetColor("DarkerBackground", self))
 		surface.DrawRect(0, 0, width, height)
+		draw.SimpleText(panel:GetText(), 'cellar.derma.large.blur', width/2, height/2, Color(56, 61, 248, 225), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 	self.label.SizeToContents = function(panel)
 		surface.SetFont(panel:GetFont())
@@ -560,6 +578,7 @@ end
 
 function PANEL:Paint(width, height)
 	derma.SkinFunc("PaintHelixSlider", self, width, height)
+	--draw.RoundedBox(0, 0, 0, width, height, Color(56, 207, 248))
 end
 
 vgui.Register("ixSlider", PANEL, "EditablePanel")
@@ -893,7 +912,7 @@ function PANEL:Init()
 	self:SetIcon("V")
 	self:SetFont("ixSmallTitleFont")
 
-	self.iconColor = Color(200, 200, 200, 160)
+	self.iconColor = Color(43, 157, 189, 180)
 end
 
 function PANEL:SetIcon(newIcon)
@@ -908,10 +927,15 @@ end
 function PANEL:Paint(width, height)
 	BaseClass.Paint(self, width, height)
 
+	
+	draw.RoundedBox(0, 0, 0, width, 2, Color(56, 207, 248))
+	draw.RoundedBox(0, 0, height - 2, width, 2, Color(56, 207, 248))
+	draw.RoundedBox(0, width - 2, 0, 2, height, Color(56, 207, 248))
+
 	-- there's no inset for text entries so we'll have to get creative
 	DisableClipping(true)
-		surface.SetDrawColor(self:GetBackgroundColor())
-		surface.DrawRect(-self.iconWidth - 2, 0, self.iconWidth + 2, height)
+		surface.SetDrawColor(Color(56, 207, 248))
+		surface.DrawRect(-self.iconWidth - 2, 0, self.iconWidth + 4, height)
 
 		surface.SetFont("ixSmallTitleIcons")
 		surface.SetTextColor(self.iconColor)

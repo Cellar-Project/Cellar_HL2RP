@@ -265,7 +265,7 @@ function PANEL:ExtraPaint(width, height)
 end
 
 function PANEL:Paint(width, height)
-	surface.SetDrawColor(0, 0, 0, 85)
+	surface.SetDrawColor(255, 0, 0, 85)
 	surface.DrawRect(2, 2, width - 4, height - 4)
 
 	self:ExtraPaint(width, height)
@@ -435,10 +435,10 @@ function PANEL:BuildSlots()
 	self.slots = self.slots or {}
 
 	local function PaintSlot(slot, w, h)
-		surface.SetDrawColor(35, 35, 35, 85)
+		surface.SetDrawColor(35, 35, 35, 20)
 		surface.DrawRect(1, 1, w - 2, h - 2)
 
-		surface.SetDrawColor(0, 0, 0, 250)
+		surface.SetDrawColor(ColorAlpha(cellar_blue, 86))
 		surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
 	end
 
