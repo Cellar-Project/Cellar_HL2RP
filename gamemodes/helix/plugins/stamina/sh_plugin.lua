@@ -24,7 +24,6 @@ local function CalcStaminaChange(client)
 		return 0
 	end
 
-	local walkSpeed = ix.config.Get("walkSpeed")
 	local offset = 0
 
 	if (!client:GetNetVar("brth", false) and client:KeyDown(IN_SPEED) and
