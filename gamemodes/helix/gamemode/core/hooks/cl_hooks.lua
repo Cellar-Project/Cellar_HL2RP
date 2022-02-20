@@ -5,7 +5,7 @@ end
 
 function GM:ScoreboardShow()
 	if (LocalPlayer():GetCharacter()) then
-		vgui.Create("ixMenu")
+		vgui.Create("cellar.tab")
 	end
 end
 
@@ -419,7 +419,7 @@ function GM:NetworkEntityCreated(entity)
 	end
 end
 
-local vignette = ix.util.GetMaterial("clockwork/vignette.png")
+local vignette = ix.util.GetMaterial("helix/gui/vignette.png") or ix.util.GetMaterial("helix/gui/vignette.png")
 local vignetteAlphaGoal = 0
 local vignetteAlphaDelta = 0
 local vignetteTraceHeight = Vector(0, 0, 768)
@@ -585,45 +585,9 @@ function GM:HUDPaintBackground()
 
 	self.BaseClass:PaintWorldTips()
 
-	local weapon = client:GetActiveWeapon()
-
-	if (IsValid(weapon) and hook.Run("CanDrawAmmoHUD", weapon) != false and weapon.DrawAmmo != false) then
-		local clip = weapon:Clip1()
-		local clipMax = weapon:GetMaxClip1()
-		local count = client:GetAmmoCount(weapon:GetPrimaryAmmoType())
-		local secondary = client:GetAmmoCount(weapon:GetSecondaryAmmoType())
-		local x, y = scrW - 80, scrH - 80
-
-		if (secondary > 0) then
-			ix.util.DrawBlurAt(x, y, 64, 64)
-
-			surface.SetDrawColor(255, 255, 255, 5)
-			surface.DrawRect(x, y, 64, 64)
-			surface.SetDrawColor(255, 255, 255, 3)
-			surface.DrawOutlinedRect(x, y, 64, 64)
-
-			ix.util.DrawText(secondary, x + 32, y + 32, nil, 1, 1, "ixBigFont")
-		end
-
-		if (weapon:GetClass() != "weapon_slam" and clip > 0 or count > 0) then
-			x = x - (secondary > 0 and 144 or 64)
-
-			ix.util.DrawBlurAt(x, y, 128, 64)
-
-			surface.SetDrawColor(255, 255, 255, 5)
-			surface.DrawRect(x, y, 128, 64)
-			surface.SetDrawColor(255, 255, 255, 3)
-			surface.DrawOutlinedRect(x, y, 128, 64)
-
-			ix.util.DrawText((clip == -1 or clipMax == -1) and count or clip.."/"..count, x + 64, y + 32, nil, 1, 1, "ixBigFont")
-		end
-	end
-
 	if (client:GetLocalVar("restricted") and !client:GetLocalVar("restrictNoMsg")) then
 		ix.util.DrawText(L"restricted", scrW * 0.5, scrH * 0.33, nil, 1, 1, "ixBigFont")
 	end
-
-	ix.hud.DrawAll(false)
 end
 
 function GM:PostDrawOpaqueRenderables(bDepth, bSkybox)
@@ -716,7 +680,6 @@ function GM:PopulateImportantCharacterInfo(client, character, container)
 		injure:SizeToContents()
 	end
 end
-
 
 function GM:PopulateCharacterInfo(client, character, container)
 	-- description
@@ -930,6 +893,14 @@ net.Receive("ixStringRequest", function()
 	end)
 end)
 
+net.Receive("ixPlayerDeath", function()
+	if (IsValid(ix.gui.deathScreen)) then
+		ix.gui.deathScreen:Remove()
+	end
+
+	ix.gui.deathScreen = vgui.Create("ixDeathScreen")
+end)
+
 function GM:Think()
 	local client = LocalPlayer()
 
@@ -976,5 +947,9 @@ hook.Add("player_spawn", "ixPlayerSpawn", function(data)
 		-- GetBoneName returns __INVALIDBONE__ for everything the first time you use it, so we'll force an update to make them valid
 		client:SetupBones()
 		client:SetIK(false)
+
+		if (client == LocalPlayer() and (IsValid(ix.gui.deathScreen) and !ix.gui.deathScreen:IsClosing())) then
+			ix.gui.deathScreen:Close()
+		end
 	end
 end)

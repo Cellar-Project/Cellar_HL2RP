@@ -158,8 +158,7 @@ function PANEL:Init()
 	self.progress:SetBarColor(ix.config.Get("color"))
 	self.progress:SetSize(parent:GetWide(), 0)
 	self.progress:SizeToContents()
-	self.progress:SetPos(0, parent:GetTall() - self.progress:GetTall())
-
+	self.progress:SetPos(0, 0)
 	-- setup payload hooks
 	self:AddPayloadHook("model", function(value)
 		local faction = ix.faction.indices[self.payload.faction]

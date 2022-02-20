@@ -186,7 +186,15 @@ function PANEL:Think()
 end
 
 function PANEL:Paint(width, height)
-	derma.SkinFunc("PaintInfoBarBackground", self, width, height)
+	surface.SetDrawColor(230, 230, 230, 15)
+	surface.DrawRect(0, 0, width, height)
+	surface.DrawOutlinedRect(0, 0, width, height)
+
+	self.bar:PaintManual()
+
+	DisableClipping(true)
+		self.label:PaintManual()
+	DisableClipping(false)
 end
 
 vgui.Register("ixInfoBar", PANEL, "Panel")

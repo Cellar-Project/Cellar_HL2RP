@@ -2,7 +2,7 @@ local PLUGIN = PLUGIN
 
 PLUGIN.name = "Ammunition check"
 PLUGIN.author = "maxxoft"
-PLUGIN.description = "Allows to check how much ammo do you have without UI."
+PLUGIN.description = "Allows to check how much ammo do you have without GUI."
 
 PLUGIN.entries = {
 	[1] = "*Еще больше половины*.",

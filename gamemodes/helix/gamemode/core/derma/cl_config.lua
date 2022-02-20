@@ -1,4 +1,3 @@
-
 -- config manager
 local PANEL = {}
 
@@ -32,8 +31,60 @@ function PANEL:Populate()
 
 	-- add panels
 	for _, category in ipairs(categoryIndices) do
-		local categoryPhrase = L(category)
-		self:AddCategory(categoryPhrase)
+		local categoryPhrase = L(category):utf8upper()
+		local cat = self:AddCategory(categoryPhrase)
+		cat.Paint = function(me, w, h)
+			draw.RoundedBox(0, 0, 0, w, h, Color(43, 157, 189, 43))
+			-- left & right --
+			draw.RoundedBox(0, 0, 0, 1, h, Color(56, 207, 248))
+			draw.RoundedBox(0, w - 1, 0, 1, h, Color(56, 207, 248))
+			draw.RoundedBox(0, 1, 0, 1, h, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w - 2, 0, 1, h, Color(43, 157, 189, 43))
+			-- bottom --
+			draw.RoundedBox(0, 0, h - 1, w, 1, Color(56, 207, 248))
+			draw.RoundedBox(0, 0, h - 2, w, 1, Color(56, 207, 248))
+			draw.RoundedBox(0, 0, h - 3, w, 1, Color(43, 157, 189, 43))
+			-- top --
+			draw.RoundedBox(0, 0, 0, w, 2, Color(56, 207, 248))
+
+			-- frame --
+			draw.RoundedBox(0, w/4.675, 0, w - w/2.3375, 2, Color(56, 207, 248))
+			draw.RoundedBox(0, w/4.65, 1, w - w/2.325, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.625, 3, w - w/2.3125, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.6, 5, w - w/2.3, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.575, 7, w - w/2.2875, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.55, 9, w - w/2.275, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.525, 11, w - w/2.2625, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.5, 13, w - w/2.25 - 1, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.465, 15, w - w/2.2325 + 1, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.445, 17, w - w/2.2225, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.420, 19, w - w/2.21, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.395, 21, w - w/2.1975, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.370, 23, w - w/2.185, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.345, 25, w - w/2.1725 + 1, 2, Color(43, 157, 189, 43))
+			draw.RoundedBox(0, w/4.320, 27, w - w/2.16 + 1, 2, Color(43, 157, 189, 43))
+			surface.SetDrawColor(Color(56, 207, 248))
+			surface.DrawLine(w/4.675, 0, w/4.320, 29)
+			surface.DrawLine(w/4.675 - 1, 0, w/4.320, 28)
+			surface.SetDrawColor(Color(56, 207, 248))
+			surface.DrawLine(w - w/4.675 - 1, 0, w - w/4.32 - 2, 29)
+			surface.DrawLine(w - w/4.675 - 2, 0, w - w/4.32 - 2, 28)
+			surface.DrawLine(w/4.320, 29, w - w/4.32 - 1, 29)
+			surface.DrawLine(w/4.320, 28, w - w/4.32 - 1, 28)
+
+
+			surface.SetTextColor(Color(56, 61, 248, 225))
+			surface.SetFont('cellar.derma.blur')
+			surface.SetTextPos(w * .5 - surface.GetTextSize(categoryPhrase) * .5, 3)
+			surface.DrawText(categoryPhrase)
+
+
+			surface.SetTextColor(Color(56, 207, 248))
+			surface.SetFont('cellar.derma')
+			surface.SetTextPos(w * .5 - surface.GetTextSize(categoryPhrase) * .5, 3)
+			surface.DrawText(categoryPhrase)
+			
+		end
 
 		-- we can use sortedpairs since configs don't have phrases to account for
 		for k, v in SortedPairs(categories[category]) do
@@ -46,7 +97,11 @@ function PANEL:Populate()
 			local value = ix.util.SanitizeType(type, ix.config.Get(k))
 
 			local row = self:AddRow(type, categoryPhrase)
+			--row:SetText(ix.util.ExpandCamelCase(k))
 			row:SetText(ix.util.ExpandCamelCase(k))
+			row.Paint = function(self, w, h)
+				draw.SimpleText(ix.util.ExpandCamelCase(k), 'cellar.derma.medium.blur', 4, h/2, Color(56, 61, 248, 225), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+			end
 
 			-- type-specific properties
 			if (type == ix.type.number) then
@@ -105,8 +160,9 @@ function PANEL:Init()
 	self:Dock(FILL)
 	self:SetSearchEnabled(true)
 
-	self.loadedCategory = L("loadedPlugins")
-	self.unloadedCategory = L("unloadedPlugins")
+	self.loadedCategory = L("loadedPlugins"):utf8upper()
+	self.unloadedCategory = L("unloadedPlugins"):utf8upper()
+	
 
 	if (!ix.gui.bReceivedUnloadedPlugins) then
 		net.Start("ixConfigRequestUnloadedList")
@@ -124,8 +180,110 @@ function PANEL:OnPluginToggled(uniqueID, bEnabled)
 end
 
 function PANEL:Populate()
-	self:AddCategory(self.loadedCategory)
-	self:AddCategory(self.unloadedCategory)
+	local loaded = self:AddCategory(self.loadedCategory)
+	loaded.Paint = function(me, w, h)
+		draw.RoundedBox(0, 0, 0, w, h, Color(43, 157, 189, 43))
+		-- left & right --
+		draw.RoundedBox(0, 0, 0, 1, h, Color(56, 207, 248))
+		draw.RoundedBox(0, w - 1, 0, 1, h, Color(56, 207, 248))
+		draw.RoundedBox(0, 1, 0, 1, h, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w - 2, 0, 1, h, Color(43, 157, 189, 43))
+		-- bottom --
+		draw.RoundedBox(0, 0, h - 1, w, 1, Color(56, 207, 248))
+		draw.RoundedBox(0, 0, h - 2, w, 1, Color(56, 207, 248))
+		draw.RoundedBox(0, 0, h - 3, w, 1, Color(43, 157, 189, 43))
+		-- top --
+		draw.RoundedBox(0, 0, 0, w, 2, Color(56, 207, 248))
+
+		-- frame --
+		draw.RoundedBox(0, w/4.675, 0, w - w/2.3375, 2, Color(56, 207, 248))
+		draw.RoundedBox(0, w/4.65, 1, w - w/2.325, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.625, 3, w - w/2.3125, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.6, 5, w - w/2.3, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.575, 7, w - w/2.2875, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.55, 9, w - w/2.275, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.525, 11, w - w/2.2625, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.5, 13, w - w/2.25 - 1, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.465, 15, w - w/2.2325 + 1, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.445, 17, w - w/2.2225, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.420, 19, w - w/2.21, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.395, 21, w - w/2.1975, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.370, 23, w - w/2.185, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.345, 25, w - w/2.1725 + 1, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.320, 27, w - w/2.16 + 1, 2, Color(43, 157, 189, 43))
+		surface.SetDrawColor(Color(56, 207, 248))
+		surface.DrawLine(w/4.675, 0, w/4.320, 29)
+		surface.DrawLine(w/4.675 - 1, 0, w/4.320, 28)
+		surface.SetDrawColor(Color(56, 207, 248))
+		surface.DrawLine(w - w/4.675 - 1, 0, w - w/4.32 - 2, 29)
+		surface.DrawLine(w - w/4.675 - 2, 0, w - w/4.32 - 2, 28)
+		surface.DrawLine(w/4.320, 29, w - w/4.32 - 1, 29)
+		surface.DrawLine(w/4.320, 28, w - w/4.32 - 1, 28)
+
+
+		surface.SetTextColor(Color(56, 61, 248, 225))
+		surface.SetFont('cellar.derma.blur')
+		surface.SetTextPos(w * .5 - surface.GetTextSize(self.loadedCategory) * .5, 3)
+		surface.DrawText(self.loadedCategory)
+
+
+		surface.SetTextColor(Color(56, 207, 248))
+		surface.SetFont('cellar.derma')
+		surface.SetTextPos(w * .5 - surface.GetTextSize(self.loadedCategory) * .5, 3)
+		surface.DrawText(self.loadedCategory)
+	end
+	local unloaded = self:AddCategory(self.unloadedCategory)
+	unloaded.Paint = function(me, w, h)
+		draw.RoundedBox(0, 0, 0, w, h, Color(43, 157, 189, 43))
+		-- left & right --
+		draw.RoundedBox(0, 0, 0, 1, h, Color(56, 207, 248))
+		draw.RoundedBox(0, w - 1, 0, 1, h, Color(56, 207, 248))
+		draw.RoundedBox(0, 1, 0, 1, h, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w - 2, 0, 1, h, Color(43, 157, 189, 43))
+		-- bottom --
+		draw.RoundedBox(0, 0, h - 1, w, 1, Color(56, 207, 248))
+		draw.RoundedBox(0, 0, h - 2, w, 1, Color(56, 207, 248))
+		draw.RoundedBox(0, 0, h - 3, w, 1, Color(43, 157, 189, 43))
+		-- top --
+		draw.RoundedBox(0, 0, 0, w, 2, Color(56, 207, 248))
+
+		-- frame --
+		draw.RoundedBox(0, w/4.675, 0, w - w/2.3375, 2, Color(56, 207, 248))
+		draw.RoundedBox(0, w/4.65, 1, w - w/2.325, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.625, 3, w - w/2.3125, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.6, 5, w - w/2.3, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.575, 7, w - w/2.2875, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.55, 9, w - w/2.275, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.525, 11, w - w/2.2625, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.5, 13, w - w/2.25 - 1, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.465, 15, w - w/2.2325 + 1, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.445, 17, w - w/2.2225, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.420, 19, w - w/2.21, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.395, 21, w - w/2.1975, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.370, 23, w - w/2.185, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.345, 25, w - w/2.1725 + 1, 2, Color(43, 157, 189, 43))
+		draw.RoundedBox(0, w/4.320, 27, w - w/2.16 + 1, 2, Color(43, 157, 189, 43))
+		surface.SetDrawColor(Color(56, 207, 248))
+		surface.DrawLine(w/4.675, 0, w/4.320, 29)
+		surface.DrawLine(w/4.675 - 1, 0, w/4.320, 28)
+		surface.SetDrawColor(Color(56, 207, 248))
+		surface.DrawLine(w - w/4.675 - 1, 0, w - w/4.32 - 2, 29)
+		surface.DrawLine(w - w/4.675 - 2, 0, w - w/4.32 - 2, 28)
+		surface.DrawLine(w/4.320, 29, w - w/4.32 - 1, 29)
+		surface.DrawLine(w/4.320, 28, w - w/4.32 - 1, 28)
+
+
+		surface.SetTextColor(Color(56, 61, 248, 225))
+		surface.SetFont('cellar.derma.blur')
+		surface.SetTextPos(w * .5 - surface.GetTextSize(self.unloadedCategory) * .5, 3)
+		surface.DrawText(self.unloadedCategory)
+
+
+		surface.SetTextColor(Color(56, 207, 248))
+		surface.SetFont('cellar.derma')
+		surface.SetTextPos(w * .5 - surface.GetTextSize(self.unloadedCategory) * .5, 3)
+		surface.DrawText(self.unloadedCategory)
+	end
 
 	-- add loaded plugins
 	for k, v in SortedPairsByMemberValue(ix.plugin.list, "name") do
@@ -139,6 +297,9 @@ function PANEL:Populate()
 		-- if this plugin is not in the unloaded list currently, then it's queued for an unload
 		row:SetValue(!ix.plugin.unloaded[k], true)
 		row:SetText(v.name)
+		row.Paint = function(me, w, h)
+			draw.SimpleText(v.name, 'cellar.derma.medium.blur', 4, h/2, Color(56, 61, 248, 225), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+		end
 
 		row.OnValueChanged = function(panel, bEnabled)
 			self:OnPluginToggled(k, bEnabled)

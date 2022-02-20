@@ -38,6 +38,7 @@ function PANEL:Init()
 	self.categories = {}
 	self.categorySubpanels = {}
 	self.categoryPanel = self:Add("ixHelpMenuCategories")
+	self.categoryPanel:Dock(TOP)
 
 	self.canvasPanel = self:Add("EditablePanel")
 	self.canvasPanel:Dock(FILL)
@@ -46,8 +47,13 @@ function PANEL:Init()
 	self.idlePanel:Dock(FILL)
 	self.idlePanel:DockMargin(8, 0, 0, 0)
 	self.idlePanel.Paint = function(_, width, height)
-		surface.SetDrawColor(backgroundColor)
-		surface.DrawRect(0, 0, width, height)
+		surface.SetDrawColor(Color(56, 207, 248, 10))
+		surface.DrawRect(1, 0, width, height)
+
+		surface.SetDrawColor(Color(56, 207, 248))
+		surface.DrawRect(1, height - 1, width, 1)
+		surface.DrawRect(1, 0, 1, height)
+		surface.DrawRect(width - 1, 0, 1, height)
 
 		derma.SkinFunc("DrawHelixCurved", width * 0.5, height * 0.5, width * 0.25)
 
@@ -92,13 +98,26 @@ function PANEL:Init()
 end
 
 function PANEL:AddCategory(name)
-	local button = self.categoryPanel:Add("ixMenuButton")
+	local button = self.categoryPanel:Add("cellar.btnlist")
 	button:SetText(L(name))
-	button:SizeToContents()
+	button:SetSize(ScrW() * .8286 / 5, 40)
 	-- @todo don't hardcode this but it's the only panel that needs docking at the bottom so it'll do for now
-	button:Dock(name == "credits" and BOTTOM or TOP)
+	button:Dock(RIGHT)
 	button.DoClick = function()
 		self:OnCategorySelected(name)
+	end
+	button.Paint = function(this, w, h)
+		local nname = L(name):utf8upper()
+			local hov = this:IsHovered()
+			surface.SetDrawColor(hov and Color(43, 157, 189, 12) or Color(43, 157, 189, 43))
+			surface.DrawRect(0, 0, w, h)
+			draw.RoundedBox(0, 0, 0, w, h, hov and Color(43, 157, 189, 12) or Color(43, 157, 189, 43))
+			draw.RoundedBox(0, 0, 0, w, 1, hov and Color(56, 207, 248, 140) or Color(56, 207, 248))
+			draw.RoundedBox(0, 0, this:GetTall() - 1, w, 1, hov and Color(56, 207, 248, 140) or Color(56, 207, 248))
+			draw.RoundedBox(0, 0, 0, 1, h,  hov and Color(56, 207, 248, 140) or Color(56, 207, 248))
+			draw.RoundedBox(0, this:GetWide() - 1, 0, 1, h, hov and Color(56, 207, 248, 140) or Color(56, 207, 248))
+			draw.SimpleText(name == "credits" and "КОМАНДА HELIX" or name == "voices" and "ГОЛОСОВЫЕ" or nname, 'cellar.main.btn', this:GetWide()/2, this:GetTall()/2,  hov and Color(56, 207, 248, 140) or Color(56, 207, 248), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			draw.SimpleText(name == "credits" and "КОМАНДА HELIX" or name == "voices" and "ГОЛОСОВЫЕ" or nname, 'cellar.main.btn.blur', this:GetWide()/2, this:GetTall()/2, hov and Color(56, 207, 248, 140) or Color(56, 61, 248, 225), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 
 	local panel = self.canvasPanel:Add("DScrollPanel")
@@ -108,8 +127,13 @@ function PANEL:AddCategory(name)
 	panel:GetCanvas():DockPadding(8, 8, 8, 8)
 
 	panel.Paint = function(_, width, height)
-		surface.SetDrawColor(backgroundColor)
-		surface.DrawRect(0, 0, width, height)
+		surface.SetDrawColor(Color(56, 207, 248, 10))
+		surface.DrawRect(1, 0, width, height)
+
+		surface.SetDrawColor(Color(56, 207, 248))
+		surface.DrawRect(1, height - 1, width, 1)
+		surface.DrawRect(1, 0, 1, height)
+		surface.DrawRect(width - 1, 0, 1, height)
 	end
 
 	-- reverts functionality back to a standard panel in the case that a category will manage its own scrolling

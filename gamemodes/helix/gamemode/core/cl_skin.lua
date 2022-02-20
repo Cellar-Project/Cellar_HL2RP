@@ -138,7 +138,9 @@ function SKIN:DrawImportantBackground(x, y, width, height, color)
 
 	surface.SetTexture(gradientLeft)
 	surface.SetDrawColor(color)
-	surface.DrawTexturedRect(x, y, width, height)
+	--surface.DrawTexturedRect(x, y, width, height)
+	surface.SetDrawColor(ColorAlpha(cellar_darker_blue, 25))
+	surface.DrawRect(x, y, width, height)
 end
 
 function SKIN:DrawCharacterStatusBackground(panel, fraction)
@@ -380,7 +382,7 @@ function SKIN:PaintHelixSlider(panel, width, height)
 	surface.SetDrawColor(self.Colours.DarkerBackground)
 	surface.DrawRect(0, 0, width, height)
 
-	surface.SetDrawColor(self.Colours.Success)
+	surface.SetDrawColor(ColorAlpha(cellar_blue, 170))
 	surface.DrawRect(0, 0, panel:GetVisualFraction() * width, height)
 end
 
