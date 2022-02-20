@@ -68,7 +68,7 @@ if (CLIENT) then
 
 			local s = tooltip:AddRow("stat"..i)
 			s:SetTextColor(greenClr)
-			:SetText(string.format("+%i %s", v, stats[i]))
+			s:SetText(string.format("+%i %s", v, stats[i]))
 			s:SizeToContents()
 		end
 
