@@ -75,8 +75,7 @@ if (CLIENT) then
 			self:GetCharacter() and
 			!self:GetNetVar("actEnterAngle") and
 			!IsValid(entity) and
-			LocalPlayer():Alive() and
-			!LocalPlayer():IsWepRaised()
+			LocalPlayer():Alive()
 			) then
 			return true
 		end

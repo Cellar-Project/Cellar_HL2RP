@@ -57,6 +57,12 @@ function PANEL:RemoveBar(panel)
 
 	if (toRemove) then
 		table.remove(self.bars, toRemove)
+
+		-- Decrease index value for the next bars
+		for i = toRemove, #self.bars do
+			ix.bar.list[i].index = i
+			self.bars[i]:SetID(i)
+		end
 	end
 
 	panel:Remove()
@@ -180,15 +186,7 @@ function PANEL:Think()
 end
 
 function PANEL:Paint(width, height)
-	surface.SetDrawColor(230, 230, 230, 15)
-	surface.DrawRect(0, 0, width, height)
-	surface.DrawOutlinedRect(0, 0, width, height)
-
-	self.bar:PaintManual()
-
-	DisableClipping(true)
-		self.label:PaintManual()
-	DisableClipping(false)
+	derma.SkinFunc("PaintInfoBarBackground", self, width, height)
 end
 
 vgui.Register("ixInfoBar", PANEL, "Panel")
