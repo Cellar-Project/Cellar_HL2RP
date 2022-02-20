@@ -659,11 +659,13 @@ function GM:PostDrawOpaqueRenderables(bDepth, bSkybox)
 end
 
 function GM:PostDrawHUD()
-	ix.hud.DrawAll(true)
+	cam.Start2D()
+		ix.hud.DrawAll()
 
-	if (!IsValid(ix.gui.characterMenu) or ix.gui.characterMenu:IsClosing()) then
-		ix.bar.DrawAction()
-	end
+		if (!IsValid(ix.gui.characterMenu) or ix.gui.characterMenu:IsClosing()) then
+			ix.bar.DrawAction()
+		end
+	cam.End2D()
 end
 
 function GM:ShouldPopulateEntityInfo(entity)
@@ -856,7 +858,7 @@ function GM:RenderScreenspaceEffects()
 				render.SetColorModulation(1, 1, 1)
 				render.SetStencilWriteMask(28)
 				render.SetStencilTestMask(28)
-				render.SetStencilReferenceValue(35)
+				render.SetStencilReferenceValue(28)
 
 				render.SetStencilCompareFunction(STENCIL_ALWAYS)
 				render.SetStencilPassOperation(STENCIL_REPLACE)

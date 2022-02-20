@@ -128,7 +128,7 @@ function GM:KeyRelease(client, key)
 	end
 end
 
-function GM:CanPlayerInteractItem(client, action, item)
+function GM:CanPlayerInteractItem(client, action, item, data)
 	if (client:IsRestricted()) then
 		return false
 	end
@@ -146,6 +146,26 @@ function GM:CanPlayerInteractItem(client, action, item)
 		return false
 	end
 
+	if (action == "combine") then
+		local other = data[1]
+
+		if (hook.Run("CanPlayerCombineItem", client, item, other) == false) then
+			return false
+		end
+
+		local combineItem = ix.item.instances[other]
+
+		if (combineItem and combineItem.invID != 0) then
+			local combineInv = ix.item.inventories[combineItem.invID]
+
+			if (!combineInv:OnCheckAccess(client)) then
+				return false
+			end
+		else
+			return false
+		end
+	end
+
 	if (isentity(item) and item.ixSteamID and item.ixCharID
 	and item.ixSteamID == client:SteamID() and item.ixCharID != client:GetCharacter():GetID()
 	and !item:GetItemTable().bAllowMultiCharacterInteraction) then
@@ -161,6 +181,10 @@ function GM:CanPlayerDropItem(client, item)
 end
 
 function GM:CanPlayerTakeItem(client, item)
+
+end
+
+function GM:CanPlayerCombineItem(client, item, other)
 
 end
 

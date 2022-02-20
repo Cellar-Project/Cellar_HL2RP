@@ -15,7 +15,7 @@ if (CLIENT) then
 	local currentClass
 
 	-- we can't rely on matching non-alphanumeric characters (i.e %W) due to patterns matching single bytes and not UTF-8 chars
-	local symbolPattern = "[~`!@#$%%%^&*()_%+%={}%[%]|;:'\",%./<>?]"
+	local symbolPattern = "[~`!@#$%%%^&*()_%+%-={}%[%]|;:'\",%./<>?]"
 
 	function PLUGIN:LoadFonts(font, genericFont)
 		surface.CreateFont("ixTypingIndicator", {

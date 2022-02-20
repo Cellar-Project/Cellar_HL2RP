@@ -207,19 +207,18 @@ if (SERVER) then
 	function meta:ToggleWepRaised()
 		local weapon = self:GetActiveWeapon()
 
-		if (weapon.IsAlwaysRaised or ALWAYS_RAISED[weapon:GetClass()]
-		or weapon.IsAlwaysLowered or weapon.NeverRaised) then
+		if (!IsValid(weapon) or
+			weapon.IsAlwaysRaised or ALWAYS_RAISED[weapon:GetClass()] or
+			weapon.IsAlwaysLowered or weapon.NeverRaised) then
 			return
 		end
 
 		self:SetWepRaised(!self:IsWepRaised(), weapon)
 
-		if (IsValid(weapon)) then
-			if (self:IsWepRaised() and weapon.OnRaised) then
-				weapon:OnRaised()
-			elseif (!self:IsWepRaised() and weapon.OnLowered) then
-				weapon:OnLowered()
-			end
+		if (self:IsWepRaised() and weapon.OnRaised) then
+			weapon:OnRaised()
+		elseif (!self:IsWepRaised() and weapon.OnLowered) then
+			weapon:OnLowered()
 		end
 	end
 
@@ -392,6 +391,11 @@ if (SERVER) then
 		entity:SetAngles(self:EyeAngles())
 		entity:SetModel(self:GetModel())
 		entity:SetSkin(self:GetSkin())
+
+		for i = 0, (self:GetNumBodyGroups() - 1) do
+			entity:SetBodygroup(i, self:GetBodygroup(i))
+		end
+
 		entity:Spawn()
 
 		if (!bDontSetPlayer) then
