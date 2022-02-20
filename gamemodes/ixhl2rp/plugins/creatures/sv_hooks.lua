@@ -125,14 +125,6 @@ function PLUGIN:PlayerTick(client)
 	end
 end
 
-function PLUGIN:ModifyCharacterRunSpeed(client)
-	if client.infoTable then
-		if (client.infoTable.moveData or {}).run then
-			return (client.infoTable.moveData or {}).run
-		end
-	end
-end
-
 hook.Add("prone.CanEnter", "Creatures", function(client)
 	if client.infoTable then
 		return false
