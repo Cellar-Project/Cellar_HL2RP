@@ -13,7 +13,7 @@ function PLUGIN:TakeThermalLimbDamage(character, damage, resist, hitgroup, bShoc
 	if resist >= damage then
 		damage = 0
 	else
-		damage = damage - resist * 0.9
+		damage = damage - (resist * 0.9)
 	end
 
 	if damage > 0 then
@@ -46,7 +46,6 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 		end
 
 		if damage > 0 then
-			print("TakeOverallLimbDamage")
 			character:TakeOverallLimbDamage(damage)
 			character:AddShockDamage(damage * 2 * 4)
 			damageTaken = true
