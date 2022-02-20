@@ -37,7 +37,7 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 
 	-- calculate damage through outfit:
 	if outfit then
-		resist = equipment["torso"].thermalIsolation
+		resist = equipment["torso"].ThermalIsolation
 
 		if resist >= damage then
 			damage = 0
@@ -53,25 +53,25 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 		end
 	else
 		-- head damage:
-		resist = equipment["head"] and equipment["head"].thermalIsolation or 0
+		resist = equipment["head"] and equipment["head"].ThermalIsolation or 0
 		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_HEAD, true)
 
 		-- chest damage:
-		resist = equipment["torso"] and equipment["torso"].thermalIsolation or 0
+		resist = equipment["torso"] and equipment["torso"].ThermalIsolation or 0
 		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_CHEST, true)
 		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_STOMACH, true)
 
 		-- arms damage:
-		resist = equipment["hands"] and equipment["hands"].thermalIsolation or 0
+		resist = equipment["hands"] and equipment["hands"].ThermalIsolation or 0
 		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_LEFTARM, true)
 		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_RIGHTARM, true)
 
 		-- legs damage:
-		resist = equipment["hands"] and equipment["hands"].thermalIsolation or 0
+		resist = equipment["hands"] and equipment["hands"].ThermalIsolation or 0
 		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_LEFTLEG, true)
 		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_RIGHTLEG, true)
 	end
-	if resist and resist > 0 then
+	if resist and (resist > 0) then
 		offset = offset * (1 - (resist * 0.1))
 	end
 	character:SetTemperature(math.Clamp(character:GetTemperature() - offset, 24, 37.2))
@@ -82,7 +82,7 @@ function PLUGIN:GetTempDamage(temperature)
 	local allOff = self.offMin + self.offMax
 	local damage = math.abs(temperature - self.tempMax) * allDmg / (math.abs(self.tempMin) + self.tempMax)
 	local offset = math.abs(temperature - self.tempMax) * allOff / (math.abs(self.tempMin) + self.tempMax)
-	return {[1] = damage, [2] = offset}
+	return damage, offset
 end
 
 function PLUGIN:CalculateThermalDamage(temperature, client)
@@ -103,7 +103,7 @@ function PLUGIN:CalculateThermalDamage(temperature, client)
 	-- to get rid of doing GetItemAtSlot every tick
 	-- and write it somewhere in character (SetData? NetVar?)
 
-	local damage, offset = unpack(self:GetTempDamage(temperature))
+	local damage, offset = self:GetTempDamage(temperature)
 
 	self:CalculateThermalLimbDamage(temperature, client, equipment, damage, offset)
 end

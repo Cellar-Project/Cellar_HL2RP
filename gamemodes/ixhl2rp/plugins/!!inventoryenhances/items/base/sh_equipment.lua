@@ -68,8 +68,15 @@ if (CLIENT) then
 
 			local s = tooltip:AddRow("stat"..i)
 			s:SetTextColor(greenClr)
-		    s:SetText(string.format("+%i %s", v, stats[i]))
+			:SetText(string.format("+%i %s", v, stats[i]))
 			s:SizeToContents()
+		end
+
+		if (self.ThermalIsolation) then
+			local t = tooltip:AddRow("tempstat")
+				t:SetTextColor(greenClr)
+				t:SetText("Уровень термоизоляции: " .. self.ThermalIsolation or 0)
+				t:SizeToContents()
 		end
 	end
 end
