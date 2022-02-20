@@ -10,6 +10,10 @@ PLUGIN.offMax = 21.01
 
 
 function PLUGIN:TakeThermalLimbDamage(character, damage, resist, hitgroup, bShock)
+	if character:GetPlayer().inWarmth then
+		damage = damage / 5
+	end
+
 	if resist >= damage then
 		damage = 0
 	else
@@ -33,7 +37,7 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 	local dangerous = temperature < 8
 	local resist = 0
 	local damageTaken = false
-	if not dangerous then return end
+	if (not dangerous) then return end
 
 	-- calculate damage through outfit:
 	if outfit then
