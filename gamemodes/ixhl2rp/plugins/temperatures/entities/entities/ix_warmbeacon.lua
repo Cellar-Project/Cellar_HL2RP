@@ -11,16 +11,16 @@ if (SERVER) then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetMoveType(MOVETYPE_NONE)
 		self:SetSolid(SOLID_VPHYSICS)
-		
+
 		self:GetPhysicsObject():Wake()
-		
+
 		self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 
-        local warmzone = ents.Create("ix_warmzone")
-        local pos = self:GetPos()
-        pos[3] = pos[3] + 15
-        warmzone:SetPos(pos)
-        warmzone:SetParent(self)
-        warmzone:Spawn()
+		local warmzone = ents.Create("ix_warmzone")
+		local pos = self:GetPos()
+		pos[3] = pos[3] + 15
+		warmzone:SetPos(pos)
+		warmzone:SetParent(self)
+		warmzone:Spawn()
 	end
 end

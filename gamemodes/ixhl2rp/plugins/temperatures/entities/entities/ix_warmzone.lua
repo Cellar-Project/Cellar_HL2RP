@@ -11,9 +11,9 @@ if (SERVER) then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetMoveType(MOVETYPE_NONE)
 		self:SetSolid(SOLID_VPHYSICS)
-		
+
 		self:GetPhysicsObject():Wake()
-		
+
 		self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 		self:SetTrigger(true)
 		self:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
@@ -31,7 +31,7 @@ if (SERVER) then
 		end
 	end
 
-	function ENT:UpdateTransmitState()	
+	function ENT:UpdateTransmitState()
 		return TRANSMIT_NEVER
 	end
 end
@@ -51,7 +51,7 @@ end
 -- 	Receive = function(self, length, client)
 -- 		if (client:IsAdmin()) then
 -- 			local entity = net.ReadEntity()
-			
+
 -- 		end
 -- 	end
 -- })
