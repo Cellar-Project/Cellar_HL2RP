@@ -9,4 +9,4 @@ ITEM.bodyGroups = {
 	[4] = 1,
 }
 ITEM.CanBreakDown = false
-ITEM.thermalIsolation = 30
+ITEM.ThermalIsolation = 4
