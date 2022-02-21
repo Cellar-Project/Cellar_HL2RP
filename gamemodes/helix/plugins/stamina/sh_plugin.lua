@@ -106,7 +106,7 @@ if (SERVER) then
 		if (value >= 50 and self:GetNetVar("brth", false)) then
 			self:SetNetVar("brth", nil)
 
-			hook.Run("PlayerStaminaGained", client)
+			hook.Run("PlayerStaminaGained", self)
 		end
 	end
 
@@ -117,7 +117,7 @@ if (SERVER) then
 		if (value == 0 and !self:GetNetVar("brth", false)) then
 			self:SetNetVar("brth", true)
 
-			hook.Run("PlayerStaminaLost", client)
+			hook.Run("PlayerStaminaLost", self)
 		end
 	end
 else
