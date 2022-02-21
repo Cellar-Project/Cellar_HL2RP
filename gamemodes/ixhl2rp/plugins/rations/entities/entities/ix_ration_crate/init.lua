@@ -81,7 +81,7 @@ function ENT:Touch(ent)
 			container:SetModel(model)
 			container:Spawn()
 
-			ix.item.NewInv(0, "container:" .. model, function(inventory)
+			ix.inventory.New(0, "container:" .. model, function(inventory)
 				-- we'll technically call this a bag since we don't want other bags to go inside
 				inventory.vars.isBag = true
 				inventory.vars.isContainer = true
