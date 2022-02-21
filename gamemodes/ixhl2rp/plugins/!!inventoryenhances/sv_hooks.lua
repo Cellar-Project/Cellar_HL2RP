@@ -423,14 +423,14 @@ function PLUGIN:CharacterLoaded(character)
 		else
 			local owner = character:GetID()
 
-			ix.item.RestoreInv(index, 1, MAX_EQUIPMENT_SLOTS, function(inv)
+			ix.inventory.Restore(index, 1, MAX_EQUIPMENT_SLOTS, function(inv)
 				inv.vars.isEquipment = true
 				inv:Sync(client)
 				inv:AddReceiver(client)
 			end)
 		end
 	else
-		ix.item.NewInv(character:GetID(), "equipment", function(inv)
+		ix.inventory.New(character:GetID(), "equipment", function(inv)
 			inv.vars.isEquipment = true
 			inv:Sync(client)
 			inv:AddReceiver(client)
