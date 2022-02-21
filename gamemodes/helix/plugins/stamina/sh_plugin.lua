@@ -101,9 +101,10 @@ if (SERVER) then
 
 	function playerMeta:RestoreStamina(amount)
 		local current = self:GetLocalVar("stm", 0)
-		local value = math.Clamp(current + amount, 0, self:GetCharacter():GetMaxStamina())
+		local maxStamina = self:GetCharacter():GetMaxStamina()
+		local value = math.Clamp(current + amount, 0, maxStamina)
 
-		if (value >= 50 and self:GetNetVar("brth", false)) then
+		if (value >= (maxStamina * 0.5) and self:GetNetVar("brth", false)) then
 			self:SetNetVar("brth", nil)
 
 			hook.Run("PlayerStaminaGained", self)
