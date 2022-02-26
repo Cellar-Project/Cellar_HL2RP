@@ -77,7 +77,9 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 	if resist and (resist > 0) then
 		offset = offset * (1 - (resist * 0.1))
 	end
-	character:SetTemperature(math.Clamp(character:GetTemperature() - offset, 24, 37.2))
+
+	-- TODO: overall body temperature effects that affect gameplay
+	-- character:SetTemperature(math.Clamp(character:GetTemperature() - offset, 24, 37.2))
 end
 
 function PLUGIN:GetTempDamage(temperature)
