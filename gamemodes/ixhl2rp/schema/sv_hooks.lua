@@ -315,3 +315,9 @@ netstream.Hook("PlayerFinishChat", function(client)
 		client.bTypingBeep = nil
 	end
 end)
+
+function Schema:ShouldDisableThirdperson(client)
+    if (client:IsWepRaised()) then
+    	return true    
+    end
+end
