@@ -1,7 +1,7 @@
 ENT.Type = "anim"
 ENT.Author = "Vintage Thief"
-ENT.PrintName = "Семена картошки"
-ENT.Description = "Небольшая упаковка с семенами."
+ENT.PrintName = "Растение"
+ENT.Description = "Посаженное растение"
 ENT.Spawnable = false
 
 if (SERVER) then
@@ -24,30 +24,41 @@ if (SERVER) then
 		self.timerName = "phasetimer" .. self:EntIndex()
 
 		local confPhaseTime = ix.config.Get("phasetime")
-		local growth_n = 0
-		local phase = 0
-		self:SetNetVar("grown", 0) -- изменить на получение из БД
+		self.growth_n = 0
+		self.phase = 0
 
 		timer.Create(self.timerName, confPhaseTime, 0, function()
 
 			local confPhaseAmount = ix.config.Get("phaseamount")
 			local confPhaseRate = ix.config.Get("phaserate")
 			local confPhases = ix.config.Get("phases")
-			growth_n = math.Clamp(growth_n + confPhaseRate, 0, confPhaseAmount)
-			phase = 1
-			if growth_n == confPhaseAmount then
-				phase = math.Clamp(phase + 1, 0, confPhases)
-				if phase == confPhases then
-					self:SetNetVar("grown", 1)
-				end
+			self.growth_n = self.growth_n + confPhaseRate
+
+			if self.growth_n >= confPhaseAmount then
+				self.phase = self.phase + 1
 			end
 
-			self:SetModel(PLUGIN.growmodels[math.random(1, #PLUGIN.growmodels)])
+			if self.phase >= confPhases then
+				self:EndGrowth()
+			end
 		end)
+
+		self:SetModel(PLUGIN.growmodels[math.random(1, #PLUGIN.growmodels)])
+	end
+
+	function ENT:SetClass(class)
+		self.class = class
+	end
+
+	function ENT:EndGrowth()
+		self:SetNetVar("grown", 1)
+		timer.Remove(self.timerName)
 	end
 
 	function ENT:OnRemove()
-		timer.Remove(self.timerName)
+		if self.timerName then
+			timer.Remove(self.timerName)
+		end
 	end
 
 else
