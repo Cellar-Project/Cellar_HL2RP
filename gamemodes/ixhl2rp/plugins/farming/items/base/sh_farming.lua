@@ -5,6 +5,11 @@ ITEM.category = "categoryFarming"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.rarity = 1
+ITEM.surfaces = {
+	[MAT_DIRT] = true,
+	[MAT_GRASS] = true,
+	[MAT_FOLIAGE] = true
+}
 
 
 ITEM.functions.Plant = {
@@ -13,11 +18,6 @@ ITEM.functions.Plant = {
 	OnRun = function(item)
 		local client = item.player
 		local tr = client:GetEyeTraceNoCursor()
-		local surfaces = {
-			[MAT_DIRT] = true,
-			[MAT_GRASS] = true,
-			[MAT_FOLIAGE] = true
-		}
 
 		if (tr.Hit and surfaces[tr.MatType]) then
 			if client:EyePos():Distance(tr.HitPos) > 80 then
@@ -25,8 +25,9 @@ ITEM.functions.Plant = {
 				return
 			end
 
-			local plant = ents.Create("ix_seeds_" .. item.seedclass)
-			plant:SetPos(tr.HitPosх[3] - 2)
+			local plant = ents.Create("ix_plant")
+			plant:SetClass(item.seedclass)
+			plant:SetPos(tr.HitPos[3] - 2)
 			plant:Spawn()
 		end
 	end
