@@ -98,15 +98,15 @@ ix.char.RegisterVar("height", {
 })
 
 function PLUGIN:OnCharacterMenuCreated(panel)
-	local localCharPanel = panel.loadCharacterPanel
+	local loadCharPanel = panel.loadCharacterPanel
 
-	localCharPanel.delete.OnSetActive = function()
-		local character = localCharPanel.character
-		local deleteModel = localCharPanel.deleteModel
+	loadCharPanel.delete.OnSetActive = function()
+		local character = loadCharPanel.character
+		local deleteModel = loadCharPanel.deleteModel
 
 		deleteModel:SetModel(character:GetModel())
 		deleteModel:GetEntity():SetModelScale(character:GetHeight())
-		localCharPanel:CreateAnimation(localCharPanel.animationTime, {
+		loadCharPanel:CreateAnimation(loadCharPanel.animationTime, {
 			index = 2,
 			target = {backgroundFraction = 0},
 			easing = "outQuint"
