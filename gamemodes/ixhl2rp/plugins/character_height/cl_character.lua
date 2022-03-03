@@ -99,9 +99,9 @@ ix.char.RegisterVar("height", {
 
 function PLUGIN:InitializedPlugins()
     ix.char.vars["model"].OnDisplay = function(self, container, payload)
-        local modelListCanvas = container:Add("DScrollPanel")
-        modelListCanvas:Dock(TOP)
-        modelListCanvas:SetTall(128)
+		local modelListCanvas = container:Add("DScrollPanel")
+		modelListCanvas:Dock(TOP)
+		modelListCanvas:SetTall(128)
 
 		container.modelList = modelListCanvas:Add("DIconLayout")
 		container.modelList:Dock(FILL)
@@ -149,16 +149,16 @@ function PLUGIN:InitializedPlugins()
 				end
 			end
 		end
-        modelListCanvas.VBar.btnGrip.Paint = function(this, width, height)
-            local parent = this:GetParent()
-            local upButtonHeight = parent.btnUp:GetTall()
-            local downButtonHeight = parent.btnDown:GetTall()
+		modelListCanvas.VBar.btnGrip.Paint = function(this, width, height)
+			local parent = this:GetParent()
+			local upButtonHeight = parent.btnUp:GetTall()
+			local downButtonHeight = parent.btnDown:GetTall()
 
-            DisableClipping(true)
-                surface.SetDrawColor(color_white:Unpack())
-                surface.DrawRect(4, -upButtonHeight, width - 8, height + upButtonHeight + downButtonHeight)
-            DisableClipping(false)
-        end
+			DisableClipping(true)
+				surface.SetDrawColor(color_white:Unpack())
+				surface.DrawRect(4, -upButtonHeight, width - 8, height + upButtonHeight + downButtonHeight)
+			DisableClipping(false)
+		end
 
 		container.modelList:UpdateModels(payload)
 
