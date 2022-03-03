@@ -98,7 +98,7 @@ ix.char.RegisterVar("height", {
 })
 
 function PLUGIN:InitializedPlugins()
-    ix.char.vars["model"].OnDisplay = function(self, container, payload)
+	ix.char.vars["model"].OnDisplay = function(self, container, payload)
 		local modelListCanvas = container:Add("DScrollPanel")
 		modelListCanvas:Dock(TOP)
 		modelListCanvas:SetTall(128)
@@ -163,5 +163,5 @@ function PLUGIN:InitializedPlugins()
 		container.modelList:UpdateModels(payload)
 
 		return modelListCanvas
-    end
+	end
 end
