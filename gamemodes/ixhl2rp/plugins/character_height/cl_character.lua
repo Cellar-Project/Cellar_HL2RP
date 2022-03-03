@@ -97,6 +97,23 @@ ix.char.RegisterVar("height", {
 	end
 })
 
+function PLUGIN:OnCharacterMenuCreated(panel)
+	local localCharPanel = panel.loadCharacterPanel
+
+	localCharPanel.delete.OnSetActive = function()
+		local character = localCharPanel.character
+		local deleteModel = localCharPanel.deleteModel
+
+		deleteModel:SetModel(character:GetModel())
+		deleteModel:GetEntity():SetModelScale(character:GetHeight())
+		localCharPanel:CreateAnimation(localCharPanel.animationTime, {
+			index = 2,
+			target = {backgroundFraction = 0},
+			easing = "outQuint"
+		})
+	end
+end
+
 function PLUGIN:InitializedPlugins()
 	ix.char.vars["model"].OnDisplay = function(self, container, payload)
 		local modelListCanvas = container:Add("DScrollPanel")
