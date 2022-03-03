@@ -3,6 +3,7 @@ ENT.Author = "Vintage Thief"
 ENT.PrintName = "Растение"
 ENT.Description = "Посаженное растение"
 ENT.Spawnable = false
+ENT.PopulateEntityInfo = true
 
 if (SERVER) then
 
@@ -71,6 +72,14 @@ else
 			local growth = self:GetNetVar("grown")
 			draw.DrawText(growth, "Default", pos.x, pos.y, color_white, TEXT_ALIGN_CENTER)
 		cam.End2D()
+	end
+
+	function ENT:OnPopulateEntityInfo(tooltip)
+
+		local title = tooltip:AddRow("")
+		title:SetText("")
+		title:SetImportant()
+		title:SizeToContents()
 	end
 
 end
