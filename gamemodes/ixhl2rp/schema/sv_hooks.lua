@@ -290,6 +290,18 @@ function Schema:PlayerSpray(client)
 	return true
 end
 
+function Schema:ShouldDisableThirdperson(client)
+    if (client:IsWepRaised()) then
+    	return true    
+    end
+end
+
+function PLUGIN:EntityTakeDamage(target)
+	if (target:GetClass() == "prop_physics" and target:GetNWBool("IsPermaEntity")) then
+		return true
+	end
+end
+
 netstream.Hook("PlayerChatTextChanged", function(client, key)
 	if (Schema:ShouldPlayTypingBeep(client, key) and !client.bTypingBeep) then
 		local faction = ix.faction.indices[client:GetCharacter():GetFaction()]
@@ -315,9 +327,3 @@ netstream.Hook("PlayerFinishChat", function(client)
 		client.bTypingBeep = nil
 	end
 end)
-
-function Schema:ShouldDisableThirdperson(client)
-    if (client:IsWepRaised()) then
-    	return true    
-    end
-end
