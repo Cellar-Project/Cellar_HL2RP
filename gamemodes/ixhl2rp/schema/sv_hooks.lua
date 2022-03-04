@@ -290,12 +290,6 @@ function Schema:PlayerSpray(client)
 	return true
 end
 
-function Schema:ShouldDisableThirdperson(client)
-    if (client:IsWepRaised()) then
-    	return true    
-    end
-end
-
 function PLUGIN:EntityTakeDamage(target)
 	if (target:GetClass() == "prop_physics" and target:GetNWBool("IsPermaEntity")) then
 		return true
