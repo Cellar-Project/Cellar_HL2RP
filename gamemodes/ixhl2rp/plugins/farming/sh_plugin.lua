@@ -1,7 +1,7 @@
 local PLUGIN = PLUGIN
 
 PLUGIN.name = "Farming Plugin"
-PLUGIN.author = "Vintage Thief"
+PLUGIN.author = "Vintage Thief, maxxoft"
 PLUGIN.description = ""
 
 ix.config.Add("phasetime", 4, "Time a plant needs to get a point to grow to the next phase.", nil, {
@@ -25,13 +25,8 @@ ix.config.Add("phases", 4, "How many phases a plant needs to fully grow.", nil, 
 	category = "farming"
 })
 
-PLUGIN.seedplant = {
-	["ix_seeds_potato"] = "breens_water", --test
-}
-
 PLUGIN.growmodels = {
-	[1] = "models/props/de_train/bush.mdl",
-	[2] = "models/props_junk/cardboard_box001a.mdl",
-	[3] = "models/props_junk/cardboard_box002a.mdl",
-	[4] = "models/props/de_train/bush2.mdl",
+	[1] = "models/props/de_train/bush2.mdl",
+	[2] = "models/props/de_inferno/bushgreensmall.mdl",
+	[2] = "models/props_foliage/bush2.mdl"
 }

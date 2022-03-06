@@ -19,16 +19,25 @@ ITEM.functions.Plant = {
 		local client = item.player
 		local tr = client:GetEyeTraceNoCursor()
 
-		if (tr.Hit and surfaces[tr.MatType]) then
-			if client:EyePos():Distance(tr.HitPos) > 80 then
+		if (tr.Hit and item.surfaces[tr.MatType]) then
+			if client:EyePos():Distance(tr.HitPos) > 90 then
 				client:Notify("Поверхность слишком далеко.")
-				return
+				print("too far")
+				return false
 			end
 
 			local plant = ents.Create("ix_plant")
 			plant:SetClass(item.seedclass)
-			plant:SetPos(tr.HitPos[3] - 2)
+			tr.HitPos[3] = tr.HitPos[3] - 2
+			plant:SetPos(tr.HitPos)
+			plant:SetName(item.plantName)
 			plant:Spawn()
+			print("plant spawned")
+			return true
 		end
+
+		print(tr.Hit)
+		print(tr.MatType)
+		return false
 	end
 }
