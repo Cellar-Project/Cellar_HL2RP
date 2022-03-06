@@ -1,7 +1,16 @@
 local PLUGIN = PLUGIN
 
 function PLUGIN:SaveData()
-	self:SaveSeed()
+	local data
+	for _, v in ipairs(ents.FindByClass("ix_plant")) do
+		data[#data + 1] = {
+			v:GetModel(),
+			v:GetPos(),
+			v:GetAngles(),
+			v:GetClass(),
+			v:GetPhase(),
+		}
+	end
 end
 
 function PLUGIN:LoadData()
@@ -9,18 +18,13 @@ function PLUGIN:LoadData()
 
 	if (data) then
 		for _, v in ipairs(data) do
-			local entity = ents.Create("ix_seeds_potato")
-			entity:SetPos(v[1])
-			entity:SetAngles(v[2])
-			entity:SetModel(v[8] or "models/props/de_train/bush2.mdl")
+			local entity = ents.Create("ix_plant")
+			entity:SetPos(v[2])
+			entity:SetAngles(v[3])
 			entity:Spawn()
-			entity:SetSeedItem(v[7])
-
-			local physObject = entity:GetPhysicsObject()
-
-			if (IsValid(physObject)) then
-				physObject:EnableMotion(v[8] and false or true)
-			end
+			entity:SetModel(v[1] or "models/props/de_train/bush2.mdl")
+			entity:SetClass(v[4])
+			entity:SetPhase(v[5])
 		end
 	end
 end
