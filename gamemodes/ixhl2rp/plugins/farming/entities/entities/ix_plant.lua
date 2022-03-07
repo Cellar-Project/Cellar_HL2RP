@@ -16,7 +16,7 @@ if (SERVER) then
 		self:SetUseType(SIMPLE_USE)
 		self:SetSolid(SOLID_BBOX)
 		self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-		self:SetCollisionBounds(pos - Vector(3, 4, 4), pos + Vector(3, 3, 3))
+		self:SetCollisionBounds(pos - Vector(3, 3, 3), pos + Vector(3, 3, 3))
 		self:PhysicsInit(SOLID_BBOX)
 
 		local physicsObject = self:GetPhysicsObject()
@@ -29,7 +29,7 @@ if (SERVER) then
 		self.timerName = "phasetimer" .. self:EntIndex()
 
 		local phaseTime = ix.config.Get("phasetime")
-		self.growth_n = 0
+		self.growthPoints = 0
 		self.phase = 0
 
 		timer.Create(self.timerName, phaseTime, 0, function()
@@ -37,9 +37,9 @@ if (SERVER) then
 			local phaseAmount = ix.config.Get("phaseamount")
 			local phaseRate = ix.config.Get("phaserate")
 			local phases = ix.config.Get("phases")
-			self.growth_n = self.growth_n + phaseRate
+			self.growthPoints = self.growthPoints + phaseRate
 
-			if (self.growth_n >= phaseAmount) then
+			if (self.growthPoints >= phaseAmount) then
 				self.phase = self.phase + 1
 			end
 
@@ -61,12 +61,20 @@ if (SERVER) then
 		return self.class
 	end
 
-	function ENT:SetPhase(phase)
+	function ENT:SetPhase(iPhase)
 		self.phase = math.Clamp(phase, 0, ix.config.Get("phases"))
 	end
 
 	function ENT:GetPhase()
 		return self.phase
+	end
+
+	function ENT:SetGrowthPoints(iPoints)
+		self.growthPoints = iPoints
+	end
+
+	function ENT:GetGrowthPoints()
+		return self.growthPoints
 	end
 
 	function ENT:EndGrowth()
