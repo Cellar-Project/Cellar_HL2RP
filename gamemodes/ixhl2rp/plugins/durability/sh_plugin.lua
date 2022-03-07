@@ -105,8 +105,8 @@ if (SERVER) then
 						if (newname) then
 							local result, _ = inventory:Add(newname)
 							if (!result) then
-								-- Transfer(nil, nil, nil, entity)
-								ix.item.Spawn(newname, entity:EyePos())
+								local newItem = ix.item.Get(newname)
+								newItem:Spawn(entity:GetItemDropPos(newItem))
 							end
 						end
 					end
