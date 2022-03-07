@@ -3,7 +3,7 @@ local PLUGIN = PLUGIN
 
 ENT.Type = "anim"
 ENT.PrintName = "Water Collector"
-ENT.Category = "vintagethief"
+ENT.Category = "HL2 RP"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 ENT.PhysgunDisable = false
