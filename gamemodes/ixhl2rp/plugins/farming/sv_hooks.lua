@@ -9,6 +9,7 @@ function PLUGIN:SaveData()
 			v:GetAngles(),
 			v:GetClass(),
 			v:GetPhase(),
+			v:GetGrowthPoints()
 		}
 	end
 end
@@ -25,6 +26,7 @@ function PLUGIN:LoadData()
 			entity:SetModel(v[1] or "models/props/de_train/bush2.mdl")
 			entity:SetClass(v[4])
 			entity:SetPhase(v[5])
+			entity:GetGrowthPoints(v[6])
 		end
 	end
 end
