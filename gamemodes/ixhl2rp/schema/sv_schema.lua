@@ -81,7 +81,7 @@ function Schema:SaveForceFields()
 	local data = {}
 
 	for _, v in ipairs(ents.FindByClass("ix_forcefield")) do
-		data[#data + 1] = {v:GetPos(), v:GetAngles(), v:GetMode()}
+		data[#data + 1] = {v:GetPos(), v:GetAngles(), v:GetMode(), v:GetAccess()}
 	end
 
 	ix.data.Set("forceFields", data)
@@ -149,5 +149,6 @@ function Schema:LoadForceFields()
 		field:SetAngles(v[2])
 		field:Spawn()
 		field:SetMode(v[3])
+		field:SetAccess(v[4])
 	end
 end
