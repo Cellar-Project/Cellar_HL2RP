@@ -41,6 +41,7 @@ if (SERVER) then
 
 			if (self.growthPoints >= phaseAmount) then
 				self.phase = self.phase + 1
+				self.growthPoints = 0
 			end
 
 			if (self.phase >= phases) then
@@ -55,7 +56,20 @@ if (SERVER) then
 		self.class = class
 	end
 
-	function ENT:Use(activator) end
+	function ENT:SetPlantName(name)
+		self.name = name
+		self:SetNetVar("name", name)
+	end
+
+	function ENT:Use(activator)
+		if (activator:IsPlayer() and self.grown) then
+			ix.item.Spawn(self.product, self:GetPos() + Vector(0, 0, 2))
+			if (math.random(0, 1) == 1) then
+				ix.item.Spawn(self.class, self:GetPos() + Vector(0, 0, 3))
+			end
+			self:Remove()
+		end
+	end
 
 	function ENT:GetClass()
 		return self.class
@@ -78,9 +92,9 @@ if (SERVER) then
 	end
 
 	function ENT:EndGrowth()
-		self:SetNetVar("grown", 1)
+		self.grown = true
+		self:SetNetVar("grown", true)
 		timer.Remove(self.timerName)
-		print("[" .. tostring(self) .. "]" .. " я вырос!!")
 	end
 
 	function ENT:OnRemove()
@@ -92,7 +106,7 @@ if (SERVER) then
 else
 
 	function ENT:OnPopulateEntityInfo(tooltip)
-		local name = self:GetName()
+		local name = self:GetPlantName()
 
 		local title = tooltip:AddRow("name")
 		title:SetText(name)
@@ -104,12 +118,7 @@ end
 
 do
 
-	function ENT:SetName(name)
-		self.name = name
-		self:SetNetVar("name", name)
-	end
-
-	function ENT:GetName()
+	function ENT:GetPlantName()
 		return self.name or self:GetNetVar("name")
 	end
 

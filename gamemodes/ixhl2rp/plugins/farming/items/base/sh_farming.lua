@@ -30,7 +30,8 @@ ITEM.functions.Plant = {
 			plant:SetClass(item.seedclass)
 			tr.HitPos[3] = tr.HitPos[3] - 2
 			plant:SetPos(tr.HitPos)
-			plant:SetName(item.plantName)
+			plant:SetPlantName(item.plantName)
+			plant.product = item.product
 			plant:Spawn()
 			print("plant spawned")
 			return true

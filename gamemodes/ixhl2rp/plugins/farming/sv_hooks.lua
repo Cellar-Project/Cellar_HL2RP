@@ -9,7 +9,8 @@ function PLUGIN:SaveData()
 			v:GetAngles(),
 			v:GetClass(),
 			v:GetPhase(),
-			v:GetGrowthPoints()
+			v:GetGrowthPoints(),
+			v.product
 		}
 	end
 end
@@ -27,6 +28,7 @@ function PLUGIN:LoadData()
 			entity:SetClass(v[4])
 			entity:SetPhase(v[5])
 			entity:GetGrowthPoints(v[6])
+			entity.product = v.product
 		end
 	end
 end
