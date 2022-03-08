@@ -12,7 +12,7 @@ ITEM.junk = nil
 ITEM.useSound = {"npc/barnacle/barnacle_gulp1.wav", "npc/barnacle/barnacle_gulp2.wav"}
 
 local function DoAction(self, time, condition, callback)
-	local uniqueID = "ixStare"..self:UniqueID()
+	local uniqueID = "ixStare" .. self:UniqueID()
 
 	timer.Create(uniqueID, 0.1, time / 0.1, function()
 		if (IsValid(self)) then
@@ -46,7 +46,6 @@ function ITEM:OnUse(client, injector)
 	end
 
 	if self.OnConsume then
-		local hands = client:GetWeapon("ix_hands")
 		client.bUsingMedical = true
 		client:SetAction("@medInject", self.dUseTime or 10)
 		DoAction(client, self.dUseTime or 10, function()
@@ -110,10 +109,6 @@ function ITEM:OnUse(client, injector)
 
 			client.bUsingMedical = false
 		end)
-	end
-
-	if IsValid(injector) then
-		-- boost attribute
 	end
 
 	return false
