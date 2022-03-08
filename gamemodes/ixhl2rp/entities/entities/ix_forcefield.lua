@@ -21,27 +21,26 @@ local MODE_ALLOW_ALL = 1
 local MODE_ALLOW_NONE = 2
 local MODES = {
 	{
-		function(client)
+		function(client, forcefield)
 			return false
 		end,
 		"деактивировано"
 	},
 	{
-		function(client)
+		function(client, forcefield)
 			return true
 		end,
 		"активировано"
 	},
 	{
-		function(client)
-			return true
+		function(client, forcefield)
+			return !client:GetCharacter():HasIDAccess(forcefield:GetAccess())
 		end,
 		"вход по доступам"
 	}
 }
 
 if (SERVER) then
-
 	function ENT:SpawnFunction(client, trace)
 		local angles = (client:GetPos() - trace.HitPos):Angle()
 		angles.p = 0
@@ -306,11 +305,7 @@ do
 			if (IsValid(client)) then
 				local mode = forcefield:GetMode() or MODE_ALLOW_ALL
 
-				if mode == 3 then
-					return !client:GetCharacter():HasIDAccess(forcefield:GetAccess())
-				end
-
-				return istable(MODES[mode]) and MODES[mode][1](client)
+				return istable(MODES[mode]) and MODES[mode][1](client, forcefield)
 			else
 				return forcefield:GetMode() != MODE_ALLOW_NONE
 			end
