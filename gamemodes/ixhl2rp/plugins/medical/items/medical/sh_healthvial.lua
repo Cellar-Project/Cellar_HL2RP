@@ -14,8 +14,8 @@ function ITEM:OnConsume(player, injector, mul, character)
 	local client = character:GetPlayer()
 	local blood, shock, rad = character:GetBlood(), character:GetShock(), character:GetRadLevel()
 	local isBleeding, isPain, bleedDmg = false, character:IsFeelPain(), 0
-	local newBlood = math.Clamp(blood + (300 * mul), -1, 5000)
-	local newShock = math.max(shock - (500 * mul), 0)
+	local newBlood = math.Clamp(blood + (240 * mul), -1, 5000)
+	local newShock = math.max(shock - (390 * mul), 0)
 	local newRad = math.max(rad - (125 * mul), 0)
 
 	character:SetBlood(newBlood)
@@ -43,7 +43,7 @@ function ITEM:OnConsume(player, injector, mul, character)
 	local rleg = character:GetLimbDamage("rightLeg")
 	local lhand = character:GetLimbDamage("leftHand")
 	local rhand = character:GetLimbDamage("rightHand")
-	local minHP = 100 - (head + ((chest + stomach)/2) + ((lleg + rleg)/2) + ((lhand + rhand)/2))/4
+	local minHP = 100 - (head + ((chest + stomach) / 2) + ((lleg + rleg) / 2) + ((lhand + rhand) / 2)) / 4
 	client:SetHealth(math.max(client:Health(), minHP))
 
 	character:SetShock(newShock)
