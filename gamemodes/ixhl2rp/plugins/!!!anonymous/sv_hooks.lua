@@ -64,15 +64,15 @@ function PLUGIN:GetOnline()
 	return player.GetCount()
 end
 
---local cache_steamid = {}
+local cache_steamid = {}
 function PLUGIN:STATUS_PLAYERINFO(client, players)
 	local ourinfo = {}
 	local lastUserID = 2
 
   	for k, v in pairs(players) do
-  		---if !cache_steamid[v.steamid] then
-  		--	cache_steamid[v.steamid] = util.SteamIDTo64(v.steamid)
-  		--end
+  		if !cache_steamid[v.steamid] then
+  			cache_steamid[v.steamid] = util.SteamIDTo64(v.steamid)
+  		end
   		local a = player.GetBySteamID64(util.SteamIDTo64(v.steamid))
   		local name = "Anon"
   		if a and a:GetCharacter() then
@@ -80,7 +80,7 @@ function PLUGIN:STATUS_PLAYERINFO(client, players)
   		end
   		v.userid = lastUserID
   		v.name = name
-		v.steamid = !a:IsBot() and "ANON" or "BOT"--self.stored[cache_steamid[v.steamid]] or "BOT"
+		v.steamid = self.stored[cache_steamid[v.steamid]] or "BOT"
 
 		ourinfo[#ourinfo + 1] = v
 		lastUserID = lastUserID + 1
@@ -108,7 +108,23 @@ function PLUGIN:A2S_PLAYER(ip, port, info)
 end
 
 function PLUGIN:A2S_INFO(ip, port, info) 
-	info.tags = " gm:ixhl2rp gmc:rp loc:ru ver:210712"
+	info.tags = " gm:ixhl2rp gmc:rp loc:ru ver:210511"
 
 	return info 
 end
+
+
+/*
+function PLUGIN:STATUS_INFO(client, info)
+	info.players = self:GetOnline()
+
+	return info
+end
+
+
+function PLUGIN:SERVER_INFO(info)
+	info.players = self:GetOnline()
+
+	return info
+end
+*/
