@@ -20,7 +20,6 @@ if (SERVER) then
 		self:PhysicsInit(SOLID_BBOX)
 
 		local physicsObject = self:GetPhysicsObject()
-
 		if (IsValid(physicsObject)) then
 			physicsObject:Wake()
 			physicsObject:EnableMotion(false)
@@ -33,7 +32,6 @@ if (SERVER) then
 		self.phase = 0
 
 		timer.Create(self.timerName, phaseTime, 0, function()
-
 			local phaseAmount = ix.config.Get("phaseamount")
 			local phaseRate = ix.config.Get("phaserate")
 			local phases = ix.config.Get("phases")
@@ -107,11 +105,22 @@ else
 
 	function ENT:OnPopulateEntityInfo(tooltip)
 		local name = self:GetPlantName()
+		local description
+
+		if (self:GetNetVar("grown")) then
+			description = "Растение выросло."
+		else
+			description = "Растение еще не выросло."
+		end
 
 		local title = tooltip:AddRow("name")
 		title:SetText(name)
 		title:SetImportant()
 		title:SizeToContents()
+
+		local panel = tooltip:AddRow("description")
+		panel:SetText(description)
+		panel:SizeToContents()
 	end
 
 end
