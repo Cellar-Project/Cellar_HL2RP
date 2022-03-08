@@ -21,6 +21,7 @@ end
 
 do
 	local CHAR = ix.meta.character
+	local PLUGIN = PLUGIN
 
 	function CHAR:SetupUnconscious()
 		local player = self:GetPlayer()
