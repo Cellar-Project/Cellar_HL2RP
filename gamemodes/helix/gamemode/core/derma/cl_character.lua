@@ -769,7 +769,7 @@ function PANEL:Init()
 			if IsValid(ix.gui.quizAnswering) then
 				ix.gui.quizAnswering:Remove()
 			end
-			
+
 			vgui.Create("ixQuizMenu")
 			ix.gui.quizAnswering:CreateQuizContent()
 			return
@@ -782,7 +782,6 @@ function PANEL:Init()
 			self:GetParent():ShowNotice(3, L("maxCharacters"))
 			return
 		end
-
 
 		self:Dim()
 		parent.newCharacterPanel:SetActiveSubpanel("faction", 0)
@@ -995,6 +994,7 @@ function PANEL:Init()
 	self.volume = 0
 
 	ix.gui.characterMenu = self
+	ix.gui.characterMenu.opened = true
 
 	if (!IsValid(ix.gui.intro)) then
 		self:PlayMusic()
@@ -1157,6 +1157,7 @@ function PANEL:OnRemove()
 		self.channel:Stop()
 		self.channel = nil
 	end
+	ix.gui.characterMenu.opened = false
 end
 
 vgui.Register("ixCharMenu", PANEL, "EditablePanel")

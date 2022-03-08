@@ -51,13 +51,14 @@ function PANEL:Init()
 	self.bar:DockMargin(self:GetParent().offset or 0,0,0,0)
 	self.sub:SetPos(self:GetParent().offset - 24, 0)
 	self.bar.Paint = function(this, w, h)
-		surface.SetDrawColor(35, 35, 35, 250)
+		surface.SetDrawColor(ColorAlpha(cellar_blue, 35))
 		surface.DrawRect(0, 0, w, h)
+		
 
 		local value = self.deltaValue / self.max
 
 		if (value > 0) then
-			local color = self.color and self.color or ix.config.Get("color")
+			local color = self.color and self.color or ColorAlpha(cellar_blue, 35)
 			local boostedValue = self.boostValue or 0
 			local add = 0
 
@@ -68,7 +69,7 @@ function PANEL:Init()
 			-- your stat
 			do
 				if !(boostedValue < 0 and math.abs(boostedValue) > self.value) then
-					surface.SetDrawColor(color.r + add, color.g + add, color.b + add, 230)
+					surface.SetDrawColor(color.r + add, color.g + add, color.b + add, 35)
 					surface.DrawRect(0, 0, w * value, h)
 				end
 			end
@@ -97,13 +98,21 @@ function PANEL:Init()
 				end
 			end
 		end
+
+		surface.SetDrawColor(cellar_blue)
+		surface.DrawRect(0, 0, h * .5, 1)
+		surface.DrawRect(0, 0, 1, h * .5)
+		surface.DrawRect(w - h * .5, h - 1, h * .5, 1)
+		surface.DrawRect(w - 1, h - h * .5, 1, h * .5)
 	end
 
 	self.label = self:Add("DLabel")
-	self.label:SetFont("ixAttributesFont")
+	self.label:SetFont("cellar.mini")
+	self.label:SetTextColor(cellar_blue)
 
 	self.label2 = self.bar:Add("DLabel")
-	self.label2:SetFont("ixAttributesBoldFont")
+	self.label2:SetFont("cellar.mini")
+	self.label2:SetTextColor(cellar_blue)
 	self.label2:DockMargin(2, 0, 0, 0)
 	self.label2:Dock(FILL)
 	self.label2:SetContentAlignment(0)
