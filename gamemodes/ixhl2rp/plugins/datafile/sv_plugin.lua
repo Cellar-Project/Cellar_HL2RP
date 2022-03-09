@@ -131,6 +131,27 @@ function PLUGIN:SetCivilStatus(datafileID, civilStatus, client, char)
 	end
 end
 
+local ranks = {
+	[1] = "Regular",
+	[2] = "Rank Leader"
+}
+function PLUGIN:SetRankStatus(datafileID, rank, client, char)
+	if !ranks[rank] then return end
+
+	datafileID = tonumber(datafileID) or 0
+
+	if !self.stored[datafileID] then return end
+
+	local old_rank = self.stored[datafileID][4].rank
+	self.stored[datafileID][4].rank = rank
+
+	if IsValid(client) then
+		self:AddEntry(client, datafileID, "civil", Format("%s has changed rank to %s", char:GetName(), ranks[rank]), 0)
+	end
+
+	hook.Run("OnCombineRankChanged", datafileID, old_rank, rank)
+end
+
 function PLUGIN:AddEntry(poster, player, category, text, points)
 	local posterCharacter = poster:GetCharacter()
 	if !posterCharacter then return end
@@ -323,6 +344,10 @@ do
 	end
 
 	function CHAR:ReturnDatafilePermission()
+		if self:GetFaction() == FACTION_DISPATCH then
+			return 4
+		end
+
 		local cid = self:GetIDCard()
 
 		if !cid then 
