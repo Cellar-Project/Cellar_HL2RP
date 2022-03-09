@@ -1,3 +1,10 @@
+Schema.scoreboardClasses = {
+	["scCityAdm"] = Color(255, 200, 100, 255),
+	["scCWU"] = Color(255, 215, 0, 255),
+	["scOTA"] = Color(150, 50, 50, 255),
+	["scMPF"] = Color(50, 100, 150)
+}
+
 local squad_glow_clr = Color(0, 63, 255)
 
 function PLUGIN:OnJoinSquad(squad)

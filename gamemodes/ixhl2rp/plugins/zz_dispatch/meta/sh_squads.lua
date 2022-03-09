@@ -24,7 +24,8 @@ local SQUAD = ix.meta.squad or {}
 	end
 
 	function SQUAD:GetMemberTag(character)
-		return string.format(dispatch.name_format, self:GetTagName(), self.members[character] or 0)
+		local rank = ix.class.list[character:GetClass()].tag
+		return string.format(dispatch.name_format, rank and rank.."." or "", self:GetTagName(), self.members[character] or 0)
 	end
 	
 	function SQUAD:GetLimitCount()
@@ -47,15 +48,22 @@ local SQUAD = ix.meta.squad or {}
 		return self.leader == character
 	end
 
-	function SQUAD:Setup(tag, character)
+	function SQUAD:IsStatic()
+		return self.isStatic
+	end
+
+	function SQUAD:Setup(tag, character, isStatic)
 		self.tag = tag
 		self.leader = character
 		self.members = {}
 		self.counter = 0  
 		self.member_counter = 0
 		self.players = {}
+		self.isStatic = isStatic
 
-		self:AddMember(character, true)
+		if !isStatic then
+			self:AddMember(character, true)
+		end
 	end
 
 	function SQUAD:RecachePlayers()
@@ -70,8 +78,16 @@ local SQUAD = ix.meta.squad or {}
 	end
 	
 	function SQUAD:AddMember(character, noNetwork)
-		if self:GetLimitCount() >= dispatch.GetMemberLimit() then
+		if !self:IsStatic() and self:GetLimitCount() >= dispatch.GetMemberLimit() then
 			return false, "its full lmao"
+		end
+
+		local other_squad = character:GetSquad()
+
+		if other_squad == self then
+			return false
+		elseif other_squad then
+			other_squad:RemoveMember(character)
 		end
 		
 		self.counter = self.counter + 1
@@ -93,10 +109,15 @@ local SQUAD = ix.meta.squad or {}
 		return true
 	end
 
-	function SQUAD:RemoveMember(character, noNetwork)
+	function SQUAD:RemoveMember(character, noNetwork, full)
 		if !character or !self:HasMember(character) then
 			return false
 		end 
+
+		if !full then
+			dispatch.unassigned_squad:AddMember(character)
+			return
+		end
 
 		self.members[character] = nil
 		self.member_counter = self.member_counter - 1 
@@ -104,7 +125,7 @@ local SQUAD = ix.meta.squad or {}
 		character:SetSquad()
 
 		if SERVER then
-			if self:GetLimitCount() <= 0 then
+			if !self:IsStatic() and self:GetLimitCount() <= 0 then
 				self:Destroy(character)
 
 				return true
@@ -114,6 +135,7 @@ local SQUAD = ix.meta.squad or {}
 				net.Start("ixSquadKickMember")
 					net.WriteUInt(self.tag, 4)
 					net.WriteUInt(character:GetID(), 32)
+					net.WriteBool(full)
 				net.Send(dispatch.GetReceivers())
 			end
 
@@ -145,6 +167,10 @@ local SQUAD = ix.meta.squad or {}
 	end
 
 	function SQUAD:Destroy(lastCharacter)
+		if self:IsStatic() then
+			return
+		end
+		
 		if SERVER then
 			net.Start("ixSquadDestroy")
 				net.WriteUInt(self.tag, 4)
@@ -171,7 +197,7 @@ local SQUAD = ix.meta.squad or {}
 		function SQUAD:Sync(full, receivers)
 			receivers = receivers or dispatch.GetReceivers()
 
-			local leaderID = self.leader:GetID()
+			local leaderID = self:IsStatic() and 0 or self.leader:GetID()
 
 			if !full then
 				net.Start("ixSquadSync")
@@ -206,6 +232,8 @@ if CLIENT then
 
 		if squad then
 			squad:Destroy()
+
+			hook.Run("OnSquadDestroy", tagID, squad)
 		end
 	end)
 
@@ -213,30 +241,34 @@ if CLIENT then
 		local tagID = net.ReadUInt(4)
 		local leaderID = net.ReadUInt(32)
 		local character = ix.char.loaded[leaderID]
+		local squad = dispatch.CreateSquad(character, tagID)
 
-		dispatch.CreateSquad(character, tagID)
-
-		print("NET", "ixSquadSync", len)
+		hook.Run("OnSquadSync", tagID, SQUAD)
 	end)
 	
 	net.Receive("ixSquadSyncFull", function(len)
 		local tagID = net.ReadUInt(4)
 		local leaderID = net.ReadUInt(32)
+		local isStatic = leaderID == 0
 		local counter = net.ReadUInt(8)
 		local members = net.ReadTable()
 
 		local leader = ix.char.loaded[leaderID]
 
-		local SQUAD = dispatch.CreateSquad(leader, tagID)
+		local SQUAD = dispatch.CreateSquad(isStatic and nil or leader, tagID, isStatic)
 		SQUAD.counter = counter
+		SQUAD.member_counter = 0
 
 		for charID, id in pairs(members) do
 			local character = ix.char.loaded[charID]
 
 			SQUAD.members[character] = id
+			SQUAD.member_counter = SQUAD.member_counter + 1
 		end
 
-		print("NET", "ixSquadSyncFull", len)
+		SQUAD:RecachePlayers()
+
+		hook.Run("OnSquadSync", tagID, SQUAD, true)
 	end)
 
 	net.Receive("ixSquadAddMember", function(len)
@@ -248,23 +280,24 @@ if CLIENT then
 			local character = ix.char.loaded[charID]
 
 			squad:AddMember(character)
-		end
 
-		print("NET", "ixSquadAddMember", len)
+			hook.Run("OnSquadMemberJoin", tagID, squad, character)
+		end
 	end)
 
 	net.Receive("ixSquadKickMember", function(len)
 		local tagID = net.ReadUInt(4)
 		local charID = net.ReadUInt(32)
+		local full = net.ReadBool()
 		local squad = dispatch.squads[tagID]
 
 		if squad then
 			local character = ix.char.loaded[charID]
 			
-			squad:RemoveMember(character)
-		end
+			squad:RemoveMember(character, false, full)
 
-		print("NET", "ixSquadKickMember", len)
+			hook.Run("OnSquadMemberLeft", tagID, squad, character)
+		end
 	end)
 
 	net.Receive("ixSquadLeader", function(len)
@@ -276,8 +309,8 @@ if CLIENT then
 			local character = ix.char.loaded[charID]
 			
 			squad:SetLeader(character)
-		end
 
-		print("NET", "ixSquadLeader", len)
+			hook.Run("OnSquadChangedLeader", tagID, squad, character)
+		end
 	end)
 end
