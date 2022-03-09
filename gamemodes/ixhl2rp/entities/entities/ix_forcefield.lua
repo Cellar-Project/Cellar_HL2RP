@@ -159,7 +159,7 @@ if (SERVER) then
 			self:SetMode(self:GetMode() + 1)
 
 			if (self:GetMode() > #MODES) then
-				self:SetMode(1)
+				self:SetMode(MODE_ALLOW_ALL)
 
 				self:SetSkin(1)
 				self.dummy:SetSkin(1)
