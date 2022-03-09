@@ -103,9 +103,12 @@ ITEM.functions.Study = {
 
 				timer.Create(timerID, 0.1, studyTime / 0.1, function()
 					if (IsValid(client)) then
-						if (savedPosition != client:GetPos()) then
+						local bNotInInventory = client != item:GetOwner()
+
+						if (bNotInInventory or savedPosition != client:GetPos()) then
 							client:SetAction()
-							client:NotifyLocalized("noStudyOnMove")
+
+							if (!bNotInInventory) then client:NotifyLocalized("noStudyOnMove") end
 
 							-- just in case
 							timer.Remove(timerID)
