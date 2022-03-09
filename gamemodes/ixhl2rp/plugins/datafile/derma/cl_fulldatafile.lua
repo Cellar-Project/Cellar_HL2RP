@@ -147,16 +147,16 @@ end
 
 -- Update the frame with all the relevant information.
 function PANEL:PopulateGenericData()
-	--local bIsCombine = self.Player:IsCombine();
+	local bIsCombine = (self.GenericData.rank or 0) >= 1;
 	local bIsAntiCitizen = false;
 	local bHasBOL = self.GenericData.bol;
 	local civilStatus = self.GenericData.status;
 	local lastSeen = os.date("%H:%M:%S - %d/%m/%Y", self.GenericData.last_seen);
 
 	-- The logic here can be done far better.
-	--if (bIsCombine) then
-		--self.InfoPanel.MiddleHeaderLabel:SetText("CREDITS");
-	--end;
+	if (bIsCombine) then
+		self.InfoPanel.MiddleHeaderLabel:SetText("POINTS");
+	end;
 
 	self.InfoPanel:SetInfoText(civilStatus, lastSeen, self.GenericData.aparts);
 
@@ -174,8 +174,8 @@ function PANEL:PopulateGenericData()
 
 	if (bIsAntiCitizen) then
 		self.Status = "red";
-	--elseif (bIsCombine) then
-	--	self.Status = "blue";
+	elseif (bIsCombine) then
+		self.Status = "blue";
 	end;
 
 	self.dRightButton.DoClick = function()
@@ -192,7 +192,7 @@ function PANEL:PopulateGenericData()
 	end;
 
 	self.uMiddleButton.DoClick = function()
-		local entryPanel = vgui.Create("cwDfCivilEntry");
+		local entryPanel = vgui.Create(bIsCombine and "cwDfCivilEntryCmb" or "cwDfCivilEntry");
 		entryPanel:SendInformation(self.Data[4]);
 	end;
 
@@ -211,15 +211,20 @@ function PANEL:PopulateGenericData()
 	end;
 
 	local CivilStatus = {
-		[0] = "Anti-Citizen",
-		[1] = "Citizen",
-		[2] = "Black",
-		[3] = "Brown",
-		[4] = "Red",
-		[5] = "Blue",
-		[6] = "Green",
-		[7] = "Gold",
-		[8] = "Platinum"
+		[1] = "Anti-Citizen",
+		[2] = "Citizen",
+		[3] = "Black",
+		[4] = "Brown",
+		[5] = "Red",
+		[6] = "Blue",
+		[7] = "Green",
+		[8] = "Gold",
+		[9] = "Platinum"
+	}
+
+	local Ranks = {
+		[1] = "Regular",
+		[2] = "Rank Leader"
 	}
 
 	self.dMiddleButton.DoClick = function()
@@ -233,6 +238,22 @@ function PANEL:PopulateGenericData()
 
 		self.Menu:Open();
 	end;
+
+	if (bIsCombine) then
+		self.dMiddleButton.DoRightClick = function()
+			self.Menu = DermaMenu()
+
+			for k, v in ipairs(Ranks) do
+				self.Menu:AddOption(v.." ("..(k - 1)..")", function()
+					PLUGIN:UpdateRankStatus(self.Data[4], k)
+				end)
+			end
+
+			self.Menu:Open()
+		end;
+
+		self.dMiddleButton:SetText("CHANGE CIVIL STATUS (LMB) / RANK (RMB)")
+	end
 end;
 
 function PANEL:Paint(w, h)
@@ -488,16 +509,16 @@ function PANEL:SetEntryText(noteText, dateText, posterText, pointsText, posterCo
 	self.Text:SetText(noteText);
 	self.Date:SetText(dateText);
 	self.Poster:SetText(posterText);
-	//self.Points:SetText(pointsText);
+	self.Points:SetText(pointsText);
 
-	//if (pointsText < 0) then
-	//	self.Points:SetTextColor(Color(255, 100, 100, 255))
-	//elseif (pointsText > 0) then
-	//	self.Points:SetTextColor(Color(150, 255, 50, 255))
-	//else
+	if (pointsText < 0) then
+		self.Points:SetTextColor(Color(255, 100, 100, 255))
+	elseif (pointsText > 0) then
+		self.Points:SetTextColor(Color(150, 255, 50, 255))
+	else
 		self.Points:SetText("");
 		self.Points:SetTextColor(Color(220, 220, 220, 255))
-	//end;
+	end;
 
 	self:SetTall(60 + (string.len(self.Text:GetText()) / 28) * 11);
 end;

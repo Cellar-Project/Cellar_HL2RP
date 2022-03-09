@@ -30,6 +30,10 @@ function PLUGIN:UpdateCivilStatus(target, tier)
     netstream.Start("UpdateCivilStatus", target, tier)
 end
 
+function PLUGIN:UpdateRankStatus(target, tier)
+    netstream.Start("UpdateRankStatus", target, tier)
+end
+
 -- A small delay is added for callback reasons. Really disgusting solution.
 function PLUGIN:Refresh(target)
     netstream.Start("RefreshDatafile", target)
