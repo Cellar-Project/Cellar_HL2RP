@@ -14,3 +14,4 @@ ITEM.access = {
 	["cmbCwu*"] = true,
 	["cmbMpf*"] = true,
 }
+ITEM.DefaultRank = 2 -- 1: MPF; 2: RL
