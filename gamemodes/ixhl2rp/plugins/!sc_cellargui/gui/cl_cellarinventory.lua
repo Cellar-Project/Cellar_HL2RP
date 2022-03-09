@@ -279,7 +279,7 @@ function PLUGIN:Think()
 		return 
 	end
 
-	if IsValid(ix.gui.characterMenu) and !ix.gui.characterMenu:IsClosing() then
+	if IsValid(ix.gui.characterMenu) and ix.gui.characterMenu.opened then
 		return
 	end
 
