@@ -13,12 +13,14 @@ function Schema:LoadData()
 	self:LoadRationDispensers()
 	self:LoadVendingMachines()
 	self:LoadCombineMonitors()
+	self:LoadForceFields()
 end
 
 function Schema:SaveData()
 	self:SaveRationDispensers()
 	self:SaveVendingMachines()
 	self:SaveCombineMonitors()
+	self:SaveForceFields()
 end
 
 function Schema:PlayerSwitchFlashlight(client, enabled)
