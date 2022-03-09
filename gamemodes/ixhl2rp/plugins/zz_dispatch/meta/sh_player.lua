@@ -33,7 +33,7 @@ do
 			local squad = self:GetSquad()
 
 			if squad then
-				squad:RemoveMember(self)
+				squad:RemoveMember(self, false, true)
 			end
 		end
 	end

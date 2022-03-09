@@ -4,9 +4,10 @@ PLUGIN.author = "Schwarz Kruppzo"
 PLUGIN.description = ""
 
 dispatch = dispatch or {
-	name_format = "CCA:c03.%s-%i",
-	unassigned_tag = "UNIT",
+	name_format = "CCA:%s%s-%i",
+	--unassigned_tag = "UNIT",
 	available_tags = {
+		"UNIT",
 		"DEFENDER",
 		"HERO",
 		"JURY",
@@ -36,10 +37,15 @@ if SERVER then
 	end)
 end
 
+ix.util.Include("sh_ranks.lua")
 ix.util.Include("meta/sh_squads.lua")
 
 function dispatch.GetMemberLimit()
 	return 5
+end
+
+function dispatch.GetSquads()
+	return dispatch.squads
 end
 
 function dispatch.GetReceivers()
@@ -54,6 +60,20 @@ function dispatch.GetReceivers()
 	return recvs
 end
 
+/*
+function dispatch.GetReceiversAI()
+	local recvs = {}
+
+	for _, client in ipairs(player.GetAll()) do
+		if client:Team() == FACTION_DISPATCH then
+			table.insert(recvs, client)
+		end
+	end
+
+	return recvs
+end
+*/
+
 function dispatch.GetFreeSquadTag()
 	for tag = 1, #dispatch.available_tags do
 		if dispatch.squads[tag] == nil then
@@ -64,8 +84,8 @@ function dispatch.GetFreeSquadTag()
 	return false
 end
 
-function dispatch.CreateSquad(leader, tagID)
-	if getmetatable(leader) != ix.meta.character then
+function dispatch.CreateSquad(leader, tagID, static)
+	if !static and getmetatable(leader) != ix.meta.character then
 		if !leader:GetCharacter() then
 			return
 		end
@@ -80,18 +100,22 @@ function dispatch.CreateSquad(leader, tagID)
 	end
 	
 	local SQUAD = setmetatable({}, ix.meta.squad)
-	SQUAD:Setup(tagID, leader)
-
-	if SERVER then
-		SQUAD:Sync()
-
-		ix.log.Add(leader, "squadCreate", SQUAD:GetTagName())
-	end
+	SQUAD:Setup(tagID, leader, static)
 
 	dispatch.squads[tagID] = SQUAD
 
+	if !static then
+		if SERVER then
+			SQUAD:Sync()
+
+			ix.log.Add(leader, "squadCreate", SQUAD:GetTagName())
+		end
+	end
+
 	return SQUAD
 end
+
+dispatch.unassigned_squad = dispatch.unassigned_squad or dispatch.CreateSquad(nil, 1, true)
 
 ix.util.Include("cl_hooks.lua")
 ix.util.Include("sv_hooks.lua")
