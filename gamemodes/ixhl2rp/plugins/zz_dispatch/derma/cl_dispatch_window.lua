@@ -2,52 +2,6 @@ local function scale(px)
 	return math.ceil(math.max(480, ScrH()) * (px / 1080))
 end
 
-surface.CreateFont("dispatch.stat.label", {
-	font = "Blender Pro Book",
-	size = 18,
-	weight = 400,
-	antialias = true,
-	extended = true
-})
-
-surface.CreateFont("dispatch.stat.value", {
-	font = "Blender Pro Book",
-	size = 21,
-	weight = 500,
-	antialias = true,
-	extended = true
-})
-
-surface.CreateFont("dispatch.window", {
-	font = "Blender Pro Book",
-	size = 14,
-	weight = 800,
-	antialias = true,
-	extended = true
-})
-
-surface.CreateFont("dispatch.tab", {
-	font = "Blender Pro Book",
-	size = 18,
-	weight = 500,
-	antialias = true,
-	extended = true
-})
-surface.CreateFont("dispatch.tabfunc", {
-	font = "Blender Pro Medium",
-	size = 18,
-	weight = 600,
-	antialias = true,
-	extended = true
-})
-surface.CreateFont("dispatch.camera.button", {
-	font = "Blender Pro Bold",
-	size = 16,
-	weight = 800,
-	antialias = true,
-	extended = true
-})
-
 do
 	local PANEL = {}
 	function PANEL:Init()
@@ -399,10 +353,10 @@ do
 			self.manpower = self:Add("dispatch.window")
 			self.manpower:SetWide(stability_w)
 			self.manpower:SetPos(scrW - stability_w - border_size, border_size)
-			self.manpower:SetWindowName("MANPOWER")
+			self.manpower:SetWindowName("СОСТАВ")
 			self.manpower.stats = {}
 
-			for i = 1, 3 do
+			for i = 1, 5 do
 				local stat = self.manpower:Insert("dispatch.window.stat")
 				stat:Dock(TOP)
 				stat:SetLabel("")
@@ -414,14 +368,60 @@ do
 			end
 		end
 
-		self.manpower.stats[1]:SetLabel("TEAMS")
+		self.manpower.stats[1]:SetLabel("ПАТРУЛЬНЫЕ ГРУППЫ")
 		self.manpower.stats[1]:SetValue(string.format("%i/15", #dispatch.squads))
+
+		self.manpower.stats[2]:SetLabel("ПОТОКОВ ИИ")
+		self.manpower.stats[2]:SetValue(0)
+
+		self.manpower.stats[3]:SetLabel("НАДЗИРАТЕЛЕЙ")
+		self.manpower.stats[3]:SetLabelColor(Color(251, 213, 0))
+		self.manpower.stats[3]:SetValue(0)
+
+		self.manpower.stats[4]:SetLabel("СИЛ ГО")
+		self.manpower.stats[4]:SetLabelColor(Color(0, 226, 255))
+		self.manpower.stats[4]:SetValue(0)
+
+		self.manpower.stats[5]:SetLabel("СИЛ СТАБИЛИЗАЦИИ")
+		self.manpower.stats[5]:SetLabelColor(Color(255, 29, 93))
+		self.manpower.stats[5]:SetValue(0)
+
+		timer.Create("dispatch.stats", 1, 0, function()
+			local self = ix.gui.dispatch
+
+			if !IsValid(self) then
+				timer.Remove("dispatch.stats")
+				return
+			end
+
+			local dispatch, overseer, mpf, ota = 0, 0, 0, 0
+
+			for k, v in ipairs(player.GetAll()) do
+				local char = v:GetCharacter()
+				if !char then continue end
+				
+				if char:GetFaction() == FACTION_DISPATCH then
+					dispatch = dispatch + 1
+				elseif char:GetFaction() == FACTION_MPF2 then
+					overseer = overseer + 1
+				elseif char:GetFaction() == FACTION_MPF then
+					mpf = mpf + 1
+				elseif char:IsOTA() then
+					ota = ota + 1
+				end
+			end
+
+			self.manpower.stats[2]:SetValue(dispatch)
+			self.manpower.stats[3]:SetValue(overseer)
+			self.manpower.stats[4]:SetValue(mpf)
+			self.manpower.stats[5]:SetValue(ota)
+		end)
 
 		do
 			local frame = self:Add("dispatch.window")
 			frame:SetWide(scrH * 0.65)
 			frame:SetPos(border_size, border_size)
-			frame:SetWindowName("ASSETS")
+			frame:SetWindowName("ПГ И НАБЛЮДЕНИЕ")
 
 			local test = frame:Insert("Panel")
 			test:Dock(TOP)
@@ -432,7 +432,7 @@ do
 
 			local tab1 = test:Add("dispatch.window.tab")
 			tab1:Dock(LEFT)
-			tab1:SetText("SQUADS")
+			tab1:SetText("ГРУППЫ")
 			tab1:SetWide(w / 3)
 			tab1.DoSwitch = function()
 				self.patrols:SetVisible(true)
@@ -442,7 +442,7 @@ do
 			local tab2 = test:Add("dispatch.window.tab")
 			tab2:Dock(LEFT)
 			tab2:SetWide(w / 3)
-			tab2:SetText("CAMERAS")
+			tab2:SetText("КАМЕРЫ")
 			tab2.DoSwitch = function()
 				self.patrols:SetVisible(false)
 				self.cameras:SetVisible(true)
@@ -451,7 +451,7 @@ do
 			local tab3 = test:Add("dispatch.window.tabfunc")
 			tab3:Dock(LEFT)
 			tab3:SetWide(w / 3)
-			tab3:SetText("DEPLOY SCANNER")
+			tab3:SetText("ВЫЗВАТЬ СКАНЕР")
 			tab3.DoClick = function()
 				self:DeployScanner()
 			end
@@ -481,22 +481,6 @@ do
 
 		self:BuildCameras()
 		self:BuildSquads()
-
-		hook.Add("OnSquadChangedLeader", "dispatch.ui", function(id, squad, character)
-			self:OnSquadChangedLeader(id, squad, character)
-		end)
-		hook.Add("OnSquadMemberLeft", "dispatch.ui", function(id, squad, character)
-			self:OnSquadMemberLeft(id, squad, character)
-		end)
-		hook.Add("OnSquadMemberJoin", "dispatch.ui", function(id, squad, character)
-			self:OnSquadMemberJoin(id, squad, character)
-		end)
-		hook.Add("OnSquadDestroy", "dispatch.ui", function(id, squad)
-			self:OnSquadDestroy(id, squad)
-		end)
-		hook.Add("OnSquadSync", "dispatch.ui", function(id, squad, full)
-			self:OnSquadSync(id, squad, full)
-		end)
 	end
 
 	function PANEL:BuildSquads()
@@ -531,16 +515,39 @@ do
 
 	function PANEL:OnSquadSync(id, squad, full)
 		self.squads[id]:SetupSquadFull(squad)
+		self.squads[id]:SetVisible(squad.member_counter > 0)
+		self.squads[id]:UpdateSquadInfo()
 
-		self.manpower.stats[1]:SetValue(string.format("%i/15", #dispatch.squads - 1))
+		self.manpower.stats[1]:SetValue(string.format("%i/15", table.Count(dispatch.squads) - 1))
 	end
 	function PANEL:OnSquadDestroy(id, squad)
+		for char, _ in pairs(self.squads[id].members) do
+			self.squads[id]:RemoveMember(char)
+		end
+
+		self.squads[id]:UpdateSquadInfo()
+		self.squads[id]:SetVisible(false)
 	end
 	function PANEL:OnSquadMemberJoin(id, squad, character)
+		self.squads[id]:AddMember(character)
+
+		if squad.member_counter > 0 then
+			self.squads[id]:SetVisible(true)
+		end
+
+		self.squads[id]:UpdateSquadInfo()
 	end
 	function PANEL:OnSquadMemberLeft(id, squad, character)
+		self.squads[id]:RemoveMember(character)
+
+		if squad.member_counter <= 0 then
+			self.squads[id]:SetVisible(false)
+		end
+
+		self.squads[id]:UpdateSquadInfo()
 	end
 	function PANEL:OnSquadChangedLeader(id, squad, character)
+		self.squads[id]:SetLeader(character)
 	end
 
 	function PANEL:DeployScanner() 

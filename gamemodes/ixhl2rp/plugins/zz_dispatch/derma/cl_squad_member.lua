@@ -13,6 +13,7 @@ local code_colors = {
 	{Color(255, 29, 93), Color(255, 29, 93, 38)},
 }
 local area_color = {Color(255, 255, 255), Color(255, 255, 255, 45)}
+local leader_ico = Material("cellar/ui/dispatch/leader.png")
 
 function PANEL:GetHeaderColor(isText)
 	return (self.hovered and isText) and focus_color or (self.hovered and header_colors[1][1] or (isText and header_colors[1][1] or header_colors[1][2]))
@@ -48,6 +49,14 @@ function PANEL:PaintPos(w, h)
 	surface.DrawRect(0, 0, w, h)
 end
 
+function PANEL:PaintLeader(w, h)
+	if !self.isLeader then return end
+	
+	surface.SetDrawColor(self.parent:GetHeaderColor(true))
+	surface.SetMaterial(leader_ico)
+	surface.DrawTexturedRect(w - 16, h / 2 - 8, 16, 16)
+end
+
 function PANEL:Init()
 	self:SetText("")
 	self:SetTall(25)
@@ -81,6 +90,7 @@ function PANEL:Init()
 	self.indicator:Dock(LEFT)
 	self.indicator:DockMargin(0, 0, 5, 0)
 	self.indicator:SetWide(self:GetTall())
+	self.indicator.isLeader = false
 
 	self.text = self.header:Add("DLabel")
 	self.text:Dock(FILL)
@@ -99,10 +109,12 @@ function PANEL:Init()
 	self.area.parent = self
 	self.code.parent = self
 	self.header.parent = self
+	self.indicator.parent = self
 
 	self.area.Paint = self.PaintPos
 	self.code.Paint = self.PaintCode
 	self.header.Paint = self.PaintMain
+	self.indicator.Paint = self.PaintLeader
 end
 
 function PANEL:OnCursorEntered()
@@ -115,6 +127,145 @@ function PANEL:OnCursorExited()
 	self.hovered = false
 
 	self:GetTextColors()
+end
+
+local high = Color(0, 100, 64, 2)
+function PANEL:PaintOver(w, h)
+	if self.char and self.char == LocalPlayer():GetCharacter() then
+		render.OverrideBlend(true, BLEND_ONE, BLEND_ONE, BLENDFUNC_ADD, BLEND_DST_ALPHA, BLEND_DST_ALPHA, BLENDFUNC_ADD)
+
+		surface.SetDrawColor(high)
+		surface.DrawRect(0, 0, w, h)
+
+		render.OverrideBlend(false)
+	end
+end
+function PANEL:Paint(w, h) end
+
+function PANEL:OpenMenu(target)
+	local id = target:GetID()
+	local character = LocalPlayer():GetCharacter()
+
+	if target == character then
+		return
+	end
+	
+	local isLeader = self:GetSquad():IsLeader(character)
+	local isDispatch = dispatch.InDispatchMode(LocalPlayer())
+
+	local menu = DermaMenu() 
+
+	local squad, sub
+
+	if isDispatch or isLeader then
+		squad, sub = menu:AddSubMenu("Группа")
+		squad:AddOption("Сделать командиром", function() 
+			net.Start("squad.menu.leader")
+				net.WriteUInt(id, 32)
+			net.SendToServer()
+		end):SetImage("icon16/star.png")
+		sub:SetImage("icon16/arrow_in.png")
+	end
+
+	if isDispatch then
+		local move, sub = squad:AddSubMenu("Переместить в")
+		sub:SetImage("icon16/arrow_right.png")
+
+		for k, v in pairs(dispatch.GetSquads()) do
+			move:AddOption(k == 1 and "Без группы" or v:GetTagName(), function()
+				net.Start("squad.menu.move")
+					net.WriteUInt(id, 32)
+					net.WriteBool(false)
+					net.WriteUInt(k, 5)
+				net.SendToServer()
+			end)
+		end
+
+		move:AddOption("Новая группа", function()
+			net.Start("squad.menu.move")
+				net.WriteUInt(id, 32)
+				net.WriteBool(true)
+			net.SendToServer()
+		end):SetImage("icon16/add.png")
+	else
+		if isLeader then
+			squad:AddOption("Выгнать", function()
+				net.Start("squad.menu.move")
+					net.WriteUInt(id, 32)
+					net.WriteBool(true)
+				net.SendToServer()
+			end):SetImage("icon16/cross.png")
+		end
+	end
+
+	if isDispatch then
+		menu:AddOption("Наблюдать", function() 
+			net.Start("squad.menu.spectate")
+				net.WriteUInt(id, 32)
+			net.SendToServer()
+		end):SetImage("icon16/zoom.png")
+
+		menu:AddOption("Начислить ОС", function() 
+			Derma_StringRequest(
+				target:GetName(), 
+				"Введите желаемое количество очков стерелизации для выдачи (положительное или отрицательное)",
+				"3",
+				function(value) 
+					local points = tonumber(value)
+
+					if points then
+						Derma_StringRequest(
+							target:GetName(), 
+							"Укажите причину",
+							"без причины",
+							function(text) 
+								net.Start("squad.menu.reward")
+									net.WriteUInt(id, 32)
+									net.WriteInt(points, 32)
+									net.WriteString(text)
+								net.SendToServer()
+							end,
+							nil,
+							"Применить",
+							"Отмена"
+						)
+					end
+				end,
+				nil,
+				"Далее",
+				"Отмена"
+			)
+		end):SetImage("icon16/award_star_add.png")
+	end
+
+	menu:AddSpacer()
+	menu:AddOption("Открыть личное дело", function() 
+		net.Start("squad.menu.datafile")
+			net.WriteUInt(id, 32)
+		net.SendToServer()
+	end):SetImage("icon16/book_open.png")
+	menu:Open()
+
+	/*
+		DISPATCH [MEMBER]:
+					Spectate
+					Move To <squad>
+					Set as Squad Leader
+					Give Reward
+					Open Datafile
+
+		MEMBER [MEMBER]:
+		[LEADER]	Kick
+		[LEADER]	Set as Squad Leader
+					Open Datafile
+		
+		DISPATCH [SQUAD]:
+					Disband
+					Give Reward
+
+		MEMBER [SQUAD]:
+		[LEADER]	Disband
+	*/
 end
 
 function PANEL:PerformLayout(w, h)
@@ -133,11 +284,16 @@ function PANEL:SetCharacter(char)
 	local squad = self:GetSquad()
 	local rank = ix.class.list[char:GetClass()].tag
 
+	self.char = char
 	self.tag = string.format("%s%s-%i", rank and rank.."." or "", squad:GetTagName(), squad.members[char] or 0)
-
 	self.text:SetText(self.tag)
 
 	self:GetTextColors()
+
+	self.indicator.isLeader = squad:IsLeader(char)
+
+	self.DoClick = function() self:OpenMenu(char) end
+	self.DoRightClick = function() self:OpenMenu(char) end
 end
 
 vgui.Register("squad.member.button", PANEL, "DButton")

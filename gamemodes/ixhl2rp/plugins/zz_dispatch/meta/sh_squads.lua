@@ -85,9 +85,9 @@ local SQUAD = ix.meta.squad or {}
 		local other_squad = character:GetSquad()
 
 		if other_squad == self then
-			return false
+			return false, "already in this squad"
 		elseif other_squad then
-			other_squad:RemoveMember(character)
+			other_squad:RemoveMember(character, false, true)
 		end
 		
 		self.counter = self.counter + 1
@@ -99,7 +99,7 @@ local SQUAD = ix.meta.squad or {}
 
 		if SERVER and !noNetwork then
 			net.Start("ixSquadAddMember")
-				net.WriteUInt(self.tag, 4)
+				net.WriteUInt(self.tag, 5)
 				net.WriteUInt(character:GetID(), 32)
 			net.Send(dispatch.GetReceivers())
 		end
@@ -113,16 +113,15 @@ local SQUAD = ix.meta.squad or {}
 		if !character or !self:HasMember(character) then
 			return false
 		end 
-
-		if !full then
-			dispatch.unassigned_squad:AddMember(character)
-			return
-		end
-
+		
 		self.members[character] = nil
 		self.member_counter = self.member_counter - 1 
 
-		character:SetSquad()
+		if !full then
+			dispatch.unassigned_squad:AddMember(character)
+		else
+			character:SetSquad()
+		end
 
 		if SERVER then
 			if !self:IsStatic() and self:GetLimitCount() <= 0 then
@@ -133,7 +132,7 @@ local SQUAD = ix.meta.squad or {}
 
 			if !noNetwork then
 				net.Start("ixSquadKickMember")
-					net.WriteUInt(self.tag, 4)
+					net.WriteUInt(self.tag, 5)
 					net.WriteUInt(character:GetID(), 32)
 					net.WriteBool(full)
 				net.Send(dispatch.GetReceivers())
@@ -158,7 +157,7 @@ local SQUAD = ix.meta.squad or {}
 
 		if SERVER and !noNetwork then
 			net.Start("ixSquadLeader")
-				net.WriteUInt(self.tag, 4)
+				net.WriteUInt(self.tag, 5)
 				net.WriteUInt(character:GetID(), 32)
 			net.Send(dispatch.GetReceivers())
 		end
@@ -173,7 +172,7 @@ local SQUAD = ix.meta.squad or {}
 		
 		if SERVER then
 			net.Start("ixSquadDestroy")
-				net.WriteUInt(self.tag, 4)
+				net.WriteUInt(self.tag, 5)
 			net.Send(dispatch.GetReceivers())
 
 			ix.log.Add(lastCharacter, "squadDestroy", self:GetTagName())
@@ -201,12 +200,12 @@ local SQUAD = ix.meta.squad or {}
 
 			if !full then
 				net.Start("ixSquadSync")
-					net.WriteUInt(self.tag, 4)
+					net.WriteUInt(self.tag, 5)
 					net.WriteUInt(leaderID, 32)
 				net.Send(receivers)
 			else
 				net.Start("ixSquadSyncFull")
-					net.WriteUInt(self.tag, 4)
+					net.WriteUInt(self.tag, 5)
 					net.WriteUInt(leaderID, 32)
 					net.WriteUInt(self.counter, 8)
 
@@ -227,7 +226,7 @@ ix.meta.squad = SQUAD
 
 if CLIENT then
 	net.Receive("ixSquadDestroy", function(len)
-		local tagID = net.ReadUInt(4)
+		local tagID = net.ReadUInt(5)
 		local squad = dispatch.squads[tagID]
 
 		if squad then
@@ -238,16 +237,16 @@ if CLIENT then
 	end)
 
 	net.Receive("ixSquadSync", function(len)
-		local tagID = net.ReadUInt(4)
+		local tagID = net.ReadUInt(5)
 		local leaderID = net.ReadUInt(32)
 		local character = ix.char.loaded[leaderID]
 		local squad = dispatch.CreateSquad(character, tagID)
 
-		hook.Run("OnSquadSync", tagID, SQUAD)
+		hook.Run("OnSquadSync", tagID, squad)
 	end)
 	
 	net.Receive("ixSquadSyncFull", function(len)
-		local tagID = net.ReadUInt(4)
+		local tagID = net.ReadUInt(5)
 		local leaderID = net.ReadUInt(32)
 		local isStatic = leaderID == 0
 		local counter = net.ReadUInt(8)
@@ -257,13 +256,14 @@ if CLIENT then
 
 		local SQUAD = dispatch.CreateSquad(isStatic and nil or leader, tagID, isStatic)
 		SQUAD.counter = counter
-		SQUAD.member_counter = 0
 
 		for charID, id in pairs(members) do
 			local character = ix.char.loaded[charID]
 
 			SQUAD.members[character] = id
 			SQUAD.member_counter = SQUAD.member_counter + 1
+
+			character:SetSquad(SQUAD)
 		end
 
 		SQUAD:RecachePlayers()
@@ -272,7 +272,7 @@ if CLIENT then
 	end)
 
 	net.Receive("ixSquadAddMember", function(len)
-		local tagID = net.ReadUInt(4)
+		local tagID = net.ReadUInt(5)
 		local charID = net.ReadUInt(32)
 		local squad = dispatch.squads[tagID]
 
@@ -286,7 +286,7 @@ if CLIENT then
 	end)
 
 	net.Receive("ixSquadKickMember", function(len)
-		local tagID = net.ReadUInt(4)
+		local tagID = net.ReadUInt(5)
 		local charID = net.ReadUInt(32)
 		local full = net.ReadBool()
 		local squad = dispatch.squads[tagID]
@@ -301,7 +301,7 @@ if CLIENT then
 	end)
 
 	net.Receive("ixSquadLeader", function(len)
-		local tagID = net.ReadUInt(4)
+		local tagID = net.ReadUInt(5)
 		local charID = net.ReadUInt(32)
 		local squad = dispatch.squads[tagID]
 
