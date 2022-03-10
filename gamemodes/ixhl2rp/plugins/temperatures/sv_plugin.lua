@@ -33,7 +33,7 @@ end
 
 function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damage, offset)
 	local character = client:GetCharacter()
-	local outfit = equipment["torso"].isOutfit
+	local outfit = equipment["torso"] and equipment["torso"].isOutfit or false
 	local dangerous = temperature < 8
 	local resist = 0
 	local damageTaken = false
@@ -41,7 +41,7 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 
 	-- calculate damage through outfit:
 	if outfit then
-		resist = equipment["torso"].ThermalIsolation
+		resist = equipment["torso"].ThermalIsolation or 0
 
 		if resist >= damage then
 			damage = 0
@@ -57,22 +57,22 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 	else
 		-- head damage:
 		resist = equipment["head"] and equipment["head"].ThermalIsolation or 0
-		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_HEAD, true)
+		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_HEAD, true)
 
 		-- chest damage:
 		resist = equipment["torso"] and equipment["torso"].ThermalIsolation or 0
-		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_CHEST, true)
-		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_STOMACH, true)
+		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_CHEST, true)
+		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_STOMACH, true)
 
 		-- arms damage:
 		resist = equipment["hands"] and equipment["hands"].ThermalIsolation or 0
-		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_LEFTARM, true)
-		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_RIGHTARM, true)
+		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_LEFTARM, true)
+		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_RIGHTARM, true)
 
 		-- legs damage:
 		resist = equipment["hands"] and equipment["hands"].ThermalIsolation or 0
-		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_LEFTLEG, true)
-		damageTaken = damageTaken or self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_RIGHTLEG, true)
+		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_LEFTLEG, true)
+		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_RIGHTLEG, true)
 	end
 	if resist and (resist > 0) then
 		offset = offset * (1 - (resist * 0.1))

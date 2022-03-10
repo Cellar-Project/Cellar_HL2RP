@@ -72,21 +72,20 @@ if SERVER then
 
 	do
 		for k, model in ipairs(PLUGIN.CombineModels) do
-			local shortname = string.Explode("/", model) -- wtf is this? debug it later
+			local shortname = string.Explode("/", model)
 			player_manager.AddValidModel(shortname, model)
-			player_manager.AddValidHands(shortname, "models/weapons/c_arms_combine.mdl", 1, "0000000")
+			player_manager.AddValidHands(shortname, "models/weapons/c_arms_combine.mdl", 0, "0000000")
 		end
 
 		for k, model in ipairs(PLUGIN.ZombieModels) do
 			local shortname = string.Explode("/", model)
 			player_manager.AddValidModel(shortname, model)
-			player_manager.AddValidHands(shortname, "models/weapons/c_arms_citizen.mdl", 2, "0000000")
+			player_manager.AddValidHands(shortname, "models/weapons/c_arms_citizen.mdl", 1, "0000000")
 		end
 	end
 
 	function PLUGIN:PlayerLoadedCharacter(client, character, lastchar)
 		timer.Simple(3, function()
-			character:SetData("mdl_ld", false)
 			hook.Run("PlayerSetHandsModel", client, client:GetHands())
 		end)
 	end
@@ -94,12 +93,11 @@ if SERVER then
 	function PLUGIN:PlayerModelChanged(client, model, lastmodel)
 		timer.Simple(2, function()
 			if !isfunction(client.GetCharacter) then return end
+
 			local char = client:GetCharacter()
-			if char and char:GetData("mdl_ld") and IsValid(client:GetHands()) then
+
+			if char and IsValid(client:GetHands()) then
 				hook.Run("PlayerSetHandsModel", client, client:GetHands())
-			else
-				if char and isfunction(char.SetData) then char:SetData("mdl_ld", true) end
-				return
 			end
 		end)
 	end
