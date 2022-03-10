@@ -1,24 +1,28 @@
 
 ix.char.RegisterVar("studiedLanguages", {
 	default = {},
-	category = "attributes",
+	category = "skills",
 	OnDisplay = function(_, container, payload)
 		local freeSpace = container:GetTall()
-		// label for language panel will be generated after, but it's height will be the same as attributes label
-		local childrenTall = container:GetChild(ix.char.vars["attributes"].index - 2):GetTall()
+		-- label for language panel will be generated after, but it's height will be the same as skills label
+		local skillsLabel = container:GetChild(1)
+		local _, topMargin, _, bottomMargin = skillsLabel:GetDockMargin()
+		local childrenTall = skillsLabel:GetTall() + topMargin + bottomMargin
 
 		for _, v in ipairs(container:GetChildren()) do
 			if (v != panel) then
-				childrenTall = childrenTall + v:GetTall()
+				_, topMargin, _, bottomMargin = v:GetDockMargin()
+
+				childrenTall = childrenTall + v:GetTall() + topMargin + bottomMargin
 			end
 		end
 
-		freeSpace = freeSpace - childrenTall
+		local langTopMargin = 4
+		freeSpace = freeSpace - childrenTall - langTopMargin
 
-		local topMargin = 4
 		local languageSelecter = container:Add("ixLanguageSelecter")
 		languageSelecter:Dock(TOP)
-		languageSelecter:DockMargin(0, topMargin, 0, 0)
+		languageSelecter:DockMargin(0, langTopMargin, 0, 0)
 		languageSelecter:SetLanguageList(ix.chatLanguages.list)
 		languageSelecter.OnLanguageSelect = function(_, id)
 			payload.studiedLanguages = id
@@ -27,12 +31,12 @@ ix.char.RegisterVar("studiedLanguages", {
 			payload.studiedLanguages = nil
 		end
 
-		local targetHeight = languageSelecter:GetChildrenHeight() + topMargin
+		local targetHeight = languageSelecter:GetChildrenHeight() + langTopMargin
 
 		if (targetHeight <= freeSpace) then
 			languageSelecter:SetTall(targetHeight)
 		elseif (targetHeight > freeSpace) then
-			languageSelecter:SetTall(freeSpace)
+			languageSelecter:Dock(FILL)
 		end
 
 		return languageSelecter
@@ -55,6 +59,11 @@ ix.char.RegisterVar("studiedLanguages", {
 	ShouldDisplay = function()
 		return !table.IsEmpty(ix.chatLanguages.list)
 	end
+})
+
+ix.char.RegisterVar("usedLanguage", {
+	default = "",
+	bNoDisplay = true
 })
 
 net.Receive("ixCharacterStudiedLanguagesChanged", function()

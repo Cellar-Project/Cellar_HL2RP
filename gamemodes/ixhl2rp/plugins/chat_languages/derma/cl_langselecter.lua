@@ -16,6 +16,7 @@ function PANEL:Init()
 	self.searchBar:SetUpdateOnType(true)
 	self.searchBar:SetPlaceholderText(L("languageSearch"))
 	self.searchBar:SetFont("ixMenuLanguageFont")
+	self.searchBar:SetTextColor(cellar_blue)
 	self.searchBar:SetZPos(-1)
 	self.searchBar.OnValueChange = function(this, value)
 		self:ReloadLanguageList(value)
@@ -52,81 +53,84 @@ function PANEL:SetLanguageList(newList)
 	end
 
 	for k, v in SortedPairsByMemberValue(newList, "name") do
-		local panel = self.canvas:Add("Panel")
-		panel:Dock(TOP)
+		if (!v.bNotLearnable) then
+			local panel = self.canvas:Add("Panel")
+			panel:Dock(TOP)
 
-		panel.Paint = function(this, width, height)
-			if (self.selectedPanel == this and this:IsHovered()) then
-				derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, ix.config.Get("color"))
-			elseif (self.selectedPanel == this) then
-				local color = ix.config.Get("color")
+			panel.Paint = function(this, width, height)
+				if (self.selectedPanel == this and this:IsHovered()) then
+					derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, ix.config.Get("color"))
+				elseif (self.selectedPanel == this) then
+					local color = ix.config.Get("color")
 
-				if (!IsColor(color)) then
-					color = Color(unpack(color))
-				end
+					if (!IsColor(color)) then
+						color = Color(color.r, color.g, color.b, color.a)
+					end
 
-				color = ColorAlpha(color, color.a * 0.5)
+					color = ColorAlpha(color, color.a * 0.5)
 
-				derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, color)
-			elseif (this:IsHovered()) then
-				derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, Color(255, 255, 255, 25))
-			end
-		end
-		panel.OnMousePressed = function(this, keyCode)
-			if (keyCode == MOUSE_LEFT) then
-				local previous = self.selectedPanel
-
-				if (self.selectedPanel != this) then
-					self.selectedPanel = this
-
-					if (self.OnLanguageSelect) then self:OnLanguageSelect(k) end
-				else
-					self.selectedPanel = nil
-
-					if (self.OnLanguageDeselect) then self:OnLanguageDeselect() end
+					derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, color)
+				elseif (this:IsHovered()) then
+					derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, Color(255, 255, 255, 25))
 				end
 			end
+			panel.OnMousePressed = function(this, keyCode)
+				if (keyCode == MOUSE_LEFT) then
+					local previous = self.selectedPanel
+
+					if (self.selectedPanel != this) then
+						self.selectedPanel = this
+
+						if (self.OnLanguageSelect) then self:OnLanguageSelect(k) end
+					else
+						self.selectedPanel = nil
+
+						if (self.OnLanguageDeselect) then self:OnLanguageDeselect() end
+					end
+				end
+			end
+			panel.OnCursorEntered = function(this)
+				this:SetCursor("hand")
+			end
+			panel.OnCursorExited = function(this)
+				this:SetCursor("arrow")
+			end
+
+			panel.flag = panel:Add("DImage")
+			panel.flag:SetMaterial(v.panelIcon)
+			panel.flag:Dock(LEFT)
+			panel.flag:DockMargin(languageLeftMargin, 0, 0, 0)
+		
+			panel.name = panel:Add("DLabel")
+			panel.name:SetFont(self.font)
+			panel.name:SetText(L(v.name))
+			panel.name:SetTextColor(cellar_blue)
+		--	panel.name:SetExpensiveShadow(1, color_black)
+			panel.name:Dock(LEFT)
+			panel.name:DockMargin(languageLeftMargin + 2, 0, 0, 0)
+			panel.name:SizeToContents()
+
+			local height = self.languageHeight
+			local nameHeight = panel.name:GetTall()
+			local iconSize = nameHeight - 4
+
+			if (iconSize > 0) then
+				local difference = (height - iconSize) * 0.5
+
+				panel.flag:DockMargin(languageLeftMargin, difference, 0, difference)
+				panel.flag:SetWide(iconSize)
+			elseif (iconSize < 0) then
+				local difference = (height - nameHeight) * 0.5
+
+				panel.flag:DockMargin(languageLeftMargin, difference, 0, difference)
+				panel.flag:SetWide(nameHeight)
+			end
+
+			panel:SetTall(height)
+
+			self.languages[#self.languages + 1] = panel
+			self.childrenHeight = self.childrenHeight + height
 		end
-		panel.OnCursorEntered = function(this)
-			this:SetCursor("hand")
-		end
-		panel.OnCursorExited = function(this)
-			this:SetCursor("arrow")
-		end
-
-		panel.flag = panel:Add("DImage")
-		panel.flag:SetMaterial(v.panelIcon)
-		panel.flag:Dock(LEFT)
-		panel.flag:DockMargin(languageLeftMargin, 0, 0, 0)
-	
-		panel.name = panel:Add("DLabel")
-		panel.name:SetFont(self.font)
-		panel.name:SetText(L(v.name))
-		panel.name:SetExpensiveShadow(1, color_black)
-		panel.name:Dock(LEFT)
-		panel.name:DockMargin(languageLeftMargin + 2, 0, 0, 0)
-		panel.name:SizeToContents()
-
-		local height = self.languageHeight
-		local nameHeight = panel.name:GetTall()
-		local iconSize = panel.name:GetTall() - 4
-
-		if (iconSize > 0) then
-			local difference = (height - iconSize) * 0.5
-
-			panel.flag:DockMargin(languageLeftMargin, difference, 0, difference)
-			panel.flag:SetWide(iconSize)
-		else
-			local halfIconSize = iconSize * 0.5
-
-			panel.flag:DockMargin(languageLeftMargin, halfIconSize, 0, halfIconSize)
-			panel.flag:SetWide(nameHeight)
-		end
-
-		panel:SetTall(height)
-
-		self.languages[#self.languages + 1] = panel
-		self.childrenHeight = self.childrenHeight + height
 	end
 
 	if (#newList > 0) then
