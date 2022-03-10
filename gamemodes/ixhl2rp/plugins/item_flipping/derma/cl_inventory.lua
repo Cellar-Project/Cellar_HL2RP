@@ -123,6 +123,12 @@ function PANEL:AddIcon(model, x, y, w, h, skin)
 
 		local itemTable = inventory:GetItemAt(panel.gridX, panel.gridY)
 
+		if (!itemTable or !itemTable.GetID) then
+			panel:Remove()
+
+			return
+		end
+
 		panel:SetInventoryID(inventory:GetID())
 		panel:SetItemTable(itemTable)
 
