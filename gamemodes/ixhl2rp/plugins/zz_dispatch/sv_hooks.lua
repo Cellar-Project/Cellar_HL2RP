@@ -1,6 +1,6 @@
 function PLUGIN:PlayerLoadedCharacter(client, character, currentChar)
 	if character:IsCombine() then
-		for k, v in ipairs(dispatch.GetSquads()) do
+		for k, v in pairs(dispatch.GetSquads()) do
 			v:Sync(true, client)
 		end
 

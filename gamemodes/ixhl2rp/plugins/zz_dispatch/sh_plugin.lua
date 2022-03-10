@@ -131,3 +131,22 @@ ix.command.Add("SquadCreate", {
 		return dispatch.CreateSquad(client)
 	end
 })
+
+
+ix.command.Add("SquadJoin", {
+	description = "@cmdPTCreate",
+	arguments = {
+		ix.type.number
+	},
+	OnRun = function(self, client, index)
+		if !client:IsCombine() then
+			return "@CannotUseTeamCommands"
+		end
+
+		local squad = dispatch.GetSquads()[index]
+
+		if squad then
+			squad:AddMember(client:GetCharacter())
+		end
+	end
+})

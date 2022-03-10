@@ -1,27 +1,4 @@
 -- TO DO: CLEAN UP THINGS
-
-surface.CreateFont("ixSquadTitle", {
-	font = "Blender Pro Bold",
-	extended = true,
-	size = 20,
-	weight = 500,
-	antialias = true
-})
-surface.CreateFont("ixSquadMember", {
-	font = "Roboto Medium",
-	extended = true,
-	size = 12,
-	weight = 500,
-	antialias = true
-})
-surface.CreateFont("ixSquadTitleSmall", {
-	font = "Blender Pro Medium",
-	extended = true,
-	size = 15,
-	weight = 500,
-	antialias = true
-})
-
 local PANEL = {}
 PANEL.HeaderSize = 28
 PANEL.clr = {
@@ -81,6 +58,7 @@ function PANEL:OnExpand()
 end
 
 function PANEL:OnJoin()
+	ix.command.Send("SquadJoin", self.squad.tag)
 end
 
 function PANEL:RemoveMember(char)
@@ -95,6 +73,33 @@ function PANEL:RemoveMember(char)
 	self:SetTall(self.targetSize)
 
 	self.lastTargetSize = self.targetSize
+
+	if self.expanded then
+		self:SetTall(self.targetSize)
+	end
+
+	self:SortMembers()
+end
+
+function PANEL:SortMembers()
+	local x = 1
+	local leader
+
+	for char, i in SortedPairsByValue(self.squad.members, true) do
+		if self.members[char] then
+			self.members[char]:SetZPos(-x)
+
+			if self.members[char].indicator.isLeader then
+				leader = self.members[char]
+			end
+			
+			x = x + 1
+		end
+	end
+
+	if leader then
+		leader:SetZPos(-x - 1)
+	end
 end
 
 function PANEL:AddMember(char)
@@ -107,7 +112,22 @@ function PANEL:AddMember(char)
 	self.subcontainer:SizeToChildren(false, true)
 
 	self.targetSize = PANEL.HeaderSize + self.subcontainer:GetTall()
+
+	self:SetTall(self.targetSize)
+
 	self.lastTargetSize = self.targetSize
+
+	self.members[char] = a
+
+	self:SortMembers()
+end
+
+function PANEL:SetLeader(char)
+	for k, v in pairs(self.members) do
+		v.indicator.isLeader = k == char
+	end
+
+	self:SortMembers()
 end
 
 function PANEL:SetupSquad(tag)
@@ -132,16 +152,71 @@ function PANEL:SetupSquadFull(squad)
 
 	self.squad = squad
 	self.data = {
-		name = self.isStatic and "UNASSIGNED" or "SQUAD "..squad:GetTagName(),
+		name = self.isStatic and "БЕЗ ПГ" or "ПГ "..squad:GetTagName(),
 		count = squad:GetLimitCount(),
 		format = "%i / "..(self.isStatic and "∞" or "5")
 	}
 
 	for char, _ in pairs(squad.members) do
-		self.members[char] = self:AddMember(char)
+		self:AddMember(char)
 	end
 
+	self:SetVisible(squad.member_counter > 0)
 	self:UpdateSquadInfo()
+
+	self.btn.DoRightClick = function() self:OpenMenu(self.squad) end
+end
+
+function PANEL:OpenMenu(squad)
+	local character = LocalPlayer():GetCharacter()
+	local isLeader = self.squad:IsLeader(character)
+	local isDispatch = dispatch.InDispatchMode(LocalPlayer())
+
+	local menu = DermaMenu() 
+
+	if isDispatch or isLeader then
+		menu:AddOption("Расформировать", function() 
+			net.Start("squad.menu.disband")
+				net.WriteUInt(squad.tag, 5)
+			net.SendToServer()
+		end):SetImage("icon16/cross.png")
+	end
+
+	if isDispatch then
+		menu:AddOption("Начислить ОС всей группе", function() 
+			Derma_StringRequest(
+				squad:GetTagName(), 
+				"Введите желаемое количество очков стерелизации для выдачи КАЖДОМУ члену патрульной группы (положительное или отрицательное)",
+				"3",
+				function(value) 
+					local points = tonumber(value)
+
+					if points then
+						Derma_StringRequest(
+							squad:GetTagName(), 
+							"Укажите причину",
+							"без причины",
+							function(text) 
+								net.Start("squad.menu.rewardall")
+									net.WriteUInt(squad.tag, 5)
+									net.WriteInt(points, 32)
+									net.WriteString(text)
+								net.SendToServer()
+							end,
+							nil,
+							"Применить",
+							"Отмена"
+						)
+					end
+				end,
+				nil,
+				"Далее",
+				"Отмена"
+			)
+		end):SetImage("icon16/award_star_add.png")
+	end
+
+	menu:Open()
 end
 
 function PANEL:UpdateSquadInfo()

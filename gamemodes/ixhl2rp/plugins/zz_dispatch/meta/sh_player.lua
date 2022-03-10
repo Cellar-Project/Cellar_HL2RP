@@ -2,11 +2,46 @@ do
 	local CHAR = ix.meta.character
 	CHAR.GetOriginalName = CHAR.GetName
 
+	local function recognize(char, id)
+		local other = ix.char.loaded[id]
+
+		if other then
+			local faction = ix.faction.indices[other:GetFaction()]
+
+			if faction and faction.isGloballyRecognized then
+				return true
+			end
+		end
+
+		local recognized = char:GetData("rgn", "")
+
+		if recognized != "" and recognized:find(","..id..",") then
+			return true
+		end
+	end
+
 	function CHAR:GetSquadName()
-		return self.dispatchSquad and self.dispatchSquad:GetMemberTag(self) or "ERROR"
+		local squad_name = self.dispatchSquad and self.dispatchSquad:GetMemberTag(self) or "ERROR"
+
+		if CLIENT then
+			local char = LocalPlayer():GetCharacter()
+
+			if char then
+				if recognize(char, self:GetID()) then
+					return squad_name
+				end
+
+				local fakename = char:GetData("aw_KnowFakeNames",{})[self:GetID()]
+
+				return fakename or squad_name
+			end
+		end
+		
+		return squad_name
 	end
 	
 	function CHAR:SetSquad(squad)
+		-- TO DO: Solve Name Issue
 		self.lastSquad = self.dispatchSquad
 		self.dispatchSquad = squad
 		self.GetName = squad and CHAR.GetSquadName or nil
