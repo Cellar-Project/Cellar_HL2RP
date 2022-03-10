@@ -26,12 +26,16 @@ ix.char.RegisterVar("studiedLanguages", {
 			if (!value and character:GetUsedLanguage() == key) then
 				character:SetUsedLanguage("")
 			end
+		else
+			return false
 		end
 	end,
 	OnValidate = function(_, value)
 		if (value != nil) then
 			if (isstring(value)) then
-				if (!ix.chatLanguages.Get(value)) then
+				local languageData = ix.chatLanguages.Get(value)
+
+				if (!languageData or languageData.bNotLearnable) then
 					return false, "unknownError"
 				end
 
@@ -58,18 +62,31 @@ ix.char.RegisterVar("studiedLanguages", {
 	end
 })
 
-do
-	local charMeta = ix.meta.character
+ix.char.RegisterVar("usedLanguage", {
+	field = "used_language",
+	fieldType = ix.type.string,
+	default = "",
+	isLocal = true,
+	bNoDisplay = true,
+	OnSet = function(self, value)
+		local oldValue = self.vars.usedLanguage
 
-	function charMeta:ResetLanguageLeftStudyTime(languageID, genericDataKey, volumeCount)
-		genericDataKey = genericDataKey or ix.chatLanguages.GetStudyTimeLeftGenericDataKey(languageID)
-		volumeCount = volumeCount or ix.config.Get("languageTextbooksVolumeCount", 3)
+		if (value == "" or (ix.chatLanguages.Get(value) and self:CanSpeakLanguage(value)) and value != oldValue) then
+			self.vars.usedLanguage = value
 
-		for i = 1, volumeCount do
-			self:SetData(genericDataKey .. i, nil)
+			net.Start("ixCharacterChangeUsedLanguage")
+				net.WriteUInt(self:GetID(), 32)
+				net.WriteString(value)
+			net.Send(self.player)
+
+			hook.Run("CharacterVarChanged", self, key, oldValue, value)
+		else
+			return false
 		end
+
+		return false
 	end
-end
+})
 
 net.Receive("ixCharacterChangeUsedLanguage", function(_, client)
 	local curTime = CurTime()
@@ -78,16 +95,7 @@ net.Receive("ixCharacterChangeUsedLanguage", function(_, client)
 		local character = client:GetCharacter()
 
 		if (character) then
-			local id = net.ReadString()
-			local bNoID = id == ""
-
-			if (
-				(bNoID or ix.chatLanguages.Get(id)) and
-				(bNoID or character:CanSpeakLanguage(id)) and
-				id != character:GetUsedLanguage()
-			) then
-				character:SetUsedLanguage(id)
-			end
+			character:SetUsedLanguage(net.ReadString())
 		end
 
 		client.ixNextUsedLanguageChange = curTime + 0.2

@@ -40,17 +40,9 @@ local function ReplaceTextWithRandomWords(usedLanguage, originalText)
 end
 
 local function CanPlayerUnderstandLanguage(client, usedLanguage)
-	if (client:GetMoveType() == MOVETYPE_NOCLIP) then
-		return true
-	end
-
 	local character = client:GetCharacter()
 
-	if (character:CanSpeakLanguage(usedLanguage)) then
-		return true
-	end
-
-	return false
+	return character and character:CanSpeakLanguage(usedLanguage)
 end
 
 function ix.chat.Send(speaker, chatType, text, bAnonymous, receivers, data)
@@ -115,10 +107,11 @@ function ix.chat.Send(speaker, chatType, text, bAnonymous, receivers, data)
 			if (class.range) then
 				local maxRange = class.range
 				local lossStartRange = maxRange * 0.2
+				local obstacleLossStartRange = maxRange * 0.1
 				local maxMinusStartLossRange = maxRange - lossStartRange
 
 				for k, v in ipairs(receivers) do
-					if (speaker != v) then
+					if (speaker != v and v:GetMoveType() != MOVETYPE_NOCLIP) then
 						local localText = text
 						local lossFraction = 0
 						local range = (speaker:GetPos() - v:GetPos()):LengthSqr()
@@ -129,7 +122,7 @@ function ix.chat.Send(speaker, chatType, text, bAnonymous, receivers, data)
 							mask = MASK_SHOT_HULL
 						})
 
-						if (traceHull.Entity != v) then
+						if (traceHull.Entity != v and range > obstacleLossStartRange) then
 							lossFraction = 0.3
 						end
 						if (range > lossStartRange) then
@@ -179,25 +172,27 @@ function ix.chat.Send(speaker, chatType, text, bAnonymous, receivers, data)
 					end
 				end
 			else
-				local receiversR = {}
-				local indexFix = 1
+				if (usedLanguage) then
+					local receiversR = {}
+					local indexFix = 1
 
-				for k, v in ipairs(receivers) do
-					if (speaker != v and !CanPlayerUnderstandLanguage(v, usedLanguage)) then
-						receiversR[#receiversR + 1] = v
-						receivers[k] = nil
+					for k, v in ipairs(receivers) do
+						if (speaker != v and v:GetMoveType() != MOVETYPE_NOCLIP and !CanPlayerUnderstandLanguage(v, usedLanguage)) then
+							receiversR[#receiversR + 1] = v
+							receivers[k] = nil
+						end
 					end
-				end
 
-				for k, v in pairs(receivers) do
-					receivers[indexFix] = v
-					indexFix = indexFix + 1
-				end
+					for k, v in pairs(receivers) do
+						receivers[indexFix] = v
+						indexFix = indexFix + 1
+					end
 
-				if (#receiversR > 0) then
-					randomText = ReplaceTextWithRandomWords(usedLanguage, text)
+					if (#receiversR > 0) then
+						randomText = ReplaceTextWithRandomWords(usedLanguage, text)
 
-					SendChatMessageToPlayers(speaker, chatType, randomText, bAnonymous, data, receiversR)
+						SendChatMessageToPlayers(speaker, chatType, randomText, bAnonymous, data, receiversR)
+					end
 				end
 
 				SendChatMessageToPlayers(speaker, chatType, text, bAnonymous, data, receivers)

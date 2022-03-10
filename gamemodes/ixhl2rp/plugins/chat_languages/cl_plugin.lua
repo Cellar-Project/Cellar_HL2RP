@@ -17,10 +17,10 @@ end
 
 function PLUGIN:LoadFonts(font)
 	surface.CreateFont("ixMenuLanguageFont", {
-		font = "Roboto Th",
+		font = "Nagonia",
 		size = ScreenScale(10),
 		extended = true,
-		weight = 400
+		weight = 200
 	})
 end
 

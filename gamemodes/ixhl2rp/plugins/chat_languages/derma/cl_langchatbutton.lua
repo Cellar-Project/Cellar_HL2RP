@@ -28,60 +28,62 @@ function PANEL:Init()
 
 			for k, _ in pairs(studiedLanguages) do
 				chatLanguages[k] = ix.chatLanguages.Get(k)
+				chatLanguages[k].bNotLearnable = nil
 			end
 
-			self.frame = vgui.Create("DFrame")
-			self.frame:SetTitle(L("optLanguage"))
-			self.frame:SetSizable(true)
-			self.frame:SetWide(ScrW() * 0.15)
+			if (!table.IsEmpty(chatLanguages)) then
+				self.frame = vgui.Create("DFrame")
+				self.frame:SetTitle(L("optLanguage"))
+				self.frame:SetSizable(true)
+				self.frame:SetWide(ScrW() * 0.15)
 
-			self.languageSelecter = self.frame:Add("ixLanguageSelecter")
-			self.languageSelecter:Dock(FILL)
-			self.languageSelecter:SetLanguageList(chatLanguages)
-			self.languageSelecter.OnLanguageSelect = function(_, id)
-				net.Start("ixCharacterChangeUsedLanguage")
-					net.WriteString(id)
-				net.SendToServer()
+				self.languageSelecter = self.frame:Add("ixLanguageSelecter")
+				self.languageSelecter:Dock(FILL)
+				self.languageSelecter:SetLanguageList(chatLanguages)
+				self.languageSelecter.OnLanguageSelect = function(_, id)
+					net.Start("ixCharacterChangeUsedLanguage")
+						net.WriteString(id)
+					net.SendToServer()
 
-				self.frame:Close()
-			end
-			self.languageSelecter.OnLanguageDeselect = function()
-				net.Start("ixCharacterChangeUsedLanguage")
-				net.SendToServer()
+					self.frame:Close()
+				end
+				self.languageSelecter.OnLanguageDeselect = function()
+					net.Start("ixCharacterChangeUsedLanguage")
+					net.SendToServer()
 
-				self.frame:Close()
-			end
+					self.frame:Close()
+				end
 
-			local usedLanguage = character:GetUsedLanguage()
-			local languageData =  ix.chatLanguages.Get(usedLanguage)
+				local usedLanguage = character:GetUsedLanguage()
+				local languageData =  ix.chatLanguages.Get(usedLanguage)
 
-			if (languageData) then
-				local languageName = L(languageData.name):utf8lower()
+				if (languageData) then
+					local languageName = L(languageData.name):utf8lower()
 
-				for _, v in ipairs(self.languageSelecter:GetLanguageList()) do
-					local text = v.name:GetText()
+					for _, v in ipairs(self.languageSelecter:GetLanguageList()) do
+						local text = v.name:GetText()
 
-					if (languageName == text:utf8lower()) then
-						self.languageSelecter.selectedPanel = v
-						self.languageSelecter.selectedPanel:SetZPos(-1)
+						if (languageName == text:utf8lower()) then
+							self.languageSelecter.selectedPanel = v
 
-						break
+							break
+						end
 					end
 				end
+
+				local maxHeight = ScrH() * 0.25
+				local _, topPadding, _, bottomPadding = self.frame:GetDockPadding()
+				local targetHeight = topPadding + bottomPadding + self.languageSelecter:GetChildrenHeight()
+
+				if (targetHeight <= maxHeight) then
+					self.frame:SetTall(targetHeight)
+				elseif (targetHeight > maxHeight) then
+					self.frame:SetTall(maxHeight)
+				end
+
+				self.frame:Center()
+				self.frame:MakePopup()
 			end
-
-			local maxHeight = ScrH() * 0.25
-			local _, topPadding, _, bottomPadding = self.frame:GetDockPadding()
-			local targetHeight = topPadding + bottomPadding + self.languageSelecter:GetChildrenHeight()
-
-			if (targetHeight <= maxHeight) then
-				self.frame:SetTall(targetHeight)
-			elseif (targetHeight > maxHeight) then
-				self.frame:SetTall(maxHeight)
-			end
-
-			self.frame:Center()
-			self.frame:MakePopup()
 		end
 	end
 
@@ -115,8 +117,8 @@ function PANEL:CorrectPosition(chatX, chatY, chatW, chatH)
 	end
 end
 
-function PANEL:ChangeFlagIcon(character)
-	local usedLanguage = character:GetUsedLanguage()
+function PANEL:ChangeFlagIcon(character, usedLanguage)
+	usedLanguage = usedLanguage or character:GetUsedLanguage()
 	local languageData = ix.chatLanguages.Get(usedLanguage)
 	local icon
 

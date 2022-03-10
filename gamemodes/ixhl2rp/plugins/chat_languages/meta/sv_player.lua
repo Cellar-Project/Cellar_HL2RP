@@ -1,8 +1,8 @@
 
-local meta = FindMetaTable("Player")
+local playerMeta = FindMetaTable("Player")
 
 -- default SetAction is really shitty and we better override it to prevent possible errors from occuring when setting a long-termed action
-function meta:SetAction(text, time, callback, startTime, finishTime, onCancel)
+function playerMeta:SetAction(text, time, callback, startTime, finishTime, onCancel)
 	if (time and time <= 0) then
 		if (callback) then
 			callback(self)
