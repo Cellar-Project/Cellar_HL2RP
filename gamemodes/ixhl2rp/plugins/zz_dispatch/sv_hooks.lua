@@ -1,4 +1,14 @@
 function PLUGIN:PlayerLoadedCharacter(client, character, currentChar)
+	local faction = ix.faction.Get(character:GetFaction())
+
+	if faction.canSeeWaypoints then
+		dispatch.SyncWaypoints(client)
+	end
+
+	if dispatch.InDispatchMode(client) and character:GetFaction() != FACTION_DISPATCH then
+		dispatch.SetDispatchMode(client, false)
+	end
+
 	if character:IsCombine() then
 		for k, v in pairs(dispatch.GetSquads()) do
 			v:Sync(true, client)
