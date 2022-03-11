@@ -222,7 +222,13 @@ do
 						count = count + v + -1
 					end
 
-					if (count < hook.Run("GetDefaultSpecialPoints", client, count)) then
+					local defaulSpecialPoints = hook.Run("GetDefaultSpecialPoints", client, count)
+
+					if (count < defaulSpecialPoints) then
+						return false, "Вы должны потратить все очки SPECIAL!"
+					end
+
+					if (count > defaulSpecialPoints) then
 						return false, "unknownError"
 					end
 				else
