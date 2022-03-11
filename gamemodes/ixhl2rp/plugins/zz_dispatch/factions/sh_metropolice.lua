@@ -5,6 +5,7 @@ FACTION.isDefault = false
 FACTION.bCanUseRations = true
 FACTION.bAllowDatafile = true
 FACTION.isLocallyRecognized = true
+FACTION.canSeeWaypoints = true
 
 FACTION.scoreboardClass = "scMPF"
 

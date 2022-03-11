@@ -168,6 +168,10 @@ function PANEL:SetupSquadFull(squad)
 end
 
 function PANEL:OpenMenu(squad)
+	if squad:IsStatic() then
+		return
+	end
+
 	local character = LocalPlayer():GetCharacter()
 	local isLeader = self.squad:IsLeader(character)
 	local isDispatch = dispatch.InDispatchMode(LocalPlayer())

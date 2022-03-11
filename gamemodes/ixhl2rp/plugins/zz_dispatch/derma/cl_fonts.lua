@@ -77,3 +77,18 @@ surface.CreateFont("dispatch.camera.button", {
 	antialias = true,
 	extended = true
 })
+
+surface.CreateFont("dispatch.stability", {
+	font = "Blender Pro Thin",
+	size = 28,
+	weight = 200,
+	antialias = true,
+	extended = true
+})
+
+surface.CreateFont("dispatch.radialmenu", {
+	font = "Blender Pro Bold",
+	antialias = true,
+	size = 16,
+	extended = true
+})
