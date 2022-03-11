@@ -27,3 +27,26 @@ function PLUGIN:InitializedChatClasses()
 	ix.chatLanguages.AddChatType("w")
 	ix.chatLanguages.AddChatType("y")
 end
+
+function PLUGIN:InitializedConfig()
+	for k, v in pairs(ix.chatLanguages.list) do
+		if (!v.bNotLearnable) then
+			local preItemID = k .. "_textbook_volume"
+			local preItemName = v.name .. " textbook #%d"
+
+			for i = 1, ix.config.Get("languageTextbooksVolumeCount", 3) do
+				local itemID = preItemID .. i
+
+				ix.item.Register(itemID, "base_language_textbooks", false, nil)
+
+				if (ix.item.list[itemID]) then
+					ix.item.list[itemID].name = string.format(preItemName, i)
+					ix.item.list[itemID].model = v.textbookModel or ix.item.list[itemID].model
+					ix.item.list[itemID].languageID = k
+					ix.item.list[itemID].volume = i
+					ix.item.list[itemID].studyTime = ix.config.Get("languageTextbooksMinReadTime", 3600) * i
+				end
+			end
+		end
+	end
+end
