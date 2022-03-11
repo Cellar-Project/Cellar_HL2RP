@@ -338,7 +338,7 @@ do
 		self:SetSize(scrW, scrH)
 
 		local stability_w, stability_h = scale(385), scale(52)
-		local stability = self:Add("DButton")
+		local stability = self:Add("dispatch.stablity")
 		stability:SetSize(stability_w, stability_h)
 		stability:SetPos(scrW - stability_w - border_size, border_size / 2 - stability_h / 2)
 		stability.DoClick = function()
@@ -369,7 +369,7 @@ do
 		end
 
 		self.manpower.stats[1]:SetLabel("ПАТРУЛЬНЫЕ ГРУППЫ")
-		self.manpower.stats[1]:SetValue(string.format("%i/15", #dispatch.squads))
+		self.manpower.stats[1]:SetValue(string.format("%i/15", table.Count(dispatch.squads) - 1))
 
 		self.manpower.stats[2]:SetLabel("ПОТОКОВ ИИ")
 		self.manpower.stats[2]:SetValue(0)

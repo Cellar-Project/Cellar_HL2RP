@@ -106,6 +106,10 @@ function PANEL:Init()
 	self.code_text:SetFont("dispatch.camera.button")
 	self.area_text:SetFont("dispatch.camera.button")
 
+	self.hp:SetText("100%")
+	self.code_text:SetText("КОД 1")
+	self.area_text:SetText("Н/Д")
+
 	self.area.parent = self
 	self.code.parent = self
 	self.header.parent = self
@@ -150,7 +154,8 @@ function PANEL:OpenMenu(target)
 		return
 	end
 	
-	local isLeader = self:GetSquad():IsLeader(character)
+	local squads = self:GetSquad()
+	local isLeader = squads:IsLeader(character)
 	local isDispatch = dispatch.InDispatchMode(LocalPlayer())
 
 	local menu = DermaMenu() 
@@ -159,12 +164,15 @@ function PANEL:OpenMenu(target)
 
 	if isDispatch or isLeader then
 		squad, sub = menu:AddSubMenu("Группа")
-		squad:AddOption("Сделать командиром", function() 
-			net.Start("squad.menu.leader")
-				net.WriteUInt(id, 32)
-			net.SendToServer()
-		end):SetImage("icon16/star.png")
 		sub:SetImage("icon16/arrow_in.png")
+
+		if !squads:IsStatic() then
+			squad:AddOption("Сделать командиром", function() 
+				net.Start("squad.menu.leader")
+					net.WriteUInt(id, 32)
+				net.SendToServer()
+			end):SetImage("icon16/star.png")
+		end
 	end
 
 	if isDispatch then

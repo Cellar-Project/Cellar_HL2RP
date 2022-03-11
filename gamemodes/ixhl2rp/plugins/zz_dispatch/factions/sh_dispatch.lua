@@ -9,6 +9,7 @@ FACTION.dontNeedFood = true
 
 FACTION.isGloballyRecognized = true
 FACTION.isLocallyRecognized = true
+FACTION.canSeeWaypoints = true
 
 FACTION.scoreboardClass = "scMPF"
 

@@ -117,9 +117,13 @@ end
 
 dispatch.unassigned_squad = dispatch.unassigned_squad or dispatch.CreateSquad(nil, 1, true)
 
+ix.util.Include("cl_interactions.lua")
+ix.util.Include("cl_waypoints.lua")
 ix.util.Include("cl_hooks.lua")
-ix.util.Include("sv_hooks.lua")
 ix.util.Include("sh_spectate.lua")
+ix.util.Include("sv_interactions.lua")
+ix.util.Include("sv_waypoints.lua")
+ix.util.Include("sv_hooks.lua")
 
 ix.command.Add("SquadCreate", {
 	description = "@cmdPTCreate",
@@ -148,5 +152,19 @@ ix.command.Add("SquadJoin", {
 		if squad then
 			squad:AddMember(client:GetCharacter())
 		end
+	end
+})
+
+ix.command.Add("TestWaypoint", {
+	description = "@cmdWaypointAdd",
+	arguments = {ix.type.string, ix.type.string},
+	OnRun = function(self, client, type, text)
+		local position = client:GetEyeTraceNoCursor().HitPos
+
+		position:Add(Vector(0, 0, 30))
+
+		dispatch.AddWaypoint(position, text, type)
+		
+		return "@addedWaypoint"
 	end
 })

@@ -7,6 +7,16 @@ Schema.scoreboardClasses = {
 
 local squad_glow_clr = Color(0, 63, 255)
 
+function PLUGIN:CharacterLoaded(character)
+	local faction = ix.faction.Get(character:GetFaction())
+
+	if faction.canSeeWaypoints then
+		hook.Add("HUDPaint", "dispatch.waypoints", dispatch.DrawWaypoints)
+	else
+		hook.Remove("HUDPaint", "dispatch.waypoints")
+	end
+end
+
 function PLUGIN:OnJoinSquad(squad)
 	hook.Add("PreDrawHalos", "SquadGlow", function()
 		halo.Add(squad:GetPlayers(), squad_glow_clr, 0.5, 0.5, 0, true, true)
