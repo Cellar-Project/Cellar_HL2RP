@@ -12,8 +12,18 @@ function PLUGIN:CharacterLoaded(character)
 
 	if faction.canSeeWaypoints then
 		hook.Add("HUDPaint", "dispatch.waypoints", dispatch.DrawWaypoints)
+		hook.Add("CreateMove", "dispatch.radialmenu", dispatch.ShowQuickPingMenu)
 	else
 		hook.Remove("HUDPaint", "dispatch.waypoints")
+		hook.Remove("CreateMove", "dispatch.radialmenu")
+	end
+
+	if character:IsCombine() and character:GetFaction() != FACTION_DISPATCH then
+		hook.Add("PlayerButtonDown", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.open") end end)
+		hook.Add("PlayerButtonUp", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.close") end end)
+	else
+		hook.Remove("PlayerButtonDown", "dispatch.quick")
+		hook.Remove("PlayerButtonUp", "dispatch.quick")
 	end
 end
 

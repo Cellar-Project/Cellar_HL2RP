@@ -27,6 +27,29 @@ dispatch = dispatch or {
 	squads = {}
 }
 
+dispatch.mpf_ranks = {
+	[1] = {
+		name = "Regular",
+		class = function() 
+			return CLASS_MPF 
+		end
+	},
+	[2] = {
+		name = "Rank Leader",
+		class = function() 
+			return CLASS_RL 
+		end
+	},
+}
+
+function dispatch.Rank(id)
+	return dispatch.mpf_ranks[id] or dispatch.mpf_ranks[1]
+end
+
+function dispatch.GetRank(character)
+	return ix.class.list[character:GetClass()].rank or 0
+end
+
 if SERVER then
 	ix.log.AddType("squadCreate", function(char, tagname)
 		return string.format("%s создал подразделение '%s'", char:GetOriginalName(), tagname)
@@ -37,7 +60,6 @@ if SERVER then
 	end)
 end
 
-ix.util.Include("sh_ranks.lua")
 ix.util.Include("meta/sh_squads.lua")
 
 function dispatch.GetMemberLimit()
@@ -155,16 +177,31 @@ ix.command.Add("SquadJoin", {
 	end
 })
 
-ix.command.Add("TestWaypoint", {
+ix.command.Add("Waypoint", {
 	description = "@cmdWaypointAdd",
-	arguments = {ix.type.string, ix.type.string},
+	arguments = {ix.type.string, bit.bor(ix.type.string, ix.type.optional)},
 	OnRun = function(self, client, type, text)
-		local position = client:GetEyeTraceNoCursor().HitPos
+		if !client:IsCombine() then
+			return "@cannotAddWaypoints"
+		end
 
-		position:Add(Vector(0, 0, 30))
+		if (client.lastWaypointCooldown or 0) > CurTime() then
+			return "Wait a bit before adding new one!" -- TO DO: change to localized version
+		end
+
+		text = text or ""
+
+		local trace = client:GetEyeTraceNoCursor()
+		local position = trace.HitPos
+
+		if math.abs(trace.HitNormal.z) > .98 then
+			position:Add(Vector(0, 0, 30))
+		end
 
 		dispatch.AddWaypoint(position, text, type)
-		
+
+		client.lastWaypointCooldown = CurTime() + 5
+
 		return "@addedWaypoint"
 	end
 })
