@@ -27,6 +27,14 @@ local function getFreeWaypoint()
 	return #dispatch.waypoints + 1
 end
 
+local letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+local function getLetter(index)
+	local letter = ((index -1) % 26) + 1
+	local sub = math.floor(letter / 26)
+
+	return letters[letter] .. (sub != 0 and sub or "")
+end
+
 function dispatch.AddWaypoint(pos, text, icon, time, addedBy)
 	local index = getFreeWaypoint()
 
@@ -47,6 +55,8 @@ function dispatch.AddWaypoint(pos, text, icon, time, addedBy)
 	timer.Create("Waypoint"..index, (time or 60), 0, function()
 		dispatch.waypoints[index] = nil
 	end)
+
+	return getLetter(index)
 end
 
 function dispatch.SyncWaypoints(receiver)

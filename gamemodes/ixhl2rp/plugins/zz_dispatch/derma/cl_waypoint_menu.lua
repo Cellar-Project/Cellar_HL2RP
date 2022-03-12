@@ -310,12 +310,16 @@ function PANEL:PerformLayout(w, h)
 end
 
 function PANEL:Select(id)
-    if self.FadingOut then return end
+	if self.FadingOut then return end
 
-    local panel = self.Button[id + 1]
+	local panel = self.Buttons[id + 1]
 
-    --surface.PlaySound(soundSelect)
-    self:Close()
+	if IsValid(panel) then
+		ix.command.Send("Waypoint", panel.data.type)
+	end
+	
+	--surface.PlaySound(soundSelect)
+	self:Close()
 end
 
 function PANEL:Paint(w, h)
@@ -374,7 +378,7 @@ function PANEL:Paint(w, h)
 		local x = w / 2
 		local y = h / 2 + (56 * WheelScale)
 
-		draw.SimpleText(str, "PingSystem", x, y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+		draw.SimpleText(str, "dispatch.radialmenu", x, y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
 		local str = "ПКМ — ОТМЕНА"
 		local tw, th = surface.GetTextSize(str)
@@ -394,43 +398,47 @@ end
 
 vgui.Register("dispatch.radial.menu", PANEL)
 
-/*
-hook.Add("VGUIMousePressed", "dispatch.radialmenu", function(pnl, code)
-	if IsValid(ix.gui.waypoints) and pnl == ix.gui.waypoints then
-		if code == MOUSE_LEFT then
-			hook.Run("quickmenu.leftclick")
-		elseif code == MOUSE_RIGHT then
-			hook.Run("quickmenu.rightclick")
+do
+	hook.Add("VGUIMousePressed", "dispatch.radialmenu", function(pnl, code)
+		if IsValid(ix.gui.waypoints) and pnl == ix.gui.waypoints then
+			if code == MOUSE_LEFT then
+				hook.Run("quickmenu.leftclick")
+			elseif code == MOUSE_RIGHT then
+				hook.Run("quickmenu.rightclick")
+			end
+		end
+	end)
+
+	local showradial = false
+	function dispatch.ShowQuickPingMenu()
+		if IsValid(ix.gui.dispatch) then
+			return
+		end
+		
+		if IsValid(ix.gui.waypoints) then
+			local leftClick = input.WasMouseReleased(MOUSE_LEFT)
+			local rightClick = input.WasMouseReleased(MOUSE_RIGHT)
+
+			if leftClick then
+				hook.Run("quickmenu.leftclick")
+			end
+
+			if rightClick then
+				hook.Run("quickmenu.rightclick")
+			end
+		end
+
+		if !showradial and input.IsKeyDown(KEY_T) and !IsValid(vgui.GetHoveredPanel()) and !gui.IsConsoleVisible() and !gui.IsGameUIVisible() then
+			if BlockUseDelay > CurTime() then return end
+
+			if !IsValid(ix.gui.waypoints) then
+				local a = vgui.Create("dispatch.radial.menu")
+				a.KeyCode = KEY_T
+				BlockUseDelay = CurTime() + 0.25
+				showradial = true
+			end
+		elseif input.WasKeyReleased(KEY_T) and showradial then
+			showradial = false
 		end
 	end
-end)
-
-local showradial = false
-hook.Add("CreateMove", "dispatch.radialmenu", function()
-	if IsValid(ix.gui.waypoints) then
-		local leftClick = input.WasMouseReleased(MOUSE_LEFT)
-		local rightClick = input.WasMouseReleased(MOUSE_RIGHT)
-
-		if leftClick then
-			hook.Run("quickmenu.leftclick")
-		end
-
-		if rightClick then
-			hook.Run("quickmenu.rightclick")
-		end
-	end
-
-	if !showradial and input.IsKeyDown(KEY_T) and !IsValid(vgui.GetHoveredPanel()) and !gui.IsConsoleVisible() and !gui.IsGameUIVisible() then
-		if BlockUseDelay > CurTime() then return end
-
-		if !IsValid(ix.gui.waypoints) then
-			local a = vgui.Create("dispatch.radial.menu")
-			a.KeyCode = KEY_T
-			BlockUseDelay = CurTime() + 0.25
-			showradial = true
-		end
-	elseif input.WasKeyReleased(KEY_T) and showradial then
-		showradial = false
-	end
-end)
-*/
+end

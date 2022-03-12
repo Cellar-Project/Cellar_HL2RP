@@ -21,7 +21,7 @@ local PANEL = {}
 function PANEL:Init()
 	self.segmentData = {}
 	self.textData = {}
-	self.messageData = "СОЦИО-СТАБИЛЬНОСТЬ В НОРМЕ"
+	self.text = "СОЦИО-СТАБИЛЬНОСТЬ В НОРМЕ"
 	self.font = "dispatch.stability"
 	self.color = Color(128, 255, 128)
 	self.borderThickness = 1
@@ -31,14 +31,15 @@ function PANEL:Init()
 	self.realWidth = 385
 	self.open = false
 	self.flashing = false
+
+	self:SetText("")
 end
 
-function PANEL:SetText(text) self.messageData = tostring(text) end
 function PANEL:SetFont(fontName) self.font = tostring(fontName) end
 function PANEL:SetTextColor(color) self.color = color end
 
 function PANEL:PaintSingle(w, h)
-	local text = self.messageData .. "     ///     "
+	local text = self.text .. "     ///     "
 
 	surface.SetFont(self.font)
 
@@ -117,4 +118,4 @@ function PANEL:Paint(w, h)
 	DrawCorners(0, 0, w, h, self.borderLength, self.borderThickness)
 end
 
-vgui.Register("dispatch.stablity", PANEL)
+vgui.Register("dispatch.stablity", PANEL, "DButton")
