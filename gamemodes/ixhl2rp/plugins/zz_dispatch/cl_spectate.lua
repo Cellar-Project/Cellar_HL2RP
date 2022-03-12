@@ -68,12 +68,43 @@ function dispatch.InputMouseApply(cmd, x, y)
 		  		cam_ang.y = normalize(cam_ang.y - x * GetConVar("m_yaw"):GetFloat())
 
 				if max_yaw then
-					cam_ang.y = clamp(cam_ang.y, angles.y + max_yaw[1], angles.y + max_yaw[2])
+					local yawDiff = math.AngleDifference(cam_ang.y, angles.y)
+
+					if yawDiff >= max_yaw[2] then
+						cam_ang.y = normalize(angles.y + max_yaw[2])
+					elseif yawDiff <= max_yaw[1] then
+						cam_ang.y = normalize(angles.y + max_yaw[1])
+					end
 		  		end
 
 				cmd:SetViewAngles(cam_ang)
 				return true
 			end
+		end
+	end
+end
+
+do
+	local viewPos, viewAng, fov = Vector(), Angle(), 90
+	hook.Add("RenderScene", "dispatch.ui", function(v1, v2, v3)
+		viewPos, viewAng, fov = v1, v2, v3
+	end)
+
+	local trace 
+	function dispatch.GetViewTrace()
+		local camera = LocalPlayer():GetViewEntity()
+
+		if camera and camera != LocalPlayer() then
+			local x, y = gui.MousePos()
+			local dir = util.AimVector(viewAng, fov, x, y, ScrW(), ScrH())
+
+			trace = util.TraceLine{start = viewPos, endpos = viewPos + dir * 4096, filter = function(e)
+				return e != LocalPlayer() and e:GetRenderMode() != RENDERMODE_TRANSALPHA and camera != e
+			end}
+
+			return trace
+		else
+			return LocalPlayer():GetEyeTrace()
 		end
 	end
 end
@@ -94,6 +125,7 @@ function dispatch.OnDispatchMode(state)
 		hook.Add("CalcView", "dispatch.spectate", dispatch.CalcView)
 		hook.Add("StartCommand", "dispatch.spectate", dispatch.StartCommand)
 		hook.Add("InputMouseApply", "dispatch.spectate", dispatch.InputMouseApply)
+		hook.Add("PostDrawTranslucentRenderables", "dispatch.spectate", dispatch.Draw3DCursor)
 
 		vgui.Create "dispatch.main"
 	else
@@ -105,6 +137,7 @@ function dispatch.OnDispatchMode(state)
 		hook.Remove("CalcView", "dispatch.spectate")
 		hook.Remove("StartCommand", "dispatch.spectate")
 		hook.Remove("InputMouseApply", "dispatch.spectate")
+		hook.Remove("PostDrawTranslucentRenderables", "dispatch.spectate")
 	end
 
 	hook.Run("DispatchModeChanged", state)

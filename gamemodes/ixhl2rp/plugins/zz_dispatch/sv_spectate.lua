@@ -53,34 +53,41 @@ net.Receive("dispatch.spectate.request", function(len, client)
 	dispatch.Spectate(client, net.ReadEntity())
 end)
 
-local SCANNER = ix.plugin.list["combinescanners"]
-function dispatch.DeployScanner(client)
-	if client:IsPilotScanner() then return end
-	
-	if IsValid(SCANNER:GetActiveScanners()[client]) then
-		return
+do
+	local SCANNERS, SPAWNS = ix.plugin.list["combinescanners"],  ix.plugin.list["spawns"]
+
+	function dispatch.DeployScanner(client)
+		if !dispatch.InDispatchMode(client) then 
+			return 
+		end
+
+		if client:IsPilotScanner() or IsValid(SCANNERS:GetActiveScanners()[client]) then
+			return
+		end
+
+		local spawnPoints = SPAWNS.spawns["metropolice"]["scanner"]
+
+		if !spawnPoints or #spawnPoints <= 0 then 
+			return 
+		end
+
+		local randomSpawn = math.random(1, #spawnPoints)
+		local pos = spawnPoints[randomSpawn]
+		
+		SCANNERS.activeID = SCANNERS.activeID + 1
+
+		local scanner = ents.Create("ix_scanner")
+		scanner:SetPos(pos)
+		scanner:Spawn()
+		scanner:SetID(SCANNERS.activeID)
+
+		SCANNERS:GetActiveScanners()[client] = scanner
+
+		scanner:Transmit(client)
+		client:SetNWEntity("Scanner", scanner)
 	end
 
-	local spawnPoints = ix.plugin.list["spawns"].spawns["metropolice"]["scanner"]
-
-	if (!spawnPoints or #spawnPoints <= 0) then return end
-
-	local randomSpawn = math.random(1, #spawnPoints)
-	local pos = spawnPoints[randomSpawn]
-	
-	SCANNER.activeID = SCANNER.activeID + 1
-
-	local scanner = ents.Create("ix_scanner")
-	scanner:SetPos(pos)
-	scanner:Spawn()
-	scanner:SetID(SCANNER.activeID)
-
-	SCANNER:GetActiveScanners()[client] = scanner
-
-	scanner:Transmit(client)
-	client:SetNWEntity("Scanner", scanner)
+	net.Receive("dispatch.scanner", function(len, client)
+		dispatch.DeployScanner(client)
+	end)
 end
-
-net.Receive("dispatch.scanner", function(len, client)
-	dispatch.DeployScanner(client)
-end)

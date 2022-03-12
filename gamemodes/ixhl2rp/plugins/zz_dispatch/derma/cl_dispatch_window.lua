@@ -226,24 +226,31 @@ end
 
 do
 	local color_bg = Color(0, 255, 255, 15)
-
+	local high = Color(0, 100, 64, 2)
+	local focus_color = Color(0, 0, 0, 225)
+	local header_colors = {Color(0, 255, 255), Color(0, 255, 255, 19)}
+	local ico = Material("cellar/ui/dispatch/camera.png")
 	local PANEL = {}
+
+	function PANEL:GetHeaderColor(isText)
+		return (self.hovered and isText) and focus_color or (self.hovered and header_colors[1] or (isText and header_colors[1] or header_colors[2]))
+	end
+
+	function PANEL:GetTextColors()
+		local clr = self:GetHeaderColor(true)
+
+		self.text:SetTextColor(clr)
+		self.code_text:SetTextColor(clr)
+		self.class_text:SetTextColor(clr)
+	end
+
 	function PANEL:PaintBG(w, h)
-		surface.SetDrawColor(color_bg)
+		surface.SetDrawColor(self.parent:GetHeaderColor())
 		surface.DrawRect(0, 0, w, h)
-
 	end
-	
-	function PANEL:Paint(w, h)
-		if self.hovered then
-			render.OverrideBlend( true, BLEND_SRC_ALPHA, BLEND_DST_COLOR, BLENDFUNC_ADD, BLEND_SRC_ALPHA, BLEND_DST_ALPHA, BLENDFUNC_ADD )
 
-			surface.SetDrawColor(Color(0, 255, 255, 255 * 0.5))
-			surface.DrawRect(0, 0, w, h)
-			render.OverrideBlend(false)
+	function PANEL:Paint(w, h) end
 
-		end
-	end
 	function PANEL:Init()
 		self:SetText("")
 		self:SetTall(25)
@@ -252,7 +259,7 @@ do
 
 		self.code = self:Add("Panel")
 		self.code:Dock(RIGHT)
-		self.code:DockMargin(1, 0, 0, 0)
+		self.code:DockMargin(2, 0, 0, 0)
 		self.code:SetMouseInputEnabled(false)
 		
 		self.code_text = self.code:Add("DLabel")
@@ -261,7 +268,7 @@ do
 
 		self.class = self:Add("Panel")
 		self.class:Dock(RIGHT)
-		self.class:DockMargin(1, 0, 0, 0)
+		self.class:DockMargin(2, 0, 0, 0)
 		self.class:SetMouseInputEnabled(false)
 
 		self.class_text = self.class:Add("DLabel")
@@ -296,10 +303,14 @@ do
 
 	function PANEL:OnCursorEntered()
 		self.hovered = true
+
+		self:GetTextColors()
 	end
 
 	function PANEL:OnCursorExited()
 		self.hovered = false
+
+		self:GetTextColors()
 	end
 
 	function PANEL:SetEntity(entity)
@@ -308,6 +319,8 @@ do
 		end
 
 		self.class_text:SetText(entity:GetCameraData():Type())
+
+		self:GetTextColors()
 	end
 	
 	function PANEL:PerformLayout(w, h)
@@ -481,6 +494,14 @@ do
 
 		self:BuildCameras()
 		self:BuildSquads()
+
+		hook.Add("VGUIMousePressed", "dispatch.ui", function(pnl, code)
+			if IsValid(ix.gui.dispatch) and pnl == ix.gui.dispatch then
+				if code == MOUSE_RIGHT then
+					pnl:OpenWorldInteraction()
+				end
+			end
+		end)
 	end
 
 	function PANEL:BuildSquads()
@@ -504,7 +525,7 @@ do
 		for k, v in pairs(dispatch.FindCameras()) do
 			local test = self.cameras:Add("dispatch.camera.button")
 			test:Dock(TOP)
-			test:DockMargin(0, 1, 16, 0)
+			test:DockMargin(0, 2, 16, 0)
 			test:InvalidateParent(true)
 			test:SetEntity(v)
 		end
@@ -559,6 +580,10 @@ do
 		net.Start("dispatch.spectate.request")
 			net.WriteEntity(entity)
 		net.SendToServer()
+	end
+	function PANEL:OpenWorldInteraction()
+		local pos = dispatch.GetViewTrace().HitPos
+		print("open")
 	end
 
 	function PANEL:Paint(w, h)
@@ -670,4 +695,62 @@ do
 */
 
 	vgui.Register("dispatch.main", PANEL, "EditablePanel")
+end
+
+do
+	local function Circle(sx, sy, radius, vertexCount, color, angle)
+		local vertices = {}
+		local ang = -math.rad(angle or 0)
+		local c = math.cos(ang)
+		local s = math.sin(ang)
+		for i = 0, 360, 360 / vertexCount do
+			local radd = math.rad(i)
+			local x = math.cos(radd)
+			local y = math.sin(radd)
+
+			local tempx = x * radius * c - y * radius * s + sx
+			y = x * radius * s + y * radius * c + sy
+			x = tempx
+
+			vertices[#vertices + 1] = {
+				x = x, 
+				y = y, 
+				u = u, 
+				v = v 
+			}
+		end
+
+		if vertices and #vertices > 0 then
+			draw.NoTexture()
+			surface.SetDrawColor(color)
+			surface.DrawPoly(vertices)
+		end
+	end
+	
+	local f, b = Vector(0, 0, 0), Angle(0, 90, 90)
+	function dispatch.Draw3DCursor()
+		local dir = LocalPlayer():EyeAngles():Forward()
+		local trace = dispatch.GetViewTrace()
+
+		if !trace then
+			return
+		end
+
+		local hitNormal = trace.Hit and trace.HitNormal or -dir
+
+		if math.abs(hitNormal.z) > .98 then
+			hitNormal:Add(-dir * .01)
+		end
+
+		local pos, ang = LocalToWorld(f, b, trace.HitPos, hitNormal:Angle())
+		cam.Start3D2D(pos, ang, math.pow(trace.Fraction, .1) * (a or .2))
+			cam.IgnoreZ(true)
+				render.OverrideBlend(true, BLEND_ONE, BLEND_ONE, BLENDFUNC_ADD, BLEND_DST_ALPHA, BLEND_DST_ALPHA, BLENDFUNC_ADD)
+
+				Circle(0, 0, 32, 18, Color(0, 200, 255), 0)
+
+				render.OverrideBlend(false)
+			cam.IgnoreZ(false)
+		cam.End3D2D()
+	end
 end
