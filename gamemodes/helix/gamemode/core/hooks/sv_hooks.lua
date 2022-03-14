@@ -316,6 +316,12 @@ function GM:PlayerSay(client, text)
 		end
 	end
 
+	local result = hook.Run("PrePlayerSay", client, chatType, message, anonymous)
+
+	if result then
+		return ""
+	end
+
 	text = ix.chat.Send(client, chatType, message, anonymous)
 
 	if (isstring(text) and chatType != "ic") then
