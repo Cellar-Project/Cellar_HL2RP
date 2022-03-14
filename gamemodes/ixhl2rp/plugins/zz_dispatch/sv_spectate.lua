@@ -3,6 +3,7 @@ util.AddNetworkString("dispatch.spectate.stop")
 util.AddNetworkString("dispatch.spectate.request")
 util.AddNetworkString("dispatch.mode")
 util.AddNetworkString("dispatch.scanner")
+util.AddNetworkString("dispatch.scannerphoto")
 
 function dispatch.SetDispatchMode(client, bool)
 	client:SetNetVar("d", bool == true and bool or nil)
@@ -89,5 +90,39 @@ do
 
 	net.Receive("dispatch.scanner", function(len, client)
 		dispatch.DeployScanner(client)
+	end)
+
+	net.Receive("dispatch.scannerphoto", function(len, client)
+		if !dispatch.InDispatchMode(client) then 
+			return 
+		end
+
+		if (client.nextPicture or 0) >= CurTime() then
+			return
+		end
+		
+		client.nextPicture = CurTime() + 5
+
+		local length = net.ReadUInt(16)
+		local data = net.ReadData(length)
+		
+		if length != #data then
+			return
+		end
+
+		local receivers = {}
+
+		for _, v in ipairs(player.GetAll()) do
+			if v:Team() == FACTION_MPF and SCANNERS:CanPlayerReceiveScan(v, client) then
+				receivers[#receivers + 1] = v
+			end
+		end
+
+		if #receivers > 0 then
+			net.Start("ScannerData")
+				net.WriteUInt(#data, 16)
+				net.WriteData(data, #data)
+			net.Send(receivers)
+		end
 	end)
 end

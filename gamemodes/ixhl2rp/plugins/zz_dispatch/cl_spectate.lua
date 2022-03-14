@@ -85,27 +85,35 @@ function dispatch.InputMouseApply(cmd, x, y)
 end
 
 do
-	local viewPos, viewAng, fov = Vector(), Angle(), 90
-	hook.Add("RenderScene", "dispatch.ui", function(v1, v2, v3)
-		viewPos, viewAng, fov = v1, v2, v3
-	end)
-
-	local trace 
 	function dispatch.GetViewTrace()
-		local camera = LocalPlayer():GetViewEntity()
+		local eyepos, eyevec = EyePos(), gui.ScreenToVector(gui.MousePos())
+		local ply = LocalPlayer()
+		local filter = ply:GetViewEntity()
 
-		if camera and camera != LocalPlayer() then
-			local x, y = gui.MousePos()
-			local dir = util.AimVector(viewAng, fov, x, y, ScrW(), ScrH())
+		if filter == ply then
+			local veh = ply:GetVehicle()
 
-			trace = util.TraceLine{start = viewPos, endpos = viewPos + dir * 4096, filter = function(e)
-				return e != LocalPlayer() and e:GetRenderMode() != RENDERMODE_TRANSALPHA and camera != e
-			end}
-
-			return trace
-		else
-			return LocalPlayer():GetEyeTrace()
+			if veh:IsValid() and (!veh:IsVehicle() or !veh:GetThirdPersonMode()) then
+				filter = {filter, veh, unpack(ents.FindByClass( "phys_bone_follower"))}
+			end
 		end
+
+		local trace = util.TraceLine({
+			start = eyepos,
+			endpos = eyepos + eyevec * 4096,
+			filter = filter
+		})
+
+		if !trace.Hit or !IsValid(trace.Entity) then
+			trace = util.TraceLine({
+				start = eyepos,
+				endpos = eyepos + eyevec * 4096,
+				filter = filter,
+				mask = MASK_ALL
+			})
+		end
+
+		return trace
 	end
 end
 

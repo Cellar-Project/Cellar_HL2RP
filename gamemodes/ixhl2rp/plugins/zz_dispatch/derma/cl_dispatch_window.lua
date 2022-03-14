@@ -338,6 +338,7 @@ do
 	local PANEL = {}
 	local background = Material("cellar/ui/dispatch/bg.png", "smooth")
 	local border_size = scale(64)
+	local x2, y2 = 0, 0
 
 	function PANEL:Init()
 		if IsValid(ix.gui.dispatch) then
@@ -406,6 +407,8 @@ do
 				timer.Remove("dispatch.stats")
 				return
 			end
+
+			stability:UpdateStability()
 
 			local dispatch, overseer, mpf, ota = 0, 0, 0, 0
 
@@ -498,9 +501,125 @@ do
 		hook.Add("VGUIMousePressed", "dispatch.ui", function(pnl, code)
 			if IsValid(ix.gui.dispatch) and pnl == ix.gui.dispatch then
 				if code == MOUSE_RIGHT then
-					pnl:OpenWorldInteraction()
+					timer.Simple(0, function() pnl:OpenWorldInteraction() end)
 				end
 			end
+		end)
+
+		local Picture = {
+			w = 580,
+			h = 420,
+			w2 = 580 * 0.5,
+			h2 = 420 * 0.5,
+			delay = 15
+		}
+
+		self.startPicture = false
+		self.prepareScreen = false
+		local time = 0
+		hook.Add("HUDPaint", "dispatch.ui", function()
+			if !IsValid(ix.gui.dispatch) then
+				hook.Remove("HUDPaint", "dispatch.ui")
+				return
+			end
+			
+			if !self.prepareScreen then
+				return
+			end
+			
+			local scrW, scrH = x2, y2
+			local x, y = scrW - Picture.w2, scrH - Picture.h2
+
+			local client = LocalPlayer()
+
+			if (time or 0) >= CurTime() then
+				local percent = math.Round(math.TimeFraction(time - 5, time, CurTime()), 2) * 100
+				local glow = math.sin(RealTime() * 15) * 25
+
+				draw.SimpleText(string.format("RE-CHARGING: %d%%", percent), "ixScannerFont", x, y - 24, Color(255 + glow, 100 + glow, 25, 250))
+			end
+
+			draw.SimpleText(string.format("(%s)", client:Name()), "ixScannerFont", x + 8, y + 8, color_white)
+
+			surface.SetDrawColor(235, 235, 235, 230)
+			surface.DrawLine(x, y, x + 128, y)
+			surface.DrawLine(x, y, x, y + 128)
+
+			x = scrW + Picture.w2
+
+			surface.DrawLine(x, y, x - 128, y)
+			surface.DrawLine(x, y, x, y + 128)
+
+			x = scrW - Picture.w2
+			y = scrH + Picture.h2
+
+			surface.DrawLine(x, y, x + 128, y)
+			surface.DrawLine(x, y, x, y - 128)
+
+			x = scrW + Picture.w2
+
+			surface.DrawLine(x, y, x - 128, y)
+			surface.DrawLine(x, y, x, y - 128)
+
+			surface.DrawLine(scrW - 48, scrH, scrW - 8, scrH)
+			surface.DrawLine(scrW + 48, scrH, scrW + 8, scrH)
+			surface.DrawLine(scrW, scrH - 48, scrW, scrH - 8)
+			surface.DrawLine(scrW, scrH + 48, scrW, scrH + 8)
+		end)
+
+		hook.Add("PostRender", "dispatch.ui", function()
+			if !IsValid(ix.gui.dispatch) then
+				hook.Remove("PostRender", "dispatch.ui")
+				return
+			end
+
+			if self.startPicture then
+				self.startPicture = false
+
+				local x = math.Clamp(x2 - Picture.w2, 0, ScrW())
+				local y = math.Clamp(y2 - Picture.h2, 0, ScrH())
+				
+				local data = util.Compress(render.Capture({
+					format = "jpeg",
+					h = Picture.h,
+					w = Picture.w,
+					quality = 50,
+					x = x,
+					y = y
+				}))
+
+				net.Start("dispatch.scannerphoto")
+					net.WriteUInt(#data, 16)
+					net.WriteData(data, #data)
+				net.SendToServer()
+
+				time = CurTime() + 5
+
+				vgui.GetWorldPanel():SetVisible(true)
+				timer.Simple(0, function() input.SetCursorPos(x2, y2) end)
+			end
+		end)
+
+		hook.Add("OnScannerControls", self, function(_, panel)
+			panel:Remove()
+
+			local eject = vgui.Create("cwTrButton", self)
+			eject:SetWide(130)
+			eject:SetText("EXIT")
+			eject.DoClick = function()
+				ix.command.Send("ScannerEject")
+			end
+			eject:SetPos(ScrW() - 130, ScrH() - eject:GetTall())
+
+			self.ScannerEject = eject
+		end)
+
+		hook.Add("OnScannerControlsRemove", self, function(_)
+			self.ScannerEject:Remove()
+		end)
+
+		hook.Add("OnScannerPhotoReceived", self, function(_, panel)
+			panel:MoveToBack()
 		end)
 	end
 
@@ -575,15 +694,26 @@ do
 		net.Start("dispatch.scanner")
 		net.SendToServer()
 	end
-	function PANEL:SwitchStability() end
+	function PANEL:SwitchStability() 
+		local menu = DermaMenu()
+
+		for k, v in ipairs(dispatch.stability_codes) do
+			menu:AddOption(v.name, function()
+				Derma_Query(string.format("Вы точно уверены и хотите сменить текущий статус-код на %s?", v.name), "Смена статус-кода", "Применить", function()
+					ix.command.Send("StabilityCode", k)
+				end, "Отмена")
+			end)
+		end
+
+		menu:Open()
+	end
 	function PANEL:RequestCamera(entity)
 		net.Start("dispatch.spectate.request")
 			net.WriteEntity(entity)
 		net.SendToServer()
 	end
 	function PANEL:OpenWorldInteraction()
-		local pos = dispatch.GetViewTrace().HitPos
-		print("open")
+		dispatch.OpenWorldAction()
 	end
 
 	function PANEL:Paint(w, h)
@@ -594,163 +724,30 @@ do
 		end
 	end
 
-/*
-	TO DO: IMPLEMENT PHOTO CAPTURE
-
-	local Picture = {
-		w = 580,
-		h = 420,
-		w2 = 580 * 0.5,
-		h2 = 420 * 0.5,
-		delay = 15
-	}
-	local startPicture = false
-	local prepareScreen = false
-	local x2, y2 = 0, 0
-	hook.Add("HUDPaint", "Test", function()
-		if !prepareScreen then
+	local click = false
+	function PANEL:Think() 
+		if LocalPlayer():IsPilotScanner() then
 			return
 		end
 		
-		local scrW, scrH = x2, y2
-		local x, y = scrW - Picture.w2, scrH - Picture.h2
-
-		local client = LocalPlayer()
-		local scanner = client:GetViewEntity()
-		local position = client:GetPos()
-		local angle = client:GetAimVector():Angle()
-
-		draw.SimpleText(string.format("ID (%s)", client:Name()), "ixScannerFont", x + 8, y + 40, color_white)
-
-		surface.SetDrawColor(235, 235, 235, 230)
-		surface.DrawLine(x, y, x + 128, y)
-		surface.DrawLine(x, y, x, y + 128)
-
-		x = scrW + Picture.w2
-
-		surface.DrawLine(x, y, x - 128, y)
-		surface.DrawLine(x, y, x, y + 128)
-
-		x = scrW - Picture.w2
-		y = scrH + Picture.h2
-
-		surface.DrawLine(x, y, x + 128, y)
-		surface.DrawLine(x, y, x, y - 128)
-
-		x = scrW + Picture.w2
-
-		surface.DrawLine(x, y, x - 128, y)
-		surface.DrawLine(x, y, x, y - 128)
-
-		surface.DrawLine(scrW - 48, scrH, scrW - 8, scrH)
-		surface.DrawLine(scrW + 48, scrH, scrW + 8, scrH)
-		surface.DrawLine(scrW, scrH - 48, scrW, scrH - 8)
-		surface.DrawLine(scrW, scrH + 48, scrW, scrH + 8)
-	end)
-
-
-	hook.Add("PostRender", "test", function()
-		if startPicture then
-			local x = math.Clamp(x2 - Picture.w2, 0, ScrW())
-			local y = math.Clamp(y2 - Picture.h2, 0, ScrH())
-			
-			local data = util.Compress(render.Capture({
-				format = "jpeg",
-				h = Picture.h,
-				w = Picture.w,
-				quality = 50,
-				x = x,
-				y = y
-			}))
-
-			net.Start("ScannerData2")
-				net.WriteUInt(#data, 16)
-				net.WriteData(data, #data)
-			net.SendToServer()
-
-			startPicture = false
-			vgui.GetWorldPanel():SetVisible(true)
-			timer.Simple(0, function() input.SetCursorPos(x2, y2) end)
-		end
-	end)
-
-	local click = false
-	function PANEL:Think() 
 		x2, y2 = input.GetCursorPos()
+
 		if input.IsKeyDown(KEY_LSHIFT) then
-			prepareScreen = true
+			self.prepareScreen = true
 
 			if input.IsMouseDown(MOUSE_LEFT) and !click then
 				click = true
 				vgui.GetWorldPanel():SetVisible(false)
 				
-				startPicture = true
+				self.startPicture = true
 			elseif !input.IsMouseDown(MOUSE_LEFT) and click then
 				click = false
 			end
 		else
-			prepareScreen = false
+			self.prepareScreen = false
 		end
 	end
-*/
 
 	vgui.Register("dispatch.main", PANEL, "EditablePanel")
 end
 
-do
-	local function Circle(sx, sy, radius, vertexCount, color, angle)
-		local vertices = {}
-		local ang = -math.rad(angle or 0)
-		local c = math.cos(ang)
-		local s = math.sin(ang)
-		for i = 0, 360, 360 / vertexCount do
-			local radd = math.rad(i)
-			local x = math.cos(radd)
-			local y = math.sin(radd)
-
-			local tempx = x * radius * c - y * radius * s + sx
-			y = x * radius * s + y * radius * c + sy
-			x = tempx
-
-			vertices[#vertices + 1] = {
-				x = x, 
-				y = y, 
-				u = u, 
-				v = v 
-			}
-		end
-
-		if vertices and #vertices > 0 then
-			draw.NoTexture()
-			surface.SetDrawColor(color)
-			surface.DrawPoly(vertices)
-		end
-	end
-	
-	local f, b = Vector(0, 0, 0), Angle(0, 90, 90)
-	function dispatch.Draw3DCursor()
-		local dir = LocalPlayer():EyeAngles():Forward()
-		local trace = dispatch.GetViewTrace()
-
-		if !trace then
-			return
-		end
-
-		local hitNormal = trace.Hit and trace.HitNormal or -dir
-
-		if math.abs(hitNormal.z) > .98 then
-			hitNormal:Add(-dir * .01)
-		end
-
-		local pos, ang = LocalToWorld(f, b, trace.HitPos, hitNormal:Angle())
-		cam.Start3D2D(pos, ang, math.pow(trace.Fraction, .1) * (a or .2))
-			cam.IgnoreZ(true)
-				render.OverrideBlend(true, BLEND_ONE, BLEND_ONE, BLENDFUNC_ADD, BLEND_DST_ALPHA, BLEND_DST_ALPHA, BLENDFUNC_ADD)
-
-				Circle(0, 0, 32, 18, Color(0, 200, 255), 0)
-
-				render.OverrideBlend(false)
-			cam.IgnoreZ(false)
-		cam.End3D2D()
-	end
-end
