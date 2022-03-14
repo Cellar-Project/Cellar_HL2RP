@@ -66,3 +66,11 @@ function dispatch.SyncWaypoints(receiver)
 		net.Send(receiver)
 	end
 end
+
+net.Receive("dispatch.waypoint", function(len, client)
+	if !dispatch.InDispatchMode(client) then return end
+
+	local type, position = net.ReadString(), net.ReadVector()
+
+	dispatch.AddWaypoint(position, "", type)
+end)

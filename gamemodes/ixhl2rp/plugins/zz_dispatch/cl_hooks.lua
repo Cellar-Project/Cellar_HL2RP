@@ -7,6 +7,37 @@ Schema.scoreboardClasses = {
 
 local squad_glow_clr = Color(0, 63, 255)
 
+local function scale(px)
+	return math.ceil(math.max(480, ScrH()) * (px / 1080))
+end
+
+local function stabilityHUD()
+	local border_size, stability_w, stability_h = scale(64),  scale(385), scale(52)
+	local scrW, scrH = ScrW(), ScrH()
+
+	local stability = vgui.Create("dispatch.stablity")
+	stability:SetSize(stability_w, stability_h)
+	stability:SetPos(scrW - stability_w - border_size, border_size / 2 - stability_h / 2)
+	stability:SetAlpha(0)
+
+	ix.gui.stability = stability
+
+	timer.Create("Stability", 1, 0, function()
+		if !IsValid(ix.gui.stability) then
+			timer.Remove("Stability")
+			return
+		end
+
+		ix.gui.stability:UpdateStability(function(self, isHidden)
+			if isHidden then
+				self:AlphaTo(0, 0.2)
+			else
+				self:AlphaTo(255, 0.2)
+			end
+		end)
+	end)
+end
+
 function PLUGIN:CharacterLoaded(character)
 	local faction = ix.faction.Get(character:GetFaction())
 
@@ -19,9 +50,15 @@ function PLUGIN:CharacterLoaded(character)
 	end
 
 	if character:IsCombine() and character:GetFaction() != FACTION_DISPATCH then
+		stabilityHUD()
+
 		hook.Add("PlayerButtonDown", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.open") end end)
 		hook.Add("PlayerButtonUp", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.close") end end)
 	else
+		if IsValid(ix.gui.stability) then
+			ix.gui.stability:Remove()
+		end
+		
 		hook.Remove("PlayerButtonDown", "dispatch.quick")
 		hook.Remove("PlayerButtonUp", "dispatch.quick")
 	end

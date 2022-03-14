@@ -42,6 +42,30 @@ dispatch.mpf_ranks = {
 	},
 }
 
+dispatch.stability_codes = {
+	[1] = {
+		name = "ЗЕЛЁНЫЙ",
+		text = "СОЦИО-СТАБИЛЬНОСТЬ В НОРМЕ",
+		color = Color(128, 255, 128),
+		isHidden = true
+	},
+	[2] = {
+		name = "ЖЕЛТЫЙ",
+		text = "СОЦИО-СТАБИЛЬНОСТЬ НИЖЕ НОРМЫ",
+		color = Color(255, 200, 32)
+	},
+	[3] = {
+		name = "КРАСНЫЙ",
+		text = "СОЦИО-СТАБИЛЬНОСТЬ ПОД УГРОЗОЙ",
+		color = Color(255, 32, 64)
+	},
+	[4] = {
+		name = "ЧЁРНЫЙ",
+		text = "СОЦИО-СТАБИЛЬНОСТЬ ПОТЕРЯНА, СУДЕБНОЕ РАЗБИРАТЕЛЬСТВО ОТМЕНЕНО",
+		color = Color(225, 225, 225)
+	},
+}
+
 function dispatch.Rank(id)
 	return dispatch.mpf_ranks[id] or dispatch.mpf_ranks[1]
 end
@@ -82,19 +106,13 @@ function dispatch.GetReceivers()
 	return recvs
 end
 
-/*
-function dispatch.GetReceiversAI()
-	local recvs = {}
-
-	for _, client in ipairs(player.GetAll()) do
-		if client:Team() == FACTION_DISPATCH then
-			table.insert(recvs, client)
-		end
-	end
-
-	return recvs
+function dispatch.GetStability()
+	return GetGlobalInt("stabilitycode", 1)
 end
-*/
+
+function dispatch.StabilityCode()
+	return dispatch.stability_codes[dispatch.GetStability()] or dispatch.stability_codes[1]
+end
 
 function dispatch.GetFreeSquadTag()
 	for tag = 1, #dispatch.available_tags do
@@ -139,7 +157,7 @@ end
 
 dispatch.unassigned_squad = dispatch.unassigned_squad or dispatch.CreateSquad(nil, 1, true)
 
-ix.util.Include("cl_interactions.lua")
+ix.util.Include("sh_interactions.lua")
 ix.util.Include("cl_waypoints.lua")
 ix.util.Include("cl_hooks.lua")
 ix.util.Include("sh_spectate.lua")
@@ -147,17 +165,46 @@ ix.util.Include("sv_interactions.lua")
 ix.util.Include("sv_waypoints.lua")
 ix.util.Include("sv_hooks.lua")
 
+ix.lang.AddTable("russian", {
+	stabilityChanged = "Вы успешно изменили статус-код!",
+	waypointCooldown = "Вам нужно немного подождать прежде чем добавить новую метку!",
+	addedWaypoint = "Вы успешно добавили метку!",
+	combineNoAccess = "У Вас нет доступа к этим командам!",
+	stabilityCmd = "Смена статус-кода (1 - 4: от зелёного до чёрного)"
+})
+
+ix.command.Add("StabilityCode", {
+	description = "@stabilityCmd",
+	arguments = {
+		ix.type.number
+	},
+	OnRun = function(self, client, index)
+		if !client:IsCombine() then
+			return false
+		end
+
+		if client:GetCharacter():ReturnDatafilePermission() < 4 then
+			return false
+		end
+
+		local id = math.Clamp(index, 1, #dispatch.stability_codes)
+
+		SetGlobalInt("stabilitycode", id)
+
+		return "@stabilityChanged"
+	end
+})
+
 ix.command.Add("SquadCreate", {
 	description = "@cmdPTCreate",
 	OnRun = function(self, client, index)
 		if !client:IsCombine() then
-			return "@CannotUseTeamCommands"
+			return "@combineNoAccess"
 		end
 
 		return dispatch.CreateSquad(client)
 	end
 })
-
 
 ix.command.Add("SquadJoin", {
 	description = "@cmdPTCreate",
@@ -166,7 +213,7 @@ ix.command.Add("SquadJoin", {
 	},
 	OnRun = function(self, client, index)
 		if !client:IsCombine() then
-			return "@CannotUseTeamCommands"
+			return "@combineNoAccess"
 		end
 
 		local squad = dispatch.GetSquads()[index]
@@ -182,11 +229,11 @@ ix.command.Add("Waypoint", {
 	arguments = {ix.type.string, bit.bor(ix.type.string, ix.type.optional)},
 	OnRun = function(self, client, type, text)
 		if !client:IsCombine() then
-			return "@cannotAddWaypoints"
+			return "@combineNoAccess"
 		end
 
 		if (client.lastWaypointCooldown or 0) > CurTime() then
-			return "Wait a bit before adding new one!" -- TO DO: change to localized version
+			return "@waypointCooldown"
 		end
 
 		text = text or ""

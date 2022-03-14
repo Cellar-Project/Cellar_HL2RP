@@ -315,7 +315,14 @@ function PANEL:Select(id)
 	local panel = self.Buttons[id + 1]
 
 	if IsValid(panel) then
-		ix.command.Send("Waypoint", panel.data.type)
+		if self.isDispatch then
+			net.Start("dispatch.waypoint")
+				net.WriteString(panel.data.type)
+				net.WriteVector(self.pos)
+			net.SendToServer()
+		else
+			ix.command.Send("Waypoint", panel.data.type)
+		end
 	end
 	
 	--surface.PlaySound(soundSelect)
@@ -408,37 +415,4 @@ do
 			end
 		end
 	end)
-
-	local showradial = false
-	function dispatch.ShowQuickPingMenu()
-		if IsValid(ix.gui.dispatch) then
-			return
-		end
-		
-		if IsValid(ix.gui.waypoints) then
-			local leftClick = input.WasMouseReleased(MOUSE_LEFT)
-			local rightClick = input.WasMouseReleased(MOUSE_RIGHT)
-
-			if leftClick then
-				hook.Run("quickmenu.leftclick")
-			end
-
-			if rightClick then
-				hook.Run("quickmenu.rightclick")
-			end
-		end
-
-		if !showradial and input.IsKeyDown(KEY_T) and !IsValid(vgui.GetHoveredPanel()) and !gui.IsConsoleVisible() and !gui.IsGameUIVisible() then
-			if BlockUseDelay > CurTime() then return end
-
-			if !IsValid(ix.gui.waypoints) then
-				local a = vgui.Create("dispatch.radial.menu")
-				a.KeyCode = KEY_T
-				BlockUseDelay = CurTime() + 0.25
-				showradial = true
-			end
-		elseif input.WasKeyReleased(KEY_T) and showradial then
-			showradial = false
-		end
-	end
 end
