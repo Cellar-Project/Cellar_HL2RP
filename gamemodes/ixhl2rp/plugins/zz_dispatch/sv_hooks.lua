@@ -77,6 +77,23 @@ function PLUGIN:OnCharacterIDCardChanged(character, newDatafile)
 	-- TO DO: Send MPF's ID to AI Dispatch
 end
 
+local replace = {
+	["ic"] = "Radio",
+	["whisper"] = "RadioWhisper",
+	["yell"] = "RadioYell"
+}
+
+function PLUGIN:PrePlayerSay(client, chatType, message, anonymous)
+	if client:Team() == FACTION_DISPATCH then
+		local rep = replace[chatType]
+
+		if rep then
+			ix.command.Run(client, rep, {message})
+			return true
+		end
+	end
+end
+
 -- DATAFILE_MEDIUM: NO SP
 -- DATAFILE_FULL: +3 SP
 -- DATAFILE_ELEVATED: INF SP

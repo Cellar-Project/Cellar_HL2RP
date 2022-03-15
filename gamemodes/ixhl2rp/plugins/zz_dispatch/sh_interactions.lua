@@ -471,7 +471,7 @@ dispatch.WorldAction({
 		entity:SetLocked(locked)
 		entity:EmitSound("buttons/combine_button_locked.wav")
 		entity:SetDisplayError(locked)
-		entity.nextUseTime = CurTime() + 3600
+		entity.nextUseTime = locked and (CurTime() + 3600) or CurTime()
 		entity:SetNWBool("locked", locked)
 	end
 })

@@ -1,8 +1,7 @@
 local CHAR = ix.meta.character
 
 function CHAR:IsDispatch()
-	local faction = self:GetFaction()
-	return faction == FACTION_OTA or Schema:IsPlayerCombineRank(self:GetPlayer(), {"dl", "cc", "sc"})
+	return self:GetFaction() == FACTION_DISPATCH
 end
 
 function CHAR:GetIDCard()
