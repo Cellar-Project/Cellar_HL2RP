@@ -104,6 +104,8 @@ if (SERVER) then
 		local maxStamina = self:GetCharacter():GetMaxStamina()
 		local value = math.Clamp(current + amount, 0, maxStamina)
 
+		self:SetLocalVar("stm", value)
+
 		if (value >= (maxStamina * 0.5) and self:GetNetVar("brth", false)) then
 			self:SetNetVar("brth", nil)
 
@@ -114,6 +116,8 @@ if (SERVER) then
 	function playerMeta:ConsumeStamina(amount)
 		local current = self:GetLocalVar("stm", 0)
 		local value = math.Clamp(current - amount, 0, self:GetCharacter():GetMaxStamina())
+
+		self:SetLocalVar("stm", value)
 
 		if (value == 0 and !self:GetNetVar("brth", false)) then
 			self:SetNetVar("brth", true)
