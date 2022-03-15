@@ -100,8 +100,9 @@ local combineOverlay = ix.util.GetMaterial("effects/combine_binocoverlay")
 
 function Schema:RenderScreenspaceEffects()
 	DrawColorModify(colorModify)
+	local char = LocalPlayer():GetCharacter()
 
-	if (LocalPlayer():IsCombine()) then
+	if (char and char:HasVisor()) then
 		render.UpdateScreenEffectTexture()
 
 		combineOverlay:SetFloat("$alpha", 0.25)
