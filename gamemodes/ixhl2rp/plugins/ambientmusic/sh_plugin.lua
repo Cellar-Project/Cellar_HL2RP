@@ -4,60 +4,37 @@ PLUGIN.name = "Ambient Music"
 PLUGIN.description = "Ambient Music"
 PLUGIN.author = "Schwarz Kruppzo"
 
-if SERVER then 
+if SERVER then
 	return
 end
 
 local timerID = "ixAmbient"
 local ambients = {
-	[1] = {"cellar/music/01.mp3", 612},
-	[2] = {"cellar/music/02.mp3", 157},
-	[3] = {"cellar/music/03.mp3", 344},
-	[4] = {"cellar/music/04.mp3", 310},
-	[5] = {"cellar/music/05.mp3", 194},
-	[6] = {"cellar/music/06.mp3", 104},
-	[7] = {"cellar/music/07.mp3", 173},
-	[8] = {"cellar/music/08.mp3", 306},
-	[9] = {"cellar/music/09.mp3", 327},
-	[10] = {"cellar/music/10.mp3", 80},
-	[11] = {"cellar/music/11.mp3", 240},
-	[12] = {"cellar/music/12.mp3", 350},
-	[13] = {"cellar/music/13.mp3", 262},
-	[14] = {"cellar/music/14.mp3", 305},
-	[15] = {"cellar/music/15.mp3", 197},
-	[16] = {"cellar/music/16.mp3", 252},
-	[17] = {"cellar/music/17.mp3", 349},
-	[18] = {"cellar/music/18.mp3", 295},
-	[19] = {"cellar/music/19.mp3", 154},
-	[20] = {"cellar/music/20.mp3", 306},
-	[21] = {"cellar/music/21.mp3", 205},
-	[22] = {"cellar/music/22.mp3", 129},
-	[23] = {"cellar/music/23.mp3", 565},
-	[24] = {"cellar/music/24.mp3", 292},
-	[25] = {"cellar/music/25.mp3", 406},
-	[26] = {"cellar/music/26.mp3", 255},
-	[27] = {"cellar/music/27v.mp3", 64},
-	[28] = {"cellar/music/28v.mp3", 189},
-	[29] = {"cellar/music/29v.mp3", 79},
-	[30] = {"cellar/music/30.mp3", 300},
-	[31] = {"cellar/music/31.mp3", 230},
-	[32] = {"cellar/music/32.mp3", 573},
-	[33] = {"cellar/music/33.mp3", 136},
-	[34] = {"cellar/music/34.mp3", 290},
-	[35] = {"cellar/music/35.mp3", 290},
-	[36] = {"cellar/music/36.mp3", 129},
-	[37] = {"cellar/music/37.mp3", 341},
-	[38] = {"cellar/music/38.mp3", 168},
-	[39] = {"cellar/music/39.mp3", 226},
-	[40] = {"cellar/music/40.mp3", 186},
-	[41] = {"cellar/music/41.mp3", 240},
-	[42] = {"cellar/music/42.mp3", 211},
-	[43] = {"cellar/music/43.mp3", 274},
-	[44] = {"cellar/music/44.mp3", 261}
+	[1] = {"cellar/music/01.mp3", 309},
+	[2] = {"cellar/music/02.mp3", 305},
+	[3] = {"cellar/music/03.mp3", 349},
+	[4] = {"cellar/music/04.mp3", 261},
+	[5] = {"cellar/music/05.mp3", 304},
+	[6] = {"cellar/music/06.mp3", 251},
+	[7] = {"cellar/music/07.mp3", 320},
+	[8] = {"cellar/music/08.mp3", 332},
+	[9] = {"cellar/music/09.mp3", 222},
+	[10] = {"cellar/music/10.mp3", 563},
+	[11] = {"cellar/music/11.mp3", 290},
+	[12] = {"cellar/music/12.mp3", 405},
+	[13] = {"cellar/music/13.mp3", 253},
+	[14] = {"cellar/music/14.mp3", 62},
+	[15] = {"cellar/music/15.mp3", 187},
+	[16] = {"cellar/music/16.mp3", 75},
+	[17] = {"cellar/music/17.mp3", 230},
+	[18] = {"cellar/music/18.mp3", 573},
+	[19] = {"cellar/music/19.mp3", 290},
+	[20] = {"cellar/music/20.mp3", 290},
+	[21] = {"cellar/music/21.mp3", 341}
 }
 
 local function SetVolume(volume)
-	if PLUGIN.snd then 
+	if PLUGIN.snd then
 		PLUGIN.snd:ChangeVolume(volume)
 	end
 end
@@ -85,7 +62,7 @@ local function PlayAmbient(ambientData)
 
 	PLUGIN.snd = CreateSound(LocalPlayer(), ambientData[1])
 	PLUGIN.snd:Play()
-	
+
 	timer.Simple(0, function()
 		PLUGIN.snd:ChangeVolume(ix.option.Get("ambientVol"), 0)
 	end)
@@ -118,8 +95,8 @@ ix.option.Add("ambientToggle", ix.type.bool, true, {
 ix.option.Add("ambientVol", ix.type.number, 1, {
 	category = "Музыка",
 	decimals = 2,
-	min = 0.01, 
-	max = 1, 
+	min = 0.01,
+	max = 1,
 	OnChanged = function(_, value)
 		SetVolume(value)
 	end
@@ -128,7 +105,7 @@ ix.option.Add("ambientVol", ix.type.number, 1, {
 ix.option.Add("ambientTime", ix.type.number, 0, {
 	category = "Музыка",
 	decimals = 0,
-	min = 0, 
+	min = 0,
 	max = 600
 })
 
