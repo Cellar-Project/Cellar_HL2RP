@@ -2,6 +2,10 @@ ix.util.Include("meta/sh_cams.lua")
 ix.util.Include("sh_cameras.lua")
 
 function dispatch.GetCameraOrigin(camera)
+	if camera:IsPlayer() then
+		return camera:GetShootPos()
+	end
+	
 	if !camera.GetCameraData then 
 		return camera:GetPos() 
 	end
@@ -21,6 +25,10 @@ function dispatch.GetCameraOrigin(camera)
 end
 
 function dispatch.GetCameraViewAngle(camera)
+	if camera:IsPlayer() then
+		return camera:EyeAngles()
+	end
+
 	local data = camera:GetCameraData()
 	local ang = camera:GetAngles()
 

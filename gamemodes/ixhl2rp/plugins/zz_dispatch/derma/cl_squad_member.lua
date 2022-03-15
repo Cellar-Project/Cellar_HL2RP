@@ -253,27 +253,6 @@ function PANEL:OpenMenu(target)
 		net.SendToServer()
 	end):SetImage("icon16/book_open.png")
 	menu:Open()
-
-	/*
-		DISPATCH [MEMBER]:
-					Spectate
-					Move To <squad>
-					Set as Squad Leader
-					Give Reward
-					Open Datafile
-
-		MEMBER [MEMBER]:
-		[LEADER]	Kick
-		[LEADER]	Set as Squad Leader
-					Open Datafile
-		
-		DISPATCH [SQUAD]:
-					Disband
-					Give Reward
-
-		MEMBER [SQUAD]:
-		[LEADER]	Disband
-	*/
 end
 
 function PANEL:PerformLayout(w, h)

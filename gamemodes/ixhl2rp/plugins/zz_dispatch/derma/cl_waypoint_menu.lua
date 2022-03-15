@@ -202,7 +202,8 @@ local icons = {
 
 local PANEL = {}
 local WheelScale = 1
-local BlockUseDelay = 0
+
+BLOCK_WAYPOINT_USE = 0
 
 function PANEL:Init()
 	if IsValid(ix.gui.waypoints) then ix.gui.waypoints:Remove() end
@@ -277,7 +278,7 @@ function PANEL:Close()
 
 	self.FadingOut = true
 
-	BlockUseDelay = CurTime() + 0.5
+	BLOCK_WAYPOINT_USE = CurTime() + 0.5
 
 	self:AlphaTo(0, 0.2, nil, function()
 		self:Remove()

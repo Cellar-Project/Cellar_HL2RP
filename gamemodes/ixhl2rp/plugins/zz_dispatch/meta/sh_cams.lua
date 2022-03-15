@@ -3,7 +3,7 @@ local CAM = ix.meta.cameratype or {}
 CAM.__index = CAM
 
 function CAM:Name(entity) 
-	return "UNKNOWN"
+	return false
 end
 
 function CAM:Type() return self.cam_type end
@@ -12,6 +12,7 @@ function CAM:ViewAngle(entity) return entity:GetAngles() end
 function CAM:ViewOffset(entity) return self.view_offset end
 function CAM:MaxYaw() return self.max_yaw end
 function CAM:MaxPitch() return self.max_pitch end
+function CAM:DefaultName(entity) return nil end
 
 function CAM:Setup(data)
 	self.cam_type = data.CameraType
@@ -19,6 +20,18 @@ function CAM:Setup(data)
 	self.max_yaw = data.MaxYaw
 	self.max_pitch = data.MaxPitch
 	self.view_offset = data.Offset
+
+	if data.Name then
+		self.Name = data.Name
+	end
+
+	if data.DefaultName then
+		self.DefaultName = data.DefaultName
+	end
+
+	if data.ViewAngle then
+		self.ViewAngle = data.ViewAngle
+	end
 end
 
 ix.meta.cameratype = CAM
@@ -56,6 +69,10 @@ do
 					RevalidateCache()
 				end)
 			end)
+
+			if SERVER then
+				dispatch.SetupCRC(entity, function() return camdata:DefaultName(entity) end)
+			end
 		end
 	end)
 

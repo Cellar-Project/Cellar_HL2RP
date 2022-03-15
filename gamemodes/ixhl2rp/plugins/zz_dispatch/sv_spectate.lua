@@ -31,6 +31,7 @@ end
 function dispatch.Spectate(client, entity)
 	if !IsValid(entity) or !IsValid(client) then return end
 	if !dispatch.InDispatchMode(client) then return end
+	if client:IsPilotScanner() then return end
 	
 	client:SetNetworkOrigin(dispatch.GetCameraOrigin(entity))
 	client:SetViewEntity(entity)

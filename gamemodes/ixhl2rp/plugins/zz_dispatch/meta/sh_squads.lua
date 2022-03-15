@@ -165,7 +165,7 @@ local SQUAD = ix.meta.squad or {}
 		return true
 	end
 
-	function SQUAD:Destroy(lastCharacter)
+	function SQUAD:Destroy()
 		if self:IsStatic() then
 			return
 		end
@@ -174,11 +174,11 @@ local SQUAD = ix.meta.squad or {}
 			net.Start("ixSquadDestroy")
 				net.WriteUInt(self.tag, 5)
 			net.Send(dispatch.GetReceivers())
-
-			ix.log.Add(lastCharacter, "squadDestroy", self:GetTagName())
 		else
 			for character, _ in pairs(self.members) do
-				character:SetSquad()
+				--character:SetSquad()
+
+				dispatch.unassigned_squad:AddMember(character)
 			end
 		end
 
@@ -255,6 +255,7 @@ if CLIENT then
 		local leader = ix.char.loaded[leaderID]
 
 		local SQUAD = dispatch.CreateSquad(isStatic and nil or leader, tagID, isStatic)
+		SQUAD.members = {}
 		SQUAD.counter = counter
 
 		for charID, id in pairs(members) do

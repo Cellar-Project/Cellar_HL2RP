@@ -62,9 +62,11 @@ function PANEL:OnJoin()
 end
 
 function PANEL:RemoveMember(char)
-	self.members[char]:Remove()
-	self.members[char] = nil
-
+	if IsValid(self.members[char]) then
+		self.members[char]:Remove()
+		self.members[char] = nil
+	end
+	
 	self.subcontainer:InvalidateLayout(true)
 	self.subcontainer:SizeToChildren(false, true)
 
