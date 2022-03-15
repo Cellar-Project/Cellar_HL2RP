@@ -63,7 +63,7 @@ net.Receive("squad.menu.leader", function(len, client)
 
 	targetSquad:SetLeader(character)
 
-	-- TO DO: add log
+	ix.log.Add(client:GetCharacter(), "squadLeader", targetSquad:GetTagName(), character)
 end)
 
 net.Receive("squad.menu.move", function(len, client)
@@ -77,9 +77,10 @@ net.Receive("squad.menu.move", function(len, client)
 
 	if !CanUseMemberInteraction(client, character, new and bit.bor(ACCESS.DISPATCH, ACCESS.LEADER) or ACCESS.DISPATCH) then return end
 
+	local newSquad = targetSquad
 	if new then
 		if client:Team() == FACTION_DISPATCH then
-			dispatch.CreateSquad(character)
+			newSquad = dispatch.CreateSquad(character)
 		else
 			if squad and !squad:IsStatic() then
 				squad:RemoveMember(character)
@@ -91,7 +92,7 @@ net.Receive("squad.menu.move", function(len, client)
 		end
 	end
 	
-	-- TO DO: add log
+	ix.log.Add(client:GetCharacter(), "squadMove", character, newSquad:GetTagName())
 end)
 
 local DATAFILE = ix.plugin.list["datafile"]
@@ -108,7 +109,7 @@ net.Receive("squad.menu.reward", function(len, client)
 		DATAFILE:AddEntry(client, datafileID, "civil", reason, points)
 	end
 
-	-- TO DO: add log
+	ix.log.Add(client:GetCharacter(), "squadReward", character, points, reason)
 end)
 
 net.Receive("squad.menu.spectate", function(len, client)
@@ -120,7 +121,7 @@ net.Receive("squad.menu.spectate", function(len, client)
 
 	dispatch.Spectate(client, character:GetPlayer())
 
-	-- TO DO: add log
+	ix.log.Add(client:GetCharacter(), "squadObserve", character)
 end)
 
 net.Receive("squad.menu.disband", function(len, client)
@@ -156,5 +157,5 @@ net.Receive("squad.menu.rewardall", function(len, client)
 		end
 	end
 
-	-- TO DO: add log
+	ix.log.Add(client:GetCharacter(), "squadRewardAll", targetSquad:GetTagName(), points, reason)
 end)

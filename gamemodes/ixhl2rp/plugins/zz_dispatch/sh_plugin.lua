@@ -76,11 +76,31 @@ end
 
 if SERVER then
 	ix.log.AddType("squadCreate", function(char, tagname)
-		return string.format("%s создал подразделение '%s'", char:GetOriginalName(), tagname)
+		return string.format("%s создал ПГ '%s'", char:GetOriginalName(), tagname)
 	end)
 
 	ix.log.AddType("squadDestroy", function(char, tagname)
-		return string.format("%s расформировал подразделение '%s'", char:GetOriginalName(), tagname)
+		return string.format("%s расформировал ПГ '%s'", char:GetOriginalName(), tagname)
+	end)
+
+	ix.log.AddType("squadLeader", function(char, tagname, target)
+		return string.format("%s назначил командиром ПГ '%s' %s", char:GetName(), tagname, target:GetName())
+	end)
+
+	ix.log.AddType("squadMove", function(char, target, tagname)
+		return string.format("%s переместил %s в ПГ '%s'", char:GetName(), target:GetName(), tagname)
+	end)
+
+	ix.log.AddType("squadReward", function(char, target, points, reason)
+		return string.format("%s наградил %s %s очками стерелизации (%s)", char:GetName(), target:GetName(), points, reason)
+	end)
+
+	ix.log.AddType("squadRewardAll", function(char, tagname, points, reason)
+		return string.format("%s наградил ПГ '%s' %s очками стерелизации (%s)", char:GetName(), tagname, points, reason)
+	end)
+
+	ix.log.AddType("squadObserve", function(char, target)
+		return string.format("%s наблюдает за %s", char:GetName(), target:GetName())
 	end)
 end
 
@@ -229,7 +249,7 @@ ix.command.Add("StabilityCode", {
 })
 
 ix.command.Add("SquadCreate", {
-	description = "@cmdPTCreate",
+	description = "",
 	OnRun = function(self, client, index)
 		if !client:IsCombine() then
 			return "@combineNoAccess"
@@ -246,7 +266,7 @@ ix.command.Add("SquadCreate", {
 })
 
 ix.command.Add("SquadJoin", {
-	description = "@cmdPTCreate",
+	description = "",
 	arguments = {
 		ix.type.number
 	},

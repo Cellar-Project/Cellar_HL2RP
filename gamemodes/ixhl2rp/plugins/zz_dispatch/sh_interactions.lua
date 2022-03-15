@@ -340,3 +340,138 @@ dispatch.WorldAction({
 		dispatch.OpenDatafile(client, entity:GetCharacter())
 	end
 })
+
+dispatch.WorldAction({
+	LabelOn = "Разблокировать дверь",
+	LabelOff = "Заблокировать дверь",
+	--Icon = "",
+	Order = 3,
+
+	Type = "toggle",
+
+	HintClass = "func_door",
+
+	Filter = function(self, entity)
+		return IsValid(entity) and entity:GetClass() == self.HintClass and !entity:HasSpawnFlags(256) and !entity:HasSpawnFlags(1024)
+	end,
+
+	Action = function(self, entity, client, trace)
+		self:MsgStart()
+			net.WriteEntity(entity)
+		self:MsgEnd()
+	end,
+
+	Checked = function(self, entity)
+		return (entity:GetNWBool("locked") or false) == true
+	end,
+
+	Receive = function(self, client)
+		local entity = net.ReadEntity()
+
+		if !self:Filter(entity) then return end
+		
+		local locked = entity:IsLocked()
+		locked = !locked
+
+		entity:Fire(locked and "lock" or "unlock")
+		entity:SetNWBool("locked", locked)
+	end
+})
+
+dispatch.WorldAction({
+	Label = "Использовать",
+	Icon = "icon16/connect.png",
+	Order = 2,
+
+	HintClass = "func_door",
+
+	Filter = function(self, entity)
+		return IsValid(entity) and entity:GetClass() == self.HintClass and !entity:HasSpawnFlags(256) and !entity:HasSpawnFlags(1024)
+	end,
+
+	Action = function(self, entity, client, trace)
+		self:MsgStart()
+			net.WriteEntity(entity)
+		self:MsgEnd()
+	end,
+
+	Receive = function(self, client)
+		local entity = net.ReadEntity()
+
+		if !self:Filter(entity) then return end
+
+		entity:Fire((entity:GetInternalVariable("m_toggle_state") == 0) and "close" or "open")
+	end
+})
+
+dispatch.WorldAction({
+	LabelOn = "Включить замок",
+	LabelOff = "Отключить замок",
+	--Icon = "",
+	Order = 2,
+
+	Type = "toggle",
+
+	HintClass = "ix_combinelock",
+
+	Filter = function(self, entity)
+		return IsValid(entity) and entity:GetClass() == self.HintClass
+	end,
+
+	Action = function(self, entity, client, trace)
+		self:MsgStart()
+			net.WriteEntity(entity)
+		self:MsgEnd()
+	end,
+
+	Checked = function(self, entity)
+		return entity:GetLocked() == true
+	end,
+
+	Receive = function(self, client)
+		local entity = net.ReadEntity()
+
+		if !self:Filter(entity) then return end
+		
+		entity:SetLocked(!entity:GetLocked())
+	end
+})
+
+dispatch.WorldAction({
+	LabelOn = "Разблокировать замок",
+	LabelOff = "Заблокировать замок",
+	--Icon = "",
+	Order = 3,
+
+	Type = "toggle",
+
+	HintClass = "ix_combinelock",
+
+	Filter = function(self, entity)
+		return IsValid(entity) and entity:GetClass() == self.HintClass
+	end,
+
+	Action = function(self, entity, client, trace)
+		self:MsgStart()
+			net.WriteEntity(entity)
+		self:MsgEnd()
+	end,
+
+	Checked = function(self, entity)
+		return (entity:GetNWBool("locked") or false) == true
+	end,
+
+	Receive = function(self, client)
+		local entity = net.ReadEntity()
+
+		if !self:Filter(entity) then return end
+		
+		local locked = !(entity:GetNWBool("locked") or false)
+
+		entity:SetLocked(locked)
+		entity:EmitSound("buttons/combine_button_locked.wav")
+		entity:SetDisplayError(locked)
+		entity.nextUseTime = CurTime() + 3600
+		entity:SetNWBool("locked", locked)
+	end
+})
