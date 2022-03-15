@@ -45,8 +45,9 @@ do
 
 			local blood = self:GetBlood()
 			local hp = PLUGIN:GetMinimalHealth(self)
+			local head = self:GetLimbHealth("head")
 
-			if (blood >= 3000) and (hp >= 20) then
+			if (blood >= 3000) and (hp >= 38) and (head >= 5) then
 				if player:IsUnconscious() and !player.ixUnconsciousOut then
 					player:SetAction("@wakingUp", 100, function(player)
 						player.ixUnconsciousOut = nil
@@ -298,8 +299,9 @@ do
 
 		local owner = self:GetPlayer()
 		local hp = PLUGIN:GetMinimalHealth(self)
+		local head = self:GetLimbHealth("head")
 
-		if hp < 20 and !owner:IsUnconscious() then
+		if ((hp < 38) or (head < 5)) and !owner:IsUnconscious() then
 			owner:SetCriticalState(true)
 		end
 	end
