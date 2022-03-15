@@ -21,3 +21,4 @@ ITEM.Stats = {
 	[5] = 0,
 }
 ITEM.CPMask = true
+ITEM.visorLevel = 1
