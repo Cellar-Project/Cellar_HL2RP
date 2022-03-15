@@ -4,19 +4,6 @@ PLUGIN.name = "Nightvision"
 PLUGIN.author = "unknown, maxxoft"
 PLUGIN.description = "Ported to Helix by maxxoft."
 
-do
-	local CHAR = ix.meta.character
-	local PLAYER = FindMetaTable("Player")
-
-	function CHAR:GetVisorLevel()
-		local inv = self:GetEquipment()
-		return inv:GetItemAtSlot(EQUIP_MASK) and inv:GetItemAtSlot(EQUIP_MASK).visorLevel or 0
-	end
-
-	function PLAYER:CanUseNightVision()
-		return self:GetCharacter():GetVisorLevel() == 2
-	end
-end
 
 if CLIENT then
 	local render = render
@@ -64,6 +51,8 @@ if CLIENT then
 	end
 
 	local function NightVisionFX()
+		local char = LocalPlayer():GetCharacter()
+
 		if oldNight != LocalPlayer():GetData("nightvisionfx") then
 			coeff = 0.02
 			AlphaAdditive = 1.5
@@ -77,7 +66,7 @@ if CLIENT then
 			oldNight = !oldNight
 		end
 
-		if LocalPlayer():GetData("nightvisionfx") then
+		if (LocalPlayer():GetData("nightvisionfx") and char:GetVisorLevel() > 1) then
 			if CurScale < 0.995 then
 				CurScale = CurScale + coeff * (1 - CurScale)
 			end
@@ -105,9 +94,11 @@ ix.command.Add("Nightvision", {
 
 		if !client:GetData("nightvisionfx") then
 			client:SetData("nightvisionfx", true)
+			sound.Play("cellar/misc/nightvision.wav", client:EyePos(), 55)
 			return "ПНВ активирован"
 		else
 			client:SetData("nightvisionfx", false)
+			sound.Play("cellar/misc/switch.wav", client:EyePos(), 55)
 			return "ПНВ деактивирован"
 		end
 	end
