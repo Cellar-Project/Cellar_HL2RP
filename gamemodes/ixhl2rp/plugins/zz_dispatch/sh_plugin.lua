@@ -124,10 +124,10 @@ function dispatch.GetFreeSquadTag()
 	return false
 end
 
-function dispatch.CreateSquad(leader, tagID, static)
+function dispatch.CreateSquad(leader, tagID, static, noLog)
 	if !static and getmetatable(leader) != ix.meta.character then
 		if !leader:GetCharacter() then
-			return
+			return false
 		end
 		
 		leader = leader:GetCharacter()
@@ -136,7 +136,7 @@ function dispatch.CreateSquad(leader, tagID, static)
 	tagID = tagID or dispatch.GetFreeSquadTag()
 
 	if !tagID then
-		return "No free tvs" --TODO: localize this
+		return false
 	end
 	
 	local SQUAD = setmetatable({}, ix.meta.squad)
@@ -144,12 +144,8 @@ function dispatch.CreateSquad(leader, tagID, static)
 
 	dispatch.squads[tagID] = SQUAD
 
-	if !static then
-		if SERVER then
-			SQUAD:Sync()
-
-			ix.log.Add(leader, "squadCreate", SQUAD:GetTagName())
-		end
+	if !static and SERVER then
+		SQUAD:Sync()
 	end
 
 	return SQUAD
@@ -164,13 +160,50 @@ ix.util.Include("sh_spectate.lua")
 ix.util.Include("sv_interactions.lua")
 ix.util.Include("sv_waypoints.lua")
 ix.util.Include("sv_hooks.lua")
+ix.util.Include("sv_crc_saving.lua")
+
+properties.Add("camera_setname", {
+	MenuLabel = "Set Camera Name",
+	Order = 400,
+	MenuIcon = "icon16/lock_edit.png",
+
+	Filter = function(self, entity, client)
+		if !dispatch.GetCameraData(entity:GetClass()) then return false end
+		if !gamemode.Call("CanProperty", client, "camera_setname", entity) then return false end
+
+		return true
+	end,
+
+	Action = function(self, entity)
+		Derma_StringRequest("Введите новое название камеры", "", "", function(text)
+			self:MsgStart()
+				net.WriteEntity(entity)
+				net.WriteString(text)
+			self:MsgEnd()
+		end)
+	end,
+
+	Receive = function(self, length, client)
+		local entity = net.ReadEntity()
+
+		if !IsValid(entity) then return end
+		if !self:Filter(entity, client) then return end
+
+		local name = net.ReadString()
+
+		entity:SetNetVar("cam", name)
+
+		PLUGIN:SaveData()
+	end
+})
 
 ix.lang.AddTable("russian", {
 	stabilityChanged = "Вы успешно изменили статус-код!",
 	waypointCooldown = "Вам нужно немного подождать прежде чем добавить новую метку!",
 	addedWaypoint = "Вы успешно добавили метку!",
 	combineNoAccess = "У Вас нет доступа к этим командам!",
-	stabilityCmd = "Смена статус-кода (1 - 4: от зелёного до чёрного)"
+	stabilityCmd = "Смена статус-кода (1 - 4: от зелёного до чёрного)",
+	squadCreated = "Вы успешно сфомировали патрульную группу!"
 })
 
 ix.command.Add("StabilityCode", {
@@ -202,7 +235,13 @@ ix.command.Add("SquadCreate", {
 			return "@combineNoAccess"
 		end
 
-		return dispatch.CreateSquad(client)
+		local result, err = dispatch.CreateSquad(client)
+
+		if result then
+			ix.log.Add(client:GetCharacter(), "squadCreate", result:GetTagName())
+
+			return "@squadCreated"
+		end
 	end
 })
 

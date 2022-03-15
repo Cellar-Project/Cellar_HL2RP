@@ -78,12 +78,12 @@ if CLIENT then
 			end
 
 			if !showradial and input.IsKeyDown(KEY_T) and !IsValid(vgui.GetHoveredPanel()) and !gui.IsConsoleVisible() and !gui.IsGameUIVisible() then
-				if BlockUseDelay > CurTime() then return end
+				if BLOCK_WAYPOINT_USE > CurTime() then return end
 
 				if !IsValid(ix.gui.waypoints) then
 					local a = vgui.Create("dispatch.radial.menu")
 					a.KeyCode = KEY_T
-					BlockUseDelay = CurTime() + 0.25
+					BLOCK_WAYPOINT_USE = CurTime() + 0.25
 					showradial = true
 				end
 			elseif input.WasKeyReleased(KEY_T) and showradial then
@@ -286,7 +286,7 @@ dispatch.WorldAction({
 	HintClass = "player",
 
 	Filter = function(self, entity)
-		return IsValid(entity) and entity:IsPlayer()
+		return IsValid(entity) and entity:IsPlayer() and !entity:IsCombine()
 	end,
 
 	Action = function(self, entity, client, trace)
@@ -296,7 +296,22 @@ dispatch.WorldAction({
 	end,
 
 	Receive = function(self, client)
+		local entity = net.ReadEntity()
 
+		if !IsValid(entity) or !entity:IsPlayer() or !entity:GetCharacter() then return end
+
+		local card = entity:GetCharacter():GetIDCard()
+
+		local data = ""
+		if card then
+			data = string.format(" #%s %s", card:GetData("cid", 0), card:GetData("name", ""))
+
+			ix.plugin.list["datafile"]:SetBOL(nil, entity.ixDatafile, true)
+		end
+		
+		local letter = dispatch.AddWaypoint(entity:GetShootPos(), "НАРУШИТЕЛЬ"..data, "warn", 60)
+
+		Schema:AddCombineDisplayMessage(string.format("Метка %s: %s", letter, card and ("гражданин"..data.." помечен как нарушитель!") or "неопознанное лицо помечено как нарушитель!"), color_red)
 	end
 })
 
@@ -318,6 +333,10 @@ dispatch.WorldAction({
 	end,
 
 	Receive = function(self, client)
+		local entity = net.ReadEntity()
 
+		if !IsValid(entity) or !entity:IsPlayer() or !entity:GetCharacter() then return end
+		
+		dispatch.OpenDatafile(client, entity:GetCharacter())
 	end
 })

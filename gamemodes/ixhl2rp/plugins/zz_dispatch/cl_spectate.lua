@@ -5,11 +5,22 @@ function dispatch.CalcView(client, origin, angles, fov, znear, zfar)
 	local camera = dispatch.IsSpectating(client)
 
 	if IsValid(camera) then
-		local pos = dispatch.GetCameraOrigin(client:GetViewEntity())
+		local pos = dispatch.GetCameraOrigin(camera)
+		local ang = camera:IsPlayer() and camera:EyeAngles() or client:EyeAngles()
+		local static = false
+
+		if !camera:IsPlayer() then
+			local data = camera.GetCameraData and camera:GetCameraData()
+			
+			if data and data:IsStatic() then
+				ang = data:ViewAngle(camera)
+				ang.z = 0
+			end
+		end
 
 		local data = {
 			origin = pos,
-			angles = client:EyeAngles(),
+			angles = ang,
 			drawviewer = true
 		}
 
@@ -61,7 +72,7 @@ function dispatch.InputMouseApply(cmd, x, y)
 
 			return true
 		else
-			if camdata then
+			if !camera:IsPlayer() and camdata then
 				local max_yaw, max_pitch, angles = camdata:MaxYaw(), camdata:MaxPitch(), camdata:ViewAngle(camera)
 
 				cam_ang.p = clamp(normalize(cam_ang.p + y * GetConVar("m_pitch"):GetFloat()), max_pitch and max_pitch[1] or -89, max_pitch and max_pitch[2] or 89)
@@ -119,8 +130,6 @@ end
 
 function dispatch.OnDispatchMode(state)
 	if state then
-		ix.gui.combine:Remove()
-
 		timer.Remove("ixRandomDisplayLines")
 
 		gui.EnableScreenClicker(true)
@@ -151,11 +160,33 @@ function dispatch.OnDispatchMode(state)
 	hook.Run("DispatchModeChanged", state)
 end
 
+local hiddenEnts = {}
+
+local function stopHide()
+	for v, _ in pairs(hiddenEnts) do
+		if IsValid(v) then
+			v:SetNoDraw(false)
+			hiddenEnts[v] = nil
+		end
+	end
+end
+
 function dispatch.Spectate(entity)
+	stopHide()
+
+	for k, v in ipairs(entity:GetChildren()) do
+		if !v:GetNoDraw() then
+			hiddenEnts[v] = true
+			v:SetNoDraw(true)
+		end
+	end
+
 	ix.gui.dispatch:OnSpectate(entity)
 end
 
 function dispatch.StopSpectate()
+	stopHide()
+
 	ix.gui.dispatch:OnStopSpectate()
 end
 

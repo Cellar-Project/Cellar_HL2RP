@@ -240,13 +240,20 @@ do
 		local clr = self:GetHeaderColor(true)
 
 		self.text:SetTextColor(clr)
-		self.code_text:SetTextColor(clr)
 		self.class_text:SetTextColor(clr)
 	end
 
 	function PANEL:PaintBG(w, h)
 		surface.SetDrawColor(self.parent:GetHeaderColor())
 		surface.DrawRect(0, 0, w, h)
+	end
+
+	function PANEL:PaintLeader(w, h)
+		if LocalPlayer():GetViewEntity() != self.parent.entity then return end
+		
+		surface.SetDrawColor(self.parent:GetHeaderColor(true))
+		surface.SetMaterial(ico)
+		surface.DrawTexturedRect(w - 16, h / 2 - 8, 16, 16)
 	end
 
 	function PANEL:Paint(w, h) end
@@ -256,15 +263,6 @@ do
 		self:SetTall(25)
 
 		self.hovered = false
-
-		self.code = self:Add("Panel")
-		self.code:Dock(RIGHT)
-		self.code:DockMargin(2, 0, 0, 0)
-		self.code:SetMouseInputEnabled(false)
-		
-		self.code_text = self.code:Add("DLabel")
-		self.code_text:Dock(FILL)
-		self.code_text:SetContentAlignment(5)
 
 		self.class = self:Add("Panel")
 		self.class:Dock(RIGHT)
@@ -289,16 +287,15 @@ do
 		self.text:SetContentAlignment(4)
 
 		self.text:SetFont("dispatch.camera.button")
-		self.code_text:SetFont("dispatch.camera.button")
 		self.class_text:SetFont("dispatch.camera.button")
 
-		self.code.parent = self
 		self.class.parent = self
 		self.header.parent = self
+		self.indicator.parent = self
 
-		self.code.Paint = self.PaintBG
 		self.class.Paint = self.PaintBG
 		self.header.Paint = self.PaintBG
+		self.indicator.Paint = self.PaintLeader
 	end
 
 	function PANEL:OnCursorEntered()
@@ -314,21 +311,24 @@ do
 	end
 
 	function PANEL:SetEntity(entity)
+		self.entity = entity
+
 		self.DoClick = function()
 			ix.gui.dispatch:RequestCamera(entity)
 		end
 
-		self.class_text:SetText(entity:GetCameraData():Type())
+		local data = entity:GetCameraData()
+
+		self.text:SetText(entity:GetNetVar("cam") or data:Name(entity) or "UNKNOWN")
+		self.class_text:SetText(data:Type())
 
 		self:GetTextColors()
 	end
 	
 	function PANEL:PerformLayout(w, h)
+		self.class:SetWide(w * 0.3)
 
-		self.class:SetWide(w * 0.15)
-		self.code:SetWide(w * 0.15)
-
-		self.header:SetWide(w - self.class:GetWide() - self.code:GetWide())
+		self.header:SetWide(w - self.class:GetWide())
 	end
 
 	vgui.Register("dispatch.camera.button", PANEL, "DButton")
@@ -460,6 +460,8 @@ do
 			tab2:SetWide(w / 3)
 			tab2:SetText("КАМЕРЫ")
 			tab2.DoSwitch = function()
+				self:BuildCameras()
+
 				self.patrols:SetVisible(false)
 				self.cameras:SetVisible(true)
 			end
@@ -486,6 +488,9 @@ do
 			self.patrols:SetSize(w, h2)
 			self.cameras = container:Add("DScrollPanel")
 			self.cameras:SetSize(w, h2)
+
+			self.cameras:SetVisible(false)
+			self.patrols:SetVisible(false)
 
 			frame:UpdateContainer()
 		end
@@ -641,6 +646,8 @@ do
 		end
 	end
 	function PANEL:BuildCameras(data)
+		self.cameras:Clear()
+
 		for k, v in pairs(dispatch.FindCameras()) do
 			local test = self.cameras:Add("dispatch.camera.button")
 			test:Dock(TOP)
