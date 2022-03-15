@@ -15,8 +15,8 @@ SWEP.ViewModelFOV = 75
 
 SWEP.Damage = 40
 SWEP.DamageMin = 10
-SWEP.BloodDamage = 1500/8
-SWEP.ShockDamage = 4200/8
+SWEP.BloodDamage = 1500 / 8
+SWEP.ShockDamage = 5000 / 8
 SWEP.BleedChance = 99
 SWEP.IsBuckshot = true
 
@@ -39,7 +39,7 @@ SWEP.Primary.ClipSize = 6
 SWEP.ExtendedClipSize = 8
 SWEP.ReducedClipSize = 4
 
-SWEP.Recoil = 5
+SWEP.Recoil = 10
 SWEP.RecoilSide = 3
 SWEP.MaxRecoilBlowback = 2
 SWEP.RecoilPunch = 0.5

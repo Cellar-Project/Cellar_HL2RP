@@ -13,8 +13,8 @@ SWEP.ViewModel = "models/weapons/cellar/c_uspmatch.mdl"
 SWEP.WorldModel = "models/weapons/w_pistol.mdl"
 SWEP.ViewModelFOV = 75
 
-SWEP.Damage = 35
-SWEP.DamageMin = 15
+SWEP.Damage = 45
+SWEP.DamageMin = 25
 SWEP.BloodDamage = 200
 SWEP.ShockDamage = 700
 SWEP.BleedChance = 75

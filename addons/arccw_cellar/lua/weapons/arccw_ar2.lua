@@ -15,8 +15,8 @@ SWEP.ViewModelFOV = 60
 
 SWEP.Damage = 50
 SWEP.DamageMin = 40
-SWEP.BloodDamage = 450
-SWEP.ShockDamage = 550
+SWEP.BloodDamage = 550
+SWEP.ShockDamage = 850
 SWEP.BleedChance = 0
 SWEP.AmmoItem = "bullets_ar2"
 SWEP.ImpulseSkill = true
