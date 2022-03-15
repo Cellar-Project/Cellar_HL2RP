@@ -380,12 +380,12 @@ Schema.voices.Add("Combine", "ПРОТИВНИК РАЗМАЗАН", "Хаха, �
 
 -- Firing
 
-Schema.voices.Add("Combine", "ОТКРЫТЬ ОГОНЬ", "Стреляю!", "HLAComVoice/grunt/firing_01.wav")
-Schema.voices.Add("Combine", "ОТКРЫТЬ ОГОНЬ2", "Атакую цель!", "HLAComVoice/grunt/firing_02.wav")
-Schema.voices.Add("Combine", "ОТКРЫТЬ ОГОНЬ3", "Открыть огонь на противника!", "HLAComVoice/grunt/firing_03.wav")
-Schema.voices.Add("Combine", "ОТКРЫТЬ ОГОНЬ4", "Открыть огонь!", "HLAComVoice/grunt/firing_04.wav")
-Schema.voices.Add("Combine", "ОТКРЫТЬ ОГОНЬ5", "Врассыпную, открыть огонь.", "HLAComVoice/grunt/firing_06.wav")
-Schema.voices.Add("Combine", "ОТКРЫТЬ ОГОНЬ6", "Подавить противника.", "HLAComVoice/grunt/firing_07.wav")
+Schema.voices.Add("Combine", "СТРЕЛЯЮ", "Стреляю!", "HLAComVoice/grunt/firing_01.wav")
+Schema.voices.Add("Combine", "АТАКУЮ", "Атакую цель!", "HLAComVoice/grunt/firing_02.wav")
+Schema.voices.Add("Combine", "ОТКРЫТЬ ОГОНЬ2", "Открыть огонь на противника!", "HLAComVoice/grunt/firing_03.wav")
+Schema.voices.Add("Combine", "ОТКРЫТЬ ОГОНЬ3", "Открыть огонь!", "HLAComVoice/grunt/firing_04.wav")
+Schema.voices.Add("Combine", "ОТКРЫТЬ ОГОНЬ4", "Врассыпную, открыть огонь.", "HLAComVoice/grunt/firing_06.wav")
+Schema.voices.Add("Combine", "ОТКРЫТЬ ОГОНЬ5", "Подавить противника.", "HLAComVoice/grunt/firing_07.wav")
 Schema.voices.Add("Combine", "ЗАЧИЩАЮ СЕКТОР", "Зачищаю сектор!", "HLAComVoice/grunt/firing_08.wav")
 Schema.voices.Add("Combine", "ПОДТВЕРЖДЕНО", "Подтверждено.", "HLAComVoice/grunt/firing_09.wav")
 Schema.voices.Add("Combine", "ПРОДВИГАЮСЬ ПО СЕКТОРУ", "Продвигаюсь по сектору.", "HLAComVoice/grunt/firing_10.wav")
