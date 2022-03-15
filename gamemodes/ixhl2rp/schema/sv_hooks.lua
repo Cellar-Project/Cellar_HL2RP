@@ -114,10 +114,10 @@ function Schema:CharacterVarChanged(character, key, oldValue, value)
 end
 
 function Schema:PlayerFootstep(client, position, foot, soundName, volume)
-	local factionTable = ix.faction.Get(client:Team())
+	-- local factionTable = ix.faction.Get(client:Team())
 
-	if (factionTable.runSounds and client:IsRunning()) then
-		client:EmitSound(factionTable.runSounds[foot])
+	if (client:GetCharacter():GetData("heavy") and client:IsRunning()) then
+		client:EmitSound(({[0] = "NPC_MetroPolice.RunFootstepLeft", [1] = "NPC_MetroPolice.RunFootstepRight"})[foot])
 		return true
 	end
 
