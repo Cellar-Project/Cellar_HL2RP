@@ -138,6 +138,8 @@ function PANEL:UpdateHealth()
 			else
 				self.type = 1
 			end
+
+			self:GetTextColors()
 		end
 	end
 end
@@ -187,7 +189,7 @@ function PANEL:OpenMenu(target)
 		squad, sub = menu:AddSubMenu("Группа")
 		sub:SetImage("icon16/arrow_in.png")
 
-		if !squads:IsStatic() then
+		if !squads:IsStatic() and !self.char:GetSquad():IsLeader(self.char) then
 			squad:AddOption("Сделать командиром", function() 
 				net.Start("squad.menu.leader")
 					net.WriteUInt(id, 32)
@@ -201,6 +203,8 @@ function PANEL:OpenMenu(target)
 		sub:SetImage("icon16/arrow_right.png")
 
 		for k, v in pairs(dispatch.GetSquads()) do
+			if k == self.char:GetSquad().tag then continue end
+			
 			move:AddOption(k == 1 and "Без группы" or v:GetTagName(), function()
 				net.Start("squad.menu.move")
 					net.WriteUInt(id, 32)

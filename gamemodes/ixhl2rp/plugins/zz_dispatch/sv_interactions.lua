@@ -110,6 +110,7 @@ net.Receive("squad.menu.reward", function(len, client)
 		DATAFILE:AddEntry(client, datafileID, "civil", reason, points)
 	end
 
+	character:GetPlayer():NotifyLocalized(points < 0 and "dispatchMinus" or "dispatchReward", client:GetName(), points, reason)
 	ix.log.Add(client:GetCharacter(), "squadReward", character, points, reason)
 end)
 
@@ -156,6 +157,8 @@ net.Receive("squad.menu.rewardall", function(len, client)
 		if datafileID then
 			DATAFILE:AddEntry(client, datafileID, "civil", reason, points)
 		end
+
+		v:NotifyLocalized(points < 0 and "dispatchMinusAll" or "dispatchRewardAll", client:GetName(), points, reason)
 	end
 
 	ix.log.Add(client:GetCharacter(), "squadRewardAll", targetSquad:GetTagName(), points, reason)

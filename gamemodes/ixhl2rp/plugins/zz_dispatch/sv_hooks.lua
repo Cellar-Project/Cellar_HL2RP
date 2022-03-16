@@ -19,11 +19,23 @@ function PLUGIN:PlayerLoadedCharacter(client, character, currentChar)
 
 	if currentChar then
 		currentChar:LeaveSquad()
+
+		if currentChar:IsCombine() then
+			for x, _ in pairs(client.IsSpectatedBy or {}) do
+				dispatch.StopSpectate(x)
+			end
+		end
 	end
 end
 
 function PLUGIN:PlayerDisconnected(client)
 	client:LeaveSquad()
+
+	if client:IsCombine() then
+		for x, _ in pairs(client.IsSpectatedBy or {}) do
+			dispatch.StopSpectate(x)
+		end
+	end
 end
 
 function PLUGIN:DatafileCombineModifyPoints(client, datafileID, points)
@@ -56,7 +68,7 @@ function PLUGIN:CharacterDatafileLoaded(character)
 		dispatch.unassigned_squad:AddMember(character)
 
 		local id, genericdata = character:ReturnDatafile(false)
-		local rank = genericdata.rank
+		local rank = genericdata.rank or 0
 
 		if rank > 1 then
 			rank = dispatch.Rank(rank)
@@ -97,6 +109,19 @@ end
 function PLUGIN:SetupPlayerVisibility(client, vw)
 	if IsValid(vw) and vw != client then
 		AddOriginToPVS(vw:GetPos())
+	end
+end
+
+function PLUGIN:PlayerNoClip(client)
+	if client:Team() == FACTION_DISPATCH then
+		return false
+	end
+end
+
+function PLUGIN:EntityTakeDamage(entity, dmgInfo)
+	if IsValid(entity) and entity:IsPlayer() and entity:Team() == FACTION_DISPATCH then
+		dmgInfo:SetDamage(0)
+		return true
 	end
 end
 

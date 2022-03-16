@@ -130,11 +130,19 @@ function PANEL:BuildSquads()
 end
 
 function PANEL:OnSquadSync(id, squad, full)
+	if !IsValid(self.squads[id]) then
+		return
+	end
+
 	self.squads[id]:SetupSquadFull(squad)
 	self.squads[id]:SetVisible(squad.member_counter > 0)
 	self.squads[id]:UpdateSquadInfo()
 end
 function PANEL:OnSquadDestroy(id, squad)
+	if !IsValid(self.squads[id]) then
+		return
+	end
+
 	for char, _ in pairs(self.squads[id].members) do
 		self.squads[id]:RemoveMember(char)
 	end
@@ -143,6 +151,10 @@ function PANEL:OnSquadDestroy(id, squad)
 	self.squads[id]:SetVisible(false)
 end
 function PANEL:OnSquadMemberJoin(id, squad, character)
+	if !IsValid(self.squads[id]) then
+		return
+	end
+
 	self.squads[id]:AddMember(character)
 
 	if squad.member_counter > 0 then
@@ -152,6 +164,10 @@ function PANEL:OnSquadMemberJoin(id, squad, character)
 	self.squads[id]:UpdateSquadInfo()
 end
 function PANEL:OnSquadMemberLeft(id, squad, character)
+	if !IsValid(self.squads[id]) then
+		return
+	end
+
 	self.squads[id]:RemoveMember(character)
 
 	if squad.member_counter <= 0 then
@@ -161,6 +177,10 @@ function PANEL:OnSquadMemberLeft(id, squad, character)
 	self.squads[id]:UpdateSquadInfo()
 end
 function PANEL:OnSquadChangedLeader(id, squad, character)
+	if !IsValid(self.squads[id]) then
+		return
+	end
+	
 	self.squads[id]:SetLeader(character)
 end
 

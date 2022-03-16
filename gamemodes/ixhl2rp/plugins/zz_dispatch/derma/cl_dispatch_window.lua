@@ -668,6 +668,8 @@ do
 		self.cameras:Clear()
 
 		for k, v in pairs(dispatch.FindCameras()) do
+			if !IsValid(v) then continue end
+			
 			local test = self.cameras:Add("dispatch.camera.button")
 			test:Dock(TOP)
 			test:DockMargin(0, 2, 16, 0)
@@ -680,6 +682,10 @@ do
 	function PANEL:OnStopSpectate() end
 
 	function PANEL:OnSquadSync(id, squad, full)
+		if !IsValid(self.squads[id]) then
+			return
+		end
+		
 		self.squads[id]:SetupSquadFull(squad)
 		self.squads[id]:SetVisible(squad.member_counter > 0)
 		self.squads[id]:UpdateSquadInfo()
@@ -687,6 +693,10 @@ do
 		self.manpower.stats[1]:SetValue(string.format("%i/15", table.Count(dispatch.squads) - 1))
 	end
 	function PANEL:OnSquadDestroy(id, squad)
+		if !IsValid(self.squads[id]) then
+			return
+		end
+
 		for char, _ in pairs(self.squads[id].members) do
 			self.squads[id]:RemoveMember(char)
 		end
@@ -695,6 +705,10 @@ do
 		self.squads[id]:SetVisible(false)
 	end
 	function PANEL:OnSquadMemberJoin(id, squad, character)
+		if !IsValid(self.squads[id]) then
+			return
+		end
+
 		self.squads[id]:AddMember(character)
 
 		if squad.member_counter > 0 then
@@ -704,6 +718,10 @@ do
 		self.squads[id]:UpdateSquadInfo()
 	end
 	function PANEL:OnSquadMemberLeft(id, squad, character)
+		if !IsValid(self.squads[id]) then
+			return
+		end
+
 		self.squads[id]:RemoveMember(character)
 
 		if squad.member_counter <= 0 then
@@ -713,6 +731,10 @@ do
 		self.squads[id]:UpdateSquadInfo()
 	end
 	function PANEL:OnSquadChangedLeader(id, squad, character)
+		if !IsValid(self.squads[id]) then
+			return
+		end
+		
 		self.squads[id]:SetLeader(character)
 	end
 
