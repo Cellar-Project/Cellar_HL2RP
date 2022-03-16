@@ -18,8 +18,8 @@ dispatch.SetCameraData("ix_combinelock", {
 	end,
 	ViewAngle = function(self, entity) 
 		local ang = entity:GetAngles()
-		ang:RotateAroundAxis(entity:GetUp(), -90)
-		
+		ang:RotateAroundAxis(entity:GetUp(), 90)
+
 		return ang
 	end
 })

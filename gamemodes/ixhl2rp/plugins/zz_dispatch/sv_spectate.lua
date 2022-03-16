@@ -42,6 +42,10 @@ function dispatch.Spectate(client, entity)
 		net.WriteEntity(entity)
 	net.Send(client)
 
+	entity.IsSpectatedBy = entity.IsSpectatedBy or {}
+	entity.IsSpectatedBy[client] = true
+	client.Spectating = entity
+
 	local id = "spectate"..client:SteamID64()
 	client.lastSpecPos = client:GetNetworkOrigin()
 	timer.Create(id, 3, 0, function()
@@ -68,7 +72,15 @@ end
 function dispatch.StopSpectate(client)
 	if !IsValid(client) then return end
 	
+	local spec = client.Spectating
+
+	if IsValid(spec) then
+		spec.IsSpectatedBy = spec.IsSpectatedBy or {}
+		spec.IsSpectatedBy[client] = nil
+	end
+	
 	client:SetViewEntity(nil)
+	client.Spectating = nil
 
 	net.Start("dispatch.spectate.stop")
 	net.Send(client)

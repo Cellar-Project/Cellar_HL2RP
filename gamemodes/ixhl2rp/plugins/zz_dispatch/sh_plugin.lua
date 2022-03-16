@@ -146,7 +146,7 @@ end
 
 function dispatch.CreateSquad(leader, tagID, static, noLog)
 	if !static and getmetatable(leader) != ix.meta.character then
-		if !leader:GetCharacter() then
+		if !leader or !leader:GetCharacter() then
 			return false
 		end
 		
@@ -223,7 +223,11 @@ ix.lang.AddTable("russian", {
 	addedWaypoint = "Вы успешно добавили метку!",
 	combineNoAccess = "У Вас нет доступа к этим командам!",
 	stabilityCmd = "Смена статус-кода (1 - 4: от зелёного до чёрного)",
-	squadCreated = "Вы успешно сфомировали патрульную группу!"
+	squadCreated = "Вы успешно сформировали патрульную группу!",
+	dispatchReward = "%s наградил Вас %s очками стерелизации (%s)!",
+	dispatchRewardAll = "%s наградил Вашу ПГ %s очками стерелизации (%s)!",
+	dispatchMinus = "%s оштрафовал Вас %s очками стерелизации (%s)!",
+	dispatchMinusAll = "%s оштрафовал Вашу ПГ %s очками стерелизации (%s)!"
 })
 
 ix.command.Add("StabilityCode", {

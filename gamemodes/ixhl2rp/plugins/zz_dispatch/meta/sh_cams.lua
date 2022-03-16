@@ -62,17 +62,17 @@ do
 			ent_cache[entity:EntIndex()] = entity
 
 			entity.GetCameraData = function() return camdata end
-			entity:CallOnRemove("dispatch.camera", function(ent)
-				timer.Simple(0, function()
-					if IsValid(ent) then return end
-
-					RevalidateCache()
-				end)
-			end)
+			entity.MarkAsCam = true
 
 			if SERVER then
 				dispatch.SetupCRC(entity, function() return camdata:DefaultName(entity) end)
 			end
+		end
+	end)
+
+	hook.Add("EntityRemoved", "dispatch.camera", function(entity)
+		if entity.MarkAsCam then
+			RevalidateCache()
 		end
 	end)
 

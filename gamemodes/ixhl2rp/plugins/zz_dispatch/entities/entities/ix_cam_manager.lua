@@ -28,12 +28,8 @@ function ENT:OnDeath(camera, client)
 		
 	Schema:AddCombineDisplayMessage(string.format("Метка %s: потерян сигнал с камерой!", letter), color_red)
 
-	for k, v in ipairs(player.GetAll()) do
-		if v:Team() != FACTION_DISPATCH then continue end
-
-		if v:GetViewEntity() == camera then
-			dispatch.StopSpectate(v)
-		end
+	for x, _ in pairs(camera.IsSpectatedBy or {}) do
+		dispatch.StopSpectate(x)
 	end
 end
 
