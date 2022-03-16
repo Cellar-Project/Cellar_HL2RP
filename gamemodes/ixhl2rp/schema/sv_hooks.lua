@@ -238,7 +238,9 @@ function Schema:PlayerMessageSend(speaker, chatType, text, anonymous, receivers,
 					elseif (chatType == "dispatch") then
 						info.global = true
 					end
-					
+
+					local visor = speaker:GetCharacter():HasVisor()
+
 					if (info.sound) then
 						if (info.global) then
 							netstream.Start(nil, "PlaySound", info.sound)
@@ -249,11 +251,13 @@ function Schema:PlayerMessageSend(speaker, chatType, text, anonymous, receivers,
 							local snd = istable(info.sound) and info.sound[character:GetGender() or 1] or info.sound
 
 							speaker.bTypingBeep = nil
-							ix.util.EmitQueuedSounds(speaker, {snd, beeps[2]}, nil, nil, volume)
+							if visor then
+								ix.util.EmitQueuedSounds(speaker, {snd, beeps[2]}, nil, nil, volume)
+							end
 						end
 					end
 
-					if (speaker:IsCombine() and chatType != "dispatch") then
+					if (visor and chatType != "dispatch") then
 						return string.format("<:: %s ::>", info.text)
 					else
 						return info.text
