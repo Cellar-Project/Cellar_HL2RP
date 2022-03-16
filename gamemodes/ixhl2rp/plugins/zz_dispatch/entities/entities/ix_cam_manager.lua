@@ -17,6 +17,22 @@ function ENT:AcceptInput(name, act, caller, data)
 			self:OnFoundPlayer(caller, act)
 		elseif name == "ScanNPC" then
 			self:OnFoundNPC(caller, act)
+		elseif name == "Death" then
+			self:OnDeath(caller, act)
+		end
+	end
+end
+
+function ENT:OnDeath(camera, client)
+	local letter = dispatch.AddWaypoint(camera:GetPos(), "УНИЧТОЖЕНА КАМЕРА", "warn", 60)
+		
+	Schema:AddCombineDisplayMessage(string.format("Метка %s: потерян сигнал с камерой!", letter), color_red)
+
+	for k, v in ipairs(player.GetAll()) do
+		if v:Team() != FACTION_DISPATCH then continue end
+
+		if v:GetViewEntity() == camera then
+			dispatch.StopSpectate(v)
 		end
 	end
 end
@@ -164,6 +180,7 @@ if SERVER then
 			entity:SetKeyValue("spawnflags", bit.bor(2, 32))
 			entity:SetKeyValue("OnFoundPlayer", "cam_manager,Scan")
 			entity:SetKeyValue("OnFoundEnemy", "cam_manager,ScanNPC")
+			entity:SetKeyValue("OnDeath", "cam_manager,Death")
 		end
 	end)
 
