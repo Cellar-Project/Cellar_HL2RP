@@ -94,6 +94,12 @@ function PLUGIN:PrePlayerSay(client, chatType, message, anonymous)
 	end
 end
 
+function PLUGIN:SetupPlayerVisibility(client, vw)
+	if IsValid(vw) and vw != client then
+		AddOriginToPVS(vw:GetPos())
+	end
+end
+
 -- DATAFILE_MEDIUM: NO SP
 -- DATAFILE_FULL: +3 SP
 -- DATAFILE_ELEVATED: INF SP

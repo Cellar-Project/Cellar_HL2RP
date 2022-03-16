@@ -40,6 +40,28 @@ function dispatch.Spectate(client, entity)
 	net.Start("dispatch.spectate")
 		net.WriteEntity(entity)
 	net.Send(client)
+
+	local id = "spectate"..client:SteamID64()
+	client.lastSpecPos = client:GetNetworkOrigin()
+	timer.Create(id, 3, 0, function()
+		if !IsValid(client) or (client:GetViewEntity() == client) then
+			timer.Remove(id)
+			return
+		end
+
+		if !IsValid(client:GetViewEntity()) then
+			dispatch.StopSpectate(client)
+			return
+		end
+
+		local newPos = dispatch.GetCameraOrigin(client:GetViewEntity())
+
+		if client.lastSpecPos != newPos then
+			client:SetNetworkOrigin(newPos)
+
+			client.lastSpecPos = newPos
+		end
+	end)
 end
 
 function dispatch.StopSpectate(client)
@@ -49,6 +71,8 @@ function dispatch.StopSpectate(client)
 
 	net.Start("dispatch.spectate.stop")
 	net.Send(client)
+
+	timer.Remove("spectate"..client:SteamID64())
 end
 
 net.Receive("dispatch.spectate.request", function(len, client)
