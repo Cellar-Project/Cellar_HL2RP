@@ -87,8 +87,8 @@ if SERVER then
 		return string.format("%s назначил командиром ПГ '%s' %s", char:GetName(), tagname, target:GetName())
 	end)
 
-	ix.log.AddType("squadMove", function(char, target, tagname)
-		return string.format("%s переместил %s в ПГ '%s'", char:GetName(), target:GetName(), tagname)
+	ix.log.AddType("squadMove", function(char, name, tagname)
+		return string.format("%s переместил %s в ПГ '%s'", char:GetName(), name, tagname)
 	end)
 
 	ix.log.AddType("squadReward", function(char, target, points, reason)
