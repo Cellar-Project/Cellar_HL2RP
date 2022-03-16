@@ -319,6 +319,7 @@ function ENT:PhysicsUpdate(phys)
 end
 
 function ENT:Die(dmgInfo)
+	local pos = self:GetPos()
 	local force = dmgInfo and dmgInfo:GetDamageForce() or Vector(0, 0, 50)
 	self:GibBreakClient(force)
 
@@ -333,6 +334,9 @@ function ENT:Die(dmgInfo)
 
 	self:EmitSound("NPC_SScanner.Die")
 	self:Remove()
+
+	local letter = dispatch.AddWaypoint(pos, "СБИТ СКАНЕР", "death", 60)
+	Schema:AddCombineDisplayMessage(string.format("Метка %s: потерян сигнал с пилотируемым сканером!", letter), color_red)
 end
 
 function ENT:CreateDamageSmoke()
