@@ -108,6 +108,25 @@ function PANEL:BuildSquads()
 
 		self.squads[tag] = a
 	end
+
+	timer.Create("dispatch.window", 1.5, 0, function()
+		if !IsValid(ix.gui.squads) then
+			timer.Remove("dispatch.window")
+			return
+		end
+
+		for k, v in pairs(dispatch.GetSquads()) do
+			local category = self.squads[v.tag]
+			if !IsValid(category) then continue end
+			
+			for character, _ in pairs(v.members) do
+				local panel = category.members[character]
+				if !IsValid(panel) then continue end
+
+				panel:UpdateHealth()
+			end
+		end
+	end)
 end
 
 function PANEL:OnSquadSync(id, squad, full)

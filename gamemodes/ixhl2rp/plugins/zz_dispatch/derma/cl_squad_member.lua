@@ -16,7 +16,7 @@ local area_color = {Color(255, 255, 255), Color(255, 255, 255, 45)}
 local leader_ico = Material("cellar/ui/dispatch/leader.png")
 
 function PANEL:GetHeaderColor(isText)
-	return (self.hovered and isText) and focus_color or (self.hovered and header_colors[1][1] or (isText and header_colors[1][1] or header_colors[1][2]))
+	return (self.hovered and isText) and focus_color or (self.hovered and header_colors[self.type][1] or (isText and header_colors[self.type][1] or header_colors[self.type][2]))
 end
 
 function PANEL:GetCodeColor(isText)
@@ -63,6 +63,7 @@ function PANEL:Init()
 
 	self.tag = "ERROR-1"
 	self.hovered = false
+	self.type = 1
 
 	self.area = self:Add("Panel")
 	self.area:Dock(RIGHT)
@@ -119,6 +120,26 @@ function PANEL:Init()
 	self.code.Paint = self.PaintCode
 	self.header.Paint = self.PaintMain
 	self.indicator.Paint = self.PaintLeader
+end
+
+function PANEL:UpdateHealth()
+	if self.char then
+		local client = self.char:GetPlayer()
+
+		if IsValid(client) then
+			local health = client:Health()
+
+			self.hp:SetText(health.."%")
+
+			if health < 31 then
+				self.type = 3
+			elseif health < 71 then
+				self.type = 2
+			else
+				self.type = 1
+			end
+		end
+	end
 end
 
 function PANEL:OnCursorEntered()

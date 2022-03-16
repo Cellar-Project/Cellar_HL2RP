@@ -77,6 +77,7 @@ net.Receive("squad.menu.move", function(len, client)
 
 	if !CanUseMemberInteraction(client, character, new and bit.bor(ACCESS.DISPATCH, ACCESS.LEADER) or ACCESS.DISPATCH) then return end
 
+	local oldname = character:GetName()
 	local newSquad = targetSquad
 	if new then
 		if client:Team() == FACTION_DISPATCH then
@@ -92,7 +93,7 @@ net.Receive("squad.menu.move", function(len, client)
 		end
 	end
 	
-	ix.log.Add(client:GetCharacter(), "squadMove", character, newSquad:GetTagName())
+	ix.log.Add(client:GetCharacter(), "squadMove", oldname, newSquad:GetTagName())
 end)
 
 local DATAFILE = ix.plugin.list["datafile"]

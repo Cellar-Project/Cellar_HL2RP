@@ -79,8 +79,8 @@ end
 
 local replace = {
 	["ic"] = "Radio",
-	["whisper"] = "RadioWhisper",
-	["yell"] = "RadioYell"
+	["w"] = "RadioWhisper",
+	["y"] = "RadioYell"
 }
 
 function PLUGIN:PrePlayerSay(client, chatType, message, anonymous)
