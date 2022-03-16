@@ -16,8 +16,23 @@ function dispatch.CalcView(client, origin, angles, fov, znear, zfar)
 				ang = data:ViewAngle(camera)
 				ang.z = 0
 			end
-		end
+		else
+			local entity = Entity(camera:GetNetVar("doll", 0))
 
+			if IsValid(entity) and entity:IsRagdoll() then
+				local index = entity:LookupAttachment("eyes")
+
+				if index then
+					local data = entity:GetAttachment(index)
+
+					if data then
+						pos = data.Pos
+						ang = data.Ang
+					end
+				end
+			end
+		end
+		
 		local data = {
 			origin = pos,
 			angles = ang,

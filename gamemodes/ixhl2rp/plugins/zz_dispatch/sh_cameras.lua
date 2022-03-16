@@ -15,6 +15,12 @@ dispatch.SetCameraData("ix_combinelock", {
 		local name = string.gsub(entity.SaveCRC, "^(%d%d%d%d)(%d)", "LOCK:%1:%2")
 		
 		return name
+	end,
+	ViewAngle = function(self, entity) 
+		local ang = entity:GetAngles()
+		ang:RotateAroundAxis(entity:GetUp(), -90)
+		
+		return ang
 	end
 })
 
