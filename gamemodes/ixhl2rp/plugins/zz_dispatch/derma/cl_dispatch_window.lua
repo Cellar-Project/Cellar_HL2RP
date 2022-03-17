@@ -635,6 +635,8 @@ do
 			local a = self.patrols:Add("squadCategoryBtn")
 			a:DockMargin(0, 1, 16, 0)
 			a:Dock(TOP)
+			
+			a.join:SetVisible(false)
 
 			if !dispatch.squads[tag] then
 				a:SetupSquad(tag)

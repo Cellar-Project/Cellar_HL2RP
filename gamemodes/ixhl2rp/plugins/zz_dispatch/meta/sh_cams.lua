@@ -65,7 +65,11 @@ do
 			entity.MarkAsCam = true
 
 			if SERVER then
-				dispatch.SetupCRC(entity, function() return camdata:DefaultName(entity) end)
+				timer.Simple(0, function()
+					if !IsValid(entity) then return end
+					
+					dispatch.SetupCRC(entity, function() return camdata:DefaultName(entity) end)
+				end)
 			end
 		end
 	end)
@@ -87,3 +91,4 @@ do
 		dispatch.camdata[classname] = CAM
 	end
 end
+

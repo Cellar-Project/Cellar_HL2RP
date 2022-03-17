@@ -196,13 +196,17 @@ function dispatch.Spectate(entity)
 		end
 	end
 
-	ix.gui.dispatch:OnSpectate(entity)
+	if IsValid(ix.gui.dispatch) then
+		ix.gui.dispatch:OnSpectate(entity)
+	end
 end
 
 function dispatch.StopSpectate()
 	stopHide()
 
-	ix.gui.dispatch:OnStopSpectate()
+	if IsValid(ix.gui.dispatch) then
+		ix.gui.dispatch:OnStopSpectate()
+	end
 end
 
 net.Receive("dispatch.mode", function()

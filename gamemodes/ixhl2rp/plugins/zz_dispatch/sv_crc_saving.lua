@@ -26,9 +26,10 @@ function dispatch.SetupCRC(entity, callback)
 	end
 
 	local data = PLUGIN:GetData()
-
-	if data[class] and data[class][entity.SaveCRC] then
-		entity:SetNetVar("cam", data[class][entity.SaveCRC])
+	local crc = tonumber(entity.SaveCRC)
+	
+	if data[class] and data[class][crc] then
+		entity:SetNetVar("cam", data[class][crc])
 	end
 end
 
