@@ -210,6 +210,9 @@ properties.Add("camera_setname", {
 		if !self:Filter(entity, client) then return end
 
 		local name = net.ReadString()
+		
+		entity.SaveCRC = nil
+		dispatch.SetupCRC(entity)
 
 		entity:SetNetVar("cam", name)
 
@@ -259,6 +262,10 @@ ix.command.Add("SquadCreate", {
 			return "@combineNoAccess"
 		end
 
+		if client:Team() == FACTION_DISPATCH then
+			return
+		end
+
 		local result, err = dispatch.CreateSquad(client)
 
 		if result then
@@ -277,6 +284,10 @@ ix.command.Add("SquadJoin", {
 	OnRun = function(self, client, index)
 		if !client:IsCombine() then
 			return "@combineNoAccess"
+		end
+
+		if client:Team() == FACTION_DISPATCH then
+			return
 		end
 
 		local squad = dispatch.GetSquads()[index]

@@ -75,6 +75,7 @@ function ITEM:OnItemEquipped(client)
 	client:SetPrimaryVisorColor(self.primaryVisor)
 	client:SetSecondaryVisorColor(self.secondaryVisor)
 
+	/*
 	if client:Team() == FACTION_MPF then
 		local name = client:GetName()
 		local format = "(CCA%:.*%.).*(%.%d+)"
@@ -99,6 +100,7 @@ function ITEM:OnItemEquipped(client)
 		client:GetCharacter():SetVar("oldName", name, true)
 		client:GetCharacter():SetName(newName)
 	end
+	*/
 end
 
 function ITEM:OnItemUnequipped(client)
@@ -107,10 +109,11 @@ function ITEM:OnItemUnequipped(client)
 
 	client:SetPrimaryVisorColor(Vector(0, 0, 0))
 	client:SetSecondaryVisorColor(Vector(0, 0, 0))
-
+	/*
 	if client:Team() == FACTION_MPF then
 		client:GetCharacter():SetName(client:GetCharacter():GetVar("oldName") or client:GetName())
 	end
+	*/
 end
 
 function ITEM:OnGetReplacement(client, model)

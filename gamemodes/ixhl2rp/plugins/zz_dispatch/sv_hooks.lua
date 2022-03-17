@@ -68,17 +68,18 @@ function PLUGIN:CharacterDatafileLoaded(character)
 		dispatch.unassigned_squad:AddMember(character)
 
 		local id, genericdata = character:ReturnDatafile(false)
-		local rank = genericdata.rank or 0
+		
+		if id and genericdata then
+			local rank = genericdata.rank or 0
 
-		if rank > 1 then
-			rank = dispatch.Rank(rank)
+			if rank > 1 then
+				rank = dispatch.Rank(rank)
 
-			if rank and rank.class then
-				character:SetClass(rank.class())
+				if rank and rank.class then
+					character:SetClass(rank.class())
+				end
 			end
 		end
-
-		-- TO DO: Send MPF's ID to AI Dispatch
 	end
 end
 
@@ -112,7 +113,13 @@ function PLUGIN:SetupPlayerVisibility(client, vw)
 	end
 end
 
-function PLUGIN:PlayerNoClip(client)
+function PLUGIN:CanPlayerEnterObserver(client)
+	if client:Team() == FACTION_DISPATCH then
+		return false
+	end
+end
+
+function PLUGIN:PlayerSwitchFlashlight(player)
 	if client:Team() == FACTION_DISPATCH then
 		return false
 	end
