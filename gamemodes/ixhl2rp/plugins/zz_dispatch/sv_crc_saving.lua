@@ -3,10 +3,10 @@ local PLUGIN = PLUGIN
 local stored = dispatch.crc_table or {}
 dispatch.crc_table = stored or {}
 
+local t = math.Truncate
 local function GenerateCRC(entity)
 	local pos = entity:GetPos()
-
-	return util.CRC(pos[1]..pos[2]..pos[3])
+	return util.CRC(entity:GetClass() .. t(pos[1]) .. t(pos[2]) .. t(pos[3]))
 end
 
 function dispatch.SetupCRC(entity, callback)
