@@ -113,3 +113,19 @@ net.Receive("dispatch.waypoint", function()
 
 	waypoints[data.index] = data
 end)
+
+net.Receive("dispatch.waypoint.fx", function()
+	local type, entry = net.ReadString(), net.ReadUInt(4)
+
+	local isLocal = LocalPlayer():IsCombine() and !LocalPlayer():ShouldDrawLocalPlayer()
+
+	if isLocal then
+		LocalPlayer():EmitSound(dispatch.snd_waypoints[type][entry], 60, 100, 1, CHAN_VOICE)
+	else
+		for k, v in ipairs(player.GetAll()) do
+			if !v:IsCombine() or v:GetNoDraw() or !v:Alive() then continue end
+
+			v:EmitSound(dispatch.snd_waypoints[type][entry], 60, 100, 1, CHAN_VOICE)
+		end
+	end
+end)

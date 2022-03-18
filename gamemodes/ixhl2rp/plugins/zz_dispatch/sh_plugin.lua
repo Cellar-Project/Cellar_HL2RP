@@ -66,6 +66,57 @@ dispatch.stability_codes = {
 	},
 }
 
+dispatch.snd_waypoints = {
+	gun = {
+		Sound("npc/overwatch/radiovoice/allunitsdeliverterminalverdict.wav"),
+		Sound("npc/overwatch/radiovoice/posession69.wav"),
+		Sound("npc/overwatch/radiovoice/suspectisnow187.wav"),
+		Sound("npc/overwatch/radiovoice/weapon94.wav")
+	},
+	death = {
+		Sound("npc/overwatch/radiovoice/assault243.wav"),
+		Sound("npc/overwatch/radiovoice/destrutionofcpt.wav"),
+		Sound("npc/overwatch/radiovoice/engagingteamisnoncohesive.wav"),
+		Sound("npc/overwatch/radiovoice/lostbiosignalforunit.wav")
+	},
+	attack = {
+		Sound("npc/overwatch/radiovoice/lockdownlocationsacrificecode.wav"),
+		Sound("npc/overwatch/radiovoice/immediateamputation.wav"),
+		Sound("npc/overwatch/radiovoice/failuretotreatoutbreak.wav"),
+		Sound("npc/overwatch/radiovoice/allunitsbeginwhitnesssterilization.wav"),
+		Sound("npc/overwatch/radiovoice/allunitsapplyforwardpressure.wav")
+	},
+	factory = {
+		Sound("npc/overwatch/radiovoice/workforceintake.wav")
+	},
+	hazard = {
+		Sound("npc/overwatch/radiovoice/infection.wav"),
+		Sound("npc/overwatch/radiovoice/infestedzone.wav")
+	},
+	protect = {
+		Sound("npc/overwatch/radiovoice/fmil_region 073.wav"),
+		Sound("npc/overwatch/radiovoice/deservicedarea.wav")
+	},
+	regroup = {
+		Sound("npc/overwatch/radiovoice/allunitsreturntocode12.wav"),
+		Sound("npc/overwatch/radiovoice/accomplicesoperating.wav")
+	},
+	poi = {
+		Sound("npc/overwatch/radiovoice/investigateandreport.wav"),
+		Sound("npc/overwatch/radiovoice/officerclosingonsuspect.wav"),
+		Sound("npc/overwatch/radiovoice/recalibratesocioscan.wav"),
+		Sound("npc/overwatch/radiovoice/reportplease.wav"),
+		Sound("npc/overwatch/radiovoice/beginscanning10-0.wav")
+	},
+	warn = {
+		Sound("npc/overwatch/radiovoice/publicnoncompliance507.wav"),
+		Sound("npc/overwatch/radiovoice/preparetoinnoculate.wav"),
+		Sound("npc/overwatch/radiovoice/politistablizationmarginal.wav"),
+		Sound("npc/overwatch/radiovoice/level5anticivilactivity.wav"),
+		Sound("npc/overwatch/radiovoice/anticitizen.wav")
+	},
+}
+
 function dispatch.Rank(id)
 	return dispatch.mpf_ranks[id] or dispatch.mpf_ranks[1]
 end
@@ -211,8 +262,10 @@ properties.Add("camera_setname", {
 
 		local name = net.ReadString()
 		
-		entity.SaveCRC = nil
-		dispatch.SetupCRC(entity)
+		if entity:GetClass() != "ix_combinelock" then
+			entity.SaveCRC = nil
+			dispatch.SetupCRC(entity)
+		end
 
 		entity:SetNetVar("cam", name)
 
