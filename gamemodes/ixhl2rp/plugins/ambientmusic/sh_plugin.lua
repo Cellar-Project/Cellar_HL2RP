@@ -30,7 +30,11 @@ local ambients = {
 	[18] = {"cellar/music/18.mp3", 573},
 	[19] = {"cellar/music/19.mp3", 290},
 	[20] = {"cellar/music/20.mp3", 290},
-	[21] = {"cellar/music/21.mp3", 341}
+	[21] = {"cellar/music/21.mp3", 341},
+	[22] = {"cellar/music/22.mp3", 347},
+	[23] = {"cellar/music/23.mp3", 190},
+	[24] = {"cellar/music/24.mp3", 304},
+	[25] = {"cellar/music/25.mp3", 46},
 }
 
 local function SetVolume(volume)

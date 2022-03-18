@@ -52,6 +52,7 @@ if CLIENT then
 
 	local function NightVisionFX()
 		local char = LocalPlayer():GetCharacter()
+		if (!char) then return end
 
 		if oldNight != LocalPlayer():GetData("nightvisionfx") then
 			coeff = 0.02
