@@ -1,4 +1,5 @@
 util.AddNetworkString("dispatch.waypoint")
+util.AddNetworkString("dispatch.waypoint.fx")
 
 dispatch.waypoints = dispatch.waypoint or {}
 
@@ -55,6 +56,17 @@ function dispatch.AddWaypoint(pos, text, icon, time, addedBy)
 	timer.Create("Waypoint"..index, (time or 60), 0, function()
 		dispatch.waypoints[index] = nil
 	end)
+
+	if (dispatch.chatter_cooldown or 0) < CurTime() then
+		local rnd = math.random(1, #dispatch.snd_waypoints[icon])
+
+		net.Start("dispatch.waypoint.fx")
+			net.WriteString(icon)
+			net.WriteUInt(rnd, 4)
+		net.Broadcast()
+
+		dispatch.chatter_cooldown = CurTime() + (SoundDuration(dispatch.snd_waypoints[icon][rnd]) or 0) + 1
+	end
 
 	return getLetter(index)
 end
