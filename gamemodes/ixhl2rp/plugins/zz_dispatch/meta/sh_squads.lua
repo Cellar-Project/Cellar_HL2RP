@@ -212,8 +212,6 @@ local SQUAD = ix.meta.squad or {}
 					local members = {}
 
 					for char, counter in pairs(self.members) do
-						if char == self.leader then continue end
-						
 						members[char:GetID()] = counter
 					end
 
