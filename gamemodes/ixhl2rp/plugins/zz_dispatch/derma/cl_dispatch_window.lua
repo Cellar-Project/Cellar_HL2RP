@@ -336,6 +336,154 @@ end
 
 do
 	local PANEL = {}
+	PANEL.HeaderSize = 28
+	PANEL.clr = {
+		Color(0, 240, 255, 255),
+		Color(0, 0, 0, 255),
+		Color(255, 255, 255, 200),
+		Color(255, 255, 255)
+	}
+
+	function PANEL:Init()
+		self.HeaderSize = PANEL.HeaderSize
+
+		self.header = self:Add("Panel")
+		self.header:Dock(TOP)
+		self.header:SetTall(PANEL.HeaderSize)
+		self.header.Paint = function(_, w, h)
+			self:HeaderPaint(w, h)
+		end
+
+		self.btn = self.header:Add("DButton")
+		self.btn:Dock(FILL)
+		self.btn:SetText("")
+		self.btn.Paint = function() end
+		self.btn.DoClick = function()
+			self:OnExpand()
+		end
+
+		self.subcontainer = self:Add("Panel")
+		self.subcontainer:Dock(FILL)
+		self.subcontainer:DockMargin(0, 0, 0, 0)
+
+		self:SetTall(PANEL.HeaderSize)
+
+		self.squad = nil
+		self.expanded = false
+		self.targetSize = PANEL.HeaderSize
+		self.lastTargetSize = self.targetSize
+		self.ents = {}
+	end
+
+	function PANEL:OnExpand()
+		self:SizeTo(-1, self.expanded and PANEL.HeaderSize or self.targetSize, 0.025, 0, -1, function()
+			self.expanded = !self.expanded
+		end)
+	end
+
+	function PANEL:RemoveEntity(entity)
+		if IsValid(self.ents[entity]) then
+			self.ents[entity]:Remove()
+			self.ents[entity] = nil
+		end
+		
+		self.subcontainer:InvalidateLayout(true)
+		self.subcontainer:SizeToChildren(false, true)
+
+		self.targetSize = PANEL.HeaderSize + self.subcontainer:GetTall()
+
+		self:SetTall(self.targetSize)
+
+		self.lastTargetSize = self.targetSize
+
+		if self.expanded then
+			self:SetTall(self.targetSize)
+		end
+
+		self:SetVisible(!table.IsEmpty(self.ents))
+		self:SortEntities()
+	end
+
+	function PANEL:SortEntities()
+		local x = 1
+		local sorted = {}
+
+		for k, v in pairs(self.ents) do
+			table.insert(sorted, {panel = v, label = v.text:GetText()})
+		end
+
+		for k, v in SortedPairsByMemberValue(sorted, "label") do
+			if v.panel then
+				v.panel:SetZPos(-x)
+
+				x = x + 1
+			end
+		end
+	end
+
+	function PANEL:ClearEntities()
+		for k, v in pairs(self.ents) do
+			v:Remove()
+		end
+
+		self.subcontainer:InvalidateLayout(true)
+		self.subcontainer:SizeToChildren(false, true)
+
+		self.targetSize = PANEL.HeaderSize + self.subcontainer:GetTall()
+
+		if self.expanded then
+			self:SetTall(self.targetSize)
+		end
+
+		self.lastTargetSize = self.targetSize
+
+		self.ents = {}
+
+		self:SetVisible(!table.IsEmpty(self.ents))
+	end
+	
+	function PANEL:AddEntity(entity)
+		if !IsValid(entity) then
+			return
+		end
+		
+		local a = self.subcontainer:Add("dispatch.camera.button")
+		a:Dock(TOP)
+		a:DockMargin(0, 2, 16, 0)
+		a:SetEntity(entity)
+
+		self.subcontainer:InvalidateLayout(true)
+		self.subcontainer:SizeToChildren(false, true)
+
+		self.targetSize = PANEL.HeaderSize + self.subcontainer:GetTall()
+
+		if self.expanded then
+			self:SetTall(self.targetSize)
+		end
+
+		self.lastTargetSize = self.targetSize
+
+		self.ents[entity] = a
+
+		self:SetVisible(!table.IsEmpty(self.ents))
+	end
+
+	function PANEL:SetupCategory(type)
+		self.type = type
+	end
+
+	function PANEL:HeaderPaint(w, h)
+		surface.SetDrawColor(self.clr[1])
+		surface.DrawRect(0, h - 1, w, 1)
+
+		draw.SimpleText(self.type, "ixSquadTitle", 8, h / 2, self.clr[1], TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+	end
+
+	vgui.Register("dispatch.camera.category", PANEL, "EditablePanel")
+end
+
+do
+	local PANEL = {}
 	local background = Material("cellar/ui/dispatch/bg.png", "smooth")
 	local border_size = scale(64)
 	local x2, y2 = 0, 0
@@ -460,7 +608,7 @@ do
 			tab2:SetWide(w / 3)
 			tab2:SetText("КАМЕРЫ")
 			tab2.DoSwitch = function()
-				self:BuildCameras()
+				self:BuildCameras(true)
 
 				self.patrols:SetVisible(false)
 				self.cameras:SetVisible(true)
@@ -666,17 +814,46 @@ do
 			end
 		end)
 	end
-	function PANEL:BuildCameras(data)
-		self.cameras:Clear()
+
+	function PANEL:BuildCameras(update)
+		if update then
+			for k, v in pairs(self.camera_types or {}) do
+				v:ClearEntities()
+			end
+		end
+		
+		self.camera_types = self.camera_types or {}
+		local sorted, categories = {}, {}
 
 		for k, v in pairs(dispatch.FindCameras()) do
 			if !IsValid(v) then continue end
+
+			local data = v:GetCameraData()
+			local type = data:Type()
+
+			if !categories[type] then
+				local x = table.insert(sorted, {label = data:Type(), ents = {}})
+				categories[type] = x
+			end
 			
-			local test = self.cameras:Add("dispatch.camera.button")
-			test:Dock(TOP)
-			test:DockMargin(0, 2, 16, 0)
-			test:InvalidateParent(true)
-			test:SetEntity(v)
+			table.insert(sorted[categories[type]].ents, {entity = v, name = (v:GetNetVar("cam") or data:Name(v) or "UNKNOWN")})
+		end
+
+		for k, v in SortedPairsByMemberValue(sorted, "label", true) do
+			if !IsValid(self.camera_types[v.label]) then
+				local a = self.cameras:Add("dispatch.camera.category")
+				a:DockMargin(0, 1, 16, 0)
+				a:Dock(TOP)
+				a:SetupCategory(v.label)
+
+				self.camera_types[v.label] = a
+			end
+
+			for _, data in SortedPairsByMemberValue(v.ents, "name", true) do
+				self.camera_types[v.label]:AddEntity(data.entity)
+			end
+
+			self.camera_types[v.label]:SortEntities()
 		end
 	end
 	
