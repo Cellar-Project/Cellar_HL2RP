@@ -42,6 +42,13 @@ function dispatch.Spectate(client, entity)
 		net.WriteEntity(entity)
 	net.Send(client)
 
+	local spec = client.Spectating
+
+	if IsValid(spec) then
+		spec.IsSpectatedBy = spec.IsSpectatedBy or {}
+		spec.IsSpectatedBy[client] = nil
+	end
+	
 	entity.IsSpectatedBy = entity.IsSpectatedBy or {}
 	entity.IsSpectatedBy[client] = true
 	client.Spectating = entity

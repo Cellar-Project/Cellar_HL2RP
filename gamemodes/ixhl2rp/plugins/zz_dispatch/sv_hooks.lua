@@ -119,7 +119,7 @@ function PLUGIN:CanPlayerEnterObserver(client)
 	end
 end
 
-function PLUGIN:PlayerSwitchFlashlight(player)
+function PLUGIN:PlayerSwitchFlashlight(client)
 	if client:Team() == FACTION_DISPATCH then
 		return false
 	end
