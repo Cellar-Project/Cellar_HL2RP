@@ -201,6 +201,10 @@ ITEM.functions.Breakdown = {
 }
 
 function ITEM:CanEquip(client, slot)
+	if (slot == EQUIP_HEAD) and (client:GetCharacter():HasWearedGasmask()) then
+		return false
+	end
+
 	return IsValid(client) and self:GetData("equip") != true and self.slot == slot
 end
 
