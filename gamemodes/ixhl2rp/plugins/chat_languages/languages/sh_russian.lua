@@ -57,6 +57,5 @@ LANGUAGE = {
 	Swedish = "Шведский",
 	Turkish = "Турецкий",
 	Ukrainian = "Украинский",
-	Ukrainian = "Украинский",
 	Vortigese = "Вортигонтский"
 }
