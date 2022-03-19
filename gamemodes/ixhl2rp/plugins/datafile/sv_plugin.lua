@@ -230,27 +230,56 @@ function PLUGIN:SetBOL(poster, player, bBOL, reason)
 	end
 end
 
-function PLUGIN:SetRestricted(poster, player, bRestricted, text)
-	local id, genericdata
+function meta:SetRestricted(bState, bNoMessage)
+	if (bState) then
+		self:SetNetVar("restricted", true)
 
-	if isstring(player) or isnumber(player) then
-		id, genericdata = self:ReturnDatafileByID(player, false)
+		if (bNoMessage) then
+			self:SetLocalVar("restrictNoMsg", true)
+		end
+
+		self.ixRestrictWeps = self.ixRestrictWeps or {}
+		self.ixRestrictWeps_Items = self.ixRestrictWeps_Items or {}
+
+		for _, v in ipairs(self:GetWeapons()) do
+			if v.ixItem then
+				self.ixRestrictWeps_Items[v.ixItem] = v:GetClass()
+			else
+				self.ixRestrictWeps[#self.ixRestrictWeps + 1] = v:GetClass()
+			end
+
+			v:Remove()
+		end
+
+		hook.Run("OnPlayerRestricted", self)
 	else
-		id, genericdata = player:GetCharacter():ReturnDatafile(false)
-	end
+		self:SetNetVar("restricted")
 
-	if bRestricted then
-		genericdata.restricted = true
-		genericdata.restricted_reason = text
+		if (self:GetLocalVar("restrictNoMsg")) then
+			self:SetLocalVar("restrictNoMsg")
+		end
 
-		self:AddEntry(poster, id, "civil", Format("%s has made this file restricted.", poster:GetCharacter():GetName()), 0)
-	else
-		genericdata.restricted = false
-		genericdata.restricted_reason = ""
+		if (self.ixRestrictWeps) then
+			for _, v in ipairs(self.ixRestrictWeps) do
+				self:Give(v)
+			end
 
-		self:AddEntry(poster, id, "civil", Format("%s has removed the restriction on this file.", poster:GetCharacter():GetName()), 0)
+			self.ixRestrictWeps = nil
+		end
+
+		if (self.ixRestrictWeps_Items) then
+			for item, class in pairs(self.ixRestrictWeps_Items) do
+				if item.characterID != self:GetCharacter():GetID() then continue end
+				self:Give(class)
+			end
+
+			self.ixRestrictWeps_Items = nil
+		end
+
+		hook.Run("OnPlayerUnRestricted", self)
 	end
 end
+
 
 function PLUGIN:SetRegistry(poster, player, text)
 	local id, genericdata
