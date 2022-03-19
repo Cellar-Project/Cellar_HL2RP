@@ -91,8 +91,6 @@ if (SERVER) then
 					if (ix.config.Get("unequipItemDurability", false) and durability < 1 and item.Unequip) then
 						item:Unequip(entity)
 						local itemname = item.uniqueID
-						item:Remove()
-
 						local brokenItemsTable = {
 							["shotgun"] = "broken_shotgun",
 							["uspmatch"] = "broken_pistol",
@@ -103,6 +101,7 @@ if (SERVER) then
 						local inventory = entity:GetCharacter():GetInventory()
 
 						if (newname) then
+							item:Remove()
 							local result, _ = inventory:Add(newname)
 							if (!result) then
 								local newItem = ix.item.Get(newname)
