@@ -102,7 +102,7 @@ function Schema:RenderScreenspaceEffects()
 	DrawColorModify(colorModify)
 	local char = LocalPlayer():GetCharacter()
 
-	if (char and char:HasVisor()) then
+	if (char and char:HasVisor() and !char:IsOTA()) then
 		render.UpdateScreenEffectTexture()
 
 		combineOverlay:SetFloat("$alpha", 0.25)
