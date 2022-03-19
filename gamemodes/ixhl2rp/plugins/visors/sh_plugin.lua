@@ -9,6 +9,7 @@ local PLAYER = FindMetaTable("Player")
 
 function CHAR:GetVisorLevel()
 	local inv = self:GetEquipment()
+	if not inv then return end
 	return inv:GetItemAtSlot(EQUIP_MASK) and inv:GetItemAtSlot(EQUIP_MASK).visorLevel or 0
 end
 
