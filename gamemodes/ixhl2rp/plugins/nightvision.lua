@@ -67,7 +67,18 @@ if CLIENT then
 			oldNight = !oldNight
 		end
 
-		if (LocalPlayer():GetData("nightvisionfx") and char:GetVisorLevel() > 1) then
+		if (LocalPlayer():GetData("nightvisionfx") and LocalPlayer():CanUseNightVision()) then
+			local dlight = DynamicLight(LocalPlayer():EntIndex())
+
+			dlight.brightness = 1
+			dlight.Size = 500
+			dlight.r = 255
+			dlight.g = 255
+			dlight.b = 255
+			dlight.Decay = 1000
+			dlight.pos = EyePos()
+			dlight.DieTime = CurTime() + 0.1
+
 			if CurScale < 0.995 then
 				CurScale = CurScale + coeff * (1 - CurScale)
 			end
@@ -84,15 +95,17 @@ if CLIENT then
 			DrawBloom( Bloom_Darken, CurScale * Bloom_Multiply, Bloom_Blur, Bloom_Blur, Bloom_Passes, CurScale * Bloom_ColorMul, 0, 1, 0 )                                                     -- Blue
 		end
 	end
+
 	hook.Add( "RenderScreenspaceEffects", "NightVisionFX", NightVisionFX )
 end
 
 ix.command.Add("Nightvision", {
 	description = "Активировать ПНВ.",
+	adminOnly = false,
+	OnCheckAccess = function(self, client)
+		return client:CanUseNightVision()
+	end,
 	OnRun = function(self, client)
-		print(client)
-		if !client:CanUseNightVision() then return end
-
 		if !client:GetData("nightvisionfx") then
 			client:SetData("nightvisionfx", true)
 			sound.Play("cellar/misc/nightvision.wav", client:EyePos(), 55)
