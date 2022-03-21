@@ -773,6 +773,10 @@ ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_18
 
 
 --BLYAT OPYAT ETO GOVNO DELAT NADO EBAT 12.03.2022 VINTAGE THIEF
+-- cca overseers
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/overseer/male/cca_overseer_01.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/overseer/male/cca_overseer_02.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/overseer/male/cca_overseer_03.mdl", "cellarMaleMPF")
 -- boys cca
 ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_01.mdl", "cellarMaleMPF")
 ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_02.mdl", "cellarMaleMPF")
@@ -805,7 +809,6 @@ ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_fem
 ix.anim.SetModelClass("models/cellar/characters/city3/overwatch/ota_ordinal.mdl", "cellarOTA")
 ix.anim.SetModelClass("models/cellar/characters/city3/overwatch/ota_elite.mdl", "cellarOTA")
 ix.anim.SetModelClass("models/cellar/characters/city3/overwatch/ota_regular.mdl", "cellarOTA")
---ix.anim.SetModelClass("models/cellar/characters/city3/overwatch/.mdl", "cellarOTA")
 -- citizen male
 ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_01.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_02.mdl", "cellarMale")
