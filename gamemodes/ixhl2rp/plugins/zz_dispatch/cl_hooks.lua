@@ -65,13 +65,26 @@ function PLUGIN:CharacterLoaded(character)
 end
 
 function PLUGIN:OnJoinSquad(squad)
+	if squad:IsStatic() then
+		hook.Run("OnLeftSquad", LocalPlayer():GetCharacter().lastSquad)
+		return
+	end
+	
 	hook.Add("PreDrawHalos", "SquadGlow", function()
 		halo.Add(squad:GetPlayers(), squad_glow_clr, 0.5, 0.5, 0, true, true)
 	end)
+
+	if IsValid(ix.gui.squads) then
+		ix.gui.squads:SetButtonState(false)
+	end
 end
 
 function PLUGIN:OnLeftSquad(squad)
 	hook.Remove("PreDrawHalos", "SquadGlow")
+
+	if IsValid(ix.gui.squads) then
+		ix.gui.squads:SetButtonState(true)
+	end
 end
 
 -- wtf is the km

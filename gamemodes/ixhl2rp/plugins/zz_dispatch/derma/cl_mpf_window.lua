@@ -92,6 +92,13 @@ function PANEL:Init()
 	self:BuildSquads()
 end
 
+function PANEL:SetButtonState(bool)
+	self.create_squad:SetText(bool and "СОЗДАТЬ ПАТРУЛЬНУЮ ГРУППУ" or "ПОКИНУТЬ ПАТРУЛЬНУЮ ГРУППУ")
+	self.create_squad.DoClick = function()
+		ix.command.Send(bool and "SquadCreate" or "SquadLeave")
+	end
+end
+
 function PANEL:BuildSquads()
 	self.squads = {}
 
