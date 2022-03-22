@@ -186,6 +186,22 @@ local function stopHide()
 	end
 end
 
+local tab = {
+	["$pp_colour_addr"] = 0,
+	["$pp_colour_addg"] = 0,
+	["$pp_colour_addb"] = 0,
+	["$pp_colour_brightness"] = -0.04,
+	["$pp_colour_contrast"] = 1.35,
+	["$pp_colour_colour"] = 0,
+	["$pp_colour_mulr"] = 0,
+	["$pp_colour_mulg"] = 0,
+	["$pp_colour_mulb"] = 0
+}
+
+local function combineLockEffect()
+	DrawColorModify(tab)
+end
+
 function dispatch.Spectate(entity)
 	stopHide()
 
@@ -198,6 +214,12 @@ function dispatch.Spectate(entity)
 
 	if IsValid(ix.gui.dispatch) then
 		ix.gui.dispatch:OnSpectate(entity)
+	end
+
+	if IsValid(entity) and entity:GetClass() == "ix_combinelock" then
+		hook.Add("RenderScreenspaceEffects", "dispatch.pp", combineLockEffect)
+	else
+		hook.Remove("RenderScreenspaceEffects", "dispatch.pp")
 	end
 end
 
