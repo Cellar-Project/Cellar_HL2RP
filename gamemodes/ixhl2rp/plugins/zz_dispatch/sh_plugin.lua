@@ -292,11 +292,7 @@ ix.command.Add("StabilityCode", {
 		ix.type.number
 	},
 	OnRun = function(self, client, index)
-		if !client:IsCombine() then
-			return false
-		end
-
-		if client:GetCharacter():ReturnDatafilePermission() < 4 then
+		if !client:IsCombine() or client:GetCharacter():ReturnDatafilePermission() < 4 then
 			return false
 		end
 
@@ -311,12 +307,8 @@ ix.command.Add("StabilityCode", {
 ix.command.Add("SquadCreate", {
 	description = "",
 	OnRun = function(self, client, index)
-		if !client:IsCombine() then
+		if !client:IsCombine() or client:Team() == FACTION_DISPATCH then
 			return "@combineNoAccess"
-		end
-
-		if client:Team() == FACTION_DISPATCH then
-			return
 		end
 
 		local result, err = dispatch.CreateSquad(client)
@@ -335,18 +327,30 @@ ix.command.Add("SquadJoin", {
 		ix.type.number
 	},
 	OnRun = function(self, client, index)
-		if !client:IsCombine() then
+		if !client:IsCombine() or client:Team() == FACTION_DISPATCH then
 			return "@combineNoAccess"
-		end
-
-		if client:Team() == FACTION_DISPATCH then
-			return
 		end
 
 		local squad = dispatch.GetSquads()[index]
 
 		if squad then
 			squad:AddMember(client:GetCharacter())
+		end
+	end
+})
+
+ix.command.Add("SquadLeave", {
+	description = "",
+	OnRun = function(self, client)
+		if !client:IsCombine() or client:Team() == FACTION_DISPATCH then
+			return "@combineNoAccess"
+		end
+
+		local character = client:GetCharacter()
+		local squad = character:GetSquad()
+
+		if squad and !squad:IsStatic() then
+			squad:RemoveMember(character)
 		end
 	end
 })
