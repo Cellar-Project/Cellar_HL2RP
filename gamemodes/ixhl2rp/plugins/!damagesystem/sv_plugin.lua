@@ -315,7 +315,7 @@ do
 	-- @number[opt=5] getUpGrace How much time in seconds to wait before the player is able to get back up manually. Set to
 	-- the same number as `time` to disable getting up manually entirely
 	function PLAYER:SetRagdolled(bState, time, getUpGrace)
-		if (!self:Alive()) then
+		if (!self:Alive() or self:Team() == FACTION_DISPATCH) then
 			return
 		end
 
