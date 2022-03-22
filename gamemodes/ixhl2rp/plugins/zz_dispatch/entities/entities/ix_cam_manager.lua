@@ -102,6 +102,10 @@ function ENT:ShouldHate(client)
 end
 
 function ENT:OnFoundPlayer(camera, client)
+	if client:IsNPC() then
+		return
+	end
+
 	local hate, text, codetext, waypointType, color = self:ShouldHate(client)
 
 	if !hate then 
