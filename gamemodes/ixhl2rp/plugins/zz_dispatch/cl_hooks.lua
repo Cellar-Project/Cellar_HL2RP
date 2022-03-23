@@ -58,7 +58,7 @@ function PLUGIN:CharacterLoaded(character)
 		if IsValid(ix.gui.stability) then
 			ix.gui.stability:Remove()
 		end
-		
+
 		hook.Remove("PlayerButtonDown", "dispatch.quick")
 		hook.Remove("PlayerButtonUp", "dispatch.quick")
 	end
@@ -69,7 +69,7 @@ function PLUGIN:OnJoinSquad(squad)
 		hook.Run("OnLeftSquad", LocalPlayer():GetCharacter().lastSquad)
 		return
 	end
-	
+
 	hook.Add("PreDrawHalos", "SquadGlow", function()
 		halo.Add(squad:GetPlayers(), squad_glow_clr, 0.5, 0.5, 0, true, true)
 	end)
@@ -89,11 +89,11 @@ end
 
 -- wtf is the km
 function PLUGIN:OnSquadChangedLeader(id, squad, character)
-	if IsValid(ix.gui.squads) then 
+	if IsValid(ix.gui.squads) then
 		ix.gui.squads:OnSquadChangedLeader(id, squad, character)
 	end
 
-	if IsValid(ix.gui.dispatch) then 
+	if IsValid(ix.gui.dispatch) then
 		ix.gui.dispatch:OnSquadChangedLeader(id, squad, character)
 	end
 end

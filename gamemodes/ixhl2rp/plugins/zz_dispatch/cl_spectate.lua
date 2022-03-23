@@ -11,7 +11,7 @@ function dispatch.CalcView(client, origin, angles, fov, znear, zfar)
 
 		if !camera:IsPlayer() then
 			local data = camera.GetCameraData and camera:GetCameraData()
-			
+
 			if data and data:IsStatic() then
 				ang = data:ViewAngle(camera)
 				ang.z = 0
@@ -32,7 +32,7 @@ function dispatch.CalcView(client, origin, angles, fov, znear, zfar)
 				end
 			end
 		end
-		
+
 		local data = {
 			origin = pos,
 			angles = ang,
@@ -58,14 +58,14 @@ function dispatch.StartCommand(client, cmd)
 				save_x, save_y = input.GetCursorPos()
 				cam_ang = LocalPlayer():EyeAngles()
 			end
-			
+
 			show_cursor = false
 		elseif !cmd:KeyDown(IN_ATTACK) and !show_cursor then
 			if !show_cursor then
 				gui.EnableScreenClicker(true)
 				input.SetCursorPos(save_x, save_y)
 			end
-			
+
 			show_cursor = true
 		end
 	end

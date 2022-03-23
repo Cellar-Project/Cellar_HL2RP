@@ -44,7 +44,7 @@ end
 
 function PLUGIN:OnCombineRankChanged(datafileID, oldrank, newrank)
 	if oldrank == newrank then return end
-	
+
 	local foundPlayer
 
 	for k, v in ipairs(player.GetAll()) do
@@ -68,7 +68,7 @@ function PLUGIN:CharacterDatafileLoaded(character)
 		dispatch.unassigned_squad:AddMember(character)
 
 		local id, genericdata = character:ReturnDatafile(false)
-		
+
 		if id and genericdata then
 			local rank = genericdata.rank or 0
 

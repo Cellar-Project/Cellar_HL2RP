@@ -13,7 +13,7 @@ dispatch.SetCameraData("ix_combinelock", {
 	Offset = Vector(4, 0, 0),
 	DefaultName = function(self, entity)
 		local name = string.gsub(entity.SaveCRC, "^(%d%d%d%d)(%d)", "LOCK:%1:%2")
-		
+
 		return name
 	end,
 	ViewAngle = function(self, entity) 

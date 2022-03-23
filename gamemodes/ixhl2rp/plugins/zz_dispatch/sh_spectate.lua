@@ -5,11 +5,11 @@ function dispatch.GetCameraOrigin(camera)
 	if camera:IsPlayer() then
 		return camera:GetShootPos()
 	end
-	
-	if !camera.GetCameraData then 
-		return camera:GetPos() 
+
+	if !camera.GetCameraData then
+		return camera:GetPos()
 	end
-	
+
 	local data = camera:GetCameraData()
 	local pos = camera:GetPos()
 
@@ -20,7 +20,7 @@ function dispatch.GetCameraOrigin(camera)
 			pos = pos + (camera:GetForward() * offset.x) + (camera:GetRight() * offset.y) + (camera:GetUp() * offset.z)
 		end
 	end
-	
+
 	return pos
 end
 
@@ -39,7 +39,7 @@ function dispatch.GetCameraViewAngle(camera)
 			ang = new_ang
 		end
 	end
-	
+
 	ang.z = 0
 
 	return ang
@@ -55,7 +55,7 @@ function dispatch.IsSpectating(client)
 	if entity == client then
 		return
 	end
-	
+
 	return dispatch.InDispatchMode(client) and (IsValid(entity) and entity or false) or false
 end
 

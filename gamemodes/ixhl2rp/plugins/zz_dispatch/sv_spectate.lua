@@ -33,7 +33,7 @@ function dispatch.Spectate(client, entity)
 	if !dispatch.InDispatchMode(client) then return end
 	if client:IsPilotScanner() then return end
 	if entity:IsNPC() and entity:Health() <= 0 then return end
-	
+
 	client:SetNetworkOrigin(dispatch.GetCameraOrigin(entity))
 	client:SetViewEntity(entity)
 	client:SetEyeAngles(dispatch.GetCameraViewAngle(entity))
@@ -48,12 +48,12 @@ function dispatch.Spectate(client, entity)
 		spec.IsSpectatedBy = spec.IsSpectatedBy or {}
 		spec.IsSpectatedBy[client] = nil
 	end
-	
+
 	entity.IsSpectatedBy = entity.IsSpectatedBy or {}
 	entity.IsSpectatedBy[client] = true
 	client.Spectating = entity
 
-	local id = "spectate"..client:SteamID64()
+	local id = "spectate" .. client:SteamID64()
 	client.lastSpecPos = client:GetNetworkOrigin()
 	timer.Create(id, 3, 0, function()
 		if !IsValid(client) or (client:GetViewEntity() == client) then
@@ -78,21 +78,21 @@ end
 
 function dispatch.StopSpectate(client)
 	if !IsValid(client) then return end
-	
+
 	local spec = client.Spectating
 
 	if IsValid(spec) then
 		spec.IsSpectatedBy = spec.IsSpectatedBy or {}
 		spec.IsSpectatedBy[client] = nil
 	end
-	
+
 	client:SetViewEntity(nil)
 	client.Spectating = nil
 
 	net.Start("dispatch.spectate.stop")
 	net.Send(client)
 
-	timer.Remove("spectate"..client:SteamID64())
+	timer.Remove("spectate" .. client:SteamID64())
 end
 
 net.Receive("dispatch.spectate.request", function(len, client)
@@ -103,8 +103,8 @@ do
 	local SCANNERS, SPAWNS = ix.plugin.list["combinescanners"],  ix.plugin.list["spawns"]
 
 	function dispatch.DeployScanner(client)
-		if !dispatch.InDispatchMode(client) then 
-			return 
+		if !dispatch.InDispatchMode(client) then
+			return
 		end
 
 		if client:IsPilotScanner() or IsValid(SCANNERS:GetActiveScanners()[client]) then
@@ -113,13 +113,13 @@ do
 
 		local spawnPoints = SPAWNS.spawns["metropolice"]["scanner"]
 
-		if !spawnPoints or #spawnPoints <= 0 then 
-			return 
+		if !spawnPoints or #spawnPoints <= 0 then
+			return
 		end
 
 		local randomSpawn = math.random(1, #spawnPoints)
 		local pos = spawnPoints[randomSpawn]
-		
+
 		SCANNERS.activeID = SCANNERS.activeID + 1
 
 		local scanner = ents.Create("ix_scanner")
@@ -138,19 +138,19 @@ do
 	end)
 
 	net.Receive("dispatch.scannerphoto", function(len, client)
-		if !dispatch.InDispatchMode(client) then 
-			return 
+		if !dispatch.InDispatchMode(client) then
+			return
 		end
 
 		if (client.nextPicture or 0) >= CurTime() then
 			return
 		end
-		
+
 		client.nextPicture = CurTime() + 5
 
 		local length = net.ReadUInt(16)
 		local data = net.ReadData(length)
-		
+
 		if length != #data then
 			return
 		end

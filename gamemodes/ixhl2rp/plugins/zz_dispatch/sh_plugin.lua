@@ -30,14 +30,14 @@ dispatch = dispatch or {
 dispatch.mpf_ranks = {
 	[1] = {
 		name = "Regular",
-		class = function() 
-			return CLASS_MPF 
+		class = function()
+			return CLASS_MPF
 		end
 	},
 	[2] = {
 		name = "Rank Leader",
-		class = function() 
-			return CLASS_RL 
+		class = function()
+			return CLASS_RL
 		end
 	},
 }
@@ -200,16 +200,16 @@ function dispatch.CreateSquad(leader, tagID, static, noLog)
 		if !leader or !leader:GetCharacter() then
 			return false
 		end
-		
+
 		leader = leader:GetCharacter()
 	end
-	
+
 	tagID = tagID or dispatch.GetFreeSquadTag()
 
 	if !tagID then
 		return false
 	end
-	
+
 	local SQUAD = setmetatable({}, ix.meta.squad)
 	SQUAD:Setup(tagID, leader, static)
 
@@ -261,7 +261,7 @@ properties.Add("camera_setname", {
 		if !self:Filter(entity, client) then return end
 
 		local name = net.ReadString()
-		
+
 		if entity:GetClass() != "ix_combinelock" then
 			entity.SaveCRC = nil
 			dispatch.SetupCRC(entity)
@@ -311,7 +311,7 @@ ix.command.Add("SquadCreate", {
 			return "@combineNoAccess"
 		end
 
-		local result, err = dispatch.CreateSquad(client)
+		local result, _ = dispatch.CreateSquad(client)
 
 		if result then
 			ix.log.Add(client:GetCharacter(), "squadCreate", result:GetTagName())
