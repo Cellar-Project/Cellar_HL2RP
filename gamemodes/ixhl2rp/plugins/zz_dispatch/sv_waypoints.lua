@@ -9,7 +9,7 @@ function dispatch.GetWaypointReceivers()
 	for _, client in ipairs(player.GetAll()) do
 		local char = client:GetCharacter()
 		if !char then continue end
-		
+
 		if ix.faction.Get(char:GetFaction()).canSeeWaypoints then
 			table.insert(recvs, client)
 		end
@@ -53,7 +53,7 @@ function dispatch.AddWaypoint(pos, text, icon, time, addedBy)
 		net.WriteTable(data)
 	net.Send(dispatch.GetWaypointReceivers())
 
-	timer.Create("Waypoint"..index, (time or 60), 0, function()
+	timer.Create("Waypoint" .. index, time or 60, 0, function()
 		dispatch.waypoints[index] = nil
 	end)
 

@@ -28,13 +28,13 @@ local function CanUseMemberInteraction(client, target, access, minDatafileAccess
 	if bit.band(access, ACCESS.ALL) != 0 or (isDispatch or isLeader) then
 		return true
 	end
-	
+
 	return false
 end
 
 function dispatch.OpenDatafile(client, target)
 	local card = target:GetIDCard()
-	
+
 	if card then
 		ix.command.Run(client, "Datafile", {card:GetData("cid", 0), card:GetData("number", 0)})
 	end
@@ -92,7 +92,7 @@ net.Receive("squad.menu.move", function(len, client)
 			targetSquad:AddMember(character)
 		end
 	end
-	
+
 	ix.log.Add(client:GetCharacter(), "squadMove", oldname, newSquad:GetTagName())
 end)
 

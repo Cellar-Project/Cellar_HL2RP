@@ -15,10 +15,10 @@ if CLIENT then
 				x = tempx
 
 				vertices[#vertices + 1] = {
-					x = x, 
-					y = y, 
-					u = u, 
-					v = v 
+					x = x,
+					y = y,
+					u = u,
+					v = v
 				}
 			end
 
@@ -28,7 +28,7 @@ if CLIENT then
 				surface.DrawPoly(vertices)
 			end
 		end
-		
+
 		local f, b = Vector(0, 0, 0), Angle(0, 90, 90)
 		function dispatch.Draw3DCursor()
 			local dir = LocalPlayer():EyeAngles():Forward()
@@ -99,7 +99,7 @@ if CLIENT then
 
 		local trace = dispatch.GetViewTrace()
 		local ent = trace.Entity
-		
+
 		if !IsValid(ent) then return end
 		if !dispatch.world_hints[ent:GetClass()] then return end
 
@@ -157,7 +157,7 @@ do
 
 	if SERVER then
 		util.AddNetworkString("dispatch.world.action")
-	
+
 		net.Receive("dispatch.world.action", function(len, client)
 			if !IsValid(client) then return end
 			if !dispatch.InDispatchMode(client) then return end
@@ -308,7 +308,7 @@ dispatch.WorldAction({
 
 			ix.plugin.list["datafile"]:SetBOL(nil, entity.ixDatafile, true)
 		end
-		
+
 		local letter = dispatch.AddWaypoint(entity:GetShootPos(), "НАРУШИТЕЛЬ"..data, "warn", 60)
 
 		Schema:AddCombineDisplayMessage(string.format("Метка %s: %s", letter, card and ("гражданин"..data.." помечен как нарушитель!") or "неопознанное лицо помечено как нарушитель!"), color_red)
@@ -336,7 +336,7 @@ dispatch.WorldAction({
 		local entity = net.ReadEntity()
 
 		if !IsValid(entity) or !entity:IsPlayer() or !entity:GetCharacter() then return end
-		
+
 		dispatch.OpenDatafile(client, entity:GetCharacter())
 	end
 })
@@ -369,7 +369,7 @@ dispatch.WorldAction({
 		local entity = net.ReadEntity()
 
 		if !self:Filter(entity) then return end
-		
+
 		local locked = entity:IsLocked()
 		locked = !locked
 
@@ -432,7 +432,7 @@ dispatch.WorldAction({
 		local entity = net.ReadEntity()
 
 		if !self:Filter(entity) then return end
-		
+
 		entity:SetLocked(!entity:GetLocked())
 	end
 })
@@ -465,7 +465,7 @@ dispatch.WorldAction({
 		local entity = net.ReadEntity()
 
 		if !self:Filter(entity) then return end
-		
+
 		local locked = !(entity:GetNWBool("locked") or false)
 
 		entity:SetLocked(locked)
