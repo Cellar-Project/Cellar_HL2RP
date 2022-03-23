@@ -2,7 +2,7 @@ local PLUGIN = PLUGIN
 
 PLUGIN.name = "Nightvision"
 PLUGIN.author = "unknown, maxxoft"
-PLUGIN.description = "Ported to Helix by maxxoft."
+PLUGIN.description = "Ported to Helix and edited by maxxoft."
 
 
 if CLIENT then
