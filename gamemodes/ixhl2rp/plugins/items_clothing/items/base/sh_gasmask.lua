@@ -9,6 +9,26 @@ ITEM.height = 1
 ITEM.business = false
 ITEM.CanBreakDown = false
 
+ITEM.functions.EnableCamera = {
+	name = "Включить камеру",
+	OnRun = function(item)
+		item:SetData("bCamOn", true)
+	end,
+	OnCanRun = function(item)
+		return item.CPMask and !item:GetData("bCamOn", false)
+	end
+}
+
+ITEM.functions.DisableCamera = {
+	name = "Выключить камеру",
+	OnRun = function(item)
+		item:SetData("bCamOn", false)
+	end,
+	OnCanRun = function(item)
+		return item.CPMask and item:GetData("bCamOn", false)
+	end
+}
+
 function ITEM:CanTransferEquipment(oldinv, newinv, slot)
 	if !self.CPMask then return true end
 	if slot != self.slot then return false end

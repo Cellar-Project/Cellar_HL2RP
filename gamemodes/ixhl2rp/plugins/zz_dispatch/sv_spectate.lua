@@ -34,6 +34,16 @@ function dispatch.Spectate(client, entity)
 	if client:IsPilotScanner() then return end
 	if entity:IsNPC() and entity:Health() <= 0 then return end
 
+	if entity:IsPlayer() and (entity:Team() == FACTION_MPF) then
+		local mask = entity:GetCharacter():GetEquipment():GetEquipmentAtSlot(EQUIP_FACE)
+		local bCamOn = mask and mask:GetData("bCamOn", false)
+
+		if !bCamOn then
+			ix.util.Notify(client, "Камера юнита неактивна")
+			return
+		end
+	end
+
 	client:SetNetworkOrigin(dispatch.GetCameraOrigin(entity))
 	client:SetViewEntity(entity)
 	client:SetEyeAngles(dispatch.GetCameraViewAngle(entity))
