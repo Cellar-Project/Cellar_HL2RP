@@ -91,7 +91,6 @@ function PLUGIN:GetTempDamage(temperature)
 end
 
 function PLUGIN:CalculateThermalDamage(temperature, client)
-	if not client.ixInArea then return end
 	if temperature >= 0 and temperature <= 29 then return end
 
 	local character = client:GetCharacter()
@@ -117,7 +116,7 @@ function PLUGIN:TempTick(client)
 	local area = ix.area.stored[client.ixArea]
 	local temperature
 
-	if area then
+	if area and client.ixInArea then
 		temperature = area.properties.temperature
 	else
 		temperature = self.globalTemp

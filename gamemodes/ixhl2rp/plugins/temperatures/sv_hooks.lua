@@ -23,6 +23,8 @@ function PLUGIN:SetupTempTimer(client)
 		if faction.tempImmunity then
 			return
 		end
+	else
+		return
 	end
 
 	timer.Create(uniqueID, ix.config.Get("tempTickTime", 4), 0, function()
@@ -36,5 +38,5 @@ function PLUGIN:SetupTempTimer(client)
 end
 
 function PLUGIN:CharacterLoaded(character)
-	self:TempTick(character:GetPlayer())
+	self:SetupTempTimer(character:GetPlayer())
 end
