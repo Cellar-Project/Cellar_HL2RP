@@ -52,7 +52,11 @@ end
 
 function PLUGIN:SetAreaTemperature(areaType, temperature, name)
 	if not temperature then return end
-	if not areaType or name then return end
+	if not areaType and not name then return end
+
+	if areaType:lower() == "global" then
+		self.globalTemp = temperature
+	end
 
 	if isstring(name) then
 		if not ix.area.stored[name] then return end

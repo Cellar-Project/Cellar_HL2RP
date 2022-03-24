@@ -26,11 +26,15 @@ function PLUGIN:SetupTempTimer(client)
 	end
 
 	timer.Create(uniqueID, ix.config.Get("tempTickTime", 4), 0, function()
-		if not IsValid(client) or not client.ixInArea then
+		if not IsValid(client) then
 			timer.Remove(uniqueID)
 			return
 		end
 
 		self:TempTick(client)
 	end)
+end
+
+function PLUGIN:CharacterLoaded(character)
+	self:TempTick(character:GetPlayer())
 end

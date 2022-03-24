@@ -1,12 +1,12 @@
 local PLUGIN = PLUGIN
 
--- move it to helix configuration maybe?
 PLUGIN.tempMin = -45
 PLUGIN.tempMax = 8
 PLUGIN.dmgMin = 1
 PLUGIN.dmgMax = 4
 PLUGIN.offMin = 0.09
 PLUGIN.offMax = 21.01
+PLUGIN.globalTemp = 8
 
 
 function PLUGIN:TakeThermalLimbDamage(character, damage, resist, hitgroup, bShock)
@@ -115,8 +115,13 @@ end
 
 function PLUGIN:TempTick(client)
 	local area = ix.area.stored[client.ixArea]
+	local temperature
+
 	if area then
-		local temperature = area.properties.temperature
-		self:CalculateThermalDamage(temperature, client)
+		temperature = area.properties.temperature
+	else
+		temperature = self.globalTemp
 	end
+
+	self:CalculateThermalDamage(temperature, client)
 end
