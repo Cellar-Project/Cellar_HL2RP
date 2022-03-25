@@ -212,11 +212,11 @@ function Schema:GetPlayerPunchDamage()
 end
 
 local voiceChatTypes = {
-    ["ic"] = true,
-    ["w"] = true,
-    ["y"] = true,
-    ["radio"] = true,
-    ["dispatch"] = true
+	["ic"] = true,
+	["w"] = true,
+	["y"] = true,
+	["radio"] = true,
+	["dispatch"] = true
 }
 function Schema:PlayerMessageSend(speaker, chatType, text, anonymous, receivers, rawText)
 	if IsValid(speaker) then
@@ -255,7 +255,7 @@ function Schema:PlayerMessageSend(speaker, chatType, text, anonymous, receivers,
 						end
 					end
 
-					if (visor and chatType != "dispatch") then
+					if visor or (chatType == "dispatch") then
 						return string.format("<:: %s ::>", info.text)
 					else
 						return info.text
@@ -264,7 +264,7 @@ function Schema:PlayerMessageSend(speaker, chatType, text, anonymous, receivers,
 			end
 
 			if (chatType == "ic" or chatType == "w" or chatType == "y") then
-				if (speaker:IsCombine()) then
+				if visor then
 					return string.format("<:: %s ::>", text)
 				end
 			end
@@ -276,7 +276,7 @@ function Schema:CanPlayerJoinClass(client, class, info)
 	if client:Team() == FACTION_ZOMBIE then
 		return true
 	end
-	
+
 	if (client:IsRestricted()) then
 		client:Notify("You cannot change classes when you are restrained!")
 
@@ -302,10 +302,10 @@ end
 
 netstream.Hook("PlayerChatTextChanged", function(client, key)
 	if (Schema:ShouldPlayTypingBeep(client, key) and !client.bTypingBeep) then
-		local faction = ix.faction.indices[client:GetCharacter():GetFaction()]
-		local beeps = faction.typingBeeps
+		local beeps = {"NPC_MetroPolice.Radio.On", "NPC_MetroPolice.Radio.Off"}
+		local char = client:GetCharacter()
 
-		if istable(beeps) then
+		if char and char:HasVisor() then
 			client:EmitSound(beeps[1])
 		end
 
@@ -315,10 +315,10 @@ end)
 
 netstream.Hook("PlayerFinishChat", function(client)
 	if (Schema:ShouldPlayTypingBeep(client, "ic") and client.bTypingBeep) then
-		local faction = ix.faction.indices[client:GetCharacter():GetFaction()]
-		local beeps = faction.typingBeeps
+		local beeps = {"NPC_MetroPolice.Radio.On", "NPC_MetroPolice.Radio.Off"}
+		local char = client:GetCharacter()
 
-		if istable(beeps) then
+		if char and char:HasVisor() then
 			client:EmitSound(beeps[2])
 		end
 
