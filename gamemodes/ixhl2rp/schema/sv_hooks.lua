@@ -184,7 +184,7 @@ function Schema:PlayerStaminaGained(client)
 end
 
 function Schema:GetPlayerPainSound(client)
-	if (client:IsCombine()) then
+	if (client:IsCombine()) and (client:GetCharacter():HasVisor()) then
 		return "NPC_MetroPolice.Pain"
 	end
 
@@ -220,6 +220,8 @@ local voiceChatTypes = {
 }
 function Schema:PlayerMessageSend(speaker, chatType, text, anonymous, receivers, rawText)
 	if IsValid(speaker) then
+		local visor = speaker:GetCharacter():HasVisor()
+
 		if voiceChatTypes[chatType] then
 			local class = self.voices.GetClass(speaker, chatType)
 
@@ -236,8 +238,6 @@ function Schema:PlayerMessageSend(speaker, chatType, text, anonymous, receivers,
 					elseif (chatType == "dispatch") then
 						info.global = true
 					end
-
-					local visor = speaker:GetCharacter():HasVisor()
 
 					if (info.sound) then
 						if (info.global) then
