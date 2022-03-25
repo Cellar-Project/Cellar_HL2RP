@@ -41,7 +41,7 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 
 	-- calculate damage through outfit:
 	if outfit then
-		resist = equipment["torso"].ThermalIsolation or 0
+		resist = equipment["torso"].thermalIsolation or 0
 
 		if resist >= damage then
 			damage = 0
@@ -56,21 +56,21 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 		end
 	else
 		-- head damage:
-		resist = equipment["head"] and equipment["head"].ThermalIsolation or 0
+		resist = equipment["head"] and equipment["head"].thermalIsolation or 0
 		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_HEAD, true)
 
 		-- chest damage:
-		resist = equipment["torso"] and equipment["torso"].ThermalIsolation or 0
+		resist = equipment["torso"] and equipment["torso"].thermalIsolation or 0
 		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_CHEST, true)
 		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_STOMACH, true)
 
 		-- arms damage:
-		resist = equipment["hands"] and equipment["hands"].ThermalIsolation or 0
+		resist = equipment["hands"] and equipment["hands"].thermalIsolation or 0
 		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_LEFTARM, true)
 		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_RIGHTARM, true)
 
 		-- legs damage:
-		resist = equipment["hands"] and equipment["hands"].ThermalIsolation or 0
+		resist = equipment["hands"] and equipment["hands"].thermalIsolation or 0
 		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_LEFTLEG, true)
 		damageTaken = self:TakeThermalLimbDamage(character, damage, resist, HITGROUP_RIGHTLEG, true)
 	end
