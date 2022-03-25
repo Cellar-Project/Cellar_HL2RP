@@ -128,11 +128,11 @@ function ITEM:OnGetReplacement(client, model)
 		gender = "male"
 	end
 
-	if !gender then return "models/cellar/characters/metropolice/male/cca_male_07.mdl" end
+	if !gender then return "models/cellar/characters/city3/metropolice/male/cca_male_07.mdl" end
 
-	local base = "models/cellar/characters/metropolice/" .. gender .. "/"
+	local base = "models/cellar/characters/city3/metropolice/" .. gender .. "/"
 	local elements = string.Explode("/", model)
-	local mdl = elements[#elements]
+	local mdl = string.Replace(elements[#elements], "c3", "cca")
 
-	return base .. "cca_" .. mdl
+	return base .. mdl
 end
