@@ -61,21 +61,21 @@ if (CLIENT) then
 
 	function ITEM:PopulateTooltip(tooltip)
 		local uses = tooltip:AddRowAfter("rarity")
-		uses:SetText(L("wearSlot", L("slot"..self.slot)))
+		uses:SetText(L("wearSlot", L("slot" .. self.slot)))
 
 		for i, v in ipairs(self.Stats) do
 			if v == 0 then continue end
 
-			local s = tooltip:AddRow("stat"..i)
+			local s = tooltip:AddRow("stat" .. i)
 			s:SetTextColor(greenClr)
 			s:SetText(string.format("+%i %s", v, stats[i]))
 			s:SizeToContents()
 		end
 
-		if (self.ThermalIsolation) then
+		if (self.thermalIsolation) then
 			local t = tooltip:AddRow("tempstat")
 				t:SetTextColor(greenClr)
-				t:SetText("Уровень термоизоляции: " .. self.ThermalIsolation or 0)
+				t:SetText("Уровень термоизоляции: " .. self.thermalIsolation or 0)
 				t:SizeToContents()
 		end
 	end
@@ -83,7 +83,7 @@ end
 
 function ITEM:RemoveOutfit(client)
 	client = client or self.player
-	
+
 	local character = client:GetCharacter()
 
 	self:SetData("equip", false)
