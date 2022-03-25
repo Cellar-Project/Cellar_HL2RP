@@ -33,7 +33,7 @@ function FACTION:GetModels(client, gender)
 end
 
 function FACTION:GetDefaultName(client)
-	return "OW:c08.OVERWATCH-"..math.random(1, 99), true
+	return "OW:OPERATOR-" .. math.random(1, 99), true
 end
 
 function FACTION:OnCharacterCreated(client, character)
