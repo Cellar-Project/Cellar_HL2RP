@@ -218,7 +218,7 @@ do
 						count = count + v + -1
 					end
 
-					local defaulSpecialPoints = hook.Run("GetDefaultSpecialPoints", client, count)
+					local defaulSpecialPoints = hook.Run("GetDefaultSpecialPoints", client, data)
 
 					if (count < defaulSpecialPoints) then
 						return false, "Вы должны потратить все очки SPECIAL!"
