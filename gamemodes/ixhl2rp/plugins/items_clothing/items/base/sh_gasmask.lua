@@ -13,6 +13,7 @@ ITEM.functions.EnableCamera = {
 	name = "Включить камеру",
 	OnRun = function(item)
 		item:SetData("bCamOn", true)
+		return false
 	end,
 	OnCanRun = function(item)
 		return item.CPMask and !item:GetData("bCamOn", false)
@@ -23,6 +24,12 @@ ITEM.functions.DisableCamera = {
 	name = "Выключить камеру",
 	OnRun = function(item)
 		item:SetData("bCamOn", false)
+		if item.player.IsSpectatedBy and item:GetData("equip", false) then
+			for disp, _ in pairs(item.player.IsSpectatedBy) do
+				dispatch.StopSpectate(disp)
+			end
+		end
+		return false
 	end,
 	OnCanRun = function(item)
 		return item.CPMask and item:GetData("bCamOn", false)
@@ -36,4 +43,13 @@ function ITEM:CanTransferEquipment(oldinv, newinv, slot)
 	local canEquip = string.find(client:GetModel(), "cca_") or string.find(client:GetModel(), "guard")
 	canEquip = tobool(canEquip)
 	return canEquip
+end
+
+function ITEM:OnUnequipped(client, ...)
+	if !item.CPMask then return end
+	if self.player.IsSpectatedBy and self:GetData("equip", false) then
+		for disp, _ in pairs(self.player.IsSpectatedBy) do
+			dispatch.StopSpectate(disp)
+		end
+	end
 end

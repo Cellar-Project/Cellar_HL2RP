@@ -35,11 +35,11 @@ function dispatch.Spectate(client, entity)
 	if entity:IsNPC() and entity:Health() <= 0 then return end
 
 	if entity:IsPlayer() and (entity:Team() == FACTION_MPF) then
-		local mask = entity:GetCharacter():GetEquipment():GetEquipmentAtSlot(EQUIP_FACE)
+		local mask = entity:GetCharacter():GetEquipment():GetItemAtSlot(EQUIP_MASK)
 		local bCamOn = mask and mask:GetData("bCamOn", false)
 
 		if !bCamOn then
-			ix.util.Notify(client, "Камера юнита неактивна")
+			ix.util.Notify("Камера юнита неактивна", client)
 			return
 		end
 	end
