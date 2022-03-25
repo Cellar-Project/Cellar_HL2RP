@@ -61,10 +61,6 @@ do
 			local faction = ix.faction.indices[payload.faction]
 			local pointsmax = hook.Run("GetDefaultSpecialPoints", LocalPlayer(), payload)
 
-			if faction.defaultLevel then
-				pointsmax = 5 + (5 * math.min(faction.defaultLevel, 5)) + (1 * math.max(faction.defaultLevel - 5, 0))
-			end
-
 			if (pointsmax < 1) then
 				return
 			end
@@ -263,15 +259,22 @@ do
 	})
 end
 
-function PLUGIN:GetDefaultSpecialPoints()
-	return 10
+function PLUGIN:GetDefaultSpecialPoints(client, payload)
+	local pointsMax = 10
+	local faction = ix.faction.indices[payload.faction]
+
+	if faction.defaultLevel then
+		pointsMax = 5 + (5 * math.min(faction.defaultLevel, 5)) + (1 * math.max(faction.defaultLevel - 5, 0))
+	end
+
+	return pointsMax
 end
 
 function PLUGIN:CharacterSkillUpdated(client, character, skillID, isIncreased)
 	local skill = (ix.skills.list[skillID] or {})
 
 	ix.chat.Send(nil, "level", "", nil, {client}, {
-		t = (isIncreased and 2 or 4),
+		t = isIncreased and 2 or 4,
 		skill = skillID,
 		value = math.floor(character:GetSkill(skillID))
 	})
