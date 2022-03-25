@@ -47,7 +47,7 @@ end
 
 function ITEM:OnUnequipped(client, ...)
 	if !item.CPMask then return end
-	if self.player.IsSpectatedBy and self:GetData("equip", false) then
+	if self.player.IsSpectatedBy then
 		for disp, _ in pairs(self.player.IsSpectatedBy) do
 			dispatch.StopSpectate(disp)
 		end
