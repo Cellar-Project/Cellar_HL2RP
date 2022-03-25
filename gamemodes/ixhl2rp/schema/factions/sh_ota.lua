@@ -3,13 +3,12 @@ FACTION.isDefault = false
 FACTION.color = Color(150, 50, 50, 255)
 FACTION.scoreboardClass = "scOTA"
 FACTION.models = {
-	[1] = {"models/cellar/characters/combine/stripped_male.mdl"},
-	[2] = {"models/combine/soldier_male.mdl"}
+	[1] = {"models/cellar/characters/city3/overwatch/ota_regular.mdl"}
 }
 
 FACTION.runSounds = {[0] = "NPC_CombineS.RunFootstepLeft", [1] = "NPC_CombineS.RunFootstepRight"}
 FACTION.typingBeeps = {"NPC_MetroPolice.Radio.On", "NPC_MetroPolice.Radio.Off"}
-FACTION.genders = {1}
+FACTION.genders = {GENDER_MALE}
 
 FACTION.isGloballyRecognized = true
 FACTION.dontNeedFood = true
