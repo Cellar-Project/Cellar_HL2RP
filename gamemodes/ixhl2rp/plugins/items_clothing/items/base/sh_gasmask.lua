@@ -45,8 +45,8 @@ function ITEM:CanTransferEquipment(oldinv, newinv, slot)
 	return canEquip
 end
 
-function ITEM:OnUnequipped(client, ...)
-	if !item.CPMask then return end
+function ITEM:OnItemUnequipped(client)
+	if !self.CPMask then return end
 	if self.player.IsSpectatedBy then
 		for disp, _ in pairs(self.player.IsSpectatedBy) do
 			dispatch.StopSpectate(disp)
