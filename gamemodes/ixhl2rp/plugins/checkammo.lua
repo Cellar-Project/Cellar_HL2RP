@@ -14,6 +14,7 @@ PLUGIN.entries = {
 
 
 function PLUGIN:CheckAmmo(client)
+	if client:IsCombine() then return end
 	local weapon = client:GetActiveWeapon()
 	if not isfunction(weapon.GetMaxClip1) then return end
 	local max = weapon:GetMaxClip1()
