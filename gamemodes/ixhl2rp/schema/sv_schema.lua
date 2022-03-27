@@ -77,15 +77,15 @@ function Schema:SaveCombineMonitors()
 	ix.data.Set("combineAccMonitors", data)
 end
 
-function Schema:SaveForceFields()
-	local data = {}
+-- function Schema:SaveForceFields()
+-- 	local data = {}
 
-	for _, v in ipairs(ents.FindByClass("ix_forcefield")) do
-		data[#data + 1] = {v:GetPos(), v:GetAngles(), v:GetMode(), v:GetAccess()}
-	end
+-- 	for _, v in ipairs(ents.FindByClass("ix_forcefield")) do
+-- 		data[#data + 1] = {v:GetPos(), v:GetAngles(), v:GetMode(), v:GetAccess()}
+-- 	end
 
-	ix.data.Set("forceFields", data)
-end
+-- 	ix.data.Set("forceFields", data)
+-- end
 
 -- data loading
 function Schema:LoadRationDispensers()
@@ -141,14 +141,14 @@ function Schema:SearchPlayer(client, target)
 	return true
 end
 
-function Schema:LoadForceFields()
-	for _, v in ipairs(ix.data.Get("forceFields") or {}) do
-		local field = ents.Create("ix_forcefield")
+-- function Schema:LoadForceFields()
+-- 	for _, v in ipairs(ix.data.Get("forceFields") or {}) do
+-- 		local field = ents.Create("ix_forcefield")
 
-		field:SetPos(v[1])
-		field:SetAngles(v[2])
-		field:Spawn()
-		field:SetMode(v[3])
-		field:SetAccess(v[4])
-	end
-end
+-- 		field:SetPos(v[1])
+-- 		field:SetAngles(v[2])
+-- 		field:Spawn()
+-- 		field:SetMode(v[3])
+-- 		field:SetAccess(v[4])
+-- 	end
+-- end
