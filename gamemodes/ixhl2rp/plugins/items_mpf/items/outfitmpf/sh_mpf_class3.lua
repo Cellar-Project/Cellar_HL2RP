@@ -5,7 +5,7 @@ ITEM.Stats = {
 	[HITGROUP_GENERIC] = 0,
 	[HITGROUP_HEAD] = 0,
 	[HITGROUP_CHEST] = 25,
-	[HITGROUP_STOMACH] = 8,
+	[HITGROUP_STOMACH] = 10,
 	[4] = 8,
 	[5] = 8,
 }

@@ -22,6 +22,7 @@ SWEP.ShockDamage = 6100 / 8
 SWEP.BleedChance = 5
 SWEP.IsBuckshot = true
 SWEP.Range = 10
+SWEP.AmmoItem = "bullets_heavyshotgun"
 
 SWEP.Penetration = 2
 SWEP.DamageType = DMG_BUCKSHOT

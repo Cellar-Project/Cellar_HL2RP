@@ -63,14 +63,6 @@ do
 
 			entity.GetCameraData = function() return camdata end
 			entity.MarkAsCam = true
-
-			if SERVER then
-				timer.Simple(0, function()
-					if !IsValid(entity) then return end
-					
-					dispatch.SetupCRC(entity, function() return camdata:DefaultName(entity) end)
-				end)
-			end
 		end
 	end)
 

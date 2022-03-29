@@ -9,8 +9,8 @@ local PLAYER = FindMetaTable("Player")
 
 function CHAR:GetVisorLevel()
 	local inv = self:GetEquipment()
-	local visorLevel = inv:GetItemAtSlot(EQUIP_MASK) and inv:GetItemAtSlot(EQUIP_MASK).visorLevel or 0
 	if not inv then return end
+	local visorLevel = inv:GetItemAtSlot(EQUIP_MASK) and inv:GetItemAtSlot(EQUIP_MASK).visorLevel or 0
 
 	if self:IsOTA() then visorLevel = 2 end
 	return visorLevel

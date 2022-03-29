@@ -72,6 +72,8 @@ function ITEM:OnItemEquipped(client)
 	client:SetNWInt("sg_uniform", self.uniform)
 	client:SetNWInt("sg_armband", armband)
 
+	client:GetCharacter():SetData("heavy", true)
+
 	client:SetPrimaryVisorColor(self.primaryVisor)
 	client:SetSecondaryVisorColor(self.secondaryVisor)
 
@@ -106,6 +108,8 @@ end
 function ITEM:OnItemUnequipped(client)
 	client:SetNWInt("sg_uniform", 0)
 	client:SetNWInt("sg_armband", self:GetData("armband", 0))
+
+	client:GetCharacter():SetData("heavy", false)
 
 	client:SetPrimaryVisorColor(Vector(0, 0, 0))
 	client:SetSecondaryVisorColor(Vector(0, 0, 0))
