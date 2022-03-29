@@ -15,6 +15,10 @@ function PLUGIN:PlayerLoadedCharacter(client, character, currentChar)
 		end
 
 		-- TO DO: Send MPF's ID to AI Dispatch
+	else
+		for k, v in pairs(dispatch.FindCameras()) do
+			v:AddEntityRelationship(client, D_HT, 99)
+		end
 	end
 
 	if currentChar then
@@ -39,7 +43,9 @@ function PLUGIN:PlayerDisconnected(client)
 end
 
 function PLUGIN:DatafileCombineModifyPoints(client, datafileID, points)
-
+	if client:GetCharacter():ReturnDatafilePermission() <= 3 then
+		return math.Clamp(points, -3, 3)
+	end
 end
 
 function PLUGIN:OnCombineRankChanged(datafileID, oldrank, newrank)
