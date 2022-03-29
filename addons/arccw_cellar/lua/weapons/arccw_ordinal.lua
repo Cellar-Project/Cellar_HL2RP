@@ -25,6 +25,7 @@ SWEP.Penetration = 22
 SWEP.DamageType = DMG_AIRBOAT
 SWEP.ShootEntity = nil -- entity to fire, if any
 SWEP.MuzzleVelocity = 1800 -- projectile or phys bullet muzzle velocity
+SWEP.AmmoItem = "bullets_ordinal"
 -- IN M/S
 
 SWEP.TracerNum = 1 -- tracer every X

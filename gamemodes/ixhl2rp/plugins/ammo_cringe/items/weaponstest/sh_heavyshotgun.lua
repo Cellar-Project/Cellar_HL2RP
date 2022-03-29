@@ -1,4 +1,4 @@
-ITEM.name = "SPAS-12"
+ITEM.name = "Импульсный дробовик"
 ITEM.description = "Тяжелый импульсный дробовик производства Вселенского Союза. Очень разрушительное оружие в тесных пространствах."
 ITEM.model = "models/weapons/w_heavyshotgun.mdl"
 ITEM.class = "arccw_heavyshotgun"

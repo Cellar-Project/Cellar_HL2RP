@@ -37,6 +37,7 @@ SWEP.ChamberSize = 0 -- how many rounds can be chambered.
 SWEP.Primary.ClipSize = 40 -- DefaultClip is automatically set.
 SWEP.ExtendedClipSize = 50
 SWEP.ReducedClipSize = 10
+SWEP.AmmoItem = "bullets_rifle"
 
 SWEP.PhysBulletMuzzleVelocity = 700
 
