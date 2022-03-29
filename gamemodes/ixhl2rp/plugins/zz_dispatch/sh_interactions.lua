@@ -475,3 +475,69 @@ dispatch.WorldAction({
 		entity:SetNWBool("locked", locked)
 	end
 })
+
+dispatch.WorldAction({
+	Label = "Установить режим доступа",
+	Order = 2,
+	HintClass = "ix_forcefield",
+
+	Filter = function(self, entity)
+		return IsValid(entity) and entity:GetClass() == self.HintClass
+	end,
+
+	Action = function(self, entity, client, trace)
+		local m = DermaMenu()
+
+		m:AddOption("Разрешить доступ всем", function()
+			self:MsgStart()
+				net.WriteEntity(entity)
+				net.WriteUInt(0, 3)
+			self:MsgEnd()
+		end)
+		m:AddOption("Проход только по доступу", function()
+			self:MsgStart()
+				net.WriteEntity(entity)
+				net.WriteUInt(1, 3)
+			self:MsgEnd()
+		end)
+		m:AddOption("Проход недоступен", function()
+			self:MsgStart()
+				net.WriteEntity(entity)
+				net.WriteUInt(2, 3)
+			self:MsgEnd()
+		end)
+
+		m:Open()
+	end,
+
+	Receive = function(self, client)
+		local entity = net.ReadEntity()
+		local y = net.ReadUInt(3)
+		if !self:Filter(entity) then return end
+
+		local x = {
+			[1] = 3,
+			[2] = 1,
+			[3] = 2
+		}
+
+		local mode = math.Clamp(x[y + 1], 1, 3)
+
+		entity.mode = mode
+		entity:SetDTInt(0, mode)
+
+		if entity.mode == 3 then
+			entity.on = false
+			entity:SetSkin(1)
+			entity.dummy:SetSkin(1)
+			entity:EmitSound("shield/deactivate.wav")
+			entity:SetCollisionGroup(COLLISION_GROUP_WORLD)
+		elseif entity.mode == 1 then
+			entity.on = true
+			entity:SetSkin(0)
+			entity.dummy:SetSkin(0)
+			entity:EmitSound("shield/activate.wav")
+			entity:SetCollisionGroup(COLLISION_GROUP_NONE)
+		end
+	end
+})
