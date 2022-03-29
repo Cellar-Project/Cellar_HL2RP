@@ -1,10 +1,10 @@
 ITEM.name = "Продвинутая маска с визором"
-ITEM.description = "Продвинутая маска-противогаз Гражданской Обороны с визором."
+ITEM.description = "Продвинутая маска-противогаз Гражданской Обороны с визором и упрощенной системой фильтрации."
 ITEM.model = Model("models/vintagethief/items/cca/mask_04.mdl")
 ITEM.rarity = 2
 ITEM.bodyGroups = {
-	[0] = 1,
-	[7] = 5
+	[3] = 5,
+	[5] = 1
 }
 ITEM.Filters = {
 	["filter_epic"] = false,
@@ -14,7 +14,7 @@ ITEM.Filters = {
 }
 ITEM.Stats = {
 	[HITGROUP_GENERIC] = 0,
-	[HITGROUP_HEAD] = 7,
+	[HITGROUP_HEAD] = 10,
 	[HITGROUP_CHEST] = 0,
 	[HITGROUP_STOMACH] = 0,
 	[4] = 0,

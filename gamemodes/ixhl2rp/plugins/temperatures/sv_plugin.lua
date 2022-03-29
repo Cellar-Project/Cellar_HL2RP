@@ -37,10 +37,13 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 	local dangerous = temperature < 8
 	local resist = 0
 	local damageTaken = false
+	local isVort = client:Team() == FACTION_VORTIGAUNT
 	if (not dangerous) then return end
 
+	if isVort then resist = 3 end
+
 	-- calculate damage through outfit:
-	if outfit then
+	if outfit or isVort then
 		resist = equipment["torso"].thermalIsolation or 0
 
 		if resist >= damage then
