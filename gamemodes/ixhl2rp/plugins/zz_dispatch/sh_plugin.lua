@@ -261,15 +261,18 @@ properties.Add("camera_setname", {
 		if !self:Filter(entity, client) then return end
 
 		local name = net.ReadString()
-
+		/*
 		if entity:GetClass() != "ix_combinelock" then
 			entity.SaveCRC = nil
 			dispatch.SetupCRC(entity)
 		end
+		*/
 
 		entity:SetNetVar("cam", name)
-
-		PLUGIN:SaveData()
+		
+		if entity:GetClass() == "npc_combine_camera" then
+			PLUGIN:SaveData()
+		end
 	end
 })
 
@@ -382,4 +385,13 @@ ix.command.Add("Waypoint", {
 
 		return "@addedWaypoint"
 	end
+})
+
+sound.Add({
+	name = "NPC_CombineCamera.Ping",
+	channel = CHAN_VOICE,
+	volume = 0.5,
+	level = 25,
+	pitch = 100,
+	sound = "npc/turret_floor/ping.wav"
 })

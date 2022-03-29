@@ -1,5 +1,6 @@
 local PLUGIN = PLUGIN
 
+/*
 local stored = dispatch.crc_table or {}
 dispatch.crc_table = stored or {}
 
@@ -47,4 +48,33 @@ function PLUGIN:SaveData()
 	end
 
 	self:SetData(data)
+end
+*/
+
+function PLUGIN:SaveData()
+	local objects = {}
+	
+	for k, v in ipairs(ents.FindByClass("npc_combine_camera")) do
+		objects[#objects + 1] = {
+			v:GetAngles(),
+			v:GetPos(),
+			v:GetNetVar("cam") or "UNKNOWN"
+		}
+	end
+
+	self:SetData(objects)
+end
+
+function PLUGIN:LoadData()
+	local stored = self:GetData()
+
+	if stored then
+		for k, v in ipairs(stored) do
+			local entity = ents.Create("npc_combine_camera")
+			entity:SetAngles(v[1])
+			entity:SetPos(v[2])
+			entity:Spawn()
+			entity:SetNetVar("cam", v[3] or "UNKNOWN")
+		end
+	end
 end
