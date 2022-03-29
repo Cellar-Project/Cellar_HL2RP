@@ -35,7 +35,7 @@ ITEM.Info = {
 		Limb = 60,
 		Shock = {90, 1500},
 		Blood = {35, 350},
-		Bleed = 0
+		Bleed = 2
 	}
 }
 

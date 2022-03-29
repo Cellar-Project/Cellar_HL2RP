@@ -1,6 +1,6 @@
 SWEP.Base = "arccw_base"
 SWEP.Spawnable = true
-SWEP.Category = "CELLAR" 
+SWEP.Category = "CELLAR"
 SWEP.AdminOnly = false
 
 SWEP.PrintName = "OSIPR Mk. I"
@@ -17,7 +17,7 @@ SWEP.Damage = 50
 SWEP.DamageMin = 40
 SWEP.BloodDamage = 550
 SWEP.ShockDamage = 850
-SWEP.BleedChance = 0
+SWEP.BleedChance = 2
 SWEP.AmmoItem = "bullets_ar2"
 SWEP.ImpulseSkill = true
 

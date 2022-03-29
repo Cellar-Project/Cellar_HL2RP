@@ -12,12 +12,11 @@ ITEM.Stats = {
 ITEM.uniform = 0
 ITEM.specialization = nil
 ITEM.bodyGroups = {
-	[0] = 1,
+	[0] = 0,
 	[1] = 0,
 	[2] = 0,
 	[3] = 0,
 	[4] = 0,
-	[5] = 0,
-	[6] = 0
+	[5] = 0
 }
 ITEM.thermalIsolation = 2
