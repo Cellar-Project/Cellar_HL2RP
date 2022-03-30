@@ -40,14 +40,13 @@ function ITEM:CanTransferEquipment(oldinv, newinv, slot)
 	if !self.CPMask then return true end
 	if slot != self.slot then return false end
 	local client = newinv:GetOwner()
-	local canEquip = string.find(client:GetModel(), "cca_") or string.find(client:GetModel(), "guard")
-	canEquip = tobool(canEquip)
-	return canEquip
+	return ix.util.StringMatches(client:GetModel(), "cca_")
 end
 
 function ITEM:OnItemUnequipped(client)
 	if !self.CPMask then return end
-	if self:GetOwner().IsSpectatedBy then
+	local owner = self:GetOwner()
+	if owner and owner.IsSpectatedBy then
 		for disp, _ in pairs(self.player.IsSpectatedBy) do
 			dispatch.StopSpectate(disp)
 		end

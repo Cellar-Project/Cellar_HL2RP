@@ -1,17 +1,17 @@
 ITEM.name = "Легкая импульсная винтовка CCA"
 ITEM.description = "Винтовка, поступившая сотрудникам Гражданской Обороны на вооружение от Сверхнадзора. Очень эргономичное и надежное оружие."
-ITEM.model = "models/weapons/c_ordinalriflearccw.mdl"
+ITEM.model = "models/weapons/w_ordinalrifle.mdl"
 ITEM.class = "arccw_rifle"
 ITEM.weaponCategory = "primary"
-ITEM.rarity = 2
+ITEM.rarity = 3
 ITEM.width = 3
 ITEM.height = 2
 ITEM.hasLock = true
 ITEM.impulse = true
 ITEM.iconCam = {
-	pos = Vector(-9, 200, 2),
+	pos = Vector(8.0824689865112, 132.81428527832, 2.4763200283051),
 	ang = Angle(0, 270, 0),
-	fov = 8.8235294117647,
+	fov = 11.867155482201,
 }
 ITEM.Attack = 12
 ITEM.DistanceSkillMod = {

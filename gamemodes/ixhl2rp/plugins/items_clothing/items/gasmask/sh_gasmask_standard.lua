@@ -12,8 +12,10 @@ ITEM.rarity = 1
 ITEM.CanBreakDown = false -- можно ли порвать на тряпки
 ITEM.thermalIsolation = 1 -- (от 1 до 4)
 ITEM.Filters = {
+	["filter_epic"] = true,
+	["filter_good"] = true,
 	["filter_medium"] = true,
-	["filter_standard"] = true
+	["filter_standard"] = false
 }
 ITEM.Stats = {
 	[HITGROUP_GENERIC] = 0,
