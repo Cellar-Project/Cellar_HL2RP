@@ -1,18 +1,17 @@
 ITEM.name = "Импульсный дробовик"
 ITEM.description = "Тяжелый импульсный дробовик производства Вселенского Союза. Очень разрушительное оружие в тесных пространствах."
-ITEM.model = "models/weapons/w_heavyshotgun.mdl"
+ITEM.model = "models/hlvr/weapons/w_shotgun_heavy/w_shotgun_heavy_hlvr.mdl"
 ITEM.class = "arccw_heavyshotgun"
 ITEM.weaponCategory = "primary"
 ITEM.width = 3
-ITEM.height = 1
+ITEM.height = 2
 ITEM.hasLock = true
 ITEM.impulse = true
 ITEM.iconCam = {
-	pos = Vector(0, 200, 1),
-	ang = Angle(0, 270, 0),
-	fov = 10
+	pos = Vector(-200, 5.289870262146, 1.5059641599655),
+	ang = Angle(0, -0, 0),
+	fov = 9.8072509180853,
 }
-
 ITEM.Attack = 13
 ITEM.DistanceSkillMod = {
 	[1] = 8,

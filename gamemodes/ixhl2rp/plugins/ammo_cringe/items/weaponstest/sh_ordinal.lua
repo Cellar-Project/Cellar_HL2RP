@@ -1,17 +1,17 @@
 ITEM.name = "Пулемет Ординала"
 ITEM.description = "Тяжелый пулемет производства Вселенского Союза, предназначенный для использования отрядами подавления Солдат Патруля."
-ITEM.model = "models/weapons/w_suppressor.mdl"
+ITEM.model = "models/hlvr/weapons/w_suppressor/suppressor_weapon_hlvr.mdl"
 ITEM.class = "arccw_ordinal"
 ITEM.weaponCategory = "primary"
-ITEM.rarity = 2
+ITEM.rarity = 3
 ITEM.width = 5
 ITEM.height = 2
 ITEM.hasLock = true
 ITEM.impulse = true
 ITEM.iconCam = {
-	pos = Vector(-9, 200, 2),
-	ang = Angle(0, 270, 0),
-	fov = 8.8235294117647,
+	pos = Vector(404, 340, 250),
+	ang = Angle(24, -139, -19),
+	fov = 4,
 }
 ITEM.Attack = 18
 ITEM.DistanceSkillMod = {
