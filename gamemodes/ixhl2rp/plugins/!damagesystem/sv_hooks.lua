@@ -1454,6 +1454,12 @@ function PLUGIN:CalculatePlayerDamage(client, lastHitGroup, dmgInfo, multiplier)
 	character:TakeAdvancedDamage(bloodDmgInfo)
 end
 
+local mapInflictors = {
+	["trigger_hurt"] = true,
+	["train_hurt"] = true,
+	["train_nodraw"] = true,
+	["func_door"] = true
+}
 local gamemode = GM or GAMEMODE
 
 function gamemode:GetFallDamage(player, velocity)
@@ -1464,9 +1470,10 @@ function gamemode:ScalePlayerDamage(ply, hitgroup, dmginfo) end
 
 function gamemode:EntityTakeDamage(entity, dmgInfo)
 	local inflictor = dmgInfo:GetInflictor()
+	local inflictorClass = inflictor:GetClass()
 	local amount = dmgInfo:GetDamage()
 
-	if (IsValid(inflictor) and inflictor:GetClass() == "ix_item") then
+	if (IsValid(inflictor) and inflictorClass == "ix_item") then
 		dmgInfo:SetDamage(0)
 		return
 	end
@@ -1497,7 +1504,7 @@ function gamemode:EntityTakeDamage(entity, dmgInfo)
 	end
 	*/
 
-	if !IsValid(entity) then
+	if !IsValid(entity) or mapInflictors[inflictorClass] then
 		return
 	end
 
