@@ -765,18 +765,8 @@ function PANEL:Init()
 	charcreate:SetIcon(1)
 	charcreate:SizeTo(285, 40, 1, (0.25 * 1))
 	charcreate.DoClick = function()
-		if !LocalPlayer():GetData("quiz", false) then
-			if IsValid(ix.gui.quizAnswering) then
-				ix.gui.quizAnswering:Remove()
-			end
+		local maximum = hook.Run("GetMaxPlayerCharacter", LocalPlayer()) or ix.config.Get("maxCharacters", 5)
 
-			vgui.Create("ixQuizMenu")
-			ix.gui.quizAnswering:CreateQuizContent()
-			return
-		end
-
-
-			local maximum = hook.Run("GetMaxPlayerCharacter", LocalPlayer()) or ix.config.Get("maxCharacters", 5)
 		-- don't allow creation if we've hit the character limit
 		if (#ix.characters >= maximum) then
 			self:GetParent():ShowNotice(3, L("maxCharacters"))
