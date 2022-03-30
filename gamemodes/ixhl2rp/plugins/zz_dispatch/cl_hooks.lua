@@ -52,8 +52,10 @@ function PLUGIN:CharacterLoaded(character)
 	if character:IsCombine() and character:GetFaction() != FACTION_DISPATCH then
 		stabilityHUD()
 
-		hook.Add("PlayerButtonDown", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.open") end end)
-		hook.Add("PlayerButtonUp", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.close") end end)
+		if !character:IsOTA() then
+			hook.Add("PlayerButtonDown", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.open") end end)
+			hook.Add("PlayerButtonUp", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.close") end end)
+		end
 	else
 		if IsValid(ix.gui.stability) then
 			ix.gui.stability:Remove()
