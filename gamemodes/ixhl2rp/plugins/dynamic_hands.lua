@@ -6,7 +6,7 @@ PLUGIN.author = "maxxoft"
 
 if SERVER then
 
-	PLUGIN.CombineModels = {
+	PLUGIN.CCAModels = {
 		"models/cellar/characters/city3/metropolice/female/cca_female_01.mdl",
 		"models/cellar/characters/city3/metropolice/female/cca_female_02.mdl",
 		"models/cellar/characters/city3/metropolice/female/cca_female_03.mdl",
@@ -31,11 +31,12 @@ if SERVER then
 		"models/cellar/characters/city3/metropolice/male/cca_male_10.mdl",
 		"models/cellar/characters/city3/metropolice/male/cca_male_11.mdl",
 		"models/cellar/characters/city3/metropolice/male/cca_male_12.mdl",
-		"models/cellar/characters/city3/metropolice/male/cca_male_13.mdl",
-		"models/cellar/characters/combine/soldier_male.mdl",
-		"models/cellar/characters/combine/soldier_female.mdl",
-		"models/cellar/characters/combine/elite_male.mdl",
-		"models/cellar/characters/combine/elite_female.mdl"
+		"models/cellar/characters/city3/metropolice/male/cca_male_13.mdl"
+	}
+	PLUGIN.OTAModels = {
+		"models/cellar/characters/city3/overwatch/ota_regular.mdl",
+		"models/cellar/characters/city3/overwatch/ota_elite.mdl",
+		"models/cellar/characters/city3/overwatch/ota_ordinal.mdl"
 	}
 	PLUGIN.ZombieModels = {
 		"models/corrupt/zombie_03.mdl",
@@ -61,7 +62,13 @@ if SERVER then
 	}
 
 	do
-		for k, model in ipairs(PLUGIN.CombineModels) do
+		for k, model in ipairs(PLUGIN.CCAModels) do
+			local shortname = string.Explode("/", model)
+			player_manager.AddValidModel(shortname, model)
+			player_manager.AddValidHands(shortname, "models/weapons/c_metrocop_hands.mdl", 0, "0000000")
+		end
+
+		for k, model in ipairs(PLUGIN.OTAModels) do
 			local shortname = string.Explode("/", model)
 			player_manager.AddValidModel(shortname, model)
 			player_manager.AddValidHands(shortname, "models/weapons/c_arms_combine.mdl", 0, "0000000")
