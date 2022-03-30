@@ -95,6 +95,7 @@ end
 
 function PLUGIN:CalculateThermalDamage(temperature, client)
 	if temperature >= 0 and temperature <= 29 then return end
+	if (client.ixObsData) then return end
 
 	local character = client:GetCharacter()
 	local inventory = character:GetEquipment()
