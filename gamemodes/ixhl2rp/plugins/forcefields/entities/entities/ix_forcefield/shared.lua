@@ -217,23 +217,24 @@ end;
 if (CLIENT) then
 
 	function ENT:Initialize()
-		local data = {};
-		data.start = self:GetPos() + Vector(0, 0, 50) + self:GetRight() * -16;
-		data.endpos = self:GetPos() + Vector(0, 0, 50) + self:GetRight() * -600;
-		data.filter = self;
-		local trace = util.TraceLine(data);
-
-		local verts = {
-			{pos = Vector(0, 0, -39)},
-			{pos = Vector(0, 0, 150)},
-			{pos = self:WorldToLocal(trace.HitPos - Vector(0, 0, 50)) + Vector(0, 0, 150)},
-			{pos = self:WorldToLocal(trace.HitPos - Vector(0, 0, 50)) + Vector(0, 0, 150)},
-			{pos = self:WorldToLocal(trace.HitPos - Vector(0, 0, 50)) - Vector(0, 0, 39)},
-			{pos = Vector(0, 0, -25)},
-		};
-
-		self:PhysicsFromMesh(verts);
 		self:EnableCustomCollisions(true);
+
+		-- timer.Simple(0, function()
+		-- 	local dummy = Entity(self:GetNWInt("dummy", 0))
+
+		-- 	if IsValid(dummy) then
+		-- 		local verts = {
+		-- 			{pos = Vector(0, 0, -25)},
+		-- 			{pos = Vector(0, 0, 150)},
+		-- 			{pos = self:WorldToLocal(dummy:GetPos()) + Vector(0, 0, 150)},
+		-- 			{pos = self:WorldToLocal(dummy:GetPos()) + Vector(0, 0, 150)},
+		-- 			{pos = self:WorldToLocal(dummy:GetPos()) - Vector(0, 0, 25)},
+		-- 			{pos = Vector(0, 0, -25)}
+		-- 		}
+
+		-- 		self:PhysicsFromMesh(verts)
+		-- 	end
+		-- end)
 	end;
 
 	function ENT:Draw()
