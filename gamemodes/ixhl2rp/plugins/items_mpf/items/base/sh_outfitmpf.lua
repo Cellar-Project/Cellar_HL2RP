@@ -19,15 +19,9 @@ function ITEM:OnInstanced(invID, x, y, item)
 end
 
 local armbandRank = {
-	[0] = "r",
-	[1] = "i4",
-	[2] = "i3",
-	[3] = "i2",
-	[4] = "i1",
-	[5] = "is",
-	[6] = "dl",
-	[7] = "cc",
-	[8] = "sc",
+	[0] = "PU",
+	[1] = "RL"
+
 }
 
 if (CLIENT) then
