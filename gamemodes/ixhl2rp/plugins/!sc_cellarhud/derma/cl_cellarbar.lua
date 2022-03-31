@@ -217,6 +217,7 @@ function PANEL:Init()
     self.clip = 1
     self.clipMax = self.weapon:GetMaxClip1()
     self.delay = CurTime()
+    self.isValidAmmo = nil
 
     self:SetPos(ScrW() - ScrW() * .25, ScrH() * .5)
     self:SetSize(ScrW() * .25, ScrH() * .5)
@@ -323,6 +324,7 @@ function PANEL:Init()
 
                 local count = self.client:GetAmmoCount(self.weapon:GetPrimaryAmmoType())
                 local secondary = self.client:GetAmmoCount(self.weapon:GetSecondaryAmmoType())
+                self.isValidAmmo = true
 
                 if self.weapon:Clip1() >= 0 then
                     draw.SimpleText(self.weapon:Clip1().."/"..self.weapon:GetMaxClip1(), "cellar.derma.light", w - 2, -3, self.clip < 0.3 and LerpColor(self.critAlpha/100, cellar_blue, cellar_red) or cellar_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
@@ -334,6 +336,7 @@ function PANEL:Init()
                     draw.SimpleText(secondary, "cellar.derma.light.blur", w - 12, -3, self.clip < 0.3 and LerpColor(self.critAlpha/100, cellar_blur_blue, cellar_red) or cellar_blur_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
                 end
             else
+                self.isValidAmmo = false
                 draw.SimpleText("--/--", "cellar.derma.light", w - 2, -3, self.clip < 0.3 and LerpColor(self.critAlpha/100, cellar_blue, cellar_red) or cellar_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
                 draw.SimpleText("--/--", "cellar.derma.light.blur", w - 2, -3, self.clip < 0.3 and LerpColor(self.critAlpha/100, cellar_blur_blue, cellar_red) or cellar_blur_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
             end
@@ -349,6 +352,10 @@ function PANEL:Think()
         if self.removed == false then
             self:Remove()
         end
+    end
+
+    if self.isValidAmmo == false then
+        self:Remove()
     end
 
 
