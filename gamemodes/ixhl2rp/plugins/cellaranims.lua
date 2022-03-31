@@ -1031,3 +1031,4 @@ ix.anim.SetModelClass("models/cellar/custom/metropolice/guard.mdl", "cellarMaleM
 ix.anim.SetModelClass("models/vintagethief/mai.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/tno/officer_female_1.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/vintagethief/bjorn.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/allcaps.mdl", "cellarMale")
