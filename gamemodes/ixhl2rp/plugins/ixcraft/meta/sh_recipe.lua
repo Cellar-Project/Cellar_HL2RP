@@ -109,7 +109,11 @@ function RECIPE:OnCanCraft(client)
 			local ourSkill = character:GetSkillModified(skill)
 
 			if ourSkill < needed then
-				return false, "Необходим навык %s!", string.format("%s %s", L(skillTable.name), needed)
+				if IsValid(client) then
+					return false, "Необходим навык %s!", string.format("%s %s", L(skillTable.name, client), needed)
+				else
+					return false, "Необходим навык %s!", string.format("%s %s", L(skillTable.name), needed)
+				end
 			end
 		end
 	end
