@@ -15,7 +15,7 @@ ITEM.iconCam = {
 	fov = 45,
 }
 ITEM.bodyGroups = {
-	[6] = 1,
+	[2] = 1,
 }
 ITEM.skin = 0
 ITEM.armband = 0
