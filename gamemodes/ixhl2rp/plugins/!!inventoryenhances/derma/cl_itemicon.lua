@@ -454,7 +454,7 @@ function PANEL:Paint(width, height)
 	surface.SetDrawColor(ColorAlpha(cellar_blue, 185))
 	surface.DrawOutlinedRect(1, 1, width - 2, height - 2)
 
-	if(self.itemTable.backgroundColor) then
+	if (self.itemTable and self.itemTable.backgroundColor) then
 		surface.SetDrawColor(self.itemTable.backgroundColor)
 		surface.DrawRect(2, 2, width - 4, height - 4)
 	end
