@@ -395,3 +395,9 @@ sound.Add({
 	pitch = 100,
 	sound = "npc/turret_floor/ping.wav"
 })
+
+hook.Add("prone.CanEnter", "dispatch", function(client)
+	if client:Team() == FACTION_DISPATCH then
+		return false
+	end
+end)
