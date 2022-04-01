@@ -198,6 +198,12 @@ local SQUAD = ix.meta.squad or {}
 
 			local leaderID = self:IsStatic() and 0 or self.leader:GetID()
 
+			for char, counter in pairs(self.members) do
+				if !IsValid(char:GetPlayer()) then
+					self:RemoveMember(char, false, true)
+				end
+			end
+
 			if !full then
 				net.Start("ixSquadSync")
 					net.WriteUInt(self.tag, 5)
@@ -253,14 +259,24 @@ if CLIENT then
 		local leader = ix.char.loaded[leaderID]
 
 		local SQUAD = dispatch.CreateSquad(isStatic and nil or leader, tagID, isStatic)
+
+		if !SQUAD then
+			print("SQUAD SYNC ERROR!")
+			return
+		end
+		
 		SQUAD.members = {}
 		SQUAD.counter = counter
 
 		for charID, id in pairs(members) do
 			local character = ix.char.loaded[charID]
 
-			SQUAD.members[character] = id
-			SQUAD.member_counter = SQUAD.member_counter + 1
+			if !character then continue end
+			
+			if !SQUAD.members[character] then
+				SQUAD.members[character] = id
+				SQUAD.member_counter = SQUAD.member_counter + 1
+			end
 
 			character:SetSquad(SQUAD)
 		end

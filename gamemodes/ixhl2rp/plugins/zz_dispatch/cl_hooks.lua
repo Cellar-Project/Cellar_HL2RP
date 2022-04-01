@@ -52,10 +52,8 @@ function PLUGIN:CharacterLoaded(character)
 	if character:IsCombine() and character:GetFaction() != FACTION_DISPATCH then
 		stabilityHUD()
 
-		if !character:IsOTA() then
-			hook.Add("PlayerButtonDown", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.open") end end)
-			hook.Add("PlayerButtonUp", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.close") end end)
-		end
+		hook.Add("PlayerButtonDown", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.open") end end)
+		hook.Add("PlayerButtonUp", "dispatch.quick", function(_, btn) if btn == KEY_LALT then hook.Run("patrolmenu.close") end end)
 	else
 		if IsValid(ix.gui.stability) then
 			ix.gui.stability:Remove()
@@ -63,6 +61,7 @@ function PLUGIN:CharacterLoaded(character)
 
 		hook.Remove("PlayerButtonDown", "dispatch.quick")
 		hook.Remove("PlayerButtonUp", "dispatch.quick")
+		hook.Remove("PreDrawHalos", "SquadGlow")
 	end
 end
 
