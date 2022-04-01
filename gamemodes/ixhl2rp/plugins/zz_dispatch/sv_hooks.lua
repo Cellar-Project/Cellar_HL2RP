@@ -13,8 +13,6 @@ function PLUGIN:PlayerLoadedCharacter(client, character, currentChar)
 		for k, v in pairs(dispatch.GetSquads()) do
 			v:Sync(true, client)
 		end
-
-		-- TO DO: Send MPF's ID to AI Dispatch
 	else
 		for k, v in pairs(dispatch.FindCameras()) do
 			if !IsValid(v) or !v:IsNPC() then continue end

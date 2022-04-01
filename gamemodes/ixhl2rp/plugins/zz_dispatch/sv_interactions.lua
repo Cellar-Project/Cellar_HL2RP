@@ -93,7 +93,7 @@ net.Receive("squad.menu.move", function(len, client)
 		end
 	end
 
-	ix.log.Add(client:GetCharacter(), "squadMove", oldname, newSquad:GetTagName())
+	ix.log.Add(client:GetCharacter(), "squadMove", oldname, newSquad and newSquad:GetTagName() or "UNIT")
 end)
 
 local DATAFILE = ix.plugin.list["datafile"]

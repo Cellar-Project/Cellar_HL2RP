@@ -342,6 +342,34 @@ dispatch.WorldAction({
 })
 
 dispatch.WorldAction({
+	Label = "Наблюдать",
+	Icon = "icon16/zoom.png",
+	Order = 4,
+
+	HintClass = "player",
+
+	Filter = function(self, entity)
+		return IsValid(entity) and entity:IsPlayer() and entity:Team() == FACTION_MPF
+	end,
+
+	Action = function(self, entity, client, trace)
+		self:MsgStart()
+			net.WriteEntity(entity)
+		self:MsgEnd()
+	end,
+
+	Receive = function(self, client)
+		local entity = net.ReadEntity()
+
+		if !IsValid(entity) or !entity:IsPlayer() or !entity:GetCharacter() then return end
+
+		dispatch.Spectate(client, entity)
+
+		ix.log.Add(client:GetCharacter(), "squadObserve", entity:GetCharacter())
+	end
+})
+
+dispatch.WorldAction({
 	LabelOn = "Разблокировать дверь",
 	LabelOff = "Заблокировать дверь",
 	--Icon = "",
