@@ -9,6 +9,15 @@ ix.command.Add("CharSetSkill", {
 	},
 	OnRun = function(self, client, target, skillName, targetValue)
 		for k, v in pairs(ix.skills.list) do
+			if (k == skillName) or (L(v.name, client) == skillName) then
+				local value = math.Clamp(targetValue, 0, v:GetMaximum(target))
+
+				target:SetSkill(k, value)
+				return "@skillSet", target:GetName(), L(v.name, client), value
+			end
+		end
+
+		for k, v in pairs(ix.skills.list) do
 			if (ix.util.StringMatches(k, skillName) or ix.util.StringMatches(L(v.name, client), skillName)) then
 				local value = math.Clamp(targetValue, 0, v:GetMaximum(target))
 
