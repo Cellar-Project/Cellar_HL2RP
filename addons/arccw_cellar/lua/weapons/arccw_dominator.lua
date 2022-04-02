@@ -9,6 +9,7 @@ SWEP.CrouchPos = Vector(-1, 3, -0.5)
 SWEP.CrouchAng = Angle(0, 0, -15)
 
 SWEP.IsDominator = true
+SWEP.ImpulseSkill = true
 
 SWEP.Slot = 2
 

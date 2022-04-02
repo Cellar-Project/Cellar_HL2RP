@@ -14,6 +14,7 @@ SWEP.ViewModel = "models/weapons/c_suppressor.mdl"
 SWEP.WorldModel = "models/weapons/w_suppressor.mdl"
 SWEP.ViewModelFOV = 60
 SWEP.DefaultBodygroups = "0000000"
+SWEP.ImpulseSkill = true
 
 SWEP.Damage = 30
 SWEP.BloodDamage = 380

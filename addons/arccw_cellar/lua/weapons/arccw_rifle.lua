@@ -19,6 +19,7 @@ SWEP.WorldModelOffset = {
 }
 
 SWEP.DefaultBodygroups = "00000000000"
+SWEP.ImpulseSkill = true
 
 SWEP.Damage = 42
 SWEP.DamageMin = 30
