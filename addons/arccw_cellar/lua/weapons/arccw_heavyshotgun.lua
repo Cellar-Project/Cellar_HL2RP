@@ -14,6 +14,7 @@ SWEP.ViewModel = "models/weapons/c_heavyshotgun.mdl"
 SWEP.WorldModel = "models/weapons/w_heavyshotgun.mdl"
 SWEP.ViewModelFOV = 60
 SWEP.DefaultBodygroups = "0000000"
+SWEP.ImpulseSkill = true
 
 SWEP.Damage = 40
 SWEP.DamageMin = 10
