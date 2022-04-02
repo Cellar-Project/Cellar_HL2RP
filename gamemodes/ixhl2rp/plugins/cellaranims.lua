@@ -980,6 +980,13 @@ ix.anim.SetModelClass("models/yan/bebra.mdl", "cellarMale")
 
 ix.anim.SetModelClass("models/vintagethief/kenneth.mdl", "cellarMale")
 
+ix.anim.SetModelClass("models/cellar/characters/riff.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/vintagethief/f_stkerokik.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/vintagethief/guomindang/guomindang_female_01.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/vintagethief/guomindang/guomindang_female_02.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/vintagethief/guomindang/guomindang_male_01.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/vintagethief/guomindang/guomindang_male_02.mdl", "cellarMale")
+
 ix.anim.SetModelClass("models/cellar/characters/rolton.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_6664.mdl", "cellarMaleMPF")
 
