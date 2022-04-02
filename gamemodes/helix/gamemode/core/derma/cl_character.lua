@@ -836,7 +836,7 @@ function PANEL:Init()
 	content:SetIcon(4)
 	content:SizeTo(285, 40, 1, (0.25 * 4))
 	content.DoClick = function()
-		gui.OpenURL("https://steamcommunity.com/sharedfiles/filedetails/?id=2425908945")
+		gui.OpenURL("https://steamcommunity.com/sharedfiles/filedetails/?id=2625033591")
 	end
 
 	-- leave/return button

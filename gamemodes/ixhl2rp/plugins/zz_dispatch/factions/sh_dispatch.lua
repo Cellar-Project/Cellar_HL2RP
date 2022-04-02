@@ -6,6 +6,7 @@ FACTION.isDefault = false
 FACTION.bCanUseRations = false
 FACTION.bAllowDatafile = true
 FACTION.dontNeedFood = true
+FACTION.tempImmunity = true
 
 FACTION.isGloballyRecognized = true
 FACTION.isLocallyRecognized = true
