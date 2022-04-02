@@ -1,4 +1,9 @@
 
+local notSolidTextures = {
+	["TOOLS/TOOLSNODRAW"] = true,
+	["METAL/METALGATE001A"] = true
+}
+
 local function SendChatMessageToPlayers(speaker, chatType, text, bAnonymous, data, receivers)
 	net.Start("ixChatMessage")
 		net.WriteEntity(speaker)
@@ -107,22 +112,22 @@ function ix.chat.Send(speaker, chatType, text, bAnonymous, receivers, data)
 			if (class.range) then
 				local maxRange = class.range
 				local lossStartRange = maxRange * 0.2
-				local obstacleLossStartRange = maxRange * 0.1
 				local maxMinusStartLossRange = maxRange - lossStartRange
 
 				for k, v in ipairs(receivers) do
 					if (speaker != v and v:GetMoveType() != MOVETYPE_NOCLIP) then
+						local vShootPos = v:GetShootPos()
 						local localText = text
 						local lossFraction = 0
 						local range = (speaker:GetPos() - v:GetPos()):LengthSqr()
-						local traceHull = util.TraceHull({
+						local traceLine = util.TraceLine({
 							start = speaker:GetShootPos(),
-							endpos = v:GetShootPos(),
+							endpos = vShootPos,
 							filter = speaker,
-							mask = MASK_SHOT_HULL
+							mask = MASK_PLAYERSOLID_BRUSHONLY
 						})
 
-						if (traceHull.Entity != v and range > obstacleLossStartRange) then
+						if (traceLine.HitPos != vShootPos and !notSolidTextures[traceLine.HitTexture] and traceLine.MatType != MAT_GLASS) then
 							lossFraction = 0.3
 						end
 						if (range > lossStartRange) then
