@@ -32,6 +32,7 @@ function PLUGIN:TakeThermalLimbDamage(character, damage, resist, hitgroup, bShoc
 end
 
 function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damage, offset)
+	if (client.ixObsData) then return end
 	local character = client:GetCharacter()
 	local outfit = equipment["torso"] and equipment["torso"].isOutfit or false
 	local dangerous = temperature < 8
@@ -44,7 +45,9 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 
 	-- calculate damage through outfit:
 	if outfit or isVort then
-		resist = equipment["torso"].thermalIsolation or 0
+		if outfit then
+			resist = equipment["torso"].thermalIsolation or 0
+		end
 
 		if resist >= damage then
 			damage = 0
