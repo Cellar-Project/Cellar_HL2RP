@@ -6,6 +6,7 @@ ITEM.description = "Знаменитый халат-заменитель из ш
 ITEM.slot = EQUIP_TORSO -- слот ( EQUIP_MASK EQUIP_HEAD EQUIP_LEGS EQUIP_HANDS EQUIP_TORSO )
 ITEM.bodyGroups = { -- какие бодигруппы на какие сетаются
     [4] = 13,
+    [6] = 4,
 }
 ITEM.CanBreakDown = true -- можно ли порвать на тряпки
 ITEM.thermalIsolation = 1 -- (от 1 до 4)
