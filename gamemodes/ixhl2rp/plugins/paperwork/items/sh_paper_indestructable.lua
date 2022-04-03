@@ -63,6 +63,16 @@ else
 	end
 end
 
+function ITEM:OnItemSpawned(entity)
+	if !DamageFilter then
+		local DamageFilter = ents.Create("filter_activator_name")
+			DamageFilter:SetKeyValue("targetname", "unbreakablewood")
+			DamageFilter:SetKeyValue("negated", "1")
+		DamageFilter:Spawn()
+	end
+	entity:Fire("SetDamageFilter", "unbreakablewood", 0)
+end
+
 function ITEM:Write(title, text, character)
 	if title then
 		title = tostring(title):sub(1, PLUGIN.maxTitleLength)
