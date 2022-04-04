@@ -366,6 +366,16 @@ function Schema:SetupMove(client, moveData, userCmd)
 	end
 end
 
+function Schema:InitializedPlugins()
+	for _, v in pairs(weapons.GetList()) do
+		local base = v.Base
+
+		if (base == "arccw_base" or base == "arccw_base_melee" or base == "arccw_base_nade") then
+			v.HoldtypeHolstered = v.HoldtypeActive
+		end
+	end
+end
+
 function Schema:InitializedChatClasses()
 	ix.chatLanguages.AddChatType("radio")
 	ix.chatLanguages.AddChatType("radio_eavesdrop")
