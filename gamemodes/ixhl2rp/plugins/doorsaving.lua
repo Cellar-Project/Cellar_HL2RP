@@ -123,6 +123,10 @@ if SERVER then
 		end
 
 		self:SetData(self.doors)
+
+		for k, v in pairs(self.doors) do
+			self.doors[k] = v[1]
+		end
 	end
 
 	function PLUGIN:LoadData()
