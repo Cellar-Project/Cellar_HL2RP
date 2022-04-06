@@ -19,9 +19,9 @@ SWEP.MeleeRange = 18
 SWEP.MeleeDamageType = DMG_SLASH
 SWEP.MeleeTime = 0.46
 SWEP.MeleeDamage = 10
-SWEP.BloodDamage = 150
+SWEP.BloodDamage = 250
 SWEP.ShockDamage = 50
-SWEP.BleedChance = 95
+SWEP.BleedChance = 99
 
 SWEP.MeleeMissSound = {
     Sound("weapons/knife/knife_slash1.wav"),

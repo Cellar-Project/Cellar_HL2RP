@@ -57,6 +57,7 @@ function ix.db.InsertSchema(schemaType, field, fieldType)
 
 		local query = mysql:Update("ix_schema")
 			query:Update("columns", util.TableToJSON(schema))
+			query:Where("table", schemaType)
 		query:Execute()
 
 		query = mysql:Alter(schemaType)
@@ -166,7 +167,14 @@ local resetCalled = 0
 concommand.Add("ix_wipedb", function(client, cmd, arguments)
 	-- can only be ran through the server's console
 	if (!IsValid(client)) then
-		
+		if (resetCalled < RealTime()) then
+			resetCalled = RealTime() + 3
+
+			MsgC(Color(255, 0, 0),
+				"[Helix] WIPING THE DATABASE WILL PERMENANTLY REMOVE ALL PLAYER, CHARACTER, ITEM, AND INVENTORY DATA.\n")
+			MsgC(Color(255, 0, 0), "[Helix] THE SERVER WILL RESTART TO APPLY THESE CHANGES WHEN COMPLETED.\n")
+			MsgC(Color(255, 0, 0), "[Helix] TO CONFIRM DATABASE RESET, RUN 'ix_wipedb' AGAIN WITHIN 3 SECONDS.\n")
+		else
 			resetCalled = 0
 			MsgC(Color(255, 0, 0), "[Helix] DATABASE WIPE IN PROGRESS...\n")
 
@@ -175,5 +183,6 @@ concommand.Add("ix_wipedb", function(client, cmd, arguments)
 				MsgC(Color(255, 255, 0), "[Helix] DATABASE WIPE COMPLETED!\n")
 				RunConsoleCommand("changelevel", game.GetMap())
 			end)
+		end
 	end
 end)

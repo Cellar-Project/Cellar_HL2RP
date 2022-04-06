@@ -58,7 +58,7 @@ else
 		if IsValid(ix.gui.quest) then
 			ix.gui.quest:Remove()
 		end
-		
+
 		ix.gui.quest = self
 
 		timer.Create("ixQuestsFetch", 0.5, 0, function()
@@ -116,11 +116,11 @@ else
 		b.Paint = function(s, w, h)
 			surface.SetDrawColor(25, 25, 25, 225)
 			surface.DrawRect(0, 0, w, h)
-			
+
 			surface.SetDrawColor(90, 90, 90, 255)
 			surface.DrawOutlinedRect(0, 0, w, h)
 		end
-		
+
 		local title = b:Add("DLabel")
 		title:SetFont("ixTaskName")
 		title:SetText(text)
@@ -186,7 +186,7 @@ else
 					ix.gui.quest:AddQuest(k, data.title, data.func)
 				end
 			end
-		end	
+		end
 	end)
 
 	function PLUGIN:CharacterLoaded(character)
@@ -212,7 +212,7 @@ else
 					ix.gui.quest:AddQuest(k, data.title, data.func)
 				end
 			end
-		end	
+		end
 	end
 end
 

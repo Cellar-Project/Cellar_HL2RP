@@ -5,6 +5,7 @@ ITEM.class = "arccw_stunstick"
 ITEM.weaponCategory = "melee"
 ITEM.width = 3
 ITEM.height = 1
+ITEM.impulse = true
 ITEM.iconCam = {
 	pos = Vector(0, 200, 0),
 	ang = Angle(0, 270, 0),

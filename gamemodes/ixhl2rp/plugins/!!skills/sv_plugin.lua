@@ -147,10 +147,6 @@ local function CalcAthleticsFatigue(athletics)
 	return (athletics * 0.1) * 0.5
 end
 
-function PLUGIN:ModifyCharacterRunSpeed(client, character, runSpeed)
-	return runSpeed * CalcAthleticsSpeed(character:GetSkillModified("athletics"))
-end
-
 local walkSpeed
 local function CalcAthleticsTrain(client)
 	local character = client:GetCharacter()

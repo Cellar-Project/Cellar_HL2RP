@@ -6,9 +6,10 @@ function PLUGIN:SaveCombineLocks()
 			data[#data + 1] = {
 				v.door:MapCreationID(),
 				v:GetLocalPos(),
-				v:GetAngles(),
+				v:GetLocalAngles(),
 				v:GetLocked(),
-				v:GetAccess()
+				v:GetAccess(),
+				v:GetNetVar("cam") or "",
 			}
 		end
 	end
@@ -25,9 +26,10 @@ function PLUGIN:LoadCombineLocks()
 
 			lock:SetPos(door:GetPos())
 			lock:Spawn()
-			lock:SetDoor(door, door:LocalToWorld(v[2]), v[3])
+			lock:SetDoor(door, door:LocalToWorld(v[2]), door:LocalToWorldAngles(v[3]))
 			lock:SetLocked(v[4])
 			lock:SetAccess(v[5])
+			lock:SetNetVar("cam", v[6] or "")
 		end
 	end
 end

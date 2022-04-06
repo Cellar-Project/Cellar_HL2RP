@@ -24,6 +24,10 @@ if (CLIENT) then
 		end
 	})
 
+	local dimDistance = 1024
+	local aimLength = 128
+	local barHeight = 2
+
 	function PLUGIN:ShouldPopulateEntityInfo(entity)
 		if (IsValid(entity)) then
 			if ((entity:IsPlayer() or IsValid(entity:GetNetVar("player"))) and entity:GetMoveType() == MOVETYPE_NOCLIP) then

@@ -18,7 +18,7 @@ ix.config.Add("containerOpenTime", 0.7, "How long it takes to open a container."
 })
 
 function ix.container.Register(model, data)
-	ix.container.stored[model] = data
+	ix.container.stored[model:lower()] = data
 end
 
 ix.util.Include("sh_definitions.lua")
@@ -28,7 +28,7 @@ if (SERVER) then
 
 	function PLUGIN:PlayerSpawnedProp(client, model, entity)
 		model = tostring(model):lower()
-		local data = ix.container.stored[model:lower()]
+		local data = ix.container.stored[model]
 
 		if (data) then
 			if (hook.Run("CanPlayerSpawnContainer", client, model, entity) == false) then return end
@@ -39,7 +39,7 @@ if (SERVER) then
 			container:SetModel(model)
 			container:Spawn()
 
-			ix.inventory.New(0, "container:" .. model, function(inventory)
+			ix.inventory.New(0, "container:" .. model:lower(), function(inventory)
 				-- we'll technically call this a bag since we don't want other bags to go inside
 				inventory.vars.isBag = true
 				inventory.vars.isContainer = true

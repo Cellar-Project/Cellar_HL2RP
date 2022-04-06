@@ -22,15 +22,15 @@ EQUIP_RESERVED3 = 15
 EQUIP_RESERVED4 = 16
 
 PLUGIN.slotPlacements = {
-	[EQUIP_HEAD] = {x = 5, y = 30, text = "Голова"},
-	[EQUIP_MASK] = {x = 5, y = 100 + 8, text = "Лицо"},
-	[EQUIP_TORSO] = {x = 5, y = 170 + 16, text = "Торс"},
-	[EQUIP_LEGS] = {x = 291, y = 100 + 8, text = "Ноги"},
-	[EQUIP_HANDS] = {x = 291, y = 170 + 16, text = "Руки"},
-	[EQUIP_RADIO] = {x = 5, y = 300, text = "Рация"},
-	[EQUIP_CID] = {x = 5, y = 370 + 16, text = "CID"},
-	[EQUIP_EARS] = {x = 291, y = 370 + 16, text = "Ухо"},
-	[EQUIP_RESERVED1] = {x = 291, y = 30, text = "Плечо"},
+	[EQUIP_HEAD] = {x = 6, y = 30, text = "Голова"},
+	[EQUIP_MASK] = {x = 6, y = 100 + 8, text = "Лицо"},
+	[EQUIP_TORSO] = {x = 6, y = 170 + 16, text = "Торс"},
+	[EQUIP_LEGS] = {x = 285, y = 300, text = "Ноги"},
+	[EQUIP_HANDS] = {x = 285, y = 170 + 16, text = "Руки"},
+	[EQUIP_RADIO] = {x = 6, y = 300, text = "Рация"},
+	[EQUIP_CID] = {x = 6, y = 370 + 16, text = "CID"},
+	[EQUIP_EARS] = {x = 285, y = 30, text = "Ухо"}, 
+	[EQUIP_RESERVED1] = {x = 285, y = 100 + 8, text = "Плечо"},
 }
 
 -- Called when this panel has been created.
@@ -210,15 +210,28 @@ function PANEL:BuildSlots()
 		if(v.condition or v.condition == nil) then
 			local text = self:Add("DLabel")
 			text:SetText(v.text)
-			text:SetPos(v.x, v.y)
+			text:SetPos(v.x + 4, v.y + 4)
 
 			local slot = self:Add("ixEquipmentSlot")
 			slot.slot = k
 			slot.text = k
-			slot:SetPos(v.x, v.y + 16)
+			slot:SetPos(v.x + 2, v.y + 22)
 
 			self.slots[k] = slot
 			slot:Populate()
+			slot.Paint = function(self, w, h)
+				local eqFrame = Material('cellar/main/tab/equipmentbackground.png')
+
+				/*surface.SetDrawColor(color_white)
+				surface.SetMaterial(eqFrame)
+				surface.DrawTexturedRect(0, 0, w, h)*/
+
+				surface.SetDrawColor(35, 35, 35, 20)
+				surface.DrawRect(1, 1, w - 2, h - 2)
+
+				surface.SetDrawColor(ColorAlpha(cellar_blue, 86))
+				surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
+			end
 		end
 	end;
 end
@@ -352,15 +365,32 @@ function PANEL:PaintOver(width, height)
 	end
 end
 
+
+local colors = {
+	[1] = Color(56, 207, 248, 56),
+	[2] = Color(43, 157, 189, 56)
+}
 -- Called every frame.
 function PANEL:Paint()
-	derma.SkinFunc("PaintCategoryPanel", self, "", ix.config.Get("color") or color_white)
-	surface.SetDrawColor(0, 0, 0, 50);	
+	local frame = Material('cellar/main/tab/border360x525.png')
+	local round = Material('cellar/main/tab/equipmentborderround27x27.png')
+	local tsinSize = TimedSin(.1, 8, 32, 0)
+	local anim1 = TimedSin(.9, 36, 99, 100)
+	local anim2 = TimedSin(.9, 39, 89, 100)
+	local prolongedW = TimedSin(.95, 8, 20, 33)
+	--derma.SkinFunc("PaintCategoryPanel", self, "", ix.config.Get("color") or color_white)
+	surface.SetDrawColor(color_white)
+	surface.SetMaterial(frame)
+	surface.DrawTexturedRect(0, 0, self:GetWide(), self:GetTall())
 
-	--surface.SetFont("ixPluginTooltipFont")
-	surface.SetTextColor(Color(255,255,255,255))
-	surface.SetTextPos(4, 4)
-	surface.DrawText("Снаряжение")
-end;
+	draw.RoundedBox(0, anim1, 32 * .33, prolongedW, 2, colors[1])
+	draw.RoundedBox(0, -anim2 + 66, 32 * .7, prolongedW, 2, colors[2])
+
+	--surface.SetFont("cellar.main.btn")
+	--surface.SetTextColor(Color(255,255,255,255))
+	--surface.SetTextPos(4, 4)
+	--surface.DrawText("Снаряжение")
+	--draw.SimpleText("Снаряжение", "cellar.main.btn", self:GetWide()/2, self:GetTall() * .035, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+end
 
 vgui.Register("ixEquipment", PANEL, "DPanel")

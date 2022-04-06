@@ -99,6 +99,14 @@ function GM:PlayerUse(client, entity)
 		return false
 	end
 
+	if (entity:IsDoor()) then
+		if (hook.Run("CanPlayerUseDoor", client, entity) == false) then
+			return false
+		end
+
+		hook.Run("PlayerUseDoor", client, entity)
+	end
+
 	return true
 end
 
@@ -109,22 +117,6 @@ function GM:KeyPress(client, key)
 				client:ToggleWepRaised()
 			end
 		end)
-	elseif (key == IN_USE) then
-		local data = {}
-			data.start = client:GetShootPos()
-			data.endpos = data.start + client:GetAimVector() * 96
-			data.filter = client
-		local entity = util.TraceLine(data).Entity
-
-		if (IsValid(entity) and hook.Run("PlayerUse", client, entity)) then
-			if (entity:IsDoor()) then
-				local result = hook.Run("CanPlayerUseDoor", client, entity)
-
-				if (result != false) then
-					hook.Run("PlayerUseDoor", client, entity)
-				end
-			end
-		end
 	end
 end
 
@@ -136,7 +128,7 @@ function GM:KeyRelease(client, key)
 	end
 end
 
-function GM:CanPlayerInteractItem(client, action, item)
+function GM:CanPlayerInteractItem(client, action, item, data)
 	if (client:IsRestricted()) then
 		return false
 	end
@@ -154,6 +146,26 @@ function GM:CanPlayerInteractItem(client, action, item)
 		return false
 	end
 
+	if (action == "combine") then
+		local other = data[1]
+
+		if (hook.Run("CanPlayerCombineItem", client, item, other) == false) then
+			return false
+		end
+
+		local combineItem = ix.item.instances[other]
+
+		if (combineItem and combineItem.invID != 0) then
+			local combineInv = ix.item.inventories[combineItem.invID]
+
+			if (!combineInv:OnCheckAccess(client)) then
+				return false
+			end
+		else
+			return false
+		end
+	end
+
 	if (isentity(item) and item.ixSteamID and item.ixCharID
 	and item.ixSteamID == client:SteamID() and item.ixCharID != client:GetCharacter():GetID()
 	and !item:GetItemTable().bAllowMultiCharacterInteraction) then
@@ -169,6 +181,10 @@ function GM:CanPlayerDropItem(client, item)
 end
 
 function GM:CanPlayerTakeItem(client, item)
+
+end
+
+function GM:CanPlayerCombineItem(client, item, other)
 
 end
 
@@ -298,6 +314,12 @@ function GM:PlayerSay(client, text)
 		if (ix.command.Parse(client, message)) then
 			return ""
 		end
+	end
+
+	local result = hook.Run("PrePlayerSay", client, chatType, message, anonymous)
+
+	if result then
+		return ""
 	end
 
 	text = ix.chat.Send(client, chatType, message, anonymous)

@@ -374,13 +374,22 @@ function OUTFIT:RemoveItem(item)
 end
 
 function OUTFIT:GetResult()
+	local max = 0
+	for k, v in ipairs(self.layers) do
+		if #v.bodygroups > max then
+			max = #v.bodygroups
+		end
+	end
 	local bodygroups = table.Copy(self.layers[1].bodygroups)
+	while #bodygroups < max do
+		table.insert(bodygroups, 0)
+	end
 	local model = self.client:GetCharacter():GetModel()
 
 	for k, v in ipairs(self.layers) do
 		if k == 1 then continue end
 
-		for z, x in ipairs(bodygroups) do
+		for z, x in pairs(bodygroups) do
 			bodygroups[z] = v.bodygroups[z] or x
 		end
 
@@ -395,21 +404,8 @@ function OUTFIT:UpdateModel(client, model, bodygroups)
 		client:SetModel(model)
 	end
 
-	for k, v in ipairs(bodygroups) do
+	for k, v in pairs(bodygroups) do
 		client:SetBodygroup(k, v)
-	end
-end
-
-for k, v in ipairs(player.GetAll()) do
-	local character = v:GetCharacter()
-
-	if character then
-		if character.outfit then
-			character.outfit = nil
-		end
-
-		character.outfit = setmetatable({}, OUTFIT)
-		character.outfit:Init(v)
 	end
 end
 
@@ -427,14 +423,14 @@ function PLUGIN:CharacterLoaded(character)
 		else
 			local owner = character:GetID()
 
-			ix.item.RestoreInv(index, 1, MAX_EQUIPMENT_SLOTS, function(inv)
+			ix.inventory.Restore(index, 1, MAX_EQUIPMENT_SLOTS, function(inv)
 				inv.vars.isEquipment = true
 				inv:Sync(client)
 				inv:AddReceiver(client)
 			end)
 		end
 	else
-		ix.item.NewInv(character:GetID(), "equipment", function(inv)
+		ix.inventory.New(character:GetID(), "equipment", function(inv)
 			inv.vars.isEquipment = true
 			inv:Sync(client)
 			inv:AddReceiver(client)
@@ -464,6 +460,8 @@ function PLUGIN:CharacterLoaded(character)
 end
 
 function PLUGIN:PlayerModelChanged(client, model, oldmodel)
+	if !client.ChangeModel then client.ChangeModel = true return end
+
 	local character = client:GetCharacter()
 
 	if character then
@@ -479,7 +477,7 @@ end
 local function SaveBGCache(client, oldcharacter)
 	if oldcharacter then
 		local bgs = {}
-		
+
 		for i = 0, (client:GetNumBodyGroups() - 1) do
 			bgs[i] = client:GetBodygroup(i)
 		end

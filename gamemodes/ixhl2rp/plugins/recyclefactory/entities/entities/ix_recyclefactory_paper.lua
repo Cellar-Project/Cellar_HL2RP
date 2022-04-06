@@ -8,9 +8,10 @@ ENT.Spawnable = true
 ENT.AdminSpawnable = true
 
 local GARBAGE_ITEMS = {
-	["empty_carton"] = 2,
-	["empty_takeout_carton"] = 1,
+	["empty_carton"] = 1,
+	["empty_ration"] = 2,
 	["empty_chinese_takeout"] = 1,
+	["paper_indestructable"] = 4
 }
 
 function ENT:GetWorkTime()
@@ -19,15 +20,15 @@ end
 
 function ENT:GetStartCost()
 	return 4
-end	
+end
 
 function ENT:GetWorkItem()
-	return "paper"
-end	
+	return "paper_advanced"
+end
 
 function ENT:GetDisplay()
 	return "PAPER"
-end	
+end
 
 function ENT:CanGarbageUsed(item)
 	return GARBAGE_ITEMS[item]

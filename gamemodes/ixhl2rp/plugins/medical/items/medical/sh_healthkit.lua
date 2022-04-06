@@ -10,12 +10,13 @@ ITEM.rarity = 2
 ITEM.dUseTime = 10
 
 function ITEM:OnConsume(player, injector, mul, character)
+	if (not mul) then mul = 1 end
 	local client = character:GetPlayer()
 	local blood, shock, rad = character:GetBlood(), character:GetShock(), character:GetRadLevel()
 	local isBleeding, isPain, isUnconscious, bleedDmg = character:IsBleeding(), character:IsFeelPain(), client:IsUnconscious(), (character:GetDmgData().bleedDmg or 0)
-	local newBlood = math.Clamp(blood + 800, -1, 5000)
-	local newShock = math.max(shock - 2500, 0)
-	local newRad = math.max(rad - 350, 0)
+	local newBlood = math.Clamp(blood + (500 * mul), -1, 5000)
+	local newShock = math.max(shock - (1950 * mul), 0)
+	local newRad = math.max(rad - (130 * mul), 0)
 
 	character:SetBlood(newBlood)
 	character:SetBleeding(false)
@@ -51,7 +52,7 @@ function ITEM:OnConsume(player, injector, mul, character)
 	local rleg = character:GetLimbDamage("rightLeg")
 	local lhand = character:GetLimbDamage("leftHand")
 	local rhand = character:GetLimbDamage("rightHand")
-	local minHP = 100 - (head + ((chest + stomach)/2) + ((lleg + rleg)/2) + ((lhand + rhand)/2))/4
+	local minHP = 100 - (head + ((chest + stomach) / 2) + ((lleg + rleg) / 2) + ((lhand + rhand) / 2)) / 4
 	client:SetHealth(math.max(client:Health(), minHP))
 
 	character:SetShock(newShock)
@@ -68,10 +69,10 @@ function ITEM:OnConsume(player, injector, mul, character)
 	end
 
 	return {
-		bleed = isBleeding, 
+		bleed = isBleeding,
 		bleedDmg = bleedDmg,
-		blood = (newBlood - blood),
-		unconscious = isUnconscious, 
+		blood = newBlood - blood,
+		unconscious = isUnconscious,
 		shock = math.abs(newShock - shock),
 		rad = math.abs(newRad - rad),
 		limbs = healedLimbs,

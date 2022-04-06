@@ -19,15 +19,9 @@ function ITEM:OnInstanced(invID, x, y, item)
 end
 
 local armbandRank = {
-	[0] = "r",
-	[1] = "i4",
-	[2] = "i3",
-	[3] = "i2",
-	[4] = "i1",
-	[5] = "is",
-	[6] = "dl",
-	[7] = "cc",
-	[8] = "sc",
+	[0] = "PU",
+	[1] = "RL"
+
 }
 
 if (CLIENT) then
@@ -72,9 +66,12 @@ function ITEM:OnItemEquipped(client)
 	client:SetNWInt("sg_uniform", self.uniform)
 	client:SetNWInt("sg_armband", armband)
 
+	client:GetCharacter():SetData("heavy", true)
+
 	client:SetPrimaryVisorColor(self.primaryVisor)
 	client:SetSecondaryVisorColor(self.secondaryVisor)
 
+	/*
 	if client:Team() == FACTION_MPF then
 		local name = client:GetName()
 		local format = "(CCA%:.*%.).*(%.%d+)"
@@ -99,16 +96,41 @@ function ITEM:OnItemEquipped(client)
 		client:GetCharacter():SetVar("oldName", name, true)
 		client:GetCharacter():SetName(newName)
 	end
+	*/
 end
 
-function ITEM:OnItemUnequipped(client) 
+function ITEM:OnItemUnequipped(client)
 	client:SetNWInt("sg_uniform", 0)
 	client:SetNWInt("sg_armband", self:GetData("armband", 0))
 
+	client:GetCharacter():SetData("heavy", false)
+
 	client:SetPrimaryVisorColor(Vector(0, 0, 0))
 	client:SetSecondaryVisorColor(Vector(0, 0, 0))
-
+	/*
 	if client:Team() == FACTION_MPF then
 		client:GetCharacter():SetName(client:GetCharacter():GetVar("oldName") or client:GetName())
 	end
+	*/
+end
+
+function ITEM:OnGetReplacement(client, model)
+	if self.genderReplacement then
+		return self.genderReplacement[client:GetCharacter():GetGender()]
+	end
+
+	local gender = nil
+	if string.find(model, "female") then
+		gender = "female"
+	elseif string.find(model, "male") then
+		gender = "male"
+	end
+
+	if !gender then return "models/cellar/characters/city3/metropolice/male/cca_male_07.mdl" end
+
+	local base = "models/cellar/characters/city3/metropolice/" .. gender .. "/"
+	local elements = string.Explode("/", model)
+	local mdl = string.Replace(elements[#elements], "c3", "cca")
+
+	return base .. mdl
 end

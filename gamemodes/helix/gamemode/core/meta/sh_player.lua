@@ -207,19 +207,18 @@ if (SERVER) then
 	function meta:ToggleWepRaised()
 		local weapon = self:GetActiveWeapon()
 
-		if (weapon.IsAlwaysRaised or ALWAYS_RAISED[weapon:GetClass()]
-		or weapon.IsAlwaysLowered or weapon.NeverRaised) then
+		if (!IsValid(weapon) or
+			weapon.IsAlwaysRaised or ALWAYS_RAISED[weapon:GetClass()] or
+			weapon.IsAlwaysLowered or weapon.NeverRaised) then
 			return
 		end
 
 		self:SetWepRaised(!self:IsWepRaised(), weapon)
 
-		if (IsValid(weapon)) then
-			if (self:IsWepRaised() and weapon.OnRaised) then
-				weapon:OnRaised()
-			elseif (!self:IsWepRaised() and weapon.OnLowered) then
-				weapon:OnLowered()
-			end
+		if (self:IsWepRaised() and weapon.OnRaised) then
+			weapon:OnRaised()
+		elseif (!self:IsWepRaised() and weapon.OnLowered) then
+			weapon:OnLowered()
 		end
 	end
 
@@ -349,37 +348,53 @@ if (SERVER) then
 	function meta:SetRestricted(bState, bNoMessage)
 		if (bState) then
 			self:SetNetVar("restricted", true)
-
+	
 			if (bNoMessage) then
 				self:SetLocalVar("restrictNoMsg", true)
 			end
-
+	
 			self.ixRestrictWeps = self.ixRestrictWeps or {}
-
+			self.ixRestrictWeps_Items = self.ixRestrictWeps_Items or {}
+	
 			for _, v in ipairs(self:GetWeapons()) do
-				self.ixRestrictWeps[#self.ixRestrictWeps + 1] = v:GetClass()
+				if v.ixItem then
+					self.ixRestrictWeps_Items[v.ixItem] = v:GetClass()
+				else
+					self.ixRestrictWeps[#self.ixRestrictWeps + 1] = v:GetClass()
+				end
+	
 				v:Remove()
 			end
-
+	
 			hook.Run("OnPlayerRestricted", self)
 		else
 			self:SetNetVar("restricted")
-
+	
 			if (self:GetLocalVar("restrictNoMsg")) then
 				self:SetLocalVar("restrictNoMsg")
 			end
-
+	
 			if (self.ixRestrictWeps) then
 				for _, v in ipairs(self.ixRestrictWeps) do
 					self:Give(v)
 				end
-
+	
 				self.ixRestrictWeps = nil
 			end
-
+	
+			if (self.ixRestrictWeps_Items) then
+				for item, class in pairs(self.ixRestrictWeps_Items) do
+					if item.characterID != self:GetCharacter():GetID() then continue end
+					self:Give(class)
+				end
+	
+				self.ixRestrictWeps_Items = nil
+			end
+	
 			hook.Run("OnPlayerUnRestricted", self)
 		end
 	end
+	
 
 	--- Creates a ragdoll entity of this player that will be synced with clients. This does **not** affect the player like
 	-- `SetRagdolled` does.
@@ -392,6 +407,11 @@ if (SERVER) then
 		entity:SetAngles(self:EyeAngles())
 		entity:SetModel(self:GetModel())
 		entity:SetSkin(self:GetSkin())
+
+		for i = 0, (self:GetNumBodyGroups() - 1) do
+			entity:SetBodygroup(i, self:GetBodygroup(i))
+		end
+
 		entity:Spawn()
 
 		if (!bDontSetPlayer) then

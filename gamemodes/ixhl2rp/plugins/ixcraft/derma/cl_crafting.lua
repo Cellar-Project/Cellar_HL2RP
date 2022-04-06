@@ -38,7 +38,7 @@ function PANEL:SetRecipe(recipeTable)
 	self.name:Dock(FILL)
 	self.name:SetContentAlignment(4)
 	self.name:SetTextColor(color_white)
-	self.name:SetFont("ixMenuButtonFont")
+	self.name:SetFont("cellar.derma.medium")
 	self.name:SetExpensiveShadow(1, Color(0, 0, 0, 200))
 	self.name:SetText(recipeTable.GetName and recipeTable:GetName() or L(recipeTable.name))
 
@@ -71,10 +71,10 @@ function PANEL:Init()
 	self:SetSize(self:GetParent():GetSize())
 
 	self.categories = self:Add("DScrollPanel")
-	self.categories:Dock(LEFT)
-	self.categories:SetWide(260)
+	self.categories:Dock(TOP)
+	self.categories:SetTall(43)
 	self.categories.Paint = function(this, w, h)
-		surface.SetDrawColor(0, 0, 0, 66)
+		--surface.SetDrawColor(0, 0, 0, 66)
 		surface.DrawRect(0, 0, w, h)
 	end
 	self.categoryPanels = {}
@@ -111,13 +111,23 @@ function PANEL:Init()
 	end
 
 	for category, realName in SortedPairs(self.categoryPanels) do
-		local button = self.categories:Add("ixMenuButton")
-		button:Dock(TOP)
+		local button = self.categories:Add("cellar.btnlist")
+		button:Dock(RIGHT)
 		button:SetText(category)
-		button:SizeToContents()
+		button:SetSize(ScrW() * .8328 / 5, 40)
 		button.Paint = function(this, w, h)
-			surface.SetDrawColor(self.selected == this and ix.config.Get("color") or color_transparent)
-			surface.DrawRect(0, 0, w, h)
+			local ccategory = L(category):utf8upper()
+			local hov = this:IsHovered()
+			local sel = self.selected == this
+			--surface.SetDrawColor(self.selected == this and Color(255, 30, 30, 43) or color_transparent)
+			--surface.DrawRect(0, 0, w, h)
+			draw.RoundedBox(0, 0, 0, w, h, sel and hov and Color(150, 19, 19, 140) or hov and Color(43, 157, 189, 12) or sel and Color(255, 30, 30, 25) or Color(43, 157, 189, 43))
+			draw.RoundedBox(0, 0, 0, w, 1, sel and hov and Color(255, 30, 30, 140) or hov and Color(56, 207, 248, 140) or sel and Color(200, 30, 30, 225) or Color(56, 207, 248))
+			draw.RoundedBox(0, 0, this:GetTall() - 1, w, 1, sel and hov and Color(255, 30, 30, 140) or hov and Color(56, 207, 248, 140) or sel and Color(200, 30, 30, 225) or Color(56, 207, 248))
+			draw.RoundedBox(0, 0, 0, 1, h, sel and hov and Color(255, 30, 30, 140) or hov and Color(56, 207, 248, 140) or sel and Color(200, 30, 30, 225) or Color(56, 207, 248))
+			draw.RoundedBox(0, this:GetWide() - 1, 0, 1, h, sel and hov and Color(255, 30, 30, 140) or hov and Color(56, 207, 248, 140) or sel and Color(200, 30, 30, 225) or Color(56, 207, 248))
+			draw.SimpleText(ccategory, 'cellar.main.btn', this:GetWide()/2, this:GetTall()/2, sel and hov and Color(255, 30, 30, 140) or hov and Color(56, 207, 248, 140) or sel and Color(200, 30, 30, 225) or Color(56, 207, 248), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			draw.SimpleText(ccategory, 'cellar.main.btn.blur', this:GetWide()/2, this:GetTall()/2, sel and hov and Color(255, 30, 30, 140) or hov and Color(56, 207, 248, 140) or sel and Color(200, 30, 30, 225) or Color(56, 61, 248, 225), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		end
 		button.DoClick = function(this)
 			if (self.selected != this) then

@@ -45,6 +45,8 @@ function Schema:GetPlayerEntityMenu(client, options)
 	elseif (!callingPlayer:IsRestricted() and !client:IsRestricted() and !client:GetNetVar("tying") and
 		callingPlayer:GetCharacter():GetInventory():HasItem("zip_tie")) then
 			options["Ziptie"] = true
+	elseif (!callingPlayer:IsRestricted() and client:GetNetVar("crit")) then
+		options["Search"] = true
 	end
 end
 
@@ -98,8 +100,9 @@ local combineOverlay = ix.util.GetMaterial("effects/combine_binocoverlay")
 
 function Schema:RenderScreenspaceEffects()
 	DrawColorModify(colorModify)
+	local char = LocalPlayer():GetCharacter()
 
-	if (LocalPlayer():IsCombine()) then
+	if (char and char:HasVisor() and !char:IsOTA()) then
 		render.UpdateScreenEffectTexture()
 
 		combineOverlay:SetFloat("$alpha", 0.25)
@@ -125,8 +128,8 @@ function Schema:IsPlayerRecognized(target)
 	if !IsValid(target) then
 		return
 	end
-
-	if target:IsCityAdmin() or target:IsCombine() then
+	-- target:IsCombine()
+	if target:IsCityAdmin() then
 		return true
 	end
 
@@ -247,5 +250,11 @@ function Schema:PopulateHelpMenu(tabs)
 				description:DockMargin(0, 0, 0, 8)
 			end
 		end
+	end
+end
+
+function Schema:ShouldDisableThirdperson(client)
+	if (client:IsWepRaised()) then
+		return true    
 	end
 end

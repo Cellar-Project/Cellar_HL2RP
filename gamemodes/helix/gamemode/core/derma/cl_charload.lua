@@ -276,11 +276,32 @@ function PANEL:Init()
 
 	local back = controlList:Add("ixMenuButton")
 	back:Dock(BOTTOM)
-	back:SetText("return")
+	back:SetFont('cellar.buttonsize')
+	back:SetText("")
 	back:SizeToContents()
 	back.DoClick = function()
 		self:SlideDown()
 		parent.mainPanel:Undim()
+	end
+	back.Paint = function(me, w, h)
+		local gradient = surface.GetTextureID("vgui/gradient-d")
+		local gradientUp = surface.GetTextureID("vgui/gradient-u")
+		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+		local gradientRadial = Material("helix/gui/radial-gradient.png")
+		
+		surface.SetFont('cellar.main.btn')
+		local hov = me:IsHovered()
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 25) or ColorAlpha(cellar_darker_blue, 43))
+		surface.SetTexture(gradientLeft)
+		surface.DrawTexturedRect(0, 0, w, h)
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 255) or ColorAlpha(cellar_blue, 255))
+		surface.DrawTexturedRect(0, 0, w, 1)
+		surface.DrawTexturedRect(0, h - 1, w, 1)
+		
+		draw.RoundedBox(0, 0, 0, 4, h, hov and cellar_red or cellar_blue)
+
+		draw.SimpleText("ВЕРНУТЬСЯ", "cellar.main.btn", 12, h/2, hov and cellar_red or cellar_blue, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+		draw.SimpleText("ВЕРНУТЬСЯ", "cellar.main.btn.blur", 12, h/2, hov and cellar_red or cellar_blur_blue, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 	end
 
 	self.characterList = controlList:Add("ixCharMenuButtonList")
@@ -297,7 +318,8 @@ function PANEL:Init()
 
 	local continueButton = infoButtons:Add("ixMenuButton")
 	continueButton:Dock(FILL)
-	continueButton:SetText("choose")
+	continueButton:SetText("")
+	continueButton:SetFont('cellar.buttonsize')
 	continueButton:SetContentAlignment(6)
 	continueButton:SizeToContents()
 	continueButton.DoClick = function()
@@ -308,16 +330,57 @@ function PANEL:Init()
 			net.SendToServer()
 		end, true)
 	end
+	continueButton.Paint = function(me, w, h)
+		local gradient = surface.GetTextureID("vgui/gradient-d")
+		local gradientUp = surface.GetTextureID("vgui/gradient-u")
+		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+		local gradientRadial = Material("helix/gui/radial-gradient.png")
+		
+		surface.SetFont('cellar.main.btn')
+		local hov = me:IsHovered()
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 25) or ColorAlpha(cellar_darker_blue, 43))
+		surface.SetTexture(gradientLeft)
+		surface.DrawTexturedRectRotated(w * .5 - 1, h * .5, w, h, 180)
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 255) or ColorAlpha(cellar_blue, 255))
+		surface.DrawTexturedRectRotated(w * .5 - 1, 0, w, 1, 180)
+		surface.DrawTexturedRectRotated(w * .5 - 1, h, w, 1, 180)
+		
+		draw.RoundedBox(0, w - 4, 0, 4, h, hov and cellar_red or cellar_blue)
+
+		draw.SimpleText("ВЫБРАТЬ", "cellar.main.btn", w - 12, h/2, hov and cellar_red or cellar_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+		draw.SimpleText("ВЫБРАТЬ", "cellar.main.btn.blur", w - 12, h/2, hov and cellar_red or cellar_blur_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+
+	end
 
 	local deleteButton = infoButtons:Add("ixMenuButton")
 	deleteButton:Dock(LEFT)
-	deleteButton:SetText("delete")
+	deleteButton:SetText("                          ")
+	deleteButton:SetFont('cellar.buttonsize')
 	deleteButton:SetContentAlignment(5)
 	deleteButton:SetTextInset(0, 0)
 	deleteButton:SizeToContents()
 	deleteButton:SetTextColor(derma.GetColor("Error", deleteButton))
 	deleteButton.DoClick = function()
 		self:SetActiveSubpanel("delete")
+	end
+	deleteButton.Paint = function(me, w, h)
+		local gradient = surface.GetTextureID("vgui/gradient-d")
+		local gradientUp = surface.GetTextureID("vgui/gradient-u")
+		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+		local gradientRadial = Material("helix/gui/radial-gradient.png")
+		local gradientCenter = Material('cellar/main/gradientcenter.png')
+
+		surface.SetFont('cellar.main.btn')
+		local hov = me:IsHovered()
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 25) or ColorAlpha(cellar_darker_blue, 43))
+		surface.SetMaterial(gradientCenter)
+		surface.DrawTexturedRect(0, 0, w, h)
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 255) or ColorAlpha(cellar_blue, 255))
+		surface.DrawTexturedRect(0, 0, w, 1)
+		surface.DrawTexturedRect(0, h - 1, w, 1)
+
+		draw.SimpleText("УДАЛИТЬ", "cellar.main.btn", w/2, h/2, hov and cellar_red or cellar_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		draw.SimpleText("УДАЛИТЬ", "cellar.main.btn.blur", w/2, h/2, hov and cellar_red or cellar_blur_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 
 	self.carousel = infoPanel:Add("ixCharMenuCarousel")
@@ -341,15 +404,37 @@ function PANEL:Init()
 
 	local deleteReturn = deleteInfo:Add("ixMenuButton")
 	deleteReturn:Dock(BOTTOM)
-	deleteReturn:SetText("no")
+	deleteReturn:SetText("")
+	deleteReturn:SetFont('cellar.buttonsize')
 	deleteReturn:SizeToContents()
 	deleteReturn.DoClick = function()
 		self:SetActiveSubpanel("main")
 	end
+	deleteReturn.Paint = function(me, w, h)
+		local gradient = surface.GetTextureID("vgui/gradient-d")
+		local gradientUp = surface.GetTextureID("vgui/gradient-u")
+		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+		local gradientRadial = Material("helix/gui/radial-gradient.png")
+		
+		surface.SetFont('cellar.main.btn')
+		local hov = me:IsHovered()
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 25) or ColorAlpha(cellar_darker_blue, 43))
+		surface.SetTexture(gradientLeft)
+		surface.DrawTexturedRect(0, 0, w, h)
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 255) or ColorAlpha(cellar_blue, 255))
+		surface.DrawTexturedRect(0, 0, w, 1)
+		surface.DrawTexturedRect(0, h - 1, w, 1)
+		
+		draw.RoundedBox(0, 0, 0, 4, h, hov and cellar_red or cellar_blue)
+
+		draw.SimpleText("НЕТ", "cellar.main.btn", 12, h/2, hov and cellar_red or cellar_blue, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+		draw.SimpleText("НЕТ", "cellar.main.btn.blur", 12, h/2, hov and cellar_red or cellar_blur_blue, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+	end
 
 	local deleteConfirm = self.delete:Add("ixMenuButton")
 	deleteConfirm:Dock(BOTTOM)
-	deleteConfirm:SetText("yes")
+	deleteConfirm:SetText("")
+	deleteConfirm:SetFont('cellar.buttonsize')
 	deleteConfirm:SetContentAlignment(6)
 	deleteConfirm:SizeToContents()
 	deleteConfirm:SetTextColor(derma.GetColor("Error", deleteConfirm))
@@ -363,6 +448,27 @@ function PANEL:Init()
 		net.Start("ixCharacterDelete")
 			net.WriteUInt(id, 32)
 		net.SendToServer()
+	end
+	deleteConfirm.Paint = function(me, w, h)
+		local gradient = surface.GetTextureID("vgui/gradient-d")
+		local gradientUp = surface.GetTextureID("vgui/gradient-u")
+		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+		local gradientRadial = Material("helix/gui/radial-gradient.png")
+		
+		surface.SetFont('cellar.main.btn')
+		local hov = me:IsHovered()
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 25) or ColorAlpha(cellar_darker_blue, 43))
+		surface.SetTexture(gradientLeft)
+		surface.DrawTexturedRectRotated(w * .5 - 1, h * .5, w, h, 180)
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 255) or ColorAlpha(cellar_blue, 255))
+		surface.DrawTexturedRectRotated(w * .5 - 1, 0, w, 1, 180)
+		surface.DrawTexturedRectRotated(w * .5 - 1, h, w, 1, 180)
+		
+		draw.RoundedBox(0, w - 4, 0, 4, h, hov and cellar_red or cellar_blue)
+
+		draw.SimpleText("ДА", "cellar.main.btn", w - 12, h/2, hov and cellar_red or cellar_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+		draw.SimpleText("ДА", "cellar.main.btn.blur", w - 12, h/2, hov and cellar_red or cellar_blur_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+
 	end
 
 	self.deleteModel = deleteInfo:Add("ixModelPanel")
@@ -420,12 +526,37 @@ function PANEL:Populate(ignoreID)
 
 		local button = self.characterList:Add("ixMenuSelectionButton")
 		button:SetBackgroundColor(color)
-		button:SetText(character:GetName())
+		button:SetText("")
+		button:SetFont('cellar.buttonsize')
 		button:SizeToContents()
 		button:SetButtonList(self.characterList.buttons)
 		button.character = character
 		button.OnSelected = function(panel)
 			self:OnCharacterButtonSelected(panel)
+		end
+		button.Paint = function(me, w, h)
+			local gradient = surface.GetTextureID("vgui/gradient-d")
+			local gradientUp = surface.GetTextureID("vgui/gradient-u")
+			local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+			local gradientRadial = Material("helix/gui/radial-gradient.png")
+			
+			
+
+			surface.SetFont('cellar.main.btn')
+			local hovered = me:IsHovered()
+			local selected = me:GetSelected()
+			local hov = selected or hovered
+			surface.SetDrawColor(hov and ColorAlpha(color, 25) or ColorAlpha(cellar_darker_blue, 43))
+			surface.SetTexture(gradientLeft)
+			surface.DrawTexturedRect(0, 0, w, h)
+			surface.SetDrawColor(hov and ColorAlpha(color, 255) or ColorAlpha(cellar_blue, 255))
+			surface.DrawTexturedRect(0, 0, w, 1)
+			surface.DrawTexturedRect(0, h - 1, w, 1)
+			
+			draw.RoundedBox(0, 0, 0, 4, h, hov and color or cellar_blue)
+
+			draw.SimpleText(character:GetName():utf8upper(), "cellar.main.btn", 12, h/2, hov and Color(210, 210, 210) or ColorAlpha(color_white, 230), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+			draw.SimpleText(character:GetName():utf8upper(), "cellar.main.btn.blur", 12, h/2, hov and color or ColorAlpha(color_white, 230), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 		end
 
 		-- select currently loaded character if available
@@ -471,6 +602,35 @@ end
 
 function PANEL:Paint(width, height)
 	derma.SkinFunc("PaintCharacterLoadBackground", self, width, height)
+
+	local w, h = width, height
+	local background = Material('cellar/main/tab/otherbackground.png')
+	local television = Material('cellar/main/tvtexture.png')
+	local staticborder = Material('cellar/main/tab/otherborders.png')
+	local vignette = ix.util.GetMaterial("helix/gui/vignette.png")
+    local helpframe = Material('cellar/main/tab/helpframe1604x754.png')
+	local skillsline = Material('cellar/main/tab/skillsline452x16.png')
+
+	DrawBlurIndependent(self)
+	surface.SetDrawColor(ColorAlpha(color_white, 190))
+	surface.SetMaterial(background)
+	surface.DrawTexturedRect(0, 0, w, h)
+
+	surface.SetDrawColor(ColorAlpha(color_black, 170))
+	surface.DrawRect(0, 0, w, h)
+
+	surface.SetDrawColor(ColorAlpha(color_white, 90))
+	surface.SetMaterial(television)
+	surface.DrawTexturedRect(0, 0, w, h)
+
+
+	surface.SetDrawColor(ColorAlpha(color_white, 240))
+	surface.SetMaterial(staticborder)
+	surface.DrawTexturedRect(0, 0, w, h)
+
+	surface.SetDrawColor(ColorAlpha(color_black, 255))
+	surface.SetMaterial(vignette)
+	surface.DrawTexturedRect(0, 0, w, h)
 end
 
 vgui.Register("ixCharMenuLoad", PANEL, "ixCharMenuPanel")

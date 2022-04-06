@@ -2,10 +2,7 @@ FACTION.name = "Элитный солдат Патруля"
 FACTION.isDefault = false
 FACTION.color = Color(150, 50, 50, 255)
 FACTION.scoreboardClass = "scOTA"
-FACTION.models = {
-	[1] = {"models/cellar/characters/combine/stripped_male.mdl"},
-	[2] = {"models/combine/soldier_male.mdl"}
-}
+FACTION.models = {"models/cellar/characters/city3/overwatch/ota_elite.mdl"}
 
 FACTION.runSounds = {[0] = "NPC_CombineS.RunFootstepLeft", [1] = "NPC_CombineS.RunFootstepRight"}
 FACTION.typingBeeps = {"NPC_MetroPolice.Radio.On", "NPC_MetroPolice.Radio.Off"}
@@ -33,7 +30,7 @@ function FACTION:GetModels(client, gender)
 end
 
 function FACTION:GetDefaultName(client)
-	return "OW:c08.LEADER-"..math.random(1, 99), true
+	return "OW:LEADER-" .. math.random(1, 99), true
 end
 
 function FACTION:OnCharacterCreated(client, character)
@@ -45,6 +42,10 @@ function FACTION:OnTransfered(client)
 
 	character:SetName(self:GetDefaultName())
 	character:SetModel(self.models[character:GetGender()])
+end
+
+function FACTION:GetModels(client, gender)
+	return self.models
 end
 
 FACTION.npcRelations = {

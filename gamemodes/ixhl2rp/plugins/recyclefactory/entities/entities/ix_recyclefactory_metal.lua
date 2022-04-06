@@ -9,24 +9,38 @@ ENT.AdminSpawnable = true
 
 local GARBAGE_ITEMS = {
 	["empty_can"] = 0.5,
-	["empty_tin_can"] = 1,
-	["ration_package"] = 2,
+	["empty_tin_can"] = 0.5,
+	["metal_scrap"] = 2,
+	["metal_armature"] = 2,
+	["broken_mp7"] = 4,
+	["broken_shotgun"] = 4,
+	["broken_pistol"] = 2,
+	["broken_357"] = 2,
+	["chain"] = 0.5,
+	["pan"] = 3,
+	["crowbar"] = 2,
+	["knife"] = 1,
+	["tool_scissors"] = 1,
+	["tool_hammer"] = 2,
+	["tool_screw"] = 1,
+	["flashlight"] = 1
 }
+
 function ENT:GetWorkTime()
 	return 30
 end
 
 function ENT:GetStartCost()
 	return 10
-end	
+end
 
 function ENT:GetWorkItem()
-	return "scrap_metal"
-end	
+	return "metal_reclaimed"
+end
 
 function ENT:GetDisplay()
 	return "METAL"
-end	
+end
 
 function ENT:CanGarbageUsed(item)
 	return GARBAGE_ITEMS[item]

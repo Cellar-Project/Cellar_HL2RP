@@ -72,12 +72,16 @@ function ITEM:OnEquipped(client, slot)
 	self:SetData("equip", true)
 
 	client.ixDatafile = self:GetData("datafileID", 0)
+
+	hook.Run("OnCharacterIDCardChanged", client:GetCharacter(), client.ixDatafile)
 end
 
 function ITEM:OnUnequipped(client, slot)
 	self:SetData("equip", false)
 
 	client.ixDatafile = nil
+
+	hook.Run("OnCharacterIDCardChanged", client:GetCharacter())
 end
 
 function ITEM:OnInstanced(invID, x, y, item)
@@ -128,7 +132,7 @@ ITEM.functions.devEdit = {
 		return false
 	end,
 	OnCanRun = function(item)
-		return item.player:IsSuperAdmin() or item.player:IsAdmin()
+		return item.player:IsAdmin()
 	end
 }
 
@@ -151,6 +155,6 @@ ITEM.combine.devTransfer = {
 		ix.plugin.list["datafile"].stored[datafileID] = nil
 	end,
 	OnCanRun = function(item)
-		return item.player:IsSuperAdmin()
+		return item.player:IsAdmin()
 	end
 }

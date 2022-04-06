@@ -116,7 +116,17 @@ if SERVER then
 	PLUGIN.doorUsers = PLUGIN.doorUsers or {}
 
 	function PLUGIN:SaveData()
+		for k, v in pairs(self.doors) do
+			local doorEntity = ents.GetMapCreatedEntity(k)
+
+			self.doors[k] = {v, doorEntity:IsLocked()}
+		end
+
 		self:SetData(self.doors)
+
+		for k, v in pairs(self.doors) do
+			self.doors[k] = v[1]
+		end
 	end
 
 	function PLUGIN:LoadData()
@@ -126,6 +136,11 @@ if SERVER then
 		local data = self:GetData()
 
 		for doorID, info in pairs(data) do
+			if (info[2]) then
+				ents.GetMapCreatedEntity(doorID):Fire("lock")
+			end
+
+			info = info[1]
 			self.doors[doorID] = info
 
 			for charID, access in pairs(info) do

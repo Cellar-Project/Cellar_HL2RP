@@ -61,22 +61,29 @@ if (CLIENT) then
 
 	function ITEM:PopulateTooltip(tooltip)
 		local uses = tooltip:AddRowAfter("rarity")
-		uses:SetText(L("wearSlot", L("slot"..self.slot)))
+		uses:SetText(L("wearSlot", L("slot" .. self.slot)))
 
 		for i, v in ipairs(self.Stats) do
 			if v == 0 then continue end
 
-			local s = tooltip:AddRow("stat"..i)
+			local s = tooltip:AddRow("stat" .. i)
 			s:SetTextColor(greenClr)
-		    s:SetText(string.format("+%i %s", v, stats[i]))
+			s:SetText(string.format("+%i %s", v, stats[i]))
 			s:SizeToContents()
+		end
+
+		if (self.thermalIsolation) then
+			local t = tooltip:AddRow("tempstat")
+				t:SetTextColor(greenClr)
+				t:SetText("Уровень термоизоляции: " .. self.thermalIsolation or 0)
+				t:SizeToContents()
 		end
 	end
 end
 
 function ITEM:RemoveOutfit(client)
 	client = client or self.player
-	
+
 	local character = client:GetCharacter()
 
 	self:SetData("equip", false)
@@ -194,6 +201,10 @@ ITEM.functions.Breakdown = {
 }
 
 function ITEM:CanEquip(client, slot)
+	if (slot == EQUIP_HEAD) and (client:GetCharacter():HasWearedGasmask()) then
+		return false
+	end
+
 	return IsValid(client) and self:GetData("equip") != true and self.slot == slot
 end
 
@@ -277,7 +288,7 @@ function ITEM:OnEquipped(client, slot)
 	local model = false
 
 	if isfunction(self.OnGetReplacement) then
-		model = self:OnGetReplacement()
+		model = self:OnGetReplacement(client, client:GetModel())
 	elseif (self.replacement or self.replacements) then
 		if (istable(self.replacements)) then
 			if (#self.replacements == 2 and isstring(self.replacements[1])) then
@@ -298,6 +309,7 @@ function ITEM:OnEquipped(client, slot)
 		char.outfit:AddItem(self, model, self.bodyGroups)
 
 		local a, b = char.outfit:GetResult()
+		client.ChangeModel = false
 		char.outfit:UpdateModel(char:GetPlayer(), a, b)
 	end
 

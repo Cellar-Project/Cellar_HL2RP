@@ -1,8 +1,14 @@
 local PLUGIN = PLUGIN
 
 PLUGIN.name = "Recycle Factory"
-PLUGIN.author = "SchwarzKruppzo"
+PLUGIN.author = "SchwarzKruppzo, Alan Wake"
 PLUGIN.description = "Adds the recycle factories."
+
+PLUGIN.VariantsUse = {
+	Запустить = function(ent) if !ent:GetIsWorking() then ent:StartWork() end end,
+	Остановить = function(ent) if ent:GetIsWorking() then ent:StopWork() end end,
+	Выгрузить = function(ent) ent:Eject() end,
+}
 
 ix.util.Include("sv_hooks.lua")
 
@@ -37,4 +43,11 @@ if CLIENT then
 			underline = false,
 		})
 	end
+	netstream.Hook("aw_recyclemenu",function(data)
+		local menu = DermaMenu()
+		for k,v in pairs(PLUGIN.VariantsUse)do
+			menu:AddOption(k,function() netstream.Start("aw_recyclemenuresult",{data,k}) end)
+		end
+		menu:Open(ScrW()/2,ScrH()/2)
+	end)
 end

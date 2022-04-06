@@ -65,7 +65,7 @@ do
 		end
 
 		if item and item:GetOwner() == client then
-			item = ix.item.instances[item:GetData("id")]
+			item = ix.item.instances[item:GetID()]
 
 			if !item then
 				return

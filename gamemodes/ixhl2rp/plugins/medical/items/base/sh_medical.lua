@@ -12,7 +12,7 @@ ITEM.junk = nil
 ITEM.useSound = {"npc/barnacle/barnacle_gulp1.wav", "npc/barnacle/barnacle_gulp2.wav"}
 
 local function DoAction(self, time, condition, callback)
-	local uniqueID = "ixStare"..self:UniqueID()
+	local uniqueID = "ixStare" .. self:UniqueID()
 
 	timer.Create(uniqueID, 0.1, time / 0.1, function()
 		if (IsValid(self)) then
@@ -37,7 +37,7 @@ end
 
 function ITEM:OnUse(client, injector)
 	local character = client:GetCharacter()
-	local mod = 1
+	local mod = 1 + character:GetSkillModified("medicine") * 0.1 or 1
 	--local mod = (1.22 * self:GetData("rare"))
 	--if mod <= 0 then mod = 1 end;	
 
@@ -46,7 +46,6 @@ function ITEM:OnUse(client, injector)
 	end
 
 	if self.OnConsume then
-		local hands = client:GetWeapon("ix_hands")
 		client.bUsingMedical = true
 		client:SetAction("@medInject", self.dUseTime or 10)
 		DoAction(client, self.dUseTime or 10, function()
@@ -87,7 +86,7 @@ function ITEM:OnUse(client, injector)
 						isWorld = true
 						pos, ang = self.entity:GetPos(), self.entity:GetAngles()
 					end
-					
+
 					self:Remove()
 
 					if isstring(self.junk) then
@@ -110,10 +109,6 @@ function ITEM:OnUse(client, injector)
 
 			client.bUsingMedical = false
 		end)
-	end
-
-	if IsValid(injector) then
-		-- boost attribute
 	end
 
 	return false
@@ -167,9 +162,11 @@ ITEM.functions.Inject = {
 					end
 
 					if item.OnConsume then
-						local healData = item:OnConsume(target, client, 1, target:GetCharacter())
+						local injectorChar = client:GetCharacter()
+						local mod = 1 + injectorChar:GetSkillModified("medicine") * 0.1 or 1
+						local healData = item:OnConsume(target, client, mod, target:GetCharacter())
 
-						client:GetCharacter():DoAction("healingTarget", healData)
+						injectorChar:DoAction("healingTarget", healData)
 					end
 
 					local uses = item:GetData("uses", item.dUses)
@@ -189,7 +186,7 @@ ITEM.functions.Inject = {
 							isWorld = true
 							pos, ang = item.entity:GetPos(), item.entity:GetAngles()
 						end
-						
+
 						item:Remove()
 
 						if isstring(item.junk) then
