@@ -30,7 +30,9 @@ function PANEL:Init()
 	modelList:SetSize(halfWidth + padding * 2, halfHeight)
 
 	local proceed = modelList:Add("ixMenuButton")
-	proceed:SetText("proceed")
+	proceed:SetText("")
+	proceed:SetTextColor(cellar_blue)
+	proceed:SetFont('cellar.buttonsize')
 	proceed:SetContentAlignment(6)
 	proceed:Dock(BOTTOM)
 	proceed:SizeToContents()
@@ -39,6 +41,29 @@ function PANEL:Init()
 
 		self:Populate()
 		self:SetActiveSubpanel("description")
+	end
+	proceed.Paint = function(me, w, h)
+		local gradient = surface.GetTextureID("vgui/gradient-d")
+		local gradientUp = surface.GetTextureID("vgui/gradient-u")
+		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+		local gradientRadial = Material("helix/gui/radial-gradient.png")
+		
+		surface.SetFont('cellar.main.btn')
+		local hov = me:IsHovered()
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 25) or ColorAlpha(cellar_darker_blue, 43))
+		surface.SetTexture(gradientLeft)
+		surface.DrawTexturedRectRotated(w * .5 - 1, h * .5, w, h, 180)
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 255) or ColorAlpha(cellar_blue, 255))
+		surface.DrawTexturedRectRotated(w * .5 - 1, 0, w, 1, 180)
+		surface.DrawTexturedRectRotated(w * .5 - 1, h, w, 1, 180)
+		
+		/*draw.RoundedBox(0, w - h * .5, 0, h * .5, 1, cellar_blue)
+		draw.RoundedBox(0, w - h * .5, h - 1, h * .5, 1, cellar_blue)*/
+		draw.RoundedBox(0, w - 4, 0, 4, h, hov and cellar_red or cellar_blue)
+
+		draw.SimpleText("ПРОДОЛЖИТЬ", "cellar.main.btn", w - 12, h/2, hov and cellar_red or cellar_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+		draw.SimpleText("ПРОДОЛЖИТЬ", "cellar.main.btn.blur", w - 12, h/2, hov and cellar_red or cellar_blur_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+
 	end
 
 	self.factionModel = modelList:Add("ixModelPanel")
@@ -52,7 +77,8 @@ function PANEL:Init()
 	self.factionButtonsPanel:Dock(FILL)
 
 	local factionBack = self.factionPanel:Add("ixMenuButton")
-	factionBack:SetText("return")
+	factionBack:SetText("")
+	factionBack:SetFont('cellar.buttonsize')
 	factionBack:SizeToContents()
 	factionBack:Dock(BOTTOM)
 	factionBack.DoClick = function()
@@ -62,6 +88,26 @@ function PANEL:Init()
 		self:SlideDown()
 
 		parent.mainPanel:Undim()
+	end
+	factionBack.Paint = function(me, w, h)
+		local gradient = surface.GetTextureID("vgui/gradient-d")
+		local gradientUp = surface.GetTextureID("vgui/gradient-u")
+		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+		local gradientRadial = Material("helix/gui/radial-gradient.png")
+		
+		surface.SetFont('cellar.main.btn')
+		local hov = me:IsHovered()
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 25) or ColorAlpha(cellar_darker_blue, 43))
+		surface.SetTexture(gradientLeft)
+		surface.DrawTexturedRect(0, 0, w, h)
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 255) or ColorAlpha(cellar_blue, 255))
+		surface.DrawTexturedRect(0, 0, w, 1)
+		surface.DrawTexturedRect(0, h - 1, w, 1)
+		
+		draw.RoundedBox(0, 0, 0, 4, h, hov and cellar_red or cellar_blue)
+
+		draw.SimpleText("ВЕРНУТЬСЯ", "cellar.main.btn", 12, h/2, hov and cellar_red or cellar_blue, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+		draw.SimpleText("ВЕРНУТЬСЯ", "cellar.main.btn.blur", 12, h/2, hov and cellar_red or cellar_blur_blue, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 	end
 
 	-- character customization subpanel
@@ -73,7 +119,8 @@ function PANEL:Init()
 	descriptionModelList:SetSize(halfWidth, halfHeight)
 
 	local descriptionBack = descriptionModelList:Add("ixMenuButton")
-	descriptionBack:SetText("return")
+	descriptionBack:SetText("")
+	descriptionBack:SetFont('cellar.buttonsize')
 	descriptionBack:SetContentAlignment(4)
 	descriptionBack:SizeToContents()
 	descriptionBack:Dock(BOTTOM)
@@ -85,6 +132,26 @@ function PANEL:Init()
 		else
 			self:SetActiveSubpanel("faction")
 		end
+	end
+	descriptionBack.Paint = function(me, w, h)
+		local gradient = surface.GetTextureID("vgui/gradient-d")
+		local gradientUp = surface.GetTextureID("vgui/gradient-u")
+		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+		local gradientRadial = Material("helix/gui/radial-gradient.png")
+		
+		surface.SetFont('cellar.main.btn')
+		local hov = me:IsHovered()
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 25) or ColorAlpha(cellar_darker_blue, 43))
+		surface.SetTexture(gradientLeft)
+		surface.DrawTexturedRect(0, 0, w, h)
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 255) or ColorAlpha(cellar_blue, 255))
+		surface.DrawTexturedRect(0, 0, w, 1)
+		surface.DrawTexturedRect(0, h - 1, w, 1)
+		
+		draw.RoundedBox(0, 0, 0, 4, h, hov and cellar_red or cellar_blue)
+
+		draw.SimpleText("ВЕРНУТЬСЯ", "cellar.main.btn", 12, h/2, hov and cellar_red or cellar_blue, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+		draw.SimpleText("ВЕРНУТЬСЯ", "cellar.main.btn.blur", 12, h/2, hov and cellar_red or cellar_blur_blue, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 	end
 
 	self.descriptionModel = descriptionModelList:Add("ixModelPanel")
@@ -101,7 +168,8 @@ function PANEL:Init()
 	self.descriptionScroll:Dock(FILL)
 
 	local descriptionProceed = self.descriptionPanel:Add("ixMenuButton")
-	descriptionProceed:SetText("proceed")
+	descriptionProceed:SetText("")
+	descriptionProceed:SetFont('cellar.buttonsize')
 	descriptionProceed:SetContentAlignment(6)
 	descriptionProceed:SizeToContents()
 	descriptionProceed:Dock(BOTTOM)
@@ -110,6 +178,29 @@ function PANEL:Init()
 			self.progress:IncrementProgress()
 			self:SetActiveSubpanel("skills")
 		end
+	end
+	descriptionProceed.Paint = function(me, w, h)
+		local gradient = surface.GetTextureID("vgui/gradient-d")
+		local gradientUp = surface.GetTextureID("vgui/gradient-u")
+		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+		local gradientRadial = Material("helix/gui/radial-gradient.png")
+		
+		surface.SetFont('cellar.main.btn')
+		local hov = me:IsHovered()
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 25) or ColorAlpha(cellar_darker_blue, 43))
+		surface.SetTexture(gradientLeft)
+		surface.DrawTexturedRectRotated(w * .5 - 1, h * .5, w, h, 180)
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 255) or ColorAlpha(cellar_blue, 255))
+		surface.DrawTexturedRectRotated(w * .5 - 1, 0, w, 1, 180)
+		surface.DrawTexturedRectRotated(w * .5 - 1, h, w, 1, 180)
+		
+		/*draw.RoundedBox(0, w - h * .5, 0, h * .5, 1, cellar_blue)
+		draw.RoundedBox(0, w - h * .5, h - 1, h * .5, 1, cellar_blue)*/
+		draw.RoundedBox(0, w - 4, 0, 4, h, hov and cellar_red or cellar_blue)
+
+		draw.SimpleText("ПРОДОЛЖИТЬ", "cellar.main.btn", w - 12, h/2, hov and cellar_red or cellar_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+		draw.SimpleText("ПРОДОЛЖИТЬ", "cellar.main.btn.blur", w - 12, h/2, hov and cellar_red or cellar_blur_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+
 	end
 
 	-- attributes subpanel
@@ -121,13 +212,34 @@ function PANEL:Init()
 	attributesModelList:SetSize(halfWidth, halfHeight)
 
 	local attributesBack = attributesModelList:Add("ixMenuButton")
-	attributesBack:SetText("return")
+	attributesBack:SetText("")
+	attributesBack:SetFont('cellar.buttonsize')
 	attributesBack:SetContentAlignment(4)
 	attributesBack:SizeToContents()
 	attributesBack:Dock(BOTTOM)
 	attributesBack.DoClick = function()
 		self.progress:DecrementProgress()
 		self:SetActiveSubpanel("description")
+	end
+	attributesBack.Paint = function(me, w, h)
+		local gradient = surface.GetTextureID("vgui/gradient-d")
+		local gradientUp = surface.GetTextureID("vgui/gradient-u")
+		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+		local gradientRadial = Material("helix/gui/radial-gradient.png")
+		
+		surface.SetFont('cellar.main.btn')
+		local hov = me:IsHovered()
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 25) or ColorAlpha(cellar_darker_blue, 43))
+		surface.SetTexture(gradientLeft)
+		surface.DrawTexturedRect(0, 0, w, h)
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 255) or ColorAlpha(cellar_blue, 255))
+		surface.DrawTexturedRect(0, 0, w, 1)
+		surface.DrawTexturedRect(0, h - 1, w, 1)
+		
+		draw.RoundedBox(0, 0, 0, 4, h, hov and cellar_red or cellar_blue)
+
+		draw.SimpleText("ВЕРНУТЬСЯ", "cellar.main.btn", 12, h/2, hov and cellar_red or cellar_blue, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+		draw.SimpleText("ВЕРНУТЬСЯ", "cellar.main.btn.blur", 12, h/2, hov and cellar_red or cellar_blur_blue, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 	end
 
 	self.attributesModel = attributesModelList:Add("ixModelPanel")
@@ -141,7 +253,8 @@ function PANEL:Init()
 	self.attributesPanel:Dock(RIGHT)
 
 	local create = self.attributesPanel:Add("ixMenuButton")
-	create:SetText("finish")
+	create:SetText("")
+	create:SetFont('cellar.buttonsize')
 	create:SetContentAlignment(6)
 	create:SizeToContents()
 	create:Dock(BOTTOM)
@@ -150,13 +263,36 @@ function PANEL:Init()
 			self:SendPayload()
 		end
 	end
+	create.Paint = function(me, w, h)
+		local gradient = surface.GetTextureID("vgui/gradient-d")
+		local gradientUp = surface.GetTextureID("vgui/gradient-u")
+		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+		local gradientRadial = Material("helix/gui/radial-gradient.png")
+		
+		surface.SetFont('cellar.main.btn')
+		local hov = me:IsHovered()
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 25) or ColorAlpha(cellar_darker_blue, 43))
+		surface.SetTexture(gradientLeft)
+		surface.DrawTexturedRectRotated(w * .5 - 1, h * .5, w, h, 180)
+		surface.SetDrawColor(hov and ColorAlpha(cellar_red, 255) or ColorAlpha(cellar_blue, 255))
+		surface.DrawTexturedRectRotated(w * .5 - 1, 0, w, 1, 180)
+		surface.DrawTexturedRectRotated(w * .5 - 1, h, w, 1, 180)
+		
+		/*draw.RoundedBox(0, w - h * .5, 0, h * .5, 1, cellar_blue)
+		draw.RoundedBox(0, w - h * .5, h - 1, h * .5, 1, cellar_blue)*/
+		draw.RoundedBox(0, w - 4, 0, 4, h, hov and cellar_red or cellar_blue)
+
+		draw.SimpleText("СОЗДАТЬ", "cellar.main.btn", w - 12, h/2, hov and cellar_red or cellar_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+		draw.SimpleText("СОЗДАТЬ", "cellar.main.btn.blur", w - 12, h/2, hov and cellar_red or cellar_blur_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+
+	end
 
 	-- creation progress panel
 	self.progress = self:Add("ixSegmentedProgress")
 	self.progress:SetBarColor(ix.config.Get("color"))
 	self.progress:SetSize(parent:GetWide(), 0)
 	self.progress:SizeToContents()
-	self.progress:SetPos(0, parent:GetTall() - self.progress:GetTall())
+	self.progress:SetPos(0, 0)
 
 	-- setup payload hooks
 	self:AddPayloadHook("model", function(value)
@@ -360,8 +496,9 @@ function PANEL:Populate()
 		for _, v in SortedPairs(ix.faction.teams) do
 			if (ix.faction.HasWhitelist(v.index)) then
 				local button = self.factionButtonsPanel:Add("ixMenuSelectionButton")
-				button:SetBackgroundColor(v.color or color_white)
-				button:SetText(L(v.name):utf8upper())
+				--button:SetBackgroundColor(v.color or color_white)
+				button:SetText("")
+				button:SetFont('cellar.buttonsize')
 				button:SizeToContents()
 				button:SetButtonList(self.factionButtons)
 				button.faction = v.index
@@ -373,6 +510,30 @@ function PANEL:Populate()
 					self.payload:Set("faction", panel.faction)
 					self.payload:Set("gender", gender)
 					self.payload:Set("model", math.random(1, #models))
+				end
+				button.Paint = function(me, w, h)
+					local gradient = surface.GetTextureID("vgui/gradient-d")
+					local gradientUp = surface.GetTextureID("vgui/gradient-u")
+					local gradientLeft = surface.GetTextureID("vgui/gradient-l")
+					local gradientRadial = Material("helix/gui/radial-gradient.png")
+					
+					
+
+					surface.SetFont('cellar.main.btn')
+					local hovered = me:IsHovered()
+					local selected = me:GetSelected()
+					local hov = selected or hovered
+					surface.SetDrawColor(hov and ColorAlpha(v.color, 25) or ColorAlpha(cellar_darker_blue, 43))
+					surface.SetTexture(gradientLeft)
+					surface.DrawTexturedRect(0, 0, w, h)
+					surface.SetDrawColor(hov and ColorAlpha(v.color, 255) or ColorAlpha(cellar_blue, 255))
+					surface.DrawTexturedRect(0, 0, w, 1)
+					surface.DrawTexturedRect(0, h - 1, w, 1)
+					
+					draw.RoundedBox(0, 0, 0, 4, h, hov and v.color or cellar_blue)
+
+					draw.SimpleText(L(v.name):utf8upper(), "cellar.main.btn", 12, h/2, hov and Color(210, 210, 210) or ColorAlpha(color_white, 230), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+					draw.SimpleText(L(v.name):utf8upper(), "cellar.main.btn.blur", 12, h/2, hov and v.color or ColorAlpha(color_white, 230), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 				end
 
 				if ((lastSelected and lastSelected == v.index) or (!lastSelected and v.isDefault)) then
@@ -507,6 +668,35 @@ end
 function PANEL:Paint(width, height)
 	derma.SkinFunc("PaintCharacterCreateBackground", self, width, height)
 	BaseClass.Paint(self, width, height)
+
+	local w, h = width, height
+	local background = Material('cellar/main/tab/otherbackground.png')
+	local television = Material('cellar/main/tvtexture.png')
+	local staticborder = Material('cellar/main/tab/otherborders.png')
+	local vignette = ix.util.GetMaterial("helix/gui/vignette.png")
+    local helpframe = Material('cellar/main/tab/helpframe1604x754.png')
+	local skillsline = Material('cellar/main/tab/skillsline452x16.png')
+
+	DrawBlurIndependent(self)
+	surface.SetDrawColor(ColorAlpha(color_white, 190))
+	surface.SetMaterial(background)
+	surface.DrawTexturedRect(0, 0, w, h)
+
+	surface.SetDrawColor(ColorAlpha(color_black, 170))
+	surface.DrawRect(0, 0, w, h)
+
+	surface.SetDrawColor(ColorAlpha(color_white, 90))
+	surface.SetMaterial(television)
+	surface.DrawTexturedRect(0, 0, w, h)
+
+
+	surface.SetDrawColor(ColorAlpha(color_white, 240))
+	surface.SetMaterial(staticborder)
+	surface.DrawTexturedRect(0, 0, w, h)
+
+	surface.SetDrawColor(ColorAlpha(color_black, 255))
+	surface.SetMaterial(vignette)
+	surface.DrawTexturedRect(0, 0, w, h)
 end
 
 vgui.Register("ixCharMenuNew", PANEL, "ixCharMenuPanel")

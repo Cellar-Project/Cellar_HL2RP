@@ -447,8 +447,9 @@ function PANEL:Init()
 
 	self.text = self:Add("DLabel")
 	self.text:Dock(LEFT)
-	self.text:SetFont("ixMenuButtonFont")
-	self.text:SetExpensiveShadow(1, color_black)
+	self.text:SetFont("cellar.derma.medium")
+	self.text:SetColor(Color(56, 207, 248))
+	--self.text:SetExpensiveShadow(1, color_black)
 
 	self.backgroundIndex = 0
 end
@@ -623,6 +624,7 @@ function PANEL:SetSearchEnabled(bValue)
 	self.searchEntry:Dock(TOP)
 	self.searchEntry:SetEnterAllowed(false)
 
+
 	self.searchEntry.OnChange = function(entry)
 		self:FilterRows(entry:GetValue())
 	end
@@ -709,6 +711,7 @@ hook.Add("CreateMenuButtons", "ixSettings", function(tabs)
 			for category, options in SortedPairs(ix.option.GetAllByCategories(true)) do
 				category = L(category)
 				panel:AddCategory(category)
+				
 
 				-- sort options by language phrase rather than the key
 				table.sort(options, function(a, b)

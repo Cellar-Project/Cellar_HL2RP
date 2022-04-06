@@ -110,6 +110,19 @@ function PLUGIN:SetupActs()
 		idle = true
 	})
 
+	-- arrest
+	ix.act.Register("ArrestWall", "citizen_male", {
+		sequence = {
+			{"apcarrestidle",
+			check = FacingWall,
+			offset = function(client)
+				return -client:GetForward() * 23
+			end},
+			"spreadwallidle"
+		},
+		untimed = true
+	})
+
 	ix.act.Register("Arrest", "citizen_male", {
 		sequence = "arrestidle",
 		untimed = true
@@ -127,7 +140,7 @@ function PLUGIN:SetupActs()
 
 	-- motion
 	ix.act.Register("Motion", "metrocop", {
-		sequence = {"motionleft", "motionright", "luggage"}
+		sequence = {"motionleft", "motionright", "luggagewarn"}
 	})
 
 	-- wave

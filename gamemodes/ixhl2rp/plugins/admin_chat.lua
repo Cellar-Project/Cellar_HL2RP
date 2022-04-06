@@ -7,7 +7,7 @@ if SERVER then
 else
 	local urls = {
 		[0] = "https://discord.gg/4zYr654",
-		[1] = "https://steamcommunity.com/sharedfiles/filedetails/?id=2425908945",
+		[1] = "https://steamcommunity.com/sharedfiles/filedetails/?id=2625033591",
 		[2] = "https://docs.google.com/document/d/1wU3DDNXKDVSNenq9wecuqXYBNQaAVi7YAFOtO81pbBE",
 		[3] = "https://docs.google.com/document/d/1kXwYo3sBgtdsuVu1y8ucaJvTJu2PRtKsmhL2FGdziBo",
 		[4] = "https://www.youtube.com/watch?v=FwuQILSwWXE",

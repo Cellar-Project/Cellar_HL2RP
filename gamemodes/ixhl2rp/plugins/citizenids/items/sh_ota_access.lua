@@ -7,7 +7,7 @@ ITEM.iconCam = {
 	fov = 45,
 }
 ITEM.access = {
-	["DATAFILE_ELEVATED"] = true,
+	["DATAFILE_MEDIUM"] = true,
 	["cmb*"] = true,
 	["BROADCAST"] = true,
 }

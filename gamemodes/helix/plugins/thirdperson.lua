@@ -1,176 +1,254 @@
 
-local PLUGIN = PLUGIN
-
 PLUGIN.name = "Third Person"
-PLUGIN.author = "Black Tea"
-PLUGIN.description = "Enables third person camera usage."
+PLUGIN.description = "Provides a customizable third-person camera."
+PLUGIN.author = "Zombine, `impulse, LegAz"
 
-ix.config.Add("thirdperson", false, "Allow Thirdperson in the server.", nil, {
+ix.config.Add("thirdperson", true, "Allow third-person camera in the server.", nil, {
 	category = "server"
 })
 
-if (CLIENT) then
-	local function isHidden()
+do
+	local function IsHidden()
 		return !ix.config.Get("thirdperson")
 	end
 
 	ix.option.Add("thirdpersonEnabled", ix.type.bool, false, {
 		category = "thirdperson",
-		hidden = isHidden,
+		bNetworked = true,
+		hidden = IsHidden(),
 		OnChanged = function(oldValue, value)
-			hook.Run("ThirdPersonToggled", oldValue, value)
+			if (CLIENT) then
+				hook.Run("ThirdPersonToggled", oldValue, value)
+			end
 		end
 	})
 
-	ix.option.Add("thirdpersonClassic", ix.type.bool, false, {
-		category = "thirdperson",
-		hidden = isHidden
-	})
+	if (CLIENT) then
+		ix.option.Add("thirdpersonVertical", ix.type.number, 6, {
+			category = "thirdperson", min = 0, max = 10,
+			hidden = IsHidden()
+		})
 
-	ix.option.Add("thirdpersonVertical", ix.type.number, 10, {
-		category = "thirdperson", min = 0, max = 30,
-		hidden = isHidden
-	})
+		ix.option.Add("thirdpersonHorizontal", ix.type.number, 10, {
+			category = "thirdperson", min = -25, max = 25,
+			hidden = IsHidden()
+		})
 
-	ix.option.Add("thirdpersonHorizontal", ix.type.number, 0, {
-		category = "thirdperson", min = -30, max = 30,
-		hidden = isHidden
-	})
+		ix.option.Add("thirdpersonDistance", ix.type.number, 45, {
+			category = "thirdperson", min = 0, max = 60,
+			hidden = IsHidden()
+		})
 
-	ix.option.Add("thirdpersonDistance", ix.type.number, 50, {
-		category = "thirdperson", min = 0, max = 100,
-		hidden = isHidden
-	})
-
-
-	concommand.Add("ix_togglethirdperson", function()
-		local bEnabled = !ix.option.Get("thirdpersonEnabled", false)
-
-		ix.option.Set("thirdpersonEnabled", bEnabled)
-	end)
-
-	local function isAllowed()
-		return ix.config.Get("thirdperson")
+		ix.option.Add("thirdpersonCrouchOffset", ix.type.number, 6, {
+			category = "thirdperson", min = 0, max = 10,
+			hidden = IsHidden()
+		})
 	end
+end
 
+if (CLIENT) then
 	local playerMeta = FindMetaTable("Player")
-	local traceMin = Vector(-10, -10, -10)
-	local traceMax = Vector(10, 10, 10)
+
+	-- current camera info
+	local camera = {
+		position = Vector(0, 0, 0),
+		angle = Angle(0, 0, 0),
+		fov = 0,
+		targetFOV = 0,
+		punch = Angle(0, 0, 0),
+		punchScale = 1,
+		bBlocked = false,
+
+		left = {},
+		right = {},
+		center = {
+			lerp = 0.05
+		},
+		focus = {
+			lerp = 0.025
+		}
+	}
 
 	function playerMeta:CanOverrideView()
+		if (hook.Run("ShouldDisableThirdperson", self) == true) then
+			return false
+		end
+
+		if ((IsValid(ix.gui.characterMenu) and !ix.gui.characterMenu:IsClosing() and ix.gui.characterMenu:IsVisible()) or
+			(IsValid(ix.gui.menu) and ix.gui.menu:GetCharacterOverview())) then
+			return false
+		end
+
 		local entity = Entity(self:GetLocalVar("ragdoll", 0))
 
-		if (IsValid(ix.gui.characterMenu) and !ix.gui.characterMenu:IsClosing() and ix.gui.characterMenu:IsVisible()) then
-			return false
-		end
-
-		if (IsValid(ix.gui.menu) and ix.gui.menu:GetCharacterOverview()) then
-			return false
-		end
-
-		if (ix.option.Get("thirdpersonEnabled", false) and
+		if (
+			ix.option.Get("thirdpersonEnabled", false) and
 			!IsValid(self:GetVehicle()) and
-			isAllowed() and
-			IsValid(self) and
+			ix.config.Get("thirdperson", false) and
 			self:GetCharacter() and
 			!self:GetNetVar("actEnterAngle") and
 			!IsValid(entity) and
-			LocalPlayer():Alive() and
-			!LocalPlayer():IsWepRaised()
-			) then
+			self:Alive() and
+			self:GetMoveType() != MOVETYPE_NOCLIP
+		) then
 			return true
 		end
+
+		return false
 	end
 
-	local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, owner
-	local clmp = math.Clamp
-	crouchFactor = 0
-
-	function PLUGIN:CalcView(client, origin, angles, fov)
-		ft = FrameTime()
-
-		if (client:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then
-			local bNoclip = LocalPlayer():GetMoveType() == MOVETYPE_NOCLIP
-
-			if ((client:OnGround() and client:KeyDown(IN_DUCK)) or client:Crouching()) then
-				crouchFactor = Lerp(ft*5, crouchFactor, 1)
-			else
-				crouchFactor = Lerp(ft*5, crouchFactor, 0)
-			end
-
-			curAng = owner.camAng or angle_zero
-			view = {}
-			traceData = {}
-				traceData.start = 	client:GetPos() + client:GetViewOffset() +
-									curAng:Up() * ix.option.Get("thirdpersonVertical", 10) +
-									curAng:Right() * ix.option.Get("thirdpersonHorizontal", 0) -
-									client:GetViewOffsetDucked() * .5 * crouchFactor
-				traceData.endpos = traceData.start - curAng:Forward() * ix.option.Get("thirdpersonDistance", 50)
-				traceData.filter = client
-				traceData.ignoreworld = bNoclip
-				traceData.mins = traceMin
-				traceData.maxs = traceMax
-			view.origin = util.TraceHull(traceData).HitPos
-			aimOrigin = view.origin
-			view.angles = curAng + client:GetViewPunchAngles()
-
-			traceData2 = {}
-				traceData2.start = 	aimOrigin
-				traceData2.endpos = aimOrigin + curAng:Forward() * 65535
-				traceData2.filter = client
-				traceData2.ignoreworld = bNoclip
-
-			local bClassic = ix.option.Get("thirdpersonClassic", false)
-
-			if (bClassic or owner:IsWepRaised() or
-				(owner:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and owner:GetVelocity():Length() >= 10)) then
-				client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle())
-			else
-				local currentAngles = client:EyeAngles()
-				currentAngles.pitch = (util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle().pitch
-
-				client:SetEyeAngles(currentAngles)
-			end
-
-			return view
+	function PLUGIN:CalcView(client, origin, angle, fov)
+		if (!client:CanOverrideView() or client:GetViewEntity() != LocalPlayer()) then
+			camera.angle = client:EyeAngles()
+			return
 		end
+
+		local frameTime = FrameTime()
+		local vertical = ix.option.Get("thirdpersonVertical", 6)
+		local horizontal = ix.option.Get("thirdpersonHorizontal", 10)
+		local distance = ix.option.Get("thirdpersonDistance", 45)
+		local crouchHeight = ix.option.Get("thirdpersonCrouchOffset", 6)
+
+		camera.left.x, camera.center.x, camera.focus.x, camera.right.x = distance * 0.33, distance, distance * 0.33, distance * 0.33 -- distance
+		camera.left.y, camera.center.y, camera.focus.y, camera.right.y = horizontal, horizontal, horizontal, 32 -- horizontal
+		camera.left.z, camera.center.z, camera.focus.z, camera.right.z = vertical, vertical, vertical, vertical -- vertical
+		camera.focus.crouch = crouchHeight == 0 and vertical or crouchHeight -- crouch offset
+		camera.targetFOV = self.zoomed and 70 or 0 -- fov
+		camera.punch = client:GetViewPunchAngles() -- viewpunch
+
+		if (!client:GetNetVar("brth", false) and client:KeyDown(IN_SPEED)) then
+			if (client:KeyDown(IN_FORWARD) or client:KeyDown(IN_BACK) or client:KeyDown(IN_MOVELEFT) or client:KeyDown(IN_MOVERIGHT)) then
+				camera.targetFOV = fov + 5
+			end
+		end
+
+		if (client:KeyDown(IN_DUCK)) then
+			camera.position.z = Lerp(frameTime * 5, camera.position.z, camera.focus.crouch)
+		else
+			camera.position.z = Lerp(frameTime * 5, camera.position.z, camera.center.z)
+		end
+
+		camera.fov = Lerp(frameTime * 7, camera.fov, camera.targetFOV == 0 and fov or camera.targetFOV)
+		camera.position.x = Lerp(camera.center.lerp, camera.position.x, camera.center.x)
+		camera.position.y = Lerp(camera.center.lerp, camera.position.y, camera.center.y)
+
+		local offset = origin - (camera.angle:Forward() * camera.position.x) + (camera.angle:Right() * camera.position.y) + (camera.angle:Up() * camera.position.z)
+
+		-- check if the camera will hit something
+		local collisionTrace = util.TraceHull({
+			start = client:EyePos() - camera.angle:Forward() * 4,
+			endpos = offset,
+			mins = Vector(-4, -4, -4),
+			maxs = Vector(4, 4, 4),
+			filter = function(entity)
+				return entity != client or entity:GetOwner() != client
+			end
+		})
+
+		if (collisionTrace.Hit) then
+			offset = collisionTrace.HitPos
+			camera.bBlocked = collisionTrace.HitPos:Distance(client:EyePos()) <= 15
+		else
+			camera.bBlocked = false
+		end
+
+		if (camera.bBlocked) then
+			return
+		end
+
+		-- from camera pos to aim pos
+		local camTrace = util.TraceLine({
+			start = offset + (camera.angle:Forward() * distance * 1.2),
+			endpos = offset + (camera.angle:Forward() * 32768),
+			filter = client,
+			mask = MASK_OPAQUE
+		})
+
+		local entTrace = util.TraceLine({
+			start = offset + (camera.angle:Forward() * distance * 1.2),
+			endpos = offset + (camera.angle:Forward() * 32768),
+			filter = client,
+			mask = MASK_SHOT
+		})
+
+		local finalPos = IsValid(entTrace.Entity) and entTrace.HitPos or camTrace.HitPos
+
+	--[[
+		local clearTrace = util.TraceLine({
+			start = client:EyePos(),
+			endpos = finalPos,
+			mask = MASK_SHOT,
+			filter = client
+		})
+
+		if (clearTrace.Fraction <= 0.9) then
+			CrosshairBlocked = true
+		else
+			CrosshairBlocked = false
+		end
+	]]
+
+		client:SetEyeAngles((finalPos - client:EyePos()):Angle(), true)
+
+		local angles = camera.angle + (camera.punch * camera.punchScale)
+		local view = {}
+
+		view.origin = offset
+		view.angles = angles
+		view.fov = camera.fov
+		view.drawviewer = true
+		client.ixCameraPosition = offset
+		client.ixCameraAngle = angles
+
+		return view
 	end
 
-	local diff, fm, sm
-	function PLUGIN:CreateMove(cmd)
-		owner = LocalPlayer()
+	function PLUGIN:InputMouseApply(_, x, y, angle)
+		local client = LocalPlayer()
 
-		if (owner:CanOverrideView() and owner:GetMoveType() != MOVETYPE_NOCLIP and
-			LocalPlayer():GetViewEntity() == LocalPlayer()) then
-			fm = cmd:GetForwardMove()
-			sm = cmd:GetSideMove()
-			diff = (owner:EyeAngles() - (owner.camAng or Angle(0, 0, 0)))[2] or 0
-			diff = diff / 90
+		if (!client:CanOverrideView()) then
+			return
+		end
 
-			cmd:SetForwardMove(fm + sm * diff)
-			cmd:SetSideMove(sm + fm * diff)
+		local weapon = client:GetActiveWeapon()
+
+		if (IsValid(weapon) and weapon:GetClass() == "weapon_physgun" and client:KeyDown(IN_USE)) then
 			return false
 		end
-	end
 
-	function PLUGIN:InputMouseApply(cmd, x, y, ang)
-		owner = LocalPlayer()
+		camera.angle.p = math.Clamp(math.NormalizeAngle(camera.angle.p + y / 50), -90, 90)
+		camera.angle.y = math.NormalizeAngle(camera.angle.y - (x / 50))
 
-		if (!owner.camAng) then
-			owner.camAng = Angle(0, 0, 0)
-		end
-
-		owner.camAng.p = clmp(math.NormalizeAngle(owner.camAng.p + y / 50), -85, 85)
-		owner.camAng.y = math.NormalizeAngle(owner.camAng.y - x / 50)
-
-		if (owner:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then
+		if (!camera.bBlocked) then
 			return true
 		end
 	end
 
-	function PLUGIN:ShouldDrawLocalPlayer()
-		if (LocalPlayer():GetViewEntity() == LocalPlayer() and !IsValid(LocalPlayer():GetVehicle())) then
-			return LocalPlayer():CanOverrideView()
+	function PLUGIN:CreateMove(cUserCmd)
+		if (!LocalPlayer():CanOverrideView()) then
+			return
 		end
+
+		local desiredYaw = camera.angle.y
+		local currentYaw = LocalPlayer():EyeAngles().y
+		local offsetYaw = desiredYaw - currentYaw
+		local correctedYaw = Vector(cUserCmd:GetForwardMove(), cUserCmd:GetSideMove(), 0)
+		local moveLength = correctedYaw:Length()
+
+		correctedYaw = correctedYaw:Angle().y
+		correctedYaw = Angle(0, correctedYaw - offsetYaw, 0)
+		correctedYaw = correctedYaw:Forward()
+		cUserCmd:SetForwardMove(correctedYaw.x * moveLength)
+		cUserCmd:SetSideMove(correctedYaw.y * moveLength)
 	end
+
+	hook.Add("PlayerEnterSequence", "ixBlockCameraOnAct", function()
+		camera.bBlocked = true
+	end)
+
+	concommand.Add("ix_togglethirdperson", function()
+		if (ix.config.Get("thirdperson", false)) then
+			ix.option.Set("thirdpersonEnabled", !ix.option.Get("thirdpersonEnabled"))
+		end
+	end)
 end

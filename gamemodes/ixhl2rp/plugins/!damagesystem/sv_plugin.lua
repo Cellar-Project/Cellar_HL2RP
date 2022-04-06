@@ -3,6 +3,7 @@ util.AddNetworkString("ixBleedingEffect")
 util.AddNetworkString("ixCritData")
 util.AddNetworkString("ixCritUse")
 util.AddNetworkString("ixCritApply")
+util.AddNetworkString('RagdollMenu')
 
 function PLUGIN:TakeAdvancedDamage(entity, bloodDmgInfo)
 	if !entity:IsPlayer() or !entity:Alive() then
@@ -20,6 +21,7 @@ end
 
 do
 	local CHAR = ix.meta.character
+	local PLUGIN = PLUGIN
 
 	function CHAR:SetupUnconscious()
 		local player = self:GetPlayer()
@@ -34,7 +36,7 @@ do
 			if !player:Alive() then
 				return
 			end
-			
+
 			local shock = self:GetShock()
 
 			if shock > 0 then
@@ -42,8 +44,10 @@ do
 			end
 
 			local blood = self:GetBlood()
+			local hp = PLUGIN:GetMinimalHealth(self)
+			local head = self:GetLimbHealth("head")
 
-			if blood >= 3000 then
+			if (blood >= 3000) and (hp >= 38) and (head >= 5) then
 				if player:IsUnconscious() and !player.ixUnconsciousOut then
 					player:SetAction("@wakingUp", 100, function(player)
 						player.ixUnconsciousOut = nil
@@ -292,6 +296,14 @@ do
 		end
 
 		self:HandleBrokenBones()
+
+		local owner = self:GetPlayer()
+		local hp = PLUGIN:GetMinimalHealth(self)
+		local head = self:GetLimbHealth("head")
+
+		if ((hp < 38) or (head < 5)) and !owner:IsUnconscious() then
+			owner:SetCriticalState(true)
+		end
 	end
 
 	local PLAYER = FindMetaTable("Player")
@@ -303,7 +315,7 @@ do
 	-- @number[opt=5] getUpGrace How much time in seconds to wait before the player is able to get back up manually. Set to
 	-- the same number as `time` to disable getting up manually entirely
 	function PLAYER:SetRagdolled(bState, time, getUpGrace)
-		if (!self:Alive()) then
+		if (!self:Alive() or self:Team() == FACTION_DISPATCH) then
 			return
 		end
 
@@ -483,6 +495,10 @@ do
 			self:SetLocalVar("ragdoll", entity:EntIndex())
 			self:SetNetVar("doll", entity:EntIndex())
 			hook.Run("OnCharacterFallover", self, entity, true)
+			net.Start('RagdollMenu')
+				net.WriteUInt(self:EntIndex(), 32)
+				net.WriteUInt(entity:EntIndex(), 32)
+			net.Broadcast()
 		elseif (IsValid(self.ixRagdoll)) then
 			self.ixRagdoll:Remove()
 

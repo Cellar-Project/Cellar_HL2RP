@@ -38,7 +38,7 @@ do
 			data.filter = client
 		local target = util.TraceLine(data).Entity
 
-		if (IsValid(target) and target:IsPlayer() and target:IsRestricted()) then
+		if (IsValid(target) and target:IsPlayer() and (target:IsRestricted() or target:GetNetVar("crit"))) then
 			if (!client:IsRestricted()) then
 				Schema:SearchPlayer(client, target)
 			else
@@ -150,7 +150,7 @@ ix.command.Add("CharFallOver", {
 ix.command.Add("DoorKick", {
 	description = "Выбить дверь.",
 	OnCheckAccess = function(self, client)
-		if (!client:IsCombine()) then
+		if (!client:IsCombine()) or (!client:GetData("zombie", false)) then
 			return false
 		end
 

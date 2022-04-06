@@ -719,6 +719,7 @@ ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_hawke.mdl", "cel
 ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_rochelle.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_wraith.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/oldsuits/female_zoey.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/ecompd/myra.mdl", "cellarFemale")
 
 ix.anim.SetModelClass("models/cellar/characters/metropolice/male.mdl", "cellarMaleMPF")
 ix.anim.SetModelClass("models/cellar/characters/metropolice/female.mdl", "cellarFemaleMPF")
@@ -728,10 +729,129 @@ ix.anim.SetModelClass("models/cellar/characters/themask.mdl", "cellarMaleMPF")
 ix.anim.SetModelClass("models/cellar/characters/riff.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/unnamed.mdl", "cellarMale")
 
+
+-- BLYAT YA TUT OHUEL ZNATNO TOGDA 05.11.2021 VINTAGE THIEF
+-- boys
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_01.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_02.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_03.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_04.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_05.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_06.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_07.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_08.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_09.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_10.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_11.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_12.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_13.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_14.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_15.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_16.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_17.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_18.mdl", "cellarMaleMPF")
+-- girls
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_01.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_02.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_03.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_04.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_05.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_06.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_07.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_08.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_09.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_10.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_11.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_12.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_13.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_14.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_15.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_16.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_17.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/female/cca_female_18.mdl", "cellarFemaleMPF")
+-- BLYAT YA TUT ZOKONCHIL
+
+
+--BLYAT OPYAT ETO GOVNO DELAT NADO EBAT 12.03.2022 VINTAGE THIEF
+-- cca overseers
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/overseer/male/cca_overseer_01.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/overseer/male/cca_overseer_02.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/overseer/male/cca_overseer_03.mdl", "cellarMaleMPF")
+-- boys cca
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_01.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_02.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_03.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_04.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_05.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_06.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_07.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_08.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_09.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_10.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_11.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_12.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/male/cca_male_13.mdl", "cellarMaleMPF")
+-- girls cca
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_01.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_02.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_03.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_04.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_05.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_06.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_07.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_08.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_09.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_10.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_11.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_12.mdl", "cellarFemaleMPF")
+ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_13.mdl", "cellarFemaleMPF")
+-- overwatch
+ix.anim.SetModelClass("models/cellar/characters/city3/overwatch/ota_ordinal.mdl", "cellarOTA")
+ix.anim.SetModelClass("models/cellar/characters/city3/overwatch/ota_elite.mdl", "cellarOTA")
+ix.anim.SetModelClass("models/cellar/characters/city3/overwatch/ota_regular.mdl", "cellarOTA")
+-- citizen male
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_01.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_02.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_03.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_04.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_05.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_06.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_07.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_08.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_09.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_10.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_11.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_12.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_male_13.mdl", "cellarMale")
+-- citizen female
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_01.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_02.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_03.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_04.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_05.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_06.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_07.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_08.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_09.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_10.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_11.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_12.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/c3_female_13.mdl", "cellarFemale")
+-- konec
+
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_valtan.mdl", "cellarMaleMPF")
+
 ix.anim.SetModelClass("models/cellar/characters/female_02.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/chong.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/leaguemovement.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/leaguemovement_coat.mdl", "cellarMale")
+
+ix.anim.SetModelClass("models/cellar/characters/zelen.mdl", "cellarMale") -- jessy
+
+ix.anim.SetModelClass("models/vintagethief/ota/ota_ordinal.mdl", "cellarOTA")
+
+ix.anim.SetModelClass("models/vintagethief/killjoy.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/vintagethief/durham.mdl", "cellarMale")
 
 for i = 1, 9 do
 	ix.anim.SetModelClass("models/cellar/characters/oldsuits/male_0"..i.."_closed_coat_tie.mdl", "cellarMale")
@@ -742,6 +862,8 @@ for i = 1, 9 do
 	ix.anim.SetModelClass("models/cellar/characters/oldsuits/male_0"..i.."_shirt.mdl", "cellarMale")
 	ix.anim.SetModelClass("models/cellar/characters/oldsuits/male_0"..i.."_shirt_tie.mdl", "cellarMale")
 end
+
+ix.anim.SetModelClass("models/cellar/characters/malogo.mdl", "cellarMale")
 
 ix.anim.SetModelClass("models/cellar/characters/tno/chancellor.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/tno/male_02.mdl", "cellarMale")
@@ -759,6 +881,16 @@ ix.anim.SetModelClass("models/cellar/characters/tno/male_14.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/tno/male_16.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/tno/male_17.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/tno/male_18.mdl", "cellarMale")
+ix.anim.SetModelClass("models/vintagethief/malogo.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/ynb.mdl", "cellarMaleMPF")
+
+
+ix.anim.SetModelClass("models/cellar/characters/rodney.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/lubitar.mdl", "cellarMale")
+
+
+ix.anim.SetModelClass("models/cellar/characters/female_lalalar.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/dance.mdl", "cellarMale")
 
 ix.anim.SetModelClass("models/cellar/characters/combine/soldier_male.mdl", "cellarOTA")
 ix.anim.SetModelClass("models/cellar/characters/combine/elite_male.mdl", "cellarOTA")
@@ -767,6 +899,7 @@ ix.anim.SetModelClass("models/cellar/characters/combine/soldier_female.mdl", "ce
 ix.anim.SetModelClass("models/cellar/characters/combine/elite_female.mdl", "cellarFemaleMPF")
 ix.anim.SetModelClass("models/cellar/characters/combine/sniper_female.mdl", "cellarFemaleMPF")
 ix.anim.SetModelClass("models/cellar/characters/combine/stripped_male.mdl", "cellarOTA")
+ix.anim.SetModelClass("models/vintagethief/combine/ota/ota_27.mdl", "cellarOTA")
 
 ix.anim.SetModelClass("models/cellar/characters/walker.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/solomon.mdl", "cellarMale")
@@ -780,6 +913,9 @@ ix.anim.SetModelClass("models/cellar/characters/prohorov.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/krasnov.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/solomon_armor.mdl", "cellarMale")
 
+ix.anim.SetModelClass("models/vintagethief/hecu/female.mdl", "cellarFemale")
+
+ix.anim.SetModelClass("models/cellar/characters/female_terdavis.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/patricia.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/violetta.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/vintagethief/brave_squad.mdl", "cellarMaleMPF")
@@ -795,18 +931,26 @@ ix.anim.SetModelClass("models/cellar/characters/female_15_eyepatch.mdl", "cellar
 ix.anim.SetModelClass("models/cellar/characters/porter.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/riff_shirt.mdl", "cellarMale")
 
+ix.anim.SetModelClass("models/cellar/characters/male_valtan.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/voinsparti.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/ksenax.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/yellowapple.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/vintagethief/dushman.mdl", "cellarFemale")
 
-ix.anim.SetModelClass("models/vintagethief/rocky.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/whned.mdl", "cellarFemale")
 
+ix.anim.SetModelClass("models/vintagethief/rocky.mdl", "cellarMale")
+ix.anim.SetModelClass("models/vintagethief/citizens/twoozy.mdl", "cellarMale")
+
+
+ix.anim.SetModelClass("models/vintagethief/f4_rebel.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/zimmerman.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/ksenax_bo.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/328.mdl", "cellarMaleMPF")
 ix.anim.SetModelClass("models/vintagethief/415.mdl", "cellarMaleMPF")
 ix.anim.SetModelClass("models/vintagethief/moore.mdl", "cellarMaleMPF")
+
+ix.anim.SetModelClass("models/vintagethief/winter.mdl", "cellarMaleMPF")
 
 ix.anim.SetModelClass("models/vintagethief/fluod.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/retribution/retribution_fem.mdl", "cellarFemale") 
@@ -816,11 +960,35 @@ ix.anim.SetModelClass("models/vintagethief/hazmat_worker.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/hazmat_armor.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/vertexsecond.mdl", "cellarMale")
 
+--why zoutlands update's uniform was never writed in animations... why? WHY??
+
+ix.anim.SetModelClass("models/cellar/characters/hazmat/medic_male.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/hazmat/medic_female.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/hazmat/hazard_male.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/hazmat/hazard_female.mdl", "cellarFemale")
+
 ix.anim.SetModelClass("models/vintagethief/hunk.mdl", "cellarMaleMPF")
 
 ix.anim.SetModelClass("models/cellar/characters/ciri.mdl", "cellarFemale")
 
+ix.anim.SetModelClass("models/vintagethief/leon_fem.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/vintagethief/leon_battle.mdl", "cellarFemale")
+
+ix.anim.SetModelClass("models/vintagethief/teresa.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/earl_krutoi/female_oberg.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/yan/bebra.mdl", "cellarMale")
+
 ix.anim.SetModelClass("models/vintagethief/kenneth.mdl", "cellarMale")
+
+ix.anim.SetModelClass("models/cellar/characters/riff.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/vintagethief/f_stkerokik.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/vintagethief/guomindang/guomindang_female_01.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/vintagethief/guomindang/guomindang_female_02.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/vintagethief/guomindang/guomindang_male_01.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/vintagethief/guomindang/guomindang_male_02.mdl", "cellarMale")
+
+ix.anim.SetModelClass("models/cellar/characters/rolton.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/metropolice/male/cca_male_6664.mdl", "cellarMaleMPF")
 
 ix.anim.SetModelClass("models/cellar/blum.mdl", "cellarFemale")
 
@@ -870,3 +1038,11 @@ ix.anim.SetModelClass("models/cellar/custom/metropolice/guard.mdl", "cellarMaleM
 ix.anim.SetModelClass("models/vintagethief/mai.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/characters/tno/officer_female_1.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/vintagethief/bjorn.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/allcaps.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/custom/ac_female.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/custom/ac_male.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/custom/ac_male_atomanik.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/custom/ac_male_themask.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/cellar/custom/odin_male.mdl", "cellarMaleMPF")
+ix.anim.SetModelClass("models/vintagethief/alberto.mdl", "cellarMale")
+ix.anim.SetModelClass("models/vintagethief/russians_arctic.mdl", "cellarMale")

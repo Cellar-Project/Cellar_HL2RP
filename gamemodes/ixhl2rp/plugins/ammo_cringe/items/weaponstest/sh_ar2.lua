@@ -7,6 +7,7 @@ ITEM.rarity = 2
 ITEM.width = 4
 ITEM.height = 2
 ITEM.hasLock = true
+ITEM.impulse = true
 ITEM.iconCam = {
 	pos = Vector(-9, 200, 2),
 	ang = Angle(0, 270, 0),
@@ -34,7 +35,7 @@ ITEM.Info = {
 		Limb = 60,
 		Shock = {90, 1500},
 		Blood = {35, 350},
-		Bleed = 0
+		Bleed = 2
 	}
 }
 

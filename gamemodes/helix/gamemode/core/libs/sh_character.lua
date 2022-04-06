@@ -327,6 +327,10 @@ do
 		default = "John Doe",
 		index = 1,
 		OnValidate = function(self, value, payload, client)
+			if (!value) then
+				return false, "invalid", "name"
+			end
+
 			value = tostring(value):gsub("\r\n", ""):gsub("\n", "")
 			value = string.Trim(value)
 
@@ -956,8 +960,7 @@ do
 				end
 			end
 
-			print(5)
-			PrintTable(payload)
+
 
 			for k, v in SortedPairsByMemberValue(ix.char.vars, "index") do
 				local value = payload[k]

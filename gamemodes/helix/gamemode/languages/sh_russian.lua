@@ -244,6 +244,7 @@ LANGUAGE = {
 	vendorSell = "Только продавать",
 	maxStock = "Максимальное кол-во",
 	vendorFaction = "Доступ фракций",
+	vendorSearch = "Поиск...",
 	buy = "Купить",
 	vendorWelcome = "Приветствую вас в моем магазине. Желаете что-то купить?",
 	vendorBye = "Приходите еще!",

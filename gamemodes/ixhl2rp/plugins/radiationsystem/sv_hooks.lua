@@ -10,6 +10,14 @@ function PLUGIN:PlayerLoadedCharacter(client, character, lastCharacter)
 	end)
 end
 
+function PLUGIN:OnPlayerRespawn(target)
+	local character = target:GetCharacter()
+
+	if (character) then
+		character:SetRadLevel(0)
+	end
+end
+
 function PLUGIN:PlayerDeath(client)
 	local character = client:GetCharacter()
 	local timerID = "ixRadDmg" .. client:SteamID64()
@@ -106,6 +114,10 @@ function PLUGIN:RadTick(client, character)
 	end
 
 	rad = math.Round(rad + ((rad / 100) * (radResistance - (radResistance * 2))), 2)
+
+	if client:InOutlands() and rad > 0 then
+		rad = rad / 2
+	end
 
 	if rad > 0 then
 		character:SetRadLevel(character:GetRadLevel() + rad)

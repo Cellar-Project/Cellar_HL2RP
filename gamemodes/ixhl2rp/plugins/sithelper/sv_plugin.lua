@@ -3,6 +3,10 @@ local PLUGIN = PLUGIN
 util.AddNetworkString("ixPlayerSit")
 
 net.Receive("ixPlayerSit", function(len, player)
+	if player:Team() == FACTION_DISPATCH then
+		return
+	end
+	
 	local pos = net.ReadVector()
 	local ang = net.ReadAngle()
 	local option = math.Clamp(net.ReadUInt(5) or 1, 1, #PLUGIN.sitStances)

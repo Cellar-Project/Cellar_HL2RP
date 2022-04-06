@@ -8,25 +8,29 @@ ENT.Spawnable = true
 ENT.AdminSpawnable = true
 
 local GARBAGE_ITEMS = {
-	["empty_jug"] = 1,
-	["empty_plastic_can"] = 1,
-	["empty_plastic_bottle"] = 2
+	["electro_reclaimed"] = 2,
+	["electro_circuit"] = 1,
+	["empty_plastic_can"] = 0.5,
+	["empty_plastic_bottle"] = 0.5,
+	["empty_jug"] = 0.5,
+	["empty_plastic_can"] = 0.5
 }
+
 function ENT:GetWorkTime()
 	return 20
 end
 
 function ENT:GetStartCost()
 	return 8
-end	
+end
 
 function ENT:GetWorkItem()
 	return "plastic"
-end	
+end
 
 function ENT:GetDisplay()
 	return "PLASTIC"
-end	
+end
 
 function ENT:CanGarbageUsed(item)
 	return GARBAGE_ITEMS[item]

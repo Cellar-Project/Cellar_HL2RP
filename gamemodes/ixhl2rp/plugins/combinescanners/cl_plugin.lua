@@ -73,6 +73,8 @@ net.Receive("ScannerData", function()
 		end)
 
 		CURRENT_PHOTO = panel
+
+		hook.Run("OnScannerPhotoReceived", CURRENT_PHOTO)
 	end
 end)
 
@@ -125,6 +127,8 @@ net.Receive("ScannerEnter", function(len)
 	eject.DoClick = function()
 		ix.command.Send("ScannerEject")
 	end
+
+	hook.Run("OnScannerControls", PLUGIN.ControlPanel)
 end)
 
 net.Receive("ScannerExit", function(len)
@@ -132,4 +136,6 @@ net.Receive("ScannerExit", function(len)
 		PLUGIN.ControlPanel:Remove()
 		PLUGIN.ControlPanel = nil
 	end
+
+	hook.Run("OnScannerControlsRemove")
 end)

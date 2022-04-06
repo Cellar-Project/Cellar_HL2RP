@@ -47,6 +47,11 @@ do
 			self:SetHealth(1)
 			self:SetNetVar("crit", true)
 
+			if self:IsCombine() then
+				local letter = dispatch.AddWaypoint(self:GetShootPos(), "ПОТЕРЯ БИО-СИГНАЛА", "death", 30)
+				Schema:AddCombineDisplayMessage(string.format("Метка %s: потерян био-сигнал с наземной единицей!", letter), color_red)
+			end
+
 			character:SetData("crit", true)
 			character:SetData("critTime", os.time() + 600)
 
@@ -882,6 +887,13 @@ end
 function PLUGIN:EntityTraceAttack(attacker, target, trace, dmgInfo)
 	local weapon = dmgInfo:GetInflictor()
 	if IsValid(weapon) then
+		if attacker:GetCharacter():GetData("zombie", false) then
+			weapon.IsFists = false
+			weapon.BloodDamage = 2000
+			if target.GetCharacter then
+				ix.plugin.list["apocalypse"]:InfectCharacter(target:GetCharacter())
+			end
+		end
 		if weapon.IsFists then
 			if !self:DoFistsAttack(attacker, attacker:GetCharacter(), dmgInfo:GetInflictor(), target, trace, dmgInfo) then
 				dmgInfo:SetDamage(0)
@@ -965,12 +977,23 @@ local painSounds = {
 	Sound("vo/npc/male01/pain06.wav")
 }
 
+local painSoundsVort = {
+	Sound("vo/npc/vortigaunt/vortigese03.wav"),
+	Sound("vo/npc/vortigaunt/vortigese02.wav"),
+	Sound("vo/npc/vortigaunt/vortigese08.wav"),
+	Sound("vo/npc/vortigaunt/vortigese04.wav")
+}
+  
 function PLUGIN:PlayerAdvancedHurt(client, attacker, damage, blood, shock, limb)
 	if (client.ixNextPain or 0) < CurTime() then
 		local painSound = hook.Run("GetPlayerPainSound", client) or painSounds[math.random(1, #painSounds)]
 
 		if (client:IsFemale() and !painSound:find("female")) then
 			painSound = painSound:gsub("male", "female")
+		end
+		
+		if (client:GetCharacter():GetFaction() == FACTION_VORTIGAUNT) then
+			painSound = painSoundsVort[math.random(1, #painSoundsVort)]
 		end
 
 		client:EmitSound(painSound)
@@ -994,7 +1017,7 @@ do
 	end
 
 	function PLUGIN:PlayerLimbTakeDamage(client, limb, damage, character, hitgroup)
-		if character:GetData("armored") then
+		if character:GetData("armored") or istable(client.ixObsData) then
 			return
 		end
 
@@ -1037,6 +1060,8 @@ local names = {
 }
 
 function PLUGIN:CalculateCreatureDamage(client, lastHitGroup, dmgInfo, multiplier)
+	if istable(client.ixObsData) then dmgInfo:SetDamage(0) return end
+
 	local baseDamage = dmgInfo:GetDamage()
 
 	if baseDamage <= 0 then
@@ -1106,7 +1131,18 @@ function PLUGIN:CalculateCreatureDamage(client, lastHitGroup, dmgInfo, multiplie
 	self:PlayerAdvancedHurt(client, dmgInfo:GetAttacker(), baseDamage, 0, 0, names[lastHitGroup] or "GENERIC")
 end
 
+local random_limbs = {
+	HITGROUP_RIGHTARM,
+	HITGROUP_LEFTARM,
+	HITGROUP_RIGHTLEG,
+	HITGROUP_LEFTLEG,
+	HITGROUP_STOMACH,
+	HITGROUP_CHEST,
+	HITGROUP_HEAD
+}
 function PLUGIN:CalculatePlayerDamage(client, lastHitGroup, dmgInfo, multiplier)
+	if istable(client.ixObsData) then dmgInfo:SetDamage(0) return end
+
 	local baseDamage = dmgInfo:GetBaseDamage()
 
 	if baseDamage <= 0 then
@@ -1137,7 +1173,31 @@ function PLUGIN:CalculatePlayerDamage(client, lastHitGroup, dmgInfo, multiplier)
 
 	multiplier = inflictor.IsVortibeam and 1 or multiplier
 
-	if dmgInfo:IsDamageType(DMG_ACID) then
+	if attacker:IsNextBot() then
+		baseDamage = 5
+
+		local limb = random_limbs[math.random(1, #random_limbs)]
+		local bloodDmg = (5000 * (baseDamage / 100))
+		local shockDmg = bloodDmg * 2
+
+		baseDamage = baseDamage * 2
+		
+		character:TakeLimbDamage(limb, baseDamage)
+
+		bloodDmgInfo:SetBlood(250)
+		bloodDmgInfo:SetShock(500)
+		bloodDmgInfo:SetBleedChance(50)
+		bloodDmgInfo:SetBleedDmg(math.min(math.floor(character:GetDmgData().bleedDmg + (bloodDmg * 0.3)), 100))
+
+		local infect = false
+
+		if math.random(0, 100) <= 10 then
+			infect = true
+			ix.plugin.Get("apocalypse"):InfectCharacter(character)
+		end
+		
+		self:PlayerAdvancedHurt(client, attacker, baseDamage, bloodDmgInfo:GetBlood(), bloodDmgInfo:GetShock(), (names[limb] or "GENERIC")..(infect and " INFECT" or ""))
+	elseif dmgInfo:IsDamageType(DMG_ACID) then
 		character:TakeOverallLimbDamage(baseDamage * 2)
 		character:SetRadLevel(character:GetRadLevel() + (baseDamage * 10))
 
@@ -1286,7 +1346,7 @@ function PLUGIN:CalculatePlayerDamage(client, lastHitGroup, dmgInfo, multiplier)
 		end
 
 		if !inflictor.IsVortibeam and character:GetData("armored") then
-			dmgReduction = 10
+			dmgReduction = 5
 		end
 		
 		if IsValid(attackerWeapon) and attackerWeapon.IsDominator and character:GetData("armored") then
@@ -1391,10 +1451,15 @@ function PLUGIN:CalculatePlayerDamage(client, lastHitGroup, dmgInfo, multiplier)
 			dmgInfo:SetDamage(0)
 		end
 	end
-
 	character:TakeAdvancedDamage(bloodDmgInfo)
 end
 
+local mapInflictors = {
+	["trigger_hurt"] = true,
+	["train_hurt"] = true,
+	["train_nodraw"] = true,
+	["func_door"] = true
+}
 local gamemode = GM or GAMEMODE
 
 function gamemode:GetFallDamage(player, velocity)
@@ -1405,9 +1470,10 @@ function gamemode:ScalePlayerDamage(ply, hitgroup, dmginfo) end
 
 function gamemode:EntityTakeDamage(entity, dmgInfo)
 	local inflictor = dmgInfo:GetInflictor()
+	local inflictorClass = inflictor:GetClass()
 	local amount = dmgInfo:GetDamage()
 
-	if (IsValid(inflictor) and inflictor:GetClass() == "ix_item") then
+	if (IsValid(inflictor) and inflictorClass == "ix_item") then
 		dmgInfo:SetDamage(0)
 		return
 	end
@@ -1438,7 +1504,7 @@ function gamemode:EntityTakeDamage(entity, dmgInfo)
 	end
 	*/
 
-	if !IsValid(entity) then
+	if !IsValid(entity) or mapInflictors[inflictorClass] then
 		return
 	end
 

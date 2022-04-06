@@ -18,7 +18,7 @@ util.PrecacheModel( SWEP.ViewModel )
 util.PrecacheModel( SWEP.WorldModel )
 
 -- Todo, make/find a better sound.
-SWEP.ShootSound = Sound( "Airboat.FireGunRevDown" )
+SWEP.ShootSound = Sound( "" )
 
 SWEP.Tool = {}
 

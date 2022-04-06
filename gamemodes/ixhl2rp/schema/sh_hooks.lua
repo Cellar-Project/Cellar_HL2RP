@@ -365,3 +365,31 @@ function Schema:SetupMove(client, moveData, userCmd)
 		moveData:SetSideSpeed(math.Clamp(moveData:GetSideSpeed(), -client:GetWalkSpeed(), client:GetWalkSpeed()))
 	end
 end
+
+function Schema:InitializedPlugins()
+	for _, v in pairs(weapons.GetList()) do
+		local base = v.Base
+
+		if (base == "arccw_base" or base == "arccw_base_melee" or base == "arccw_base_nade") then
+			v.HoldtypeHolstered = v.HoldtypeActive
+		end
+	end
+end
+
+function Schema:InitializedChatClasses()
+	ix.chatLanguages.AddChatType("radio")
+	ix.chatLanguages.AddChatType("radio_eavesdrop")
+	ix.chatLanguages.AddChatType("request")
+	ix.chatLanguages.AddChatType("request_eavesdrop")
+	ix.chatLanguages.AddChatType("request_loopback")
+	ix.chatLanguages.AddChatType("dispatch")
+	ix.chatLanguages.AddChatType("dispatch_radio")
+	ix.chatLanguages.AddChatType("dispatch_chat")
+	ix.chatLanguages.AddChatType("broadcast")
+end
+
+function Schema:PhysgunPickup(client, entity)
+	if (entity:GetNWBool("IsPermaEntity")) then
+		return false
+	end
+end

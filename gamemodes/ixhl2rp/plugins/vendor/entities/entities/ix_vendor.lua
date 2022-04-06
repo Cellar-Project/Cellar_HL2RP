@@ -15,7 +15,7 @@ end
 
 function ENT:Initialize()
 	if (SERVER) then
-		self:SetModel("models/mossman.mdl")
+		self:SetModel("models/Humans/Group02/male_08.mdl")
 		self:SetUseType(SIMPLE_USE)
 		self:SetMoveType(MOVETYPE_NONE)
 		self:DrawShadow(true)
@@ -23,13 +23,17 @@ function ENT:Initialize()
 		self:SetCollisionBounds(Vector(-16, -16, 0), Vector(16, 16, 72))
 		self:SetBloodColor(BLOOD_COLOR_RED)
 
+		self.password = ""
+		self.card_access = ""
 		self.items = {}
 		self.messages = {}
 		self.factions = {}
 		self.classes = {}
+		self.Sessions = {}
 
-		self:SetDisplayName("John Doe")
-		self:SetDescription("")
+		self:SetDisplayName("Le Happy Merchant")
+		self:SetDescription("Constantly rubs his hands")
+		self:OnChangedAnim("Idlepackage")
 
 		self.receivers = {}
 
@@ -47,12 +51,23 @@ end
 function ENT:CanAccess(client)
 	local bAccess = false
 	local uniqueID = ix.faction.indices[client:Team()].uniqueID
+	local free_access = true
+
+	if (self.password != "") then
+		free_access = false
+	end
+
+	if (self.card_access != "") then
+		free_access = false
+		if (client:GetCharacter():HasIDAccess(self.card_access)) then
+			return true
+		end
+	end
 
 	if (self.factions and !table.IsEmpty(self.factions)) then
+		free_access = false
 		if (self.factions[uniqueID]) then
 			bAccess = true
-		else
-			return false
 		end
 	end
 
@@ -61,11 +76,19 @@ function ENT:CanAccess(client)
 		local classID = class and class.uniqueID
 
 		if (classID and !self.classes[classID]) then
-			return false
+			bAccess = false
 		end
 	end
-
-	return true
+	if (free_access or bAccess) then
+		return true
+	end
+	if (self.password == "") then
+		return false
+	end
+	if (self.Sessions[client:GetCharacter():GetID()]) then
+		return true
+	end
+	return false
 end
 
 function ENT:GetStock(uniqueID)
@@ -168,6 +191,23 @@ if (SERVER) then
 			if number and number != "" then
 				self:SetBodygroup(i, tonumber(number))
 			end
+		end
+	end
+
+	function ENT:OnChangedAccess(access)
+		self.card_access = access
+	end
+
+	function ENT:OnChangedPassword(password)
+		self.password = password
+	end
+
+	function ENT:onEnteredPassword(client, password)
+		if (self.password == "") then
+			return
+		end
+		if (password and password == self.password) then
+			self.Sessions[client:GetCharacter():GetID()] = true
 		end
 	end
 	
@@ -392,5 +432,106 @@ properties.Add("ixvendor_bg", {
 		local text = net.ReadString()
 
 		entity:OnChangedBodyGroups(text)
+	end
+})
+
+properties.Add("ixvendor_access", {
+	MenuLabel = "Set Vendor Access",
+	Order = 400,
+	MenuIcon = "icon16/tag_blue_edit.png",
+
+	Filter = function(self, entity, client)
+		if (entity:GetClass() != "ix_vendor") then return false end
+		if (!gamemode.Call("CanProperty", client, "ixvendor_access", entity)) then return false end
+
+			return true
+	end,
+
+	Action = function(self, entity)
+		Derma_StringRequest("Specify Card Access", "", "cmbMpfAll", function(text)
+			self:MsgStart()
+			net.WriteEntity(entity)
+			net.WriteString(text)
+			self:MsgEnd()
+		end)
+	end,
+
+	Receive = function(self, length, client)
+		local entity = net.ReadEntity()
+
+		if (!IsValid(entity)) then return end
+		if (!self:Filter(entity, client)) then return end
+
+		local text = net.ReadString()
+
+		entity:OnChangedAccess(text)
+	end
+})
+
+properties.Add("ixvendor_password_set", {
+	MenuLabel = "Set Vendor Password",
+	Order = 400,
+	MenuIcon = "icon16/tag_blue_edit.png",
+
+	Filter = function(self, entity, client)
+		if (entity:GetClass() != "ix_vendor") then return false end
+		if (!gamemode.Call("CanProperty", client, "ixvendor_password_set", entity)) then return false end
+
+			return true
+	end,
+
+	Action = function(self, entity)
+		Derma_StringRequest("Specify Password", "", "qwerty", function(text)
+			self:MsgStart()
+			net.WriteEntity(entity)
+			net.WriteString(text)
+			self:MsgEnd()
+		end)
+	end,
+
+	Receive = function(self, length, client)
+		local entity = net.ReadEntity()
+
+		if (!IsValid(entity)) then return end
+		if (!self:Filter(entity, client)) then return end
+
+		local text = net.ReadString()
+
+		entity:OnChangedPassword(text)
+	end
+})
+
+properties.Add("ixvendor_password_enter", {
+	MenuLabel = "Enter Vendor Password",
+	Order = 400,
+	MenuIcon = "icon16/tag_blue_edit.png",
+	-- self.Sessions[activator:GetCharacter():GetID()]
+	-- self.Sessions[activator:GetCharacter():GetID()] = true
+
+	Filter = function(self, entity, client)
+		if (entity:GetClass() != "ix_vendor") then return false end
+		-- if (!gamemode.Call("CanProperty", client, "ixvendor_password_set", entity)) then return false end
+
+			return true
+	end,
+
+	Action = function(self, entity)
+		Derma_StringRequest("Enter Password", "", "", function(text)
+			self:MsgStart()
+			net.WriteEntity(entity)
+			net.WriteString(text)
+			self:MsgEnd()
+		end)
+	end,
+
+	Receive = function(self, length, client)
+		local entity = net.ReadEntity()
+
+		if (!IsValid(entity)) then return end
+		if (!self:Filter(entity, client)) then return end
+
+		local text = net.ReadString()
+
+		entity:onEnteredPassword(client, text)
 	end
 })

@@ -61,7 +61,7 @@ function PLUGIN:SaveData()
 	end
 end
 
-function PLUGIN:CreateDatafile(name, cid, regid, access, callback)
+function PLUGIN:CreateDatafile(name, cid, regid, access, callback, rank)
 	local GenericData = {
 		bol = false,
 		bol_reason = "",
@@ -69,7 +69,8 @@ function PLUGIN:CreateDatafile(name, cid, regid, access, callback)
 		restricted = false,
 		restricted_reason = "",
 		status = "Citizen",
-		last_seen = os.time()
+		last_seen = os.time(),
+		rank = rank or 0
 	}
 
 	local CivilianData = {
@@ -125,7 +126,7 @@ function PLUGIN:OnIDCardInstanced(item)
 		self:CreateDatafile(name, cid, regid, access, function(id)
 			print("Datafile created for ", item, id)
 			item:SetData("datafileID", id)
-		end)
+		end, item.DefaultRank)
 	else
 		print("Datafile loaded for ", item)
 	end
@@ -265,6 +266,8 @@ function PLUGIN:CharacterLoaded(character)
 
 		if cid then
 			player.ixDatafile = cid:GetData("datafileID")
+
+			hook.Run("CharacterDatafileLoaded", character)
 		end
 	end)
 end
@@ -314,6 +317,16 @@ netstream.Hook("UpdateCivilStatus", function(client, datafileID, civilStatus)
 	PLUGIN:RefreshDatafile(client, datafileID)
 end) --{target, tier})
 
+netstream.Hook("UpdateRankStatus", function(client, datafileID, rank)
+	local char = client:GetCharacter()
+
+	if char:ReturnDatafilePermission() < 4 then return end
+	if !PLUGIN:HasDatafileAccess(char, datafileID) then return end
+
+	PLUGIN:SetRankStatus(datafileID, rank, client, char)
+	PLUGIN:RefreshDatafile(client, datafileID)
+end)
+
 netstream.Hook("AddDatafileEntry", function(client, datafileID, category, text, points)
 	local char = client:GetCharacter()
 
@@ -323,6 +336,19 @@ netstream.Hook("AddDatafileEntry", function(client, datafileID, category, text, 
 
 	PLUGIN:AddEntry(client, datafileID, category, text, points, false)
 end) --{target, category, text, points});
+
+netstream.Hook("CmbAddDatafileEntry", function(client, datafileID, category, text, points)
+	local char = client:GetCharacter()
+
+	if char:ReturnDatafilePermission() < 4 then return end
+	if !PLUGIN:HasDatafileAccess(char, datafileID) then return end
+
+	local new_points = hook.Run("DatafileCombineModifyPoints", client, datafileID, points)
+
+	points = new_points or points
+	
+	PLUGIN:AddEntry(client, datafileID, category, text, points, false)
+end)
 
 netstream.Hook("SetBOL", function(client, datafileID)
 	local char = client:GetCharacter()

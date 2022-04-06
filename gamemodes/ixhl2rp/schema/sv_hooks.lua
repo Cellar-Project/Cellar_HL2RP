@@ -13,12 +13,14 @@ function Schema:LoadData()
 	self:LoadRationDispensers()
 	self:LoadVendingMachines()
 	self:LoadCombineMonitors()
+	-- self:LoadForceFields()
 end
 
 function Schema:SaveData()
 	self:SaveRationDispensers()
 	self:SaveVendingMachines()
 	self:SaveCombineMonitors()
+	-- self:SaveForceFields()
 end
 
 function Schema:PlayerSwitchFlashlight(client, enabled)
@@ -112,10 +114,10 @@ function Schema:CharacterVarChanged(character, key, oldValue, value)
 end
 
 function Schema:PlayerFootstep(client, position, foot, soundName, volume)
-	local factionTable = ix.faction.Get(client:Team())
+	-- local factionTable = ix.faction.Get(client:Team())
 
-	if (factionTable.runSounds and client:IsRunning()) then
-		client:EmitSound(factionTable.runSounds[foot])
+	if (client:GetCharacter():GetData("heavy") and client:IsRunning()) then
+		client:EmitSound(({[0] = "NPC_MetroPolice.RunFootstepLeft", [1] = "NPC_MetroPolice.RunFootstepRight"})[foot])
 		return true
 	end
 
@@ -129,10 +131,8 @@ end
 
 function Schema:PlayerDeath(client, inflicter, attacker)
 	if (client:IsCombine()) then
-		local location = client:GetArea() or "unknown location"
-
-		self:AddCombineDisplayMessage("@cLostBiosignal")
-		self:AddCombineDisplayMessage("@cLostBiosignalLocation", Color(255, 0, 0, 255), location)
+		local letter = dispatch.AddWaypoint(client:GetShootPos(), "ПОТЕРЯ БИО-СИГНАЛА", "death", 60)
+		self:AddCombineDisplayMessage(string.format("Метка %s: потерян био-сигнал с наземной единицей!", letter), color_red)
 
 		local sounds = {"npc/overwatch/radiovoice/on1.wav", "npc/overwatch/radiovoice/lostbiosignalforunit.wav"}
 		local chance = math.random(1, 7)
@@ -184,8 +184,12 @@ function Schema:PlayerStaminaGained(client)
 end
 
 function Schema:GetPlayerPainSound(client)
-	if (client:IsCombine()) then
+	if (client:IsCombine()) and (client:GetCharacter():HasVisor()) then
 		return "NPC_MetroPolice.Pain"
+	end
+
+	if client:GetCharacter():GetFaction() == FACTION_VORTIGAUNT then
+		return "npc_vortigaunt.vort_pain10"
 	end
 end
 
@@ -208,14 +212,16 @@ function Schema:GetPlayerPunchDamage()
 end
 
 local voiceChatTypes = {
-    ["ic"] = true,
-    ["w"] = true,
-    ["y"] = true,
-    ["radio"] = true,
-    ["dispatch"] = true
+	["ic"] = true,
+	["w"] = true,
+	["y"] = true,
+	["radio"] = true,
+	["dispatch"] = true
 }
 function Schema:PlayerMessageSend(speaker, chatType, text, anonymous, receivers, rawText)
 	if IsValid(speaker) then
+		local visor = speaker:GetCharacter():HasVisor()
+
 		if voiceChatTypes[chatType] then
 			local class = self.voices.GetClass(speaker, chatType)
 
@@ -232,7 +238,7 @@ function Schema:PlayerMessageSend(speaker, chatType, text, anonymous, receivers,
 					elseif (chatType == "dispatch") then
 						info.global = true
 					end
-					
+
 					if (info.sound) then
 						if (info.global) then
 							netstream.Start(nil, "PlaySound", info.sound)
@@ -243,11 +249,13 @@ function Schema:PlayerMessageSend(speaker, chatType, text, anonymous, receivers,
 							local snd = istable(info.sound) and info.sound[character:GetGender() or 1] or info.sound
 
 							speaker.bTypingBeep = nil
-							ix.util.EmitQueuedSounds(speaker, {snd, beeps[2]}, nil, nil, volume)
+							if visor then
+								ix.util.EmitQueuedSounds(speaker, {snd, beeps[2]}, nil, nil, volume)
+							end
 						end
 					end
 
-					if (speaker:IsCombine() and chatType != "dispatch") then
+					if visor or (chatType == "dispatch") then
 						return string.format("<:: %s ::>", info.text)
 					else
 						return info.text
@@ -256,7 +264,7 @@ function Schema:PlayerMessageSend(speaker, chatType, text, anonymous, receivers,
 			end
 
 			if (chatType == "ic" or chatType == "w" or chatType == "y") then
-				if (speaker:IsCombine()) then
+				if visor then
 					return string.format("<:: %s ::>", text)
 				end
 			end
@@ -268,7 +276,7 @@ function Schema:CanPlayerJoinClass(client, class, info)
 	if client:Team() == FACTION_ZOMBIE then
 		return true
 	end
-	
+
 	if (client:IsRestricted()) then
 		client:Notify("You cannot change classes when you are restrained!")
 
@@ -286,12 +294,18 @@ function Schema:PlayerSpray(client)
 	return true
 end
 
+function Schema:EntityTakeDamage(target)
+	if (target:GetClass() == "prop_physics" and target:GetNWBool("IsPermaEntity")) then
+		return true
+	end
+end
+
 netstream.Hook("PlayerChatTextChanged", function(client, key)
 	if (Schema:ShouldPlayTypingBeep(client, key) and !client.bTypingBeep) then
-		local faction = ix.faction.indices[client:GetCharacter():GetFaction()]
-		local beeps = faction.typingBeeps
+		local beeps = {"NPC_MetroPolice.Radio.On", "NPC_MetroPolice.Radio.Off"}
+		local char = client:GetCharacter()
 
-		if istable(beeps) then
+		if char and char:HasVisor() then
 			client:EmitSound(beeps[1])
 		end
 
@@ -301,10 +315,10 @@ end)
 
 netstream.Hook("PlayerFinishChat", function(client)
 	if (Schema:ShouldPlayTypingBeep(client, "ic") and client.bTypingBeep) then
-		local faction = ix.faction.indices[client:GetCharacter():GetFaction()]
-		local beeps = faction.typingBeeps
+		local beeps = {"NPC_MetroPolice.Radio.On", "NPC_MetroPolice.Radio.Off"}
+		local char = client:GetCharacter()
 
-		if istable(beeps) then
+		if char and char:HasVisor() then
 			client:EmitSound(beeps[2])
 		end
 
