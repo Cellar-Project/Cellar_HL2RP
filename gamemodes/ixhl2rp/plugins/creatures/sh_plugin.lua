@@ -102,12 +102,20 @@ end
 
 function PLUGIN:StartCommand(client, cmd)
 	local info = client:GetClassTable()
-	
-	if info then
-		if info.jump then
-			if SERVER and client:KeyPressed(IN_JUMP) then
+
+	if info and info.jump then
+		local curTime = CurTime()
+
+		if client:KeyPressed(IN_JUMP) and curTime >= (client.ixNextJump or 0) then
+			if SERVER then
 				info.jump(client, info)
 			end
+
+			client.ixNextJump = curTime + 1.5
+		end
+
+		if (curTime < (client.ixNextJump or 0)) then
+			cmd:RemoveKey(IN_JUMP)
 		end
 	end
 end
