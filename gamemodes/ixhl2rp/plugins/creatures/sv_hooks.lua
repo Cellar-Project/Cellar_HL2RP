@@ -1,3 +1,4 @@
+
 function PLUGIN:PlayerJoinedClass(client, class)
 	local classTable = ix.class.list[class]
 	
@@ -106,7 +107,7 @@ function PLUGIN:DoAnimationEvent(client, event, data)
 end
 
 function PLUGIN:PlayerTick(client)
-	if client:IsBot() then
+	if client:IsBot() or !client:Alive() then
 		return
 	end
 

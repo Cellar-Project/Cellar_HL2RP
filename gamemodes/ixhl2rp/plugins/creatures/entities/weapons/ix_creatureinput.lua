@@ -123,7 +123,6 @@ function SWEP:PrimaryAttack()
 end;
 
 function SWEP:SecondaryAttack()
-	print(5)
 	if (!IsFirstTimePredicted()) then return; end;
 	if (!self.infoTable) then return; end;
 	if (CLIENT) then return; end;

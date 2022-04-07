@@ -35,16 +35,19 @@ CLASS.infoTable = {
 		DMG_RADIATION
 	},
 
-	jump = function(player, infoTable)
-		local v = player:EyeAngles():Forward();
-			v.z = math.max(v.z / 2, 0);
-		player:SetVelocity(v * 400);
-		player:SoundEvent("attack");
-		player.canBite = true;
+	jump = {
+		delay = 1.5,
+		func = function(player, infoTable)
+			local v = player:EyeAngles():Forward();
+				v.z = math.max(v.z / 2, 0);
+			player:SetVelocity(v * 400);
+			player:SoundEvent("attack");
+			player.canBite = true;
 
-		player:ForceSequence(false)
-		player:ForceSequence("attack", nil, 1, true)
-	end,
+			player:ForceSequence(false)
+			player:ForceSequence("attack", nil, 1, true)
+		end
+	},
 
 	glideThink = function(player, infoTable)
 		if (player.canBite) then
