@@ -1046,3 +1046,4 @@ ix.anim.SetModelClass("models/cellar/custom/ac_male_themask.mdl", "cellarMaleMPF
 ix.anim.SetModelClass("models/cellar/custom/odin_male.mdl", "cellarMaleMPF")
 ix.anim.SetModelClass("models/vintagethief/alberto.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/russians_arctic.mdl", "cellarMale")
+ix.anim.SetModelClass("models/vintagethief/olive.mdl", "cellarFemale")
