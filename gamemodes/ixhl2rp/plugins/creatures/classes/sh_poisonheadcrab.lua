@@ -47,18 +47,17 @@ CLASS.infoTable = {
 
 			player.canBite = true;
 			player:ForceSequence(false);
-			player:ForceSequence("tele_attack_a", 2.5, true);
+			player:ForceSequence("tele_attack_a", nil, 2.5, true);
 
 			timer.Simple(attackDelay, function()
-				if (!IsValid(player) or !player:OnGround()) then return; end;
+				if (!IsValid(player) or !player:Alive() or !player:OnGround()) then return; end;
 
 				local v = player:EyeAngles():Forward();
-					v.z = 0;
-				v:Normalize();
+				v.z = math.max(v.z / 2, 0);
 
 				player:SoundEvent("jump");
 				player:SetGroundEntity(nil);
-				moveData:SetVelocity(v * 400 + Vector(0, 0, 300));
+				player:SetVelocity(v * 400 + Vector(0, 0, 300));
 				player.canBite = true;
 			end);
 		end
