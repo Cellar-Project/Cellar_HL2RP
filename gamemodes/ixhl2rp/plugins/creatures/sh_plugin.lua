@@ -95,45 +95,64 @@ function PLUGIN:OnPlayerHitGround(client)
 		end
 
 		if (infoTable.noFallDamage) then
-			return false
+			return true
 		end
 	end
 end
 
-function PLUGIN:StartCommand(client, cmd)
-	local info = client:GetClassTable()
+function PLUGIN:StartCommand(client, userCmd)
+	if (client:Alive() and CurTime() < (client.ixNextJump or 0)) then
+		userCmd:RemoveKey(IN_JUMP)
+	end
+end
 
-	if info and info.jump then
-		local curTime = CurTime()
+function PLUGIN:SetupMove(client, moveData)
+	if (client:Alive() and client:GetMoveType() != MOVETYPE_NOCLIP) then
+		local info = client:GetClassTable()
 
-		if client:KeyPressed(IN_JUMP) and curTime >= (client.ixNextJump or 0) then
-			if SERVER then
-				info.jump(client, info)
+		if (info) then
+			if (info.jump) then
+				local delay, func = info.jump.delay, info.jump.func
+				local curTime = CurTime()
+				local nextJump = client.ixNextJump or 0
+
+				if (client:KeyPressed(IN_JUMP) and client:IsOnGround() and curTime >= nextJump) then
+					if (SERVER) then
+						func(client, moveData, info)
+					end
+
+					client.ixNextJump = curTime + delay
+
+					return true
+				elseif (curTime < nextJump) then
+					local newButtons = bit.band(moveData:GetButtons(), bit.bnot(IN_JUMP))
+					moveData:SetButtons(newButtons)
+				end
+			elseif (client:Team() == FACTION_SYNTH and client:GetNetVar("ChargeTime", 0) != 0) then
+				local charge = info.charge
+				local velocity = moveData:GetVelocity()
+
+				if (client:GetNetVar("ChargeTime") < CurTime() and velocity:Length() < charge.vel * 0.2) then
+					if (SERVER) then
+						client:SetNetVar("ChargeTime", nil)
+					end
+
+					moveData:SetVelocity(vector_origin)
+				else
+					moveData:SetVelocity(Angle(0, client:EyeAngles().y, 0):Forward() * charge.vel)
+				end
 			end
-
-			client.ixNextJump = curTime + 1.5
-		end
-
-		if (curTime < (client.ixNextJump or 0)) then
-			cmd:RemoveKey(IN_JUMP)
 		end
 	end
 end
 
-function PLUGIN:SetupMove(client, mv, cmd)
-	if (client:Team() == FACTION_SYNTH and client:GetNetVar("ChargeTime", 0) ~= 0) then
-		local charge = client:GetClassTable().charge
-		local vel = mv:GetVelocity()
+function PLUGIN:AdjustStaminaOffset(client)
+	local character = client:GetCharacter()
+	local faction = character and character:GetFaction()
 
-		if (client:GetNetVar("ChargeTime") < CurTime() and vel:Length() < charge.vel * 0.2) then
-			if (SERVER) then
-				client:SetNetVar("ChargeTime", nil)
-			end
-
-			mv:SetVelocity(vector_origin)
-		else
-			mv:SetVelocity(Angle(0, client:EyeAngles().y, 0):Forward() * charge.vel)
-		end
+	if (faction and (faction == FACTION_ZOMBIE or faction == FACTION_SYNTH)) then
+		-- we can use GetMaxStamina function instead of a hardcoded value but I don't want to run the same hook twice every second
+		return 100
 	end
 end
 
