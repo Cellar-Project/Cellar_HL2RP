@@ -9,6 +9,7 @@ FACTION.whitelist = true
 FACTION.bSubscriber = true
 FACTION.noGas = true
 FACTION.bNoNeeds = true
+FACTION.tempImmunity = true
 FACTION.npcRelations = {
 	["npc_zombie"] = D_LI,
 	["npc_poisonzombie"] = D_LI,
