@@ -37,10 +37,10 @@ CLASS.infoTable = {
 
 	jump = {
 		delay = 1.5,
-		func = function(player, infoTable)
+		func = function(player, moveData, infoTable)
 			local v = player:EyeAngles():Forward();
 				v.z = math.max(v.z / 2, 0);
-			player:SetVelocity(v * 400);
+			moveData:SetVelocity(v * 400);
 			player:SoundEvent("attack");
 			player.canBite = true;
 
