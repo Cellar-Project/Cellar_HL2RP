@@ -107,8 +107,8 @@ function Schema:SaveForceFields()
 		}
 	end
 
-	ix.data.Set(PLUGIN.name .. ".terminal_data", terminal_data)
-	ix.data.Set(PLUGIN.name .. ".dissolver_data", dissolver_data)
+	ix.data.Set("ForceFields" .. ".terminal_data", terminal_data)
+	ix.data.Set("ForceFields" .. ".dissolver_data", dissolver_data)
 end
 
 -- data loading
