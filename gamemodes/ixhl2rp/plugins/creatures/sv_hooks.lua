@@ -14,7 +14,7 @@ local zombieClasses = {
 function PLUGIN:OnEntityWaterLevelChanged(entity, _, level)
 	if (entity:IsPlayer() and entity:Alive()) then
 		local character = entity:GetCharacter()
-		local class = character:GetClass()
+		local class = character and character:GetClass()
 
 		if ((headcrabClasses[class] and level > 0) or (zombieClasses[class] and level > 1)) then
 			entity:Kill()
