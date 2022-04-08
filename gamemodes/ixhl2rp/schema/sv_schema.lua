@@ -36,6 +36,10 @@ function Schema:GetCitizenRationTypes(character)
 		local dID, datafile, genericdata = ix.plugin.list["datafile"]:ReturnDatafileByID(character:GetPlayer().ixDatafile)
 		local level = loyalTable[genericdata.status] or 0
 
+		if character:GetFaction() == FACTION_MPF then
+			return "ration_tier_3"
+		end
+
 		if level >= 5 then
 			return "ration_tier_4"
 		elseif level >= 3 then
