@@ -3,7 +3,7 @@
 CLASS.name = "Headcrab"
 CLASS.color = Color(200, 80, 80, 255);
 CLASS.faction = FACTION_ZOMBIE;
-CLASS.isDefault = true;
+CLASS.isDefault = false;
 CLASS.model = "models/headcrabclassic.mdl";
 CLASS.description = "A headcrab.";
 CLASS.defaultPhysDesc = "A headcrab.";
