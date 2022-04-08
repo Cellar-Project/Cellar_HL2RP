@@ -114,17 +114,19 @@ function PLUGIN:SetupMove(client, moveData)
 			if (info.jump) then
 				local delay, func = info.jump.delay, info.jump.func
 				local curTime = CurTime()
-				local nextJump = client.ixNextJump or 0
 
-				if (client:KeyPressed(IN_JUMP) and client:IsOnGround() and curTime >= nextJump) then
+				if (client:KeyPressed(IN_JUMP) and client:IsOnGround() and curTime >= client.ixNextJump) then
 					if (SERVER) then
 						func(client, moveData, info)
+
+						client.ixCouldShoot = true
+						client:SetNetVar("canShoot", true)
 					end
 
 					client.ixNextJump = curTime + delay
 
 					return true
-				elseif (curTime < nextJump) then
+				elseif (curTime < client.ixNextJump) then
 					local newButtons = bit.band(moveData:GetButtons(), bit.bnot(IN_JUMP))
 					moveData:SetButtons(newButtons)
 				end
