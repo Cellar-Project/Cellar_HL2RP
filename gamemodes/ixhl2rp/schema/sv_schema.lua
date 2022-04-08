@@ -166,7 +166,7 @@ function Schema:SearchPlayer(client, target)
 end
 
 function Schema:LoadForceFields()
-	for k, v in pairs(ix.data.Get(PLUGIN.name .. ".terminal_data") or {}) do
+	for k, v in pairs(ix.data.Get("ForceFields" .. ".terminal_data") or {}) do
 		local terminal = ents.Create("ix_dissolver_terminal")
 		terminal:SetPos(v.position)
 		terminal:SetAngles(v.angles)
@@ -174,7 +174,7 @@ function Schema:LoadForceFields()
 		terminal:SetNetVar("id", v.id)
 	end
 
-	for k, v in pairs(ix.data.Get(PLUGIN.name .. ".dissolver_data") or {}) do
+	for k, v in pairs(ix.data.Get("ForceFields" .. ".dissolver_data") or {}) do
 		local dissolver = ents.Create("ix_dissolver")
 		dissolver:SetPos(v.position)
 		dissolver:SetAngles(v.angles)
