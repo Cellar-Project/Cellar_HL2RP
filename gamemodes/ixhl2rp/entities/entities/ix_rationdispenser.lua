@@ -150,7 +150,7 @@ if (SERVER) then
 		if (!self.canUse or self.nextUseTime > CurTime()) then
 			return
 		end
-		if (client:IsCombine()) then
+		if (client:IsCombine() and !client:KeyDown(IN_SPEED)) then
 			self:SetEnabled(!self:GetEnabled())
 			self:EmitSound(self:GetEnabled() and "buttons/combine_button1.wav" or "buttons/combine_button2.wav")
 
