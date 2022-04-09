@@ -4,11 +4,24 @@ local television = Material('cellar/main/tvtexture.png')
 local staticborder = Material('cellar/main/tab/tabbordersmirrored.png')
 
 function PANEL:Init()
-	if IsValid(cellar_tab_classes) then
-		cellar_tab_classes:Remove()
+	if IsValid(ix.gui.classes) then
+		ix.gui.classes:Remove()
 	end
 
-	cellar_tab_classes = self
+	ix.gui.classes = self
+
+	self:SetSize(self:GetParent():GetSize())
+
+	self.list = vgui.Create("DPanelList", self)
+	self.list:SetPos(ScrW() - ScrW() * .916, ScrH() - ScrH() * .90)
+	self.list:SetSize(1000, 0)
+	self.list:SizeTo(ScrW() * .8333, ScrH() * .7778, .5, .1, .1)
+	self.list:EnableVerticalScrollbar()
+	self.list:SetSpacing(5)
+	self.list:SetPadding(5)
+
+	self.classPanels = {}
+	self:LoadClasses()
 
 	local parent = self:GetParent()
 	self.closing = false
@@ -27,17 +40,6 @@ function PANEL:Init()
     self:MoveTo(0, 0, .8, .1, .1)
 	LocalPlayer():EmitSound('Helix.Whoosh')
 	LocalPlayer():EmitSound('cellar.tab.amb2')
-
-
-    self.canvas = self:Add("Panel")
-    self.canvas:SetPos(ScrW() - ScrW() * .916, ScrH() - ScrH() * .90)
-    self.canvas:SetSize(1000, 0)
-    self.canvas:SizeTo(ScrW() * .8333, ScrH() * .7778, .5, .1, .1)
-    self.canvas.Paint = function(me, w, h)
-    end
-
-	local classes self.canvas:Add("ixClasses")
-
 
     local menu = self:Add("cellar.btnlist")
 	menu:SetPos(ScrW() - ScrW()/2 - 301, ScrH() - ScrH() * .0888)
@@ -70,6 +72,24 @@ function PANEL:Init()
 	----------------------------------
 end
 
+function PANEL:LoadClasses()
+	self.list:Clear()
+
+	for k, v in ipairs(ix.class.list) do
+		local no, why = ix.class.CanSwitchTo(LocalPlayer(), k)
+		local itsFull = ("class is full" == why)
+
+		if (no or itsFull) then
+			local panel = vgui.Create("ixClassPanel", self.list)
+			panel:SetClass(v)
+			table.insert(self.classPanels, panel)
+
+			self.list:AddItem(panel)
+		end
+	end
+end
+
+
 function PANEL:Paint(w, h)
 	local vignette = ix.util.GetMaterial("helix/gui/vignette.png")
     local helpframe = Material('cellar/main/tab/helpframe1604x754.png')
@@ -99,12 +119,12 @@ function PANEL:Paint(w, h)
     local animsize1 = TimedCos(.32, 15, 25, 0)
 
     surface.SetDrawColor(Color(56, 207, 248, 25))
-	surface.DrawLine(self.canvas:GetX() - 7, animslide1 + 5, self.canvas:GetWide() * 1.10233 + 7, animslide1 + 5)
-	surface.DrawLine(self.canvas:GetX() - 7, animslide1 + 6, self.canvas:GetWide() * 1.10233 + 7, animslide1 + 6)
+	surface.DrawLine(self.list:GetX() - 7, animslide1 + 5, self.list:GetWide() * 1.10233 + 7, animslide1 + 5)
+	surface.DrawLine(self.list:GetX() - 7, animslide1 + 6, self.list:GetWide() * 1.10233 + 7, animslide1 + 6)
 
     surface.SetDrawColor(Color(56, 207, 248, 255))
-	surface.DrawRect(self.canvas:GetX() - 8, animslide1, 1, animsize1)
-	surface.DrawRect(self.canvas:GetWide() * 1.10233 + 8, animslide1, 1, animsize1)
+	surface.DrawRect(self.list:GetX() - 8, animslide1, 1, animsize1)
+	surface.DrawRect(self.list:GetWide() * 1.10233 + 8, animslide1, 1, animsize1)
 
     local scoreboarder = Material('cellar/main/tab/scoreboarder1642x880.png')
     surface.SetDrawColor(color_white)
@@ -159,7 +179,23 @@ end
 
 vgui.Register("cellar.tab.classes", PANEL, "EditablePanel")
 
-if IsValid(cellar_tab_classes) then
-	cellar_tab_classes:Remove()
-	cellar_tab_classes = nil
+net.Receive("ixClassUpdate", function()
+	local client = net.ReadEntity()
+
+	if (ix.gui.classes and ix.gui.classes:IsVisible()) then
+		if (client == LocalPlayer()) then
+			ix.gui.classes:LoadClasses()
+		else
+			for _, v in ipairs(ix.gui.classes.classPanels) do
+				local data = v.data
+
+				v:SetNumber(#ix.class.GetPlayers(data.index))
+			end
+		end
+	end
+end)
+
+if IsValid(ix.gui.classes) then
+	ix.gui.classes:Remove()
+	ix.gui.classes = nil
 end
