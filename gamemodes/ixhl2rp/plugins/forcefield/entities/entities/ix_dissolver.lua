@@ -200,6 +200,8 @@ return entity end
 
 				if entity:GetClass() == "player" and not entity:GetNetVar("dissolve") then
 					if not entity:GetCharacter():HasIDAccess(self:GetAccess()) and entity:GetMoveType() ~= MOVETYPE_NOCLIP then
+						if entity:IsDispatch() then return end
+
 						entity:SetNetVar("dissolve", true)
 
 						timer.Simple(10, function()
@@ -243,7 +245,8 @@ return entity end
 			if table.HasValue(data, "player") then
 				for k, v in pairs(ents.FindInSphere(self:GetPos() + self:GetRight() * -(self:GetPos():Distance(self:GetDummy():GetPos()) / 2), 200)) do
 					if v:IsPlayer() and v:Alive() then
-						if not v:GetCharacter():HasIDAccess(self:GetAccess()) and v:Team() ~= FACTION_ADMIN and v:GetMoveType() ~= MOVETYPE_NOCLIP then
+						if not v:GetCharacter():HasIDAccess(self:GetAccess()) and v:GetMoveType() ~= MOVETYPE_NOCLIP then
+							if v:IsDispatch() then continue end
 							if not self:GetNetVar("light") then
 								if (not self.Warning or CurTime() >= self.Warning) then
 									self:EmitSound("hlacomvoice/alarms/combine_alarm_02_01_lp.mp3")
