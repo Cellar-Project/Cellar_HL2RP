@@ -1,5 +1,7 @@
 -- luacheck: globals CLASS_FASTZOMBIE
 
+local attackDelay2 = 0.5
+
 CLASS.name = "Fast Zombie"
 CLASS.color = Color(200, 80, 80, 255);
 CLASS.faction = FACTION_ZOMBIE;
@@ -53,7 +55,7 @@ CLASS.infoTable = {
 	},
 
 	attack2 = {
-		delay = 0.5,
+		delay = attackDelay2,
 		canAttackInAir = true,
 		func = function(player, infoTable)
 			local start = player:GetPos() + Vector(0, 0, 10)
@@ -67,19 +69,21 @@ CLASS.infoTable = {
 			tracedata.mins = Vector(-8, -8, -8)
 			tracedata.maxs = Vector(8, 8, 8)
 
-			player.ixAnimating = nil;
-
 			if (util.TraceHull(tracedata).Hit) then
 				if (player:IsOnGround()) then
 					player:SetVelocity(Vector(0, 0, 150))
 					player:ForceSequence("climbmount", nil, 1, true);
 				end;
 
-				player:SetLocalVelocity(Vector(0, 0, 100))
+				player:SetVelocity(Vector(0, 0, 310))
 
 				if (!player.ixAnimating) then
 					player:ForceSequence("climbloop", nil, nil, true);
 					player.ixAnimating = true;
+
+					timer.Simple(attackDelay2, function()
+						player.ixAnimating = nil
+					end)
 				end;
 			else
 				player:ForceSequence(false);
@@ -103,21 +107,18 @@ CLASS.infoTable = {
 
 	noFallDamage = true,
 
-	jump = function(player, infoTable)
-		if (player:GetVelocity():Length() > 100 and player:OnGround()) then
-			if ((player.nextLeap or 0) < CurTime()) then
-				local v = player:EyeAngles():Forward()
-					v:Normalize()
-				player:SetGroundEntity(nil)
-				player:SetVelocity(v * 650 + Vector(0, 0, 220));
-				player.canAttack = true;
-				player:SoundEvent("jump");
-				player:ForceSequence("LeapStrike", nil, nil, true);
-			end;
-		else
-			player:SetVelocity(Vector(0, 0, 500));
-		end;
-	end,
+	jump = {
+		delay = 2,
+		func = function(player, moveData, infoTable)
+			local v = player:EyeAngles():Forward()
+			v:Normalize()
+			player:SetGroundEntity(nil)
+			moveData:SetVelocity(v * 650 + Vector(0, 0, 220));
+			player.canAttack = true;
+			player:SoundEvent("jump");
+			player:ForceSequence("LeapStrike", nil, nil, true);
+		end
+   	},
 
 	glideThink = function(player, infoTable)
 		if (player.canAttack) then

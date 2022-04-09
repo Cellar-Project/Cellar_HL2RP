@@ -8,6 +8,7 @@ FACTION.useFullName = true
 FACTION.whitelist = true
 FACTION.noGas = true
 FACTION.bNoNeeds = true
+FACTION.tempImmunity = true
 --FACTION.weapons = {"ix_thermalgoggles"}
 FACTION.npcRelations = {
 	["npc_turret_floor"] = D_LI,

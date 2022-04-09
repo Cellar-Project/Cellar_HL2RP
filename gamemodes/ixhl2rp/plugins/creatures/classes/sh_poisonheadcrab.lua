@@ -1,5 +1,7 @@
 -- luacheck: globals CLASS_POISONHEADCRAB
 
+local attackDelay = 1.35
+
 CLASS.name = "Poison Headcrab"
 CLASS.color = Color(200, 80, 80, 255);
 CLASS.faction = FACTION_ZOMBIE;
@@ -38,33 +40,28 @@ CLASS.infoTable = {
 		DMG_RADIATION
 	},
 
-	jump = function(player, infoTable)
-		if ((player.ixJumpCooldown or 0) > CurTime()) then 
-			return; 
-		end;
+	jump = {
+		delay = attackDelay + 2,
+		func = function(player, moveData, infoTable)
+			player:SoundEvent("scream");
 
-		player.ixJumpCooldown = CurTime() + 1.35
-		player:SoundEvent("scream");
-
-		player.canBite = true;
-		player:ForceSequence(false);
-		player:ForceSequence("tele_attack_a", function(client)
-			client.ixJumpCooldown = nil
-		end, 2.5, true);
-
-		timer.Simple(1.35, function()
-			if (!IsValid(player) or !player:OnGround()) then return; end;
-
-			local v = player:EyeAngles():Forward();
-				v.z = 0;
-			v:Normalize();
-
-			player:SoundEvent("jump");
-			player:SetGroundEntity(nil);
-			player:SetVelocity(v * 400 + Vector(0, 0, 300));
 			player.canBite = true;
-		end);
-	end,
+			player:ForceSequence(false);
+			player:ForceSequence("tele_attack_a", nil, 2.5, true);
+
+			timer.Simple(attackDelay, function()
+				if (!IsValid(player) or !player:Alive() or !player:OnGround()) then return; end;
+
+				local v = player:EyeAngles():Forward();
+				v.z = math.max(v.z / 2, 0);
+
+				player:SoundEvent("jump");
+				player:SetGroundEntity(nil);
+				player:SetVelocity(v * 400 + Vector(0, 0, 300));
+				player.canBite = true;
+			end);
+		end
+	},
 
 	glideThink = function(player, infoTable)
 		if (player.canBite) then

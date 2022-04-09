@@ -19,9 +19,9 @@ if (SERVER) then
 	-- You can override this method in your item.
 	-- item: The current used item.
 	function ITEM:UseRepair(item, client)
-		local compatible = (self.impulse and item.impulse)
+		local compatible = (self.impulse == item.impulse)
 		if !compatible then
-			ix.util.Notify(client, "Ремнабор и оружие несовместимы")
+			client:Notify("Ремнабор и оружие несовместимы")
 			return
 		end
 		local maxDurability = item.maxDurability or ix.config.Get("maxValueDurability", 100)

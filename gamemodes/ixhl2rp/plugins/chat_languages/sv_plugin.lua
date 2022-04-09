@@ -1,7 +1,10 @@
 
 local notSolidTextures = {
+	["**studio**"] = true,
 	["TOOLS/TOOLSNODRAW"] = true,
-	["METAL/METALGATE001A"] = true
+	["METAL/METALGATE001A"] = true,
+	["METAL/METALGRATE016A"] = true,
+	["METAL/METALCOMBINEGRATE001A"] = true
 }
 
 local function SendChatMessageToPlayers(speaker, chatType, text, bAnonymous, data, receivers)
