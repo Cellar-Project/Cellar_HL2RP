@@ -8,9 +8,11 @@ PLUGIN.lerphunger = 1
 PLUGIN.lerpthirst = 1
 PLUGIN.lerpradiation = 1
 PLUGIN.lerpfilter = 1
+PLUGIN.lerpgeiger = 1
 PLUGIN.tickbrake = true
 PLUGIN.tickbrake1 = true
 PLUGIN.staminaBrake = true
+PLUGIN.tempBrake = true
 
 
 ix.util.Include('cl_cellarcitizenhud.lua')
@@ -23,7 +25,7 @@ function PLUGIN:HUDPaint()
 
     if not client:GetCharacter() then return end
 
-    if character:IsOTA() or character:IsCombine() and not character:IsCityAdmin() then
+    if character:IsCombine() or character:IsOTA() or character:IsCombine() and not character:IsCityAdmin() then
 
         if IsValid(cellar_citizenhud_needs) then
             if cellar_citizenhud_needs or not cellar_citizenhud_needs.removed then
@@ -120,13 +122,36 @@ function PLUGIN:HUDPaint()
                 end
             end
         end
+
+       -- temperature
+
+        local temperature = LocalPlayer():GetLocalVar("coldCounter", 0) / 100
+
+        if temperature < 1 then
+            PLUGIN.tempBrake = false
+            if !cellar_citizenhud_temperature or cellar_citizenhud_temperature.removed then
+                vgui.Create('cellar.citizenhud.temperature')
+            end
+        end
+
+        if temperature > 0.99 then
+            if IsValid(cellar_citizenhud_temperature) then
+                PLUGIN.tempBrake = true
+                cellar_citizenhud_temperature:Remove()
+            end
+        end
+        
     else
-        if cellar_citizenhud_needs or not cellar_citizenhud_needs.removed then
+        if IsValid(cellar_citizenhud_needs) or (cellar_citizenhud_needs and not cellar_citizenhud_needs.removed) then
             cellar_citizenhud_needs:Remove()
         end
 
-        if cellar_citizenhud_rad or not cellar_citizenhud_rad.removed then
+        if IsValid(cellar_citizenhud_rad) or (cellar_citizenhud_rad and not cellar_citizenhud_rad.removed) then
             cellar_citizenhud_rad:Remove()
+        end
+
+        if IsValid(cellar_citizenhud_temperature) or (cellar_citizenhud_temperature and not cellar_citizenhud_temperature.removed) then
+            cellar_citizenhud_temperature:Remove()
         end
     end
 end
