@@ -75,10 +75,8 @@ function PANEL:Think()
 
     self.critAlpha = TimedSin(.65, 45, 155, 0)
 
-    /*self.hinside = LocalPlayer():GetCharacter():GetHunger()/100
-    self.tinside = LocalPlayer():GetCharacter():GetThirst()/100*/
-    self.hinside = LocalPlayer():Health()/100
-    self.tinside = LocalPlayer():Health()/100
+    self.hinside = LocalPlayer():GetCharacter():GetHunger()/100
+    self.tinside = LocalPlayer():GetCharacter():GetThirst()/100
 
 end
 
@@ -165,16 +163,13 @@ end
 
 function PANEL:Think()
 
-    /*local radLevel = LocalPlayer():GetNetVar("radDmg") or 0
+    local radLevel = LocalPlayer():GetNetVar("radDmg") or 0
 	local geiger = character:HasGeigerCounter()
     local filter = character:HasWearedFilter()
 
     self.critAlpha = TimedSin(.65, 45, 155, 0)
     self.hinside = radLevel/100
-    self.tinside = filter and filter:GetFilterQuality()/filter.filterQuality*/
-
-    self.hinside = LocalPlayer():Health()/100
-    self.tinside = LocalPlayer():Health()/100
+    self.tinside = filter and filter:GetFilterQuality()/filter.filterQuality
 
 end
 
@@ -239,6 +234,7 @@ end
 
 function PANEL:Think()
 
+    self.critAlpha = TimedSin(.65, 45, 155, 0)
     self.tinside = LocalPlayer():GetLocalVar("coldCounter", 0) / 100
 
 end
