@@ -3,7 +3,7 @@ local PLUGIN = PLUGIN
 PLUGIN.name = "Advanced Cellar UI"
 PLUGIN.author = "Sectorial.Commander"
 PLUGIN.description = "Advanced Game User Interface & Animations specially for Cellar Project."
-PLUGIN.version = 1.0
+PLUGIN.version = 1.2
 
 cellar_blur_blue = Color(56, 61, 248, 225)
 cellar_blue = Color(56, 207, 248)
@@ -25,5 +25,6 @@ ix.util.Include('gui/cl_cellarconfig.lua')
 ix.util.Include('gui/cl_cellarplugins.lua')
 ix.util.Include('gui/cl_cellarcrafting.lua')
 ix.util.Include('gui/cl_cellarinformation.lua')
+ix.util.Include('gui/cl_cellarclasses.lua')
 
 ix.util.Include('languages/sh_russian.lua')

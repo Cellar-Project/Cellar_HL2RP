@@ -71,7 +71,7 @@ if (CLIENT) then
 	function PLUGIN:CalcView(client, origin, angles, fov)
 		if (CanDoHeadBob(client)) then
 			local realFrameTime = RealFrameTime()
-			local approachTime = realFrameTime *
+			local approachTime = realFrameTime * 2
 			local info = {}
 				info.speed = 1
 				info.yaw = 0.5

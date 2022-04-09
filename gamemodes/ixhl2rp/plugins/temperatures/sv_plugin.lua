@@ -21,11 +21,15 @@ function PLUGIN:TakeThermalLimbDamage(character, damage, resist, hitgroup, bShoc
 	end
 
 	if damage > 0 then
+
 		character:TakeLimbDamage(hitgroup, damage)
 		if bShock then
 			-- is it fucked up to do this 5 times every 4-8 seconds???
 			character:AddShockDamage(damage * 2)
+			character:GetPlayer():SetColdlevel(0)
 		end
+
+
 		return true
 	end
 	return false
@@ -45,9 +49,7 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 
 	-- calculate damage through outfit:
 	if outfit or isVort then
-		if outfit then
-			resist = equipment["torso"].thermalIsolation or 0
-		end
+		resist = equipment["torso"].thermalIsolation or 0
 
 		if resist >= damage then
 			damage = 0

@@ -8,6 +8,11 @@ PLUGIN.description = "Temperatures system based on areas plugin."
 ix.util.Include("sv_plugin.lua")
 ix.util.Include("sv_hooks.lua")
 
+-- HUD --
+ix.util.Include('sh_functionality.lua')
+---------
+
+
 ix.config.Add("tempTickTime", 6, "How many seconds between each time a character's body temperature is calculated.", function(_, new)
 	for _, client in ipairs(player.GetAll()) do
 		PLUGIN:SetupTempTimer(client)

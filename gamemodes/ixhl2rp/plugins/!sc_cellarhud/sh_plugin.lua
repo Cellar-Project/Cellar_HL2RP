@@ -3,7 +3,7 @@ local PLUGIN = PLUGIN
 PLUGIN.name = "Advanced Cellar HUD"
 PLUGIN.author = "Sectorial.Commander"
 PLUGIN.description = "Advanced Smart Heads-Up Display & Animations specially for Cellar Project."
-PLUGIN.version = 1.0
+PLUGIN.version = 1.2
 
 
 PLUGIN.hasWeapon = nil
@@ -22,6 +22,9 @@ PLUGIN.tickbrake4 = true
 PLUGIN.tickbrake5 = true
 PLUGIN.ammoShow = false
 
+PLUGIN.tempBrake = true
+
+
 ix.util.Include('derma/cl_cellarbar.lua')
 ix.util.Include('derma/cl_cellarneeds.lua')
 
@@ -35,7 +38,7 @@ function PLUGIN:HUDPaint() -- using HUDPaint instead of think to call the functi
 
 	if not client:GetCharacter() then return end
 
-	if character:GetFaction() == FACTION_VORTIGAUNT or character:GetFaction() == FACTION_CITIZEN or character:IsOTA() or character:IsCityAdmin() or character:IsCWU() or !character:HasVisor() then
+	if !character:HasVisor() and !character:IsOTA() then
 		if IsValid(cellar_hud_ammo) then
 			cellar_hud_ammo:SetVisible(false)
 			cellar_hud_ammo:Remove()
@@ -248,6 +251,24 @@ function PLUGIN:HUDPaint() -- using HUDPaint instead of think to call the functi
 		if cellar_needs_thirst then
 			PLUGIN.tickbrake3 = true
 			cellar_needs_thirst:Remove()
+		end
+	end
+
+	-- temperature
+
+	local temperature = LocalPlayer():GetLocalVar("coldCounter", 0) / 100
+
+	if temperature < 1 then
+		PLUGIN.tempBrake = false
+		if !cellar_citizenhud_temperature or cellar_citizenhud_temperature.removed then
+			vgui.Create('cellar.citizenhud.temperature')
+		end
+	end
+
+	if temperature > 0.99 then
+		if IsValid(cellar_citizenhud_temperature) then
+			PLUGIN.tempBrake = true
+			cellar_citizenhud_temperature:Remove()
 		end
 	end
 

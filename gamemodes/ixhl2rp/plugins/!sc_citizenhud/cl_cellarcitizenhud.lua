@@ -182,3 +182,68 @@ function PANEL:Remove()
 end
 
 vgui.Register('cellar.citizenhud.rad', PANEL, "DPanel")
+
+
+PANEL = {}
+function PANEL:Init()
+
+    if IsValid(cellar_citizenhud_temperature) then
+        cellar_citizenhud_temperature:Remove()
+    end
+
+    cellar_citizenhud_temperature = self
+
+    self.critAlpha = TimedSin(.65, 45, 155, 0)
+    self.frameInside = ColorAlpha(cellar_blue, 107)
+    self.frameCritInside = ColorAlpha(cellar_red, critAlpha)
+    self.hinside = nil
+    self.tinside = nil
+    self.client = LocalPlayer()
+    self.removed = false
+
+    self:SetAlpha(65)
+    self:SetSize(ICON_FRAME_SIZE * 3, ICON_FRAME_SIZE)
+    self:SetPos(ScrW() * .016, ScrH() * .03 + ICON_FRAME_SIZE + 8)
+    self:AlphaTo(255, .5, .7)
+    self:ParentToHUD()
+
+    self.temperature = self:Add('DPanel')
+    self.temperature:SetPos(0, 0)
+    self.temperature:SetSize(ICON_FRAME_SIZE, ICON_FRAME_SIZE)
+    self.temperature.Paint = function(me, w, h)
+        local icon = Material('cellar/main/hud/snowflake.png')
+
+        surface.SetDrawColor(self.tinside < 0.6 and LerpColor(self.critAlpha/100, self.frameInside, color_yellow) or self.tinside < 0.3 and LerpColor(self.critAlpha/100, color_yellow, self.frameCritInside) or self.frameInside)
+
+        surface.SetMaterial(icon)
+        surface.DrawTexturedRectRotated(w * .5, h * .5, ICON_SIZE, ICON_SIZE, 0)
+
+        surface.DrawRect(0, 0, w * .66, 1)
+        surface.DrawRect(0, 0, 1, h)
+        surface.DrawRect(0, h - 1, w, 1)
+        surface.DrawRect(w - 1, h * .33, 1, h * .66)
+        surface.DrawLine(w * .66, 0, w, h * .33)
+
+
+    end
+
+end
+
+function PANEL:Paint(w, h)
+end
+
+function PANEL:Think()
+
+    self.critAlpha = TimedSin(.65, 45, 155, 0)
+    self.tinside = LocalPlayer():GetLocalVar("coldCounter", 0) / 100
+
+end
+
+function PANEL:Remove()
+    self:AlphaTo(65, .5, .1, function()
+        self:SetVisible(false)
+        self.removed = true
+    end)
+end
+
+vgui.Register('cellar.citizenhud.temperature', PANEL, "DPanel")

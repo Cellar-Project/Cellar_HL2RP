@@ -44,15 +44,18 @@ CLASS.infoTable = {
 
 	jumpPower = 200,
 
-	jump = function(player, infoTable)
-		local v = player:EyeAngles():Forward();
+	jump = {
+		delay = 2,
+		func = function(player, moveData, infoTable)
+			local v = player:EyeAngles():Forward();
 			v.z = math.max(v.z / 2, 0);
-		player:SetVelocity(v * 300);
-		player:SoundEvent("jump");
-		player.canBite = true;
-		player:ForceSequence(false);
-		player:ForceSequence("jumpattack_broadcast", nil, 1, true);
-	end,
+			moveData:SetVelocity(v * 300);
+			player:SoundEvent("jump");
+			player.canBite = true;
+			player:ForceSequence(false);
+			player:ForceSequence("jumpattack_broadcast", nil, 1, true);
+		end
+	},
 
 	glideThink = function(player, infoTable)
 		if (player.canBite) then

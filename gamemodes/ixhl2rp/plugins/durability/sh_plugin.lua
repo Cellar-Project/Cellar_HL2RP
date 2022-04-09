@@ -166,17 +166,18 @@ function PLUGIN:InitializedPlugins()
 				local client = item.player
 				local itemKit = client:GetCharacter():GetInventory():HasItemOfBase("base_repair_kit")
 
-				if (itemKit and itemKit.isWeaponKit) then
+				if (itemKit and itemKit.isWeaponKit) and (item.impulse == itemKit.impulse) then
 					local quantity = itemKit:GetData("quantity", itemKit.quantity or 1) - 1
+
+
+					if (itemKit.UseRepair) then
+						itemKit:UseRepair(item, client)
+					end
 
 					if (quantity < 1) then
 						itemKit:Remove()
 					else
 						itemKit:SetData("quantity", quantity)
-					end
-
-					if (itemKit.UseRepair) then
-						itemKit:UseRepair(item, client)
 					end
 
 					if (itemKit.useSound) then

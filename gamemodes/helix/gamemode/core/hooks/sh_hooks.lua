@@ -495,6 +495,14 @@ do
 	end
 end
 
+function GM:SetupMove(client, moveData)
+	if (!client:Alive()) then
+		moveData:SetForwardSpeed(0)
+		moveData:SetSideSpeed(0)
+		moveData:SetUpSpeed(0)
+	end
+end
+
 function GM:Move(client, moveData)
 	local char = client:GetCharacter()
 
