@@ -15,12 +15,10 @@ ix.lang.AddTable("russian", {
 if (CLIENT) then
 	local hookRun = hook.Run
 	local ixOptionGet = ix.option.Get
-	local ixConfigGet = ix.config.Get
 	local mathApproach = math.Approach
 	local mathSin = math.sin
 	local mathCos = math.cos
 	local mathClamp = math.Clamp
-	local bSecondEnterence = 0
 
 	ix.option.Add("headBobSacle", ix.type.number, 1, {
 		category = "general", min = 0, max = 1, decimals = 1
