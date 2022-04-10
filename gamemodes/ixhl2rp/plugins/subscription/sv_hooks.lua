@@ -52,6 +52,7 @@ function PLUGIN:CharacterLoaded(character)
 
 	for k, faction in pairs(ix.faction.indices) do
 		if faction.bSubscriber then
+			if faction.name == "Zombie" and target:GetData("z_whitelist") then return end
 			client:SetWhitelisted(k, client:IsDonator())
 		end
 	end
