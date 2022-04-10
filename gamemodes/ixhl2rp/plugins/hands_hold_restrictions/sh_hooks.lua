@@ -10,7 +10,7 @@ local function IsCarryingCharInCrit(client)
 		local heldPlayer = IsValid(hands.heldEntity) and hands.heldEntity.ixPlayer
 
 		if (heldPlayer and heldPlayer:GetNetVar("crit")) then
-			return true
+			return heldPlayer
 		end
 	end
 
@@ -27,12 +27,14 @@ function PLUGIN:PlayerSwitchWeapon(client, _, weapon)
 end
 
 function PLUGIN:SetupMove(client, moveData)
-	if (IsCarryingCharInCrit(client)) then
+	local heldPlayer = IsCarryingCharInCrit(client)
+
+	if (heldPlayer) then
 		if (client:IsProne() and prone.CanExit(client)) then
 			prone.Exit(client)
 		end
 
-		moveData:SetMaxClientSpeed(client:GetWalkSpeed() * (speedMultipliers[client:Team()] or 0.5))
+		moveData:SetMaxClientSpeed(client:GetWalkSpeed() * (speedMultipliers[heldPlayer:Team()] or 0.5))
 	end
 end
 
