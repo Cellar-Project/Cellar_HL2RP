@@ -14,7 +14,7 @@ ITEM.Stats = {
 	[5] = 10, -- legs
 }
 ITEM.bodyGroups = { -- какие бодигруппы на какие сетаются
-	[2] = 2,
+	[1] = 1,
 }
 ITEM.RadResist = 99.75
 ITEM.primaryVisor = Vector(0.15, 0.8, 2)
