@@ -8,6 +8,16 @@ ENT.AdminSpawnable = false
 ENT.IsFactory = true
 ENT.MaxRenderDistance = math.pow(512, 2)
 
+local WORK_ITEM = "paper"
+local WORK_TIME = 15
+local METAL_GARBAGE_COUNT_START = 4
+local GARBAGE_ITEMS = {
+	["empty_carton"] = 2,
+	["empty_takeout_carton"] = 1,
+	["empty_chinese_takeout"] = 1,
+}
+local mat = Material("models/props_combine/tprotato2_sheet")
+
 function ENT:SetupDataTables()
 	self:NetworkVar("Vector", "0", "ProductPos")
 	self:NetworkVar("Float", "2", "GarbageCount")
@@ -63,7 +73,7 @@ function ENT:Initialize()
 		self.NextRandomSound = nil
 		self.StopWorkTime = nil
 	else
-		self.RT = GetRenderTargetEx("_cmb_FIndicatorRT" .. self:EntIndex() .. CurTime(), 128, 85, RT_SIZE_DEFAULT, MATERIAL_RT_DEPTH_SHARED, 0x0001, CREATERENDERTARGETFLAGS_UNFILTERABLE_OK, IMAGE_FORMAT_DEFAULT)
+		self.RT = GetRenderTargetEx("_cmb_FIndicatorRT"..self:EntIndex()..CurTime(), 128, 85, RT_SIZE_DEFAULT, MATERIAL_RT_DEPTH_SHARED, 0x0001, CREATERENDERTARGETFLAGS_UNFILTERABLE_OK, IMAGE_FORMAT_DEFAULT)
 		self.RTMat = CreateMaterial("_cmb_FIndicatorRTMAT" .. self:EntIndex() .. CurTime(), "UnlitTwoTexture", {
 			["$selfilium"] = "1",
 			["$texture2"] = "dev/dev_scanline",
@@ -106,8 +116,6 @@ if SERVER then
 		self:SetIsWorking(true)
 		self:EmitSound("plats/elevator_large_start1.wav")
 		self.NextWorkSound = CurTime() + 1.4
-
-		self.StayedCount = self:GetGarbageCount() - self:GetStartCost()
 	end
 	function ENT:Eject()
 		if self:GetIsWorking() then return end
@@ -198,18 +206,8 @@ if SERVER then
 			if !self.NextGarbageDecrease then
 				self.NextGarbageDecrease = CurTime() + ((self:GetNextWorkTime() - self:GetStartWorkTime()) - 5) / self:GetStartCost()
 			elseif self.NextGarbageDecrease and CurTime() > self.NextGarbageDecrease then
-
-				if self.StayedCount == self:GetGarbageCount() then
-
-					goto afterset
-
-				end
 				self:SetGarbageCount(math.Clamp(self:GetGarbageCount() - 1, 0, self:GetStartCost())) 
-
-				table.remove(self.Garbages,1)
-
-				::afterset::
-
+				table.remove(self.Garbages)
 				self.NextGarbageDecrease = nil
 			end
 			if CurTime() > self:GetNextWorkTime() then
@@ -291,7 +289,7 @@ else
 						var2 = 0
 					end
 				end
-
+				
 				surface.SetDrawColor(colors[2])
 				surface.DrawRect(7, 42, 114, 16)
 				surface.SetDrawColor(colors[1])
