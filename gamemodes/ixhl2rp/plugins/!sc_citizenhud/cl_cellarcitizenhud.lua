@@ -16,6 +16,8 @@ function PANEL:Init()
     self.frameCritInside = ColorAlpha(cellar_red, critAlpha)
     self.hinside = nil
     self.tinside = nil
+    self.hColorInside = nil
+    self.tColorInside = nil
     self.client = LocalPlayer()
     self.removed = false
 
@@ -32,7 +34,15 @@ function PANEL:Init()
     self.hunger.Paint = function(me, w, h)
         local icon = Material('cellar/main/hud/hunger.png')
 
-        surface.SetDrawColor(self.hinside > 0.3 and self.hinside < 0.6 and LerpColor(self.critAlpha/100, self.frameInside, color_yellow) or self.hinside < 0.3 and LerpColor(self.critAlpha/100, color_yellow, self.frameCritInside) or self.frameInside)
+        if self.hinside < 0.3 then
+            self.hColorInside = LerpColor(self.critAlpha/100, color_yellow, self.frameCritInside)
+        elseif self.hinside < 0.6 then
+            self.hColorInside = LerpColor(self.critAlpha/100, self.frameInside, color_yellow)
+        else
+            self.hColorInside = self.frameInside
+        end
+
+        surface.SetDrawColor(self.hColorInside)
 
         surface.SetMaterial(icon)
         surface.DrawTexturedRectRotated(w * .5, h * .5, ICON_SIZE, ICON_SIZE, 0)
@@ -52,7 +62,15 @@ function PANEL:Init()
     self.thirst.Paint = function(me, w, h)
         local icon = Material('cellar/main/hud/thirst.png')
 
-        surface.SetDrawColor(self.tinside > 0.3 and self.tinside < 0.6 and LerpColor(self.critAlpha/100, self.frameInside, color_yellow) or self.tinside < 0.3 and LerpColor(self.critAlpha/100, color_yellow, self.frameCritInside) or self.frameInside)
+        if self.tinside < 0.3 then
+            self.tColorInside = LerpColor(self.critAlpha/100, color_yellow, self.frameCritInside)
+        elseif self.tinside < 0.6 then
+            self.tColorInside = LerpColor(self.critAlpha/100, self.frameInside, color_yellow)
+        else
+            self.tColorInside = self.frameInside
+        end
+
+        surface.SetDrawColor(self.tColorInside)
 
         surface.SetMaterial(icon)
         surface.DrawTexturedRectRotated(w * .5, h * .5, ICON_SIZE, ICON_SIZE, 0)
@@ -89,6 +107,7 @@ function PANEL:Remove()
 end
 
 vgui.Register('cellar.citizenhud.needs', PANEL, "DPanel")
+
 
 
 

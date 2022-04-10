@@ -42,17 +42,15 @@ if SERVER then
 		end
 	end
 
-    timer.Create("warmIcrease", 2, 0, function()
-		for _, client in ipairs(player.GetAll()) do
-			local char = client:GetCharacter()
+	function PLUGIN:PlayerTick(client)
+		local char = client:GetCharacter()
 
-			if (client:Alive() and char) then
-				if (client:GetLocalVar("coldCounter") < 100) then
-					client:SetColdlevel(client:GetColdlevel() + 7)
-				end
+		if (client:Alive() and char) then
+			if (client:GetLocalVar("coldCounter") < 100) then
+				client:SetColdlevel(client:GetColdlevel() + 0.0001)
 			end
 		end
-	end)
+	end
 
 end
 
