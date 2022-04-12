@@ -1053,3 +1053,4 @@ ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/vikar.mdl", 
 ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_female_lalalar.mdl", "cellarFemaleMPF")
 ix.anim.SetModelClass("models/cultist.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_varg.mdl", "cellarMale")
+ix.anim.SetModelClass("models/vintagethief/f_garo.mdl", "cellarFemale")
