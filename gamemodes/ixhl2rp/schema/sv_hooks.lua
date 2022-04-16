@@ -13,14 +13,14 @@ function Schema:LoadData()
 	self:LoadRationDispensers()
 	self:LoadVendingMachines()
 	self:LoadCombineMonitors()
-	-- self:LoadForceFields()
+	self:LoadForceFields()
 end
 
 function Schema:SaveData()
 	self:SaveRationDispensers()
 	self:SaveVendingMachines()
 	self:SaveCombineMonitors()
-	-- self:SaveForceFields()
+	self:SaveForceFields()
 end
 
 function Schema:PlayerSwitchFlashlight(client, enabled)
@@ -71,7 +71,7 @@ function Schema:PlayerUse(client, entity)
 end
 
 function Schema:PlayerUseDoor(client, door)
-	if (client:IsCombine() or client:IsCityAdmin()) then
+	if (client:IsCombine() or client:IsCityAdmin() or client:GetCharacter():HasIDAccess('NEXUS')) then
 		if (!door:HasSpawnFlags(256) and !door:HasSpawnFlags(1024)) then
 			door:Fire("open")
 		end
@@ -302,11 +302,22 @@ end
 
 netstream.Hook("PlayerChatTextChanged", function(client, key)
 	if (Schema:ShouldPlayTypingBeep(client, key) and !client.bTypingBeep) then
-		local beeps = {"NPC_MetroPolice.Radio.On", "NPC_MetroPolice.Radio.Off"}
+		local beeps = {
+			"NPC_MetroPolice.Radio.On",
+			"hlacomvoice/beepboops/combine_radio_on_01.wav",
+			"hlacomvoice/beepboops/combine_radio_on_02.wav",
+			"hlacomvoice/beepboops/combine_radio_on_03.wav",
+			"hlacomvoice/beepboops/combine_radio_on_04.wav",
+			"hlacomvoice/beepboops/combine_radio_on_05.wav",
+			"hlacomvoice/beepboops/combine_radio_on_06.wav",
+			"hlacomvoice/beepboops/combine_radio_on_07.wav",
+			"hlacomvoice/beepboops/combine_radio_on_08.wav",
+			"hlacomvoice/beepboops/combine_radio_on_09.wav"
+		}
 		local char = client:GetCharacter()
 
 		if char and char:HasVisor() then
-			client:EmitSound(beeps[1])
+			client:EmitSound(beeps[math.random(1, #beeps)])
 		end
 
 		client.bTypingBeep = true
@@ -315,11 +326,21 @@ end)
 
 netstream.Hook("PlayerFinishChat", function(client)
 	if (Schema:ShouldPlayTypingBeep(client, "ic") and client.bTypingBeep) then
-		local beeps = {"NPC_MetroPolice.Radio.On", "NPC_MetroPolice.Radio.Off"}
+		local beeps = {
+			"NPC_MetroPolice.Radio.Off",
+			"hlacomvoice/beepboops/combine_radio_off_01.wav",
+			"hlacomvoice/beepboops/combine_radio_off_02.wav",
+			"hlacomvoice/beepboops/combine_radio_off_03.wav",
+			"hlacomvoice/beepboops/combine_radio_off_04.wav",
+			"hlacomvoice/beepboops/combine_radio_off_05.wav",
+			"hlacomvoice/beepboops/combine_radio_off_06.wav",
+			"hlacomvoice/beepboops/combine_radio_off_07.wav",
+			"hlacomvoice/beepboops/combine_radio_off_08.wav"
+		}
 		local char = client:GetCharacter()
 
 		if char and char:HasVisor() then
-			client:EmitSound(beeps[2])
+			client:EmitSound(beeps[math.random(1, #beeps)])
 		end
 
 		client.bTypingBeep = nil

@@ -2,6 +2,7 @@ PANEL = {}
 local background = Material('cellar/main/tab/otherbackground.png')
 local television = Material('cellar/main/tvtexture.png')
 local staticborder = Material('cellar/main/tab/otherborders.png')
+local infoicon = Material("cellar/main/info.png")
 
 local function CalculateWidestName(tbl)
 	local highest = 0
@@ -49,7 +50,7 @@ function PANEL:Init()
     self.model:SetCharacter(LocalPlayer():GetCharacter())
     self.model:SetPos(ScrW() - ScrW(), ScrH() - ScrH() * .90)
     self.model.Paint = function(me, w, h)
-		local card = character:GetIDCard()
+		/*local card = character:GetIDCard()
 		local frameline = Material('cellar/main/tab/characterline.png')
         surface.SetDrawColor(color_white)
 		surface.SetMaterial(frameline)
@@ -84,7 +85,7 @@ function PANEL:Init()
 			draw.SimpleText(cid, "cellar.derma.light", me:GetWide() - 16, me:GetTall()/2 - 5, cellar_blue, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
 		end
 
-		--ix.infoMenu.Add("Уровень: " .. character:GetLevel())
+		--ix.infoMenu.Add("Уровень: " .. character:GetLevel())*/
     end
 
     self.canvas = self:Add("Panel")
@@ -147,6 +148,31 @@ function PANEL:Init()
 
     self.class = self:Add('cellar.information.class')
     self.class:SetPos(ScrW() * .48, self.model:GetTall()/1.13 - self.class:GetTall()/2)
+
+	if LocalPlayer():GetCharacter():GetFaction() == FACTION_ZOMBIE or LocalPlayer():GetCharacter():GetFaction() == FACTION_SYNTH then
+		local calsses = self:Add("DButton")
+		calsses:SetPos(ScrW() * .48435, ScrH() - ScrH() * .33)
+		calsses:SetText("")
+		calsses:SetSize(32, 32)
+		calsses.OnCursorEntered = function(me)
+			if me:IsHovered() then
+				LocalPlayer():EmitSound("Helix.Rollover")
+			end
+		end
+		calsses.DoClick = function(me)
+			LocalPlayer():EmitSound('Helix.Press')
+			vgui.Create('cellar.tab.classes')
+			self:Remove()
+		end
+		calsses.Paint = function(self, w, h)
+			local bHovered = self:IsHovered() and Color(255, 30, 30, 35)
+			draw.RoundedBox(255, 0, 0, w, h, bHovered or Color(56, 207, 248, 35))
+			surface.SetDrawColor(ColorAlpha(color_black, 255))
+			draw.SimpleText('C', 'cellar.derma.light', w/2, h/2, self:IsHovered() and cellar_red or cellar_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		end
+	end
+
+
 
 	self.stats = self:Add("ixStatsPanel")
 		self.stats:SetPos(ScrW() * .6980, ScrH() * .2639)
@@ -217,7 +243,7 @@ function PANEL:Init()
 		self.limbs:SetTall(260)
 
 		self.limbsS = self.limbs:Add("ixLimbStatus")
-		self.limbsS:SetPos(self:GetWide() / 6.25 - 60, 260 / 2 - 240 / 2)
+		self.limbsS:SetPos(self:GetWide() / 1.5, 260 / 2 - 240 / 2)
 
 		self.attributes:SizeToContents()
 
