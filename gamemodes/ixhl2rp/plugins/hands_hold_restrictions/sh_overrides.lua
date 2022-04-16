@@ -3,14 +3,13 @@ if (SERVER) then
 	util.AddNetworkString("ixPickedUpPlayer")
 else
 	net.Receive("ixPickedUpPlayer", function()
-		local hands = net.ReadEntity()
+		local client = LocalPlayer()
 		local heldPlayer = net.ReadEntity()
 
-		if (heldPlayer != game.GetWorld()) then
-			hands.heldEntity = heldPlayer
-			hands.heldEntity.ixPlayer = net.ReadEntity()
+		if (IsValid(heldPlayer) and heldPlayer != game.GetWorld()) then
+			client.ixHeldPlayer = heldPlayer
 		else
-			hands.heldEntity = nil
+			client.ixHeldPlayer = nil
 		end
 	end)
 end
@@ -70,9 +69,9 @@ function ix_hands:PickupObject(entity)
 
 	-- PickupObject func is being executed only on server
 	if (self.heldEntity.ixPlayer) then
+		self:GetOwner().ixHeldPlayer = self.heldEntity.ixPlayer
+
 		net.Start("ixPickedUpPlayer")
-			net.WriteEntity(self)
-			net.WriteEntity(self.heldEntity)
 			net.WriteEntity(self.heldEntity.ixPlayer)
 		net.Send(self:GetOwner())
 
@@ -83,8 +82,9 @@ end
 function ix_hands:DropObject(bThrow)
 	-- DropObject func is being executed only on server
 	if (self.bHeldPlayerSent) then
+		self:GetOwner().ixHeldPlayer = nil
+
 		net.Start("ixPickedUpPlayer")
-			net.WriteEntity(self)
 		net.Send(self:GetOwner())
 
 		self.bHeldPlayerSent = nil
