@@ -36,6 +36,10 @@ function Schema:GetCitizenRationTypes(character)
 		local dID, datafile, genericdata = ix.plugin.list["datafile"]:ReturnDatafileByID(character:GetPlayer().ixDatafile)
 		local level = loyalTable[genericdata.status] or 0
 
+		if character:GetFaction() == FACTION_MPF then
+			return "ration_tier_3"
+		end
+
 		if level >= 5 then
 			return "ration_tier_4"
 		elseif level >= 3 then
@@ -77,15 +81,35 @@ function Schema:SaveCombineMonitors()
 	ix.data.Set("combineAccMonitors", data)
 end
 
--- function Schema:SaveForceFields()
--- 	local data = {}
+function Schema:SaveForceFields()
+	-- local terminal_data = {}
+	-- local dissolver_data = {}
 
--- 	for _, v in ipairs(ents.FindByClass("ix_forcefield")) do
--- 		data[#data + 1] = {v:GetPos(), v:GetAngles(), v:GetMode(), v:GetAccess()}
--- 	end
+	-- for i = 1, #ents.FindByClass("ix_dissolver_terminal") do
+	-- 	local terminal = ents.FindByClass("ix_dissolver_terminal")[i]
 
--- 	ix.data.Set("forceFields", data)
--- end
+	-- 	terminal_data[#terminal_data + 1] = {
+	-- 		id = terminal:id(),
+	-- 		position = terminal:GetPos(),
+	-- 		angles = terminal:GetAngles()
+	-- 	}
+	-- end
+
+	-- for i = 1, #ents.FindByClass("ix_dissolver") do
+	-- 	local dissolver = ents.FindByClass("ix_dissolver")[i]
+
+	-- 	dissolver_data[#dissolver_data + 1] = {
+	-- 		id = dissolver:id(),
+	-- 		toggle = dissolver:GetToggle(),
+	-- 		position = dissolver:GetPos(),
+	-- 		angles = dissolver:GetAngles(),
+	-- 		access = dissolver:GetAccess()
+	-- 	}
+	-- end
+
+	-- ix.data.Set("ForceFields" .. ".terminal_data", terminal_data)
+	-- ix.data.Set("ForceFields" .. ".dissolver_data", dissolver_data)
+end
 
 -- data loading
 function Schema:LoadRationDispensers()
@@ -141,14 +165,22 @@ function Schema:SearchPlayer(client, target)
 	return true
 end
 
--- function Schema:LoadForceFields()
--- 	for _, v in ipairs(ix.data.Get("forceFields") or {}) do
--- 		local field = ents.Create("ix_forcefield")
+function Schema:LoadForceFields()
+	-- for k, v in pairs(ix.data.Get("ForceFields" .. ".terminal_data") or {}) do
+	-- 	local terminal = ents.Create("ix_dissolver_terminal")
+	-- 	terminal:SetPos(v.position)
+	-- 	terminal:SetAngles(v.angles)
+	-- 	terminal:Spawn()
+	-- 	terminal:SetNetVar("id", v.id)
+	-- end
 
--- 		field:SetPos(v[1])
--- 		field:SetAngles(v[2])
--- 		field:Spawn()
--- 		field:SetMode(v[3])
--- 		field:SetAccess(v[4])
--- 	end
--- end
+	-- for k, v in pairs(ix.data.Get("ForceFields" .. ".dissolver_data") or {}) do
+	-- 	local dissolver = ents.Create("ix_dissolver")
+	-- 	dissolver:SetPos(v.position)
+	-- 	dissolver:SetAngles(v.angles)
+	-- 	dissolver:Spawn()
+	-- 	dissolver:SetNetVar("id", v.id)
+	-- 	dissolver:toggle(v.toggle)
+	-- 	dissolver:SetAccess(v.access)
+	-- end
+end
