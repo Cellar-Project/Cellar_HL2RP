@@ -15,7 +15,7 @@ if SERVER then
 		end)
 	end
 
-	function PLUGIN:PlayerLoadedCharacter(client, character)
+	function PLUGIN:PostPlayerLoadout(client)
 		timer.Simple(0.25, function()
 			client:SetLocalVar("coldCounter", character:GetData("coldCounter", 100))
 		end)
@@ -53,7 +53,7 @@ if SERVER then
 
 		if (client:Alive() and char) then
 			if client:GetLocalVar("coldCounter") and (client:GetLocalVar("coldCounter") < 100) then
-				client:SetColdlevel(client:GetColdlevel() + 0.0001)
+				client:SetColdlevel(client:GetColdlevel() + .2)
 			end
 		end
 	end
