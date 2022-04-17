@@ -199,7 +199,7 @@ return entity end
 				end
 
 				if entity:GetClass() == "player" and not entity:GetNetVar("dissolve") then
-					if not entity:GetCharacter():HasIDAccess(self:GetAccess()) and not client.ixObsData then
+					if not entity:GetCharacter():HasIDAccess(self:GetAccess()) and not entity.ixObsData then
 						if entity:IsDispatch() then return end
 
 						entity:SetNetVar("dissolve", true)
