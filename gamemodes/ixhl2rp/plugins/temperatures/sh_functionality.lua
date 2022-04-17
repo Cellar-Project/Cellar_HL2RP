@@ -17,7 +17,10 @@ if SERVER then
 
 	function PLUGIN:PostPlayerLoadout(client)
 		timer.Simple(0.25, function()
-			client:SetLocalVar("coldCounter", character:GetData("coldCounter", 100))
+			local character = client:GetCharacter()
+			if character then
+				client:SetLocalVar("coldCounter", character:GetData("coldCounter", 100))
+			end
 		end)
 	end
 
