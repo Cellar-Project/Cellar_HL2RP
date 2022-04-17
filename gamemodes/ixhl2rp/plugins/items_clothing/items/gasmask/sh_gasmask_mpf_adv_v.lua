@@ -23,3 +23,4 @@ ITEM.Stats = {
 ITEM.WeaponSkillBuff = 3
 ITEM.CPMask = true
 ITEM.visorLevel = 2
+ITEM.withOutfit = true

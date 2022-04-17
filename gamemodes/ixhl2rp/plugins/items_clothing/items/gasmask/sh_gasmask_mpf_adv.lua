@@ -22,3 +22,4 @@ ITEM.Stats = {
 }
 ITEM.CPMask = true
 ITEM.visorLevel = 1
+ITEM.withOutfit = true
