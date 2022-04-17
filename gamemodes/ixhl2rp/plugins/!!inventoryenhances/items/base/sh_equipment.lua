@@ -201,17 +201,8 @@ ITEM.functions.Breakdown = {
 }
 
 function ITEM:CanEquip(client, slot)
-	local character = client:GetCharacter()
-
-	if (slot == EQUIP_HEAD) and (character:HasWearedGasmask()) then
+	if (slot == EQUIP_HEAD) and (client:GetCharacter():HasWearedGasmask()) then
 		return false
-	end
-
-	local equipment = character:GetEquipment()
-	local outfit = equipment:GetItemAtSlot(EQUIP_TORSO)
-
-	if outfit and outfit.isOutfit then
-		return tobool(self.withOutfit)
 	end
 
 	return IsValid(client) and self:GetData("equip") != true and self.slot == slot
