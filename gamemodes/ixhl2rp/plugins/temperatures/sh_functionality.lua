@@ -15,6 +15,12 @@ if SERVER then
 		end)
 	end
 
+	function PLUGIN:PlayerLoadedCharacter(client, character)
+		timer.Simple(0.25, function()
+			client:SetLocalVar("coldCounter", character:GetData("coldCounter", 100))
+		end)
+	end
+
 	function PLUGIN:CharacterPreSave(character)
 		local client = character:GetPlayer()
 
@@ -27,7 +33,7 @@ if SERVER then
 
 	function playerMeta:GetColdlevel()
 		local char = self:GetCharacter()
-	
+
 		if (char) then
 			return char:GetData("coldCounter", 100)
 		end
@@ -46,7 +52,7 @@ if SERVER then
 		local char = client:GetCharacter()
 
 		if (client:Alive() and char) then
-			if (client:GetLocalVar("coldCounter") < 100) then
+			if client:GetLocalVar("coldCounter") and (client:GetLocalVar("coldCounter") < 100) then
 				client:SetColdlevel(client:GetColdlevel() + 0.0001)
 			end
 		end
@@ -55,13 +61,13 @@ if SERVER then
 end
 
 ix.command.Add("CharSetColdlevel", {
-    description = "Sets the character's cold-need level",
-    adminOnly = true,
-    arguments = {
-        ix.type.player,
-        ix.type.number
-    },
-    OnRun = function(self, client, target, amount)
-        target:SetColdlevel(amount)
-    end
+	description = "Sets the character's cold-need level",
+	adminOnly = true,
+	arguments = {
+		ix.type.player,
+		ix.type.number
+	},
+	OnRun = function(self, client, target, amount)
+		target:SetColdlevel(amount)
+	end
 })

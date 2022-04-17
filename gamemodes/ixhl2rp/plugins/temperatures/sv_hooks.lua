@@ -38,5 +38,7 @@ function PLUGIN:SetupTempTimer(client)
 end
 
 function PLUGIN:CharacterLoaded(character)
-	self:SetupTempTimer(character:GetPlayer())
+	local client = character:GetPlayer()
+	self:SetupTempTimer(client)
+	client:SetLocalVar("coldCounter", character:GetData("coldCounter", 100))
 end
