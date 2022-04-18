@@ -73,6 +73,10 @@ function ITEM:OnItemSpawned(entity)
 	entity:Fire("SetDamageFilter", "unbreakablewood", 0)
 end
 
+function ITEM:OnEntityTakeDamage(entity, damageInfo)
+	damageInfo:SetDamage(0)
+end
+
 function ITEM:Write(title, text, character)
 	if title then
 		title = tostring(title):sub(1, PLUGIN.maxTitleLength)
