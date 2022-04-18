@@ -39,7 +39,7 @@ ITEM.functions.DisableCamera = {
 function ITEM:CanTransferEquipment(oldinv, newinv, slot)
 	if !self.CPMask then return end
 	if slot != self.slot then return false end
-	local client = newinv:GetOwner()
+	local client = self:GetOwner()
 	return ix.util.StringMatches(client:GetModel(), "cca_")
 end
 
