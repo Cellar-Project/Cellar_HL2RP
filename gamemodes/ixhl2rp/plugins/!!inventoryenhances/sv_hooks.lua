@@ -450,12 +450,30 @@ function PLUGIN:CharacterLoaded(character)
 
 	if equipment then
 		local items = equipment:GetItems()
+		local torso = equipment:GetItemAtSlot(EQUIP_TORSO)
+		local mask = equipment:GetItemAtSlot(EQUIP_MASK)
+
+		if torso and torso.OnEquipped then
+			timer.Simple(2, function() torso:OnEquipped(client, torso.slot) end)
+		end
+
+		if mask and mask.OnEquipped then
+			timer.Simple(2.1, function() mask:OnEquipped(client, mask.slot) end)
+		end
 
 		for _, v in pairs(items) do
 			if v.OnEquipped then
-				v:OnEquipped(client)
+				v:OnEquipped(client, v.slot)
 			end
 		end
+	end
+end
+
+function PLUGIN:OnPlayerRespawn(client)
+	local character = client:GetCharacter()
+
+	if character then
+		hook.Run("CharacterLoaded", character)
 	end
 end
 
