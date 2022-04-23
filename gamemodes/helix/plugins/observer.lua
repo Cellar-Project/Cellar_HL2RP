@@ -54,9 +54,9 @@ else
 
 	ix.log.AddType("observerExit", function(client, ...)
 		if (ix.option.Get(client, "observerTeleportBack", true)) then
-			return string.format("%s exited observer at %s", client:Name(), client:GetPos())
+			return string.format("%s exited observer.", client:Name())
 		else
-			return string.format("%s exited observer at their location.", client:Name())
+			return string.format("%s exited observer at %s", client:Name(), client:GetPos())
 		end
 	end)
 
