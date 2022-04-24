@@ -2,6 +2,7 @@
 local notSolidTextures = {
 	["**studio**"] = true,
 	["TOOLS/TOOLSNODRAW"] = true,
+	["METAL/METALBAR001C"] = true,
 	["METAL/METALGATE001A"] = true,
 	["METAL/METALGRATE011A"] = true,
 	["METAL/METALGRATE016A"] = true,
