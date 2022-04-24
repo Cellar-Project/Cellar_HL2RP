@@ -21,6 +21,25 @@ function ix.chatLanguages.LoadFromDir(directory)
 			CHAT_LANGUAGE.words = CHAT_LANGUAGE.words or {}
 
 			ix.chatLanguages.list[niceName] = CHAT_LANGUAGE
+
+			if (!CHAT_LANGUAGE.bNotLearnable) then
+				local preItemID = niceName .. "_textbook_volume"
+				local preItemName = CHAT_LANGUAGE.name .. " textbook #%d"
+
+				for i = 1, ix.config.Get("languageTextbooksVolumeCount", 3) do
+					local itemID = preItemID .. i
+
+					ix.item.Register(itemID, "base_language_textbooks", false, nil)
+
+					if (ix.item.list[itemID]) then
+						ix.item.list[itemID].name = string.format(preItemName, i)
+						ix.item.list[itemID].model = CHAT_LANGUAGE.textbookModel or ix.item.list[itemID].model
+						ix.item.list[itemID].languageID = niceName
+						ix.item.list[itemID].volume = i
+						ix.item.list[itemID].studyTime = ix.config.Get("languageTextbooksMinReadTime", 3600) * i
+					end
+				end
+			end
 		CHAT_LANGUAGE = nil
 	end
 end
@@ -31,10 +50,6 @@ end
 
 function ix.chatLanguages.Get(uniqueID)
 	return ix.chatLanguages.list[uniqueID]
-end
-
-function ix.chatLanguages.GetStudyTimeLeftGenericDataKey(uniqueID)
-	return uniqueID .. "StudyTimeLeftTextbook"
 end
 
 function ix.chatLanguages.AddChatType(uniqueID)
