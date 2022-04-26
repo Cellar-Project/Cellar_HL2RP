@@ -179,7 +179,7 @@ function ix.chat.Send(speaker, chatType, text, bAnonymous, receivers, data)
 
 						data.lossFraction = nil
 					else
-						SendChatMessageToPlayers(speaker, chatType, text, bAnonymous, data, speaker)
+						SendChatMessageToPlayers(speaker, chatType, text, bAnonymous, data, v)
 					end
 				end
 			else
