@@ -14,12 +14,12 @@ PLUGIN.lerphunger = 1
 PLUGIN.lerpthirst = 1
 PLUGIN.lerpgeiger = 1
 PLUGIN.lerpfilter = 1
-PLUGIN.tickbrake = true
-PLUGIN.tickbrake1 = true
-PLUGIN.tickbrake2 = true
-PLUGIN.tickbrake3 = true
-PLUGIN.tickbrake4 = true
-PLUGIN.tickbrake5 = true
+PLUGIN.tickBrake = true
+PLUGIN.tickBrake1 = true
+PLUGIN.tickBrake2 = true
+PLUGIN.tickBrake3 = true
+PLUGIN.tickBrake4 = true
+PLUGIN.tickBrake5 = true
 PLUGIN.ammoShow = false
 
 PLUGIN.tempBrake = true
@@ -68,14 +68,33 @@ function PLUGIN:HUDPaint() -- using HUDPaint instead of think to call the functi
 
 	--  AMMO BAR    --
 
-	if client:Health() <= 1 or !client:Alive() then
+	if client:GetNetVar("crit") or client:Health() <= 1 or !client:Alive() then
 		if IsValid(cellar_hud_ammo) then
 			cellar_hud_ammo:Remove()
 		end
 
 		if IsValid(cellar_hud_main) then
+			cellar_hud_main:SetVisible(false)
 			cellar_hud_main:Remove()
 		end
+
+		PLUGIN.hasWeapon = nil
+		PLUGIN.bbarshide = nil
+		PLUGIN.lerphealth = 1
+		PLUGIN.lerpstamina = 1
+		PLUGIN.lerphunger = 1
+		PLUGIN.lerpthirst = 1
+		PLUGIN.lerpgeiger = 1
+		PLUGIN.lerpfilter = 1
+		PLUGIN.tickBrake = true
+		PLUGIN.tickBrake1 = true
+		PLUGIN.tickBrake2 = true
+		PLUGIN.tickBrake3 = true
+		PLUGIN.tickBrake4 = true
+		PLUGIN.tickBrake5 = true
+		PLUGIN.ammoShow = false
+		
+		PLUGIN.tempBrake = true
 	end
 
 	local weapon = client:GetActiveWeapon()
@@ -121,46 +140,24 @@ function PLUGIN:HUDPaint() -- using HUDPaint instead of think to call the functi
 		PLUGIN.ammoShow = false
 	end
 
-	if newstamina != 1 then
-		PLUGIN.tickbrake1 = false
+
+	if newhealth != oldhealth or newstamina != 1 then
+		PLUGIN.tickBrake = false
 
 		if !cellar_hud_main or cellar_hud_main.removed then
 			vgui.Create('cellar.hud')
 		end
 	end
 
-	if newstamina == 1 and PLUGIN.tickbrake1 == false then
+	if newhealth == oldhealth and newstamina == 1 and PLUGIN.tickBrake == false then
 		if cellar_hud_main then
 			if cellar_hud_ammo then
 				if cellar_hud_ammo.removed then
-					PLUGIN.tickbrake1 = true
+					PLUGIN.tickBrake1 = true
 					cellar_hud_main:Remove()
 				end
 			else
-				PLUGIN.tickbrake1 = true
-				cellar_hud_main:Remove()
-			end
-		end
-	end
-
-
-	if newhealth != oldhealth then
-		PLUGIN.tickbrake = false
-
-		if !cellar_hud_main or cellar_hud_main.removed then
-			vgui.Create('cellar.hud')
-		end
-	end
-
-	if newhealth == oldhealth and PLUGIN.tickbrake == false then
-		if cellar_hud_main then
-			if cellar_hud_ammo then
-				if cellar_hud_ammo.removed then
-					PLUGIN.tickbrake1 = true
-					cellar_hud_main:Remove()
-				end
-			else
-				PLUGIN.tickbrake = true
+				PLUGIN.tickBrake = true
 				cellar_hud_main:Remove()
 			end
 		end
@@ -186,15 +183,15 @@ function PLUGIN:HUDPaint() -- using HUDPaint instead of think to call the functi
 
 		
 		if oldgeiger != newgeiger then
-			PLUGIN.tickbrake4 = false
+			PLUGIN.tickBrake4 = false
 			if !cellar_needs_geiger or cellar_needs_geiger.removed then
 				vgui.Create('cellar.needs.geiger')
 			end
 		end
 
-		if oldgeiger == newgeiger and PLUGIN.tickbrake4 == false then
+		if oldgeiger == newgeiger and PLUGIN.tickBrake4 == false then
 			if cellar_needs_geiger then
-				PLUGIN.tickbrake4 = true
+				PLUGIN.tickBrake4 = true
 				cellar_needs_geiger:Remove()
 			end
 		end
@@ -210,15 +207,15 @@ function PLUGIN:HUDPaint() -- using HUDPaint instead of think to call the functi
 
 		
 		if oldfilter != newfilter then
-			PLUGIN.tickbrake5 = false
+			PLUGIN.tickBrake5 = false
 			if !cellar_needs_filter or cellar_needs_filter.removed then
 				vgui.Create('cellar.needs.filter')
 			end
 		end
 
-		if oldfilter == newfilter and PLUGIN.tickbrake5 == false then
+		if oldfilter == newfilter and PLUGIN.tickBrake5 == false then
 			if cellar_needs_filter then
-				PLUGIN.tickbrake5 = true
+				PLUGIN.tickBrake5 = true
 				cellar_needs_filter:Remove()
 			end
 		end
@@ -226,30 +223,30 @@ function PLUGIN:HUDPaint() -- using HUDPaint instead of think to call the functi
 
 	-- hunger
 	if oldhunger != newhunger then
-		PLUGIN.tickbrake2 = false
+		PLUGIN.tickBrake2 = false
 		if !cellar_needs_hunger or cellar_needs_hunger.removed then
 			vgui.Create('cellar.needs.hunger')
 		end
 	end
 
-	if oldhunger == newhunger and PLUGIN.tickbrake2 == false then
+	if oldhunger == newhunger and PLUGIN.tickBrake2 == false then
 		if cellar_needs_hunger then
-			PLUGIN.tickbrake2 = true
+			PLUGIN.tickBrake2 = true
 			cellar_needs_hunger:Remove()
 		end
 	end
 
 	-- thirst
 	if oldthirst != newthirst then
-		PLUGIN.tickbrake3 = false
+		PLUGIN.tickBrake3 = false
 		if !cellar_needs_thirst or cellar_needs_thirst.removed then
 			vgui.Create('cellar.needs.thirst')
 		end
 	end
 
-	if oldthirst == newthirst and PLUGIN.tickbrake3 == false then
+	if oldthirst == newthirst and PLUGIN.tickBrake3 == false then
 		if cellar_needs_thirst then
-			PLUGIN.tickbrake3 = true
+			PLUGIN.tickBrake3 = true
 			cellar_needs_thirst:Remove()
 		end
 	end
@@ -272,6 +269,4 @@ function PLUGIN:HUDPaint() -- using HUDPaint instead of think to call the functi
 		end
 	end
 
-	
-	
 end
