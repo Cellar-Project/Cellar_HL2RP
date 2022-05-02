@@ -4,6 +4,9 @@ PLUGIN.name = "Farming"
 PLUGIN.author = "Vintage Thief, maxxoft"
 PLUGIN.description = "Adds the ability to grow plants."
 
+
+ix.util.Include("sv_hooks.lua")
+
 ix.config.Add("phasetime", 4, "Time a plant needs to get a point to grow to the next phase.", nil, {
 	data = {min = 1, max = 3600},
 	category = "farming"

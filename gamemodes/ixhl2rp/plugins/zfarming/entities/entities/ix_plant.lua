@@ -40,6 +40,7 @@ if (SERVER) then
 			if (self.growthPoints >= phaseAmount) then
 				self.phase = self.phase + 1
 				self.growthPoints = 0
+				PLUGIN:SaveData()
 			end
 
 			if (self.phase >= phases) then
@@ -50,7 +51,7 @@ if (SERVER) then
 		self:SetModel(PLUGIN.growmodels[math.random(1, #PLUGIN.growmodels)])
 	end
 
-	function ENT:SetClass(class)
+	function ENT:SetPlantClass(class)
 		self.class = class
 	end
 
@@ -69,12 +70,12 @@ if (SERVER) then
 		end
 	end
 
-	function ENT:GetClass()
+	function ENT:GetPlantClass()
 		return self.class
 	end
 
 	function ENT:SetPhase(iPhase)
-		self.phase = math.Clamp(phase, 0, ix.config.Get("phases"))
+		self.phase = math.Clamp(iPhase, 0, ix.config.Get("phases"))
 	end
 
 	function ENT:GetPhase()

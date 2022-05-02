@@ -1,22 +1,24 @@
 local PLUGIN = PLUGIN
 
 function PLUGIN:SaveData()
-	local data
+	local data = {}
 	for _, v in ipairs(ents.FindByClass("ix_plant")) do
 		data[#data + 1] = {
 			v:GetModel(),
 			v:GetPos(),
 			v:GetAngles(),
-			v:GetClass(),
+			v:GetPlantClass(),
 			v:GetPhase(),
 			v:GetGrowthPoints(),
-			v.product
+			v.product,
+			v:GetPlantName(),
 		}
 	end
+	self:SetData(data)
 end
 
 function PLUGIN:LoadData()
-	local data = self:GetData()
+	local data = self:GetData() or {}
 
 	if (data) then
 		for _, v in ipairs(data) do
@@ -25,10 +27,15 @@ function PLUGIN:LoadData()
 			entity:SetAngles(v[3])
 			entity:Spawn()
 			entity:SetModel(v[1] or "models/props/de_train/bush2.mdl")
-			entity:SetClass(v[4])
+			entity:SetPlantClass(v[4])
 			entity:SetPhase(v[5])
 			entity:GetGrowthPoints(v[6])
-			entity.product = v.product
+			entity.product = v[7]
+			entity:SetPlantName(v[8])
 		end
 	end
+end
+
+function PLUGIN:DoPluginIncludes(path)
+	ix.plugin.Get("ixcraft").craft.LoadFromDir(path .. "/recipes", "recipe")
 end
