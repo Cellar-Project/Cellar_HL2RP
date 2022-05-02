@@ -3,7 +3,7 @@ local PLUGIN = PLUGIN
 PLUGIN.name = "Advanced Cellar HUD"
 PLUGIN.author = "Sectorial.Commander"
 PLUGIN.description = "Advanced Smart Heads-Up Display & Animations specially for Cellar Project."
-PLUGIN.version = 1.2
+PLUGIN.version = 1.3
 
 
 PLUGIN.hasWeapon = nil
@@ -66,36 +66,21 @@ function PLUGIN:HUDPaint() -- using HUDPaint instead of think to call the functi
 		return
 	end
 
-	--  AMMO BAR    --
+	if client:GetNetVar("crit") then PLUGIN.tickBrake1 = false end
 
-	if client:GetNetVar("crit") or client:Health() <= 1 or !client:Alive() then
+	if client:GetNetVar("crit") or client:Health() <= 1 or !client:Alive() and PLUGIN.tickBrake1 == false then
 		if IsValid(cellar_hud_ammo) then
 			cellar_hud_ammo:Remove()
+			PLUGIN.tickBrake1 = true
 		end
 
 		if IsValid(cellar_hud_main) then
-			cellar_hud_main:SetVisible(false)
 			cellar_hud_main:Remove()
+			PLUGIN.tickBrake1 = true
 		end
-
-		PLUGIN.hasWeapon = nil
-		PLUGIN.bbarshide = nil
-		PLUGIN.lerphealth = 1
-		PLUGIN.lerpstamina = 1
-		PLUGIN.lerphunger = 1
-		PLUGIN.lerpthirst = 1
-		PLUGIN.lerpgeiger = 1
-		PLUGIN.lerpfilter = 1
-		PLUGIN.tickBrake = true
-		PLUGIN.tickBrake1 = true
-		PLUGIN.tickBrake2 = true
-		PLUGIN.tickBrake3 = true
-		PLUGIN.tickBrake4 = true
-		PLUGIN.tickBrake5 = true
-		PLUGIN.ammoShow = false
-		
-		PLUGIN.tempBrake = true
 	end
+
+	--  AMMO BAR    --
 
 	local weapon = client:GetActiveWeapon()
 
@@ -153,7 +138,7 @@ function PLUGIN:HUDPaint() -- using HUDPaint instead of think to call the functi
 		if cellar_hud_main then
 			if cellar_hud_ammo then
 				if cellar_hud_ammo.removed then
-					PLUGIN.tickBrake1 = true
+					PLUGIN.tickBrake = true
 					cellar_hud_main:Remove()
 				end
 			else
