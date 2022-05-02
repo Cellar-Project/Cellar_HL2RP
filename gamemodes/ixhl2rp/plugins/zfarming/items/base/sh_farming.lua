@@ -22,23 +22,24 @@ ITEM.functions.Plant = {
 		if (tr.Hit and item.surfaces[tr.MatType]) then
 			if client:EyePos():Distance(tr.HitPos) > 90 then
 				client:Notify("Поверхность слишком далеко.")
-				print("too far")
+				return false
+			end
+
+			if tr.Entity:IsPlayer() then
+				client:Notify("Некорректная поверхность.")
 				return false
 			end
 
 			local plant = ents.Create("ix_plant")
-			plant:SetClass(item.seedclass)
+			plant:SetPlantClass(item.uniqueID)
 			tr.HitPos[3] = tr.HitPos[3] - 2
 			plant:SetPos(tr.HitPos)
 			plant:SetPlantName(item.plantName)
 			plant.product = item.product
 			plant:Spawn()
-			print("plant spawned")
 			return true
 		end
 
-		print(tr.Hit)
-		print(tr.MatType)
 		return false
 	end
 }
