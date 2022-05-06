@@ -1060,7 +1060,7 @@ ix.anim.SetModelClass("models/cellar/custom/ac_female_lalalar.mdl", "cellarFemal
 ix.anim.SetModelClass("models/cellar/vintagethief/characters/male/delta_john.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/vintagethief/characters/male/dorin.mdl", "cellarMale")
 ix.anim.SetModelClass("models/frostofan4ik/russians_arctic.mdl", "cellarMale")
-ix.anim.SetModelClass("models/leeetov/borz_f.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/leeetov/borz_f.mdl", "cellarMale")
 ix.anim.SetModelClass("models/suits/black_gloves.mdl","cellarMale")
 ix.anim.SetModelClass("models/custom/male_black_gloves.mdl", "cellarMale")
 ix.anim.SetModelClass("models/custom/female_black_gloves.mdl", "cellarFemale")
