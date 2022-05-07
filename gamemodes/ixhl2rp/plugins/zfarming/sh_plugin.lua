@@ -12,7 +12,7 @@ ix.config.Add("phasetime", 4, "Time a plant needs to get a point to grow to the 
 	category = "farming"
 })
 
-ix.config.Add("phaserate", 1, "How much a plant gains growth points on timer tick.", nil, {
+ix.config.Add("phaserate", 1, "How many a plant gains growth points on timer tick.", nil, {
 	data = {min = 1, max = 100},
 	category = "farming"
 })
@@ -26,6 +26,14 @@ ix.config.Add("phaseamount", 10, "How many points a plant needs to get on the ne
 ix.config.Add("phases", 4, "How many phases a plant needs to fully grow.", nil, {
 	data = {min = 2, max = 8},
 	category = "farming"
+})
+
+ix.lang.AddTable("english", {
+	categoryFarming = "Farming"
+})
+
+ix.lang.AddTable("russian", {
+	categoryFarming = "Фермерство"
 })
 
 PLUGIN.growmodels = {
