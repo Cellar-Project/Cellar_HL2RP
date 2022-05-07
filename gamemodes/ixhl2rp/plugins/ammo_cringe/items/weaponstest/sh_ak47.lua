@@ -12,12 +12,12 @@ ITEM.iconCam = {
 	fov	= 7.2253324508038,
 	pos	= Vector(0, 200, -1)
 }
-ITEM.Attack = 7
+ITEM.Attack = 15
 ITEM.DistanceSkillMod = {
 	[1] = 5,
-	[2] = 0,
-	[3] = -2,
-	[4] = -5
+	[2] = 2,
+	[3] = 1,
+	[4] = -2
 }
 ITEM.Info = {
 	Type = nil,
@@ -31,10 +31,10 @@ ITEM.Info = {
 	Dmg = {
 		Attack = nil,
 		AP = ITEM.Attack,
-		Limb = 45,
-		Shock = {110, 3000},
-		Blood = {60, 666},
-		Bleed = 80
+		Limb = 50,
+		Shock = {110, 2000},
+		Blood = {60, 600},
+		Bleed = 70
 	}
 }
 
