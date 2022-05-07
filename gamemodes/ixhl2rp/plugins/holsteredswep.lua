@@ -75,12 +75,6 @@ HOLSTER_DRAWINFO["arccw_ar2"] = {
 	bone = "ValveBiped.Bip01_Spine",
 	model = "models/weapons/w_irifle.mdl"
 }
-HOLSTER_DRAWINFO["arccw_ak47"] = {
-	pos = Vector(4, 15, -5),
-	ang = Angle(-45, 180, 0),
-	bone = "ValveBiped.Bip01_Spine",
-	model = "models/weapons/w_tdon_mwak_mammal_edition.mdl"
-}
 HOLSTER_DRAWINFO["arccw_spas12"] = {
 	pos = Vector(4, 16, 0),
 	ang = Angle(-45, 180, 0),

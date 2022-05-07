@@ -15,5 +15,4 @@ ITEM.access = {
 	["cmbCit*"] = true,
 	["cmbCwu*"] = true,
 	["cmbMpfAll*"] = true,
-	["HACKED"] = true,
 }

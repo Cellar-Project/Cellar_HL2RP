@@ -71,7 +71,7 @@ function Schema:PlayerUse(client, entity)
 end
 
 function Schema:PlayerUseDoor(client, door)
-	if (client:IsCombine() or client:IsCityAdmin() or client:GetCharacter():HasIDAccess('NEXUS') or client:GetCharacter():HasIDAccess('HACKED')) then
+	if (client:IsCombine() or client:IsCityAdmin() or client:GetCharacter():HasIDAccess('NEXUS')) then
 		if (!door:HasSpawnFlags(256) and !door:HasSpawnFlags(1024)) then
 			door:Fire("open")
 		end
