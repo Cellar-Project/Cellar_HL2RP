@@ -67,7 +67,7 @@ if (SERVER) then
 				end
 
 				for k, v in pairs(PLUGIN.loot_healthkits) do
-					char:GetInventroy():Add(k, v)
+					char:GetInventory():Add(k, v)
 				end
 			end
 			if z_check_otabridge = pla then
@@ -76,7 +76,7 @@ if (SERVER) then
 				end
 
 				for k, v in pairs(PLUGIN.loot_healthkits) do
-					char:GetInventroy():Add(k, v)
+					char:GetInventory():Add(k, v)
 				end
 			end
 			if z_checkvillage = pla then
@@ -84,7 +84,7 @@ if (SERVER) then
 				char:SetMoney(char:GetMoney() + tokens_amount)
 
 				for k, v in pairs(PLUGIN.loot_food) do
-					char:GetInventroy():Add(k, v)
+					char:GetInventory():Add(k, v)
 				end
 
 				for k, v in pairs(PLUGIN.loot_drinks) do
@@ -93,11 +93,11 @@ if (SERVER) then
 			end
 			if z_check_destroyedvillage = pla then
 				for k, v in pairs(PLUGIN.loot_healthkits) do
-					char:GetInventroy():Add(k, v)
+					char:GetInventory():Add(k, v)
 				end
 
 				for k, v in pairs(PLUGIN.loot_seeds) do
-					char:GetInventroy():Add(k, v)
+					char:GetInventory():Add(k, v)
 				end
 			end
 			if z_check_canalspit = pla then
@@ -105,7 +105,7 @@ if (SERVER) then
 				char:SetMoney(char:GetMoney() + tokens_amount)
 
 				for k, v in pairs(PLUGIN.loot_garabge) do
-					char:GetInventroy():Add(k, v)
+					char:GetInventory():Add(k, v)
 				end
 			end
 			if z_check_fisherhouse = pla then
