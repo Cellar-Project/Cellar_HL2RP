@@ -267,22 +267,9 @@ end
 
 -- Inventory button bind
 function PLUGIN:Think()
-	if gui.IsGameUIVisible() then
-		return 
-	end
-
-	if gui.IsConsoleVisible() then
-		return 
-	end
-
-	if chatopened then
-		return 
-	end
-
-	if IsValid(ix.gui.characterMenu) and ix.gui.characterMenu.opened then
+	if (IsValid(vgui.GetHoveredPanel()) or gui.IsGameUIVisible()) then
 		return
 	end
-
 
 	local invdown = input.IsKeyDown(KEY_I)
 	if IsValid(cellar_tab_inv) then
