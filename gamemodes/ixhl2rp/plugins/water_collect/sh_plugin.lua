@@ -4,6 +4,8 @@ PLUGIN.name = "Plugin for collecting water"
 PLUGIN.author = "Vintage Thief"
 PLUGIN.description = ""
 
+ix.util.Include("sv_hooks.lua")
+
 ix.config.Add("watertimer", 5, "How ofter water will collect (in seconds)", nil, {
     data = {min = 1, max = 3600},
     category = "watercollector"
