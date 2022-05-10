@@ -57,7 +57,7 @@ if (SERVER) then
 			local z_check_fisherhouse = ix.config.Get("z_fisherhouse")
 			local z_check_mines = ix.config.Get("z_mines")
 
-			if z_check_metro = pla then
+			if z_check_metro == pla then
 			
 				local tokens_amount = PLUGIN.loot_tokens.tokens
 				char:SetMoney(char:GetMoney() + tokens_amount)
@@ -70,7 +70,7 @@ if (SERVER) then
 					char:GetInventory():Add(k, v)
 				end
 			end
-			if z_check_otabridge = pla then
+			if z_check_otabridge == pla then
 				for k, v in pairs(PLUGIN.loot_ammo) do
 					char:GetInventory():Add(k, v)
 				end
@@ -79,7 +79,7 @@ if (SERVER) then
 					char:GetInventory():Add(k, v)
 				end
 			end
-			if z_checkvillage = pla then
+			if z_checkvillage == pla then
 				local tokens_amount = PLUGIN.loot_tokens.tokens
 				char:SetMoney(char:GetMoney() + tokens_amount)
 
@@ -91,7 +91,7 @@ if (SERVER) then
 					char:GetInventory():Add(k, v)
 				end
 			end
-			if z_check_destroyedvillage = pla then
+			if z_check_destroyedvillage == pla then
 				for k, v in pairs(PLUGIN.loot_healthkits) do
 					char:GetInventory():Add(k, v)
 				end
@@ -100,7 +100,7 @@ if (SERVER) then
 					char:GetInventory():Add(k, v)
 				end
 			end
-			if z_check_canalspit = pla then
+			if z_check_canalspit == pla then
 				local tokens_amount = PLUGIN.loot_tokens.tokens
 				char:SetMoney(char:GetMoney() + tokens_amount)
 
@@ -108,7 +108,7 @@ if (SERVER) then
 					char:GetInventory():Add(k, v)
 				end
 			end
-			if z_check_fisherhouse = pla then
+			if z_check_fisherhouse == pla then
 				for k, v in pairs(PLUGIN.loot_food) do
 					char:GetInventory():Add(k, v)
 				end
@@ -117,7 +117,7 @@ if (SERVER) then
 					char:GetInventory():Add(k, v)
 				end
 			end
-			if z_check_mines = pla then
+			if z_check_mines == pla then
 				local tokens_amount = PLUGIN.loot_tokens.tokens
 				char:SetMoney(char:GetMoney() + tokens_amount)
 
@@ -126,11 +126,16 @@ if (SERVER) then
 				end
 			end
 			char:GetPlayer():NotifyLocalized("Вы успешно забрали вашу добычу.")
-			timer.Create(self.timer_name, conf_time, 0, fucntion () end))
+
+			timer.Create( self.timer_name, conf_time, 0, function()
+				self:SetNetVar("reward_done", true)
+			end)
+
 			self:SetNetVar("reward_done", false)
 		else
 			char:GetPlayer():NotifyLocalized("Время для получения добычи еще не пришло.")
 		end
+	end
 
 	function ENT:OnRemove()
 		timer.Remove(self.timer_name)
@@ -140,6 +145,7 @@ else
 
 	function ENT:Draw()
 
+		local conf_time = ix.config.Get("reward_time")
 		local amount = (self:GetNetVar("now_time") .. "/" .. conf_time)
 
 		self:DrawModel()
