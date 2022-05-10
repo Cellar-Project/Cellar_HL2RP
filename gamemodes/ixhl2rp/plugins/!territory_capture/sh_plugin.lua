@@ -20,7 +20,7 @@ end
 
 
 -- NUMs MEANINGS:
--- 1 = OVERWATCH | 2 = PLA | 3 = REFUGEES | 4 = BANDITS | INTS CAN BE CHANGABLE TIME TO TIME
+-- 1 = OVERWATCH | 2 = PLA | 3 = ALASKA | 4 = WOLVES | 5 = LIBERTY_UNION | 6 = RENEGADES | INTS CAN BE CHANGABLE TIME TO TIME
 
 ix.config.Add("z_metro", 2, "What faction controls the territory?", nil, {
     data = {min = 0, max = 10},
@@ -51,8 +51,8 @@ ix.config.Add("z_mines", 0, "What faction controls the territory?", nil, {
     category = "territory_capture"
 })
 
-ix.config.Add("reward_time", 30, "How much time does it take to take a new reward from a vault?", nil, {
-	data = {min = 30, max = 86400},
+ix.config.Add("reward_time", 86400, "How much time does it take to take a new reward from a vault?", nil, {
+	data = {min = 3600, max = 86400},
 	category = "territory_capture"
 })
 
@@ -104,11 +104,9 @@ PLUGIN.loot_garabge = {
 	["chain"] = math.random(1, 2),
 	["mat_plastic"] = math.random(1, 2),
 	["mat_resine"] = math.random(1, 2),
-	["mat_cloth"] = math.random(1, 2),
 	["mat_wood"] = math.random(1, 2),
 	["box_of_nails"] = math.random(1, 2),
 	["box_of_casings"] = math.random(1, 2),
-	["varnish"] = math.random(1, 2),
 	["box_of_needles"] = math.random(1, 2)
 }
 PLUGIN.loot_metal = {
