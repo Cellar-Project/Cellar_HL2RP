@@ -53,7 +53,7 @@ if (SERVER) then
 			else
 				self:SetNetVar("nv_otabridge", false)
 			end
-			if z_checkvillage == pla then
+			if z_check_village == pla then
 				self:SetNetVar("nv_village", true)
 			else
 				self:SetNetVar("nv_village", false)
@@ -135,7 +135,7 @@ if (SERVER) then
 					char:GetInventory():Add(k, v)
 				end
 			end
-			if z_checkvillage == pla then
+			if z_check_village == pla then
 				local tokens_amount = PLUGIN.loot_tokens.tokens
 				char:SetMoney(char:GetMoney() + tokens_amount)
 
@@ -217,7 +217,7 @@ if (SERVER) then
 				else
 					self:SetNetVar("nv_otabridge", false)
 				end
-				if z_checkvillage == pla then
+				if z_check_village == pla then
 					self:SetNetVar("nv_village", true)
 				else
 					self:SetNetVar("nv_village", false)
