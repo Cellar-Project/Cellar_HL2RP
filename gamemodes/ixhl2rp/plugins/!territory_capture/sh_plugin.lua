@@ -6,8 +6,7 @@ PLUGIN.description = "Plugin allows factions to capture zones of a map and to ta
 
 do
 	ix.command.Add("SetTerritory", {
-		description = "Set a territory to a faction."
-		privilege = "Manage Territories"
+		description = "Set a territory to a faction.",
 		superAdminOnly = true,
 		arguments = {
 			ix.type.string,
@@ -52,7 +51,7 @@ ix.config.Add("z_mines", 0, "What faction controls the territory?", nil, {
     category = "territory_capture"
 })
 
-ix.config.Add("reward_time", 86400, "How much time does it take to take a new reward from a vault?", nil{
+ix.config.Add("reward_time", 86400, "How much time does it take to take a new reward from a vault?", nil, {
 	data = {min = 3600, max = 86400},
 	category = "territory_capture"
 })
@@ -69,50 +68,50 @@ ix.config.Add("reward_time", 86400, "How much time does it take to take a new re
 ]]
 
 PLUGIN.loot_ammo = {
-	["bullets_7x62"] = math.random(1, 2)
-	["bullets_smg"] = math.random(2, 4)
-	["bullets_9mm"] = math.random(1, 3)
+	["bullets_7x62"] = math.random(1, 2),
+	["bullets_smg"] = math.random(2, 4),
+	["bullets_9mm"] = math.random(1, 3),
 	["bullets_buckshot"] = math.random(1, 2) 
 }
 PLUGIN.loot_tokens = {
 	["tokens"] = math.random(25, 50)
 }
 PLUGIN.loot_healthkits = {
-	["bandage"] = math.random(2, 4)
-	["bloodbag"] = math.random(1, 3)
-	["painkiller"] = math.random(1, 3)
+	["bandage"] = math.random(2, 4),
+	["bloodbag"] = math.random(1, 3),
+	["painkiller"] = math.random(1, 3),
 	["diyhealthkit"] = math.random(1, 2)
 }
 PLUGIN.loot_food = {
-	["baked_beans"] = math.random(1, 4)
-	["union_branded_chinese_takeout"] = math.random(1, 4)
-	["potato"] = math.random(1, 4)
-	["carrot"] = math.random(1, 4)
+	["baked_beans"] = math.random(1, 4),
+	["union_branded_chinese_takeout"] = math.random(1, 4),
+	["potato"] = math.random(1, 4),
+	["carrot"] = math.random(1, 4),
 	["sandwich"] = math.random(1, 4)
 }
 PLUGIN.loot_drinks = {
-	["can_with_water"] = math.random(1, 4)
-	["plastic_bottle_of_water"] = math.random(1, 4)
-	["plastic_jar_of_water"] = math.random(1, 4)
+	["can_with_water"] = math.random(1, 4),
+	["plastic_bottle_of_water"] = math.random(1, 4),
+	["plastic_jar_of_water"] = math.random(1, 4),
 	["purified_water"] = math.random(1, 4)
 }
 PLUGIN.loot_seeds = {
-	["seeds_potato"] = math.random(1, 3)
-	["seeds_papaver"] = math.random(1, 3)
+	["seeds_potato"] = math.random(1, 3),
+	["seeds_papaver"] = math.random(1, 3),
 	["seeds_carrot"] = math.random(1, 3)
 }
 PLUGIN.loot_garabge = {
-	["chain"] = math.random(1, 2)
-	["mat_plastic"] = math.random(1, 2)
-	["mat_resine"] = math.random(1, 2)
-	["mat_cloth"] = math.random(1, 2)
-	["mat_wood"] = math.random(1, 2)
-	["box_of_nails"] = math.random(1, 2)
-	["box_of_casings"] = math.random(1, 2)
-	["varnish"] = math.random(1, 2)
+	["chain"] = math.random(1, 2),
+	["mat_plastic"] = math.random(1, 2),
+	["mat_resine"] = math.random(1, 2),
+	["mat_cloth"] = math.random(1, 2),
+	["mat_wood"] = math.random(1, 2),
+	["box_of_nails"] = math.random(1, 2),
+	["box_of_casings"] = math.random(1, 2),
+	["varnish"] = math.random(1, 2),
 	["box_of_needles"] = math.random(1, 2)
 }
 PLUGIN.loot_metal = {
-	["ore_coal"] = math.random(1, 3)
+	["ore_coal"] = math.random(1, 3),
 	["ore_iron"] = math.random(1, 3)
 }
