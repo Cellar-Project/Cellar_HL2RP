@@ -23,36 +23,36 @@ end
 -- 1 = OVERWATCH | 2 = PLA | 3 = REFUGEES | 4 = BANDITS | INTS CAN BE CHANGABLE TIME TO TIME
 
 ix.config.Add("z_metro", 2, "What faction controls the territory?", nil, {
-    data = {min = 1, max = 10},
+    data = {min = 0, max = 10},
     category = "territory_capture"
 })
 ix.config.Add("z_otabridge", 1, "What faction controls the territory?", nil, {
-    data = {min = 1, max = 10},
+    data = {min = 0, max = 10},
     category = "territory_capture"
 })
 ix.config.Add("z_village", 0, "What faction controls the territory?", nil, {
-    data = {min = 1, max = 10},
+    data = {min = 0, max = 10},
     category = "territory_capture"
 })
 ix.config.Add("z_destroyedvillage", 0, "What faction controls the territory?", nil, {
-    data = {min = 1, max = 10},
+    data = {min = 0, max = 10},
     category = "territory_capture"
 })
 ix.config.Add("z_canalspit", 0, "What faction controls the territory?", nil, {
-    data = {min = 1, max = 10},
+    data = {min = 0, max = 10},
     category = "territory_capture"
 })
 ix.config.Add("z_fisherhouse", 0, "What faction controls the territory?", nil, {
-    data = {min = 1, max = 10},
+    data = {min = 0, max = 10},
     category = "territory_capture"
 })
 ix.config.Add("z_mines", 0, "What faction controls the territory?", nil, {
-    data = {min = 1, max = 10},
+    data = {min = 0, max = 10},
     category = "territory_capture"
 })
 
-ix.config.Add("reward_time", 86400, "How much time does it take to take a new reward from a vault?", nil, {
-	data = {min = 3600, max = 86400},
+ix.config.Add("reward_time", 30, "How much time does it take to take a new reward from a vault?", nil, {
+	data = {min = 30, max = 86400},
 	category = "territory_capture"
 })
 
