@@ -2,7 +2,7 @@ local PLUGIN = PLUGIN
 
 
 ENT.Type = "anim"
-ENT.PrintName = "Vault - Valkyre"
+ENT.PrintName = "Vault - Renegades"
 ENT.Category = "HL2 RP"
 ENT.Spawnable = true
 ENT.AdminOnly = true
@@ -41,7 +41,7 @@ if (SERVER) then
 			local z_check_canalspit = ix.config.Get("z_canalspit")
 			local z_check_fisherhouse = ix.config.Get("z_fisherhouse")
 			local z_check_mines = ix.config.Get("z_mines")
-			local pla = 4
+			local pla = 6
 
 			if z_check_metro == pla then
 				self:SetNetVar("nv_metro", true)
@@ -104,7 +104,7 @@ if (SERVER) then
 			timer.Remove(self.timer_name_control)
 
 			local conf_time = ix.config.Get("reward_time")
-			local pla = 4
+			local pla = 6
 			local z_check_metro = ix.config.Get("z_metro")
 			local z_check_otabridge = ix.config.Get("z_otabridge")
 			local z_check_village = ix.config.Get("z_village")
@@ -266,7 +266,7 @@ if (SERVER) then
 				local z_check_canalspit = ix.config.Get("z_canalspit")
 				local z_check_fisherhouse = ix.config.Get("z_fisherhouse")
 				local z_check_mines = ix.config.Get("z_mines")
-				local pla = 4
+				local pla = 6
 
 				if z_check_metro == pla then
 					self:SetNetVar("nv_metro", true)
@@ -358,7 +358,7 @@ else
 
 		local fixedPos_title = self:GetPos() + self:GetUp() * 9 + self:GetRight() * 5 + self:GetForward() * 16
 		cam.Start3D2D(fixedPos_title, fixedAng, 0.1)
-			draw.SimpleText( "Валькирия", "Default", 50, 0, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
+			draw.SimpleText( "Отступники", "Default", 50, 0, Color( 255, 255, 255, 155 ), TEXT_ALIGN_CENTER)
 		cam.End3D2D()
 
 		-- territories
