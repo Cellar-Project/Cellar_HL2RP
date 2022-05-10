@@ -47,6 +47,15 @@ function PLUGIN:SaveData()
 			v:GetNetVar("reward_done"),
 		}
 	end
+	for _, v in ipairs(ents.FindByClass("ix_vault_renegades")) do
+		data[#data + 1] = {
+			v:GetModel(),
+			v:GetPos(),
+			v:GetAngles(),
+			v:GetNetVar("now_time"),
+			v:GetNetVar("reward_done"),
+		}
+	end
 	self:SetData(data)
 end
 
@@ -92,6 +101,15 @@ function PLUGIN:LoadData()
 		end
 		for _, v in ipairs(data) do
 			local entity = ents.Create("ix_vault_wolves")
+			entity:SetPos(v[2])
+			entity:SetAngles(v[3])
+			entity:Spawn()
+			entity:SetModel(v[1])
+			entity:SetNetVar("now_time", v[4])
+			entity:SetNetVar("reward_done", v[5])
+		end
+		for _, v in ipairs(data) do
+			local entity = ents.Create("ix_vault_renegades")
 			entity:SetPos(v[2])
 			entity:SetAngles(v[3])
 			entity:Spawn()

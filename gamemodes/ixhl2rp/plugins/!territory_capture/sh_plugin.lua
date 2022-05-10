@@ -71,9 +71,11 @@ ix.config.Add("reward_time", 86400, "How much time does it take to take a new re
 
 PLUGIN.loot_ammo = {
 	["bullets_7x62"] = math.random(1, 2),
-	["bullets_smg"] = math.random(2, 4),
+	["bullets_556x45"] = math.random(1, 2),
+	["bullets_7x62_54mmR"] = math.random(0, 1),
+	["bullets_smg"] = math.random(1, 3),
 	["bullets_9mm"] = math.random(1, 3),
-	["bullets_buckshot"] = math.random(1, 2) 
+	["bullets_buckshot"] = math.random(0, 1) 
 }
 PLUGIN.loot_tokens = {
 	["tokens"] = math.random(25, 50)
