@@ -127,6 +127,7 @@ if (SERVER) then
 			end
 			char:GetPlayer():NotifyLocalized("Вы успешно забрали вашу добычу.")
 			timer.Create(self.timer_name, conf_time, 0, fucntion () end))
+			self:SetNetVar("reward_done", false)
 		else
 			char:GetPlayer():NotifyLocalized("Время для получения добычи еще не пришло.")
 		end
