@@ -36,7 +36,7 @@ if (SERVER) then
 
 		timer.Create( self.timer_name_tick, 1, 0, function()
 			self:SetNetVar("now_time", self:GetNetVar("now_time") + 1)
-		)
+		end)
 
 	end
 	
@@ -131,7 +131,6 @@ if (SERVER) then
 		else
 			char:GetPlayer():NotifyLocalized("Время для получения добычи еще не пришло.")
 		end
-	end
 
 	function ENT:OnRemove()
 		timer.Remove(self.timer_name)
