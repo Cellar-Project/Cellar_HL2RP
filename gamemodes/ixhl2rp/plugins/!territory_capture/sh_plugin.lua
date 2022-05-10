@@ -4,6 +4,8 @@ PLUGIN.name = "Territory Capture"
 PLUGIN.author = "Vintage Thief"
 PLUGIN.description = "Plugin allows factions to capture zones of a map and to take control over it in order to get loot from factions' lootboxes"
 
+ix.util.Include("sv_hooks.lua")
+
 do
 	ix.command.Add("SetTerritory", {
 		description = "Set a territory to a faction.",
@@ -52,7 +54,7 @@ ix.config.Add("z_mines", 0, "What faction controls the territory?", nil, {
 })
 
 ix.config.Add("reward_time", 86400, "How much time does it take to take a new reward from a vault?", nil, {
-	data = {min = 3600, max = 86400},
+	data = {min = 15, max = 86400},
 	category = "territory_capture"
 })
 

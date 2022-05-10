@@ -18,7 +18,7 @@ if (SERVER) then
 		self:SetNetVar("now_time", 0)
 		self:SetModel("models/Items/ammocrate_grenade.mdl")
 		self:SetSolid(SOLID_VPHYSICS)
-		self:SetMoveType(MOVETYPE_VPHYSICS)
+		self:SetMoveType(MOVETYPE_NONE)
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetUseType(SIMPLE_USE)
 
@@ -112,6 +112,7 @@ if (SERVER) then
 			local z_check_canalspit = ix.config.Get("z_canalspit")
 			local z_check_fisherhouse = ix.config.Get("z_fisherhouse")
 			local z_check_mines = ix.config.Get("z_mines")
+			local vaultpos = self:GetPos()
 
 			if z_check_metro == pla then
 			
@@ -119,20 +120,40 @@ if (SERVER) then
 				char:SetMoney(char:GetMoney() + tokens_amount)
 
 				for k, v in pairs(PLUGIN.loot_ammo) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 
 				for k, v in pairs(PLUGIN.loot_healthkits) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 			end
 			if z_check_otabridge == pla then
 				for k, v in pairs(PLUGIN.loot_ammo) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 
 				for k, v in pairs(PLUGIN.loot_healthkits) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 			end
 			if z_check_village == pla then
@@ -140,20 +161,40 @@ if (SERVER) then
 				char:SetMoney(char:GetMoney() + tokens_amount)
 
 				for k, v in pairs(PLUGIN.loot_food) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 
 				for k, v in pairs(PLUGIN.loot_drinks) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 			end
 			if z_check_destroyedvillage == pla then
 				for k, v in pairs(PLUGIN.loot_healthkits) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 
 				for k, v in pairs(PLUGIN.loot_seeds) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 			end
 			if z_check_canalspit == pla then
@@ -161,16 +202,31 @@ if (SERVER) then
 				char:SetMoney(char:GetMoney() + tokens_amount)
 
 				for k, v in pairs(PLUGIN.loot_garabge) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 			end
 			if z_check_fisherhouse == pla then
 				for k, v in pairs(PLUGIN.loot_food) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 
 				for k, v in pairs(PLUGIN.loot_drinks) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 			end
 			if z_check_mines == pla then
@@ -178,7 +234,12 @@ if (SERVER) then
 				char:SetMoney(char:GetMoney() + tokens_amount)
 
 				for k, v in pairs(PLUGIN.loot_metal) do
-					char:GetInventory():Add(k, v)
+					local result, _ = char:GetInventory():Add(k, v)
+					if (!result) then
+						for i = 0, v do
+							ix.item.Spawn(k, vaultpos + Vector(0, 0, 26))
+						end
+					end
 				end
 			end
 
