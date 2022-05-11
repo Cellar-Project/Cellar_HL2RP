@@ -1,14 +1,14 @@
-RECIPE.name = "Рубашка 'Красное и Черное'"
+RECIPE.name = "Тёмно-серая утепленная куртка"
 RECIPE.category = "Портняжное дело"
 RECIPE.requirements = {
-    ["box_of_needles"] = 1,
-    ["mat_cloth"] = 6
+    ["box_of_needles"] = 2,
+    ["mat_cloth"] = 17
 }
 RECIPE.results = {
-    ["redblacktop"] = 1
+    ["greythermalvest"] = 1
 }
 RECIPE.station = "station_tailor"
-RECIPE.skill = {"tailoring", 3}
+RECIPE.skill = {"tailoring", 7}
 RECIPE.tools = {"tool_scissors"}
 RECIPE.description = nil
 RECIPE.model = nil
