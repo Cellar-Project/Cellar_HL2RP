@@ -5,6 +5,7 @@ ITEM.class = "arccw_dragunov"
 ITEM.weaponCategory = "primary"
 ITEM.rarity = 2
 ITEM.width = 5
+ITEM.rarity = 4
 ITEM.height = 2
 ITEM.iconCam = {
 	ang	= Angle(-0.020070368424058, 270.40155029297, 0),
@@ -13,19 +14,19 @@ ITEM.iconCam = {
 }
 ITEM.Attack = 30
 ITEM.DistanceSkillMod = {
-	[1] = 9,
-	[2] = 6,
+	[1] = 1,
+	[2] = 3,
 	[3] = 5,
-	[4] = 2
+	[4] = 4
 }
 ITEM.Info = {
 	Type = nil,
 	Skill = "guns",
 	Distance = {
-		[1] = 9,
-		[2] = 4,
-		[3] = 2,
-		[4] = 0
+		[1] = 1,
+		[2] = 3,
+		[3] = 5,
+		[4] = 4
 	},
 	Dmg = {
 		Attack = nil,
