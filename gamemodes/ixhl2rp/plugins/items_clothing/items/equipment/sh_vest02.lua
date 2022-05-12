@@ -12,8 +12,8 @@ ITEM.thermalIsolation = 2 -- (от 1 до 4)
 ITEM.Stats = {
 	[HITGROUP_GENERIC] = 0,
 	[HITGROUP_HEAD] = 0,
-	[HITGROUP_CHEST] = 20,
-	[HITGROUP_STOMACH] = 10,
+	[HITGROUP_CHEST] = 15,
+	[HITGROUP_STOMACH] = 7,
 	[4] = 0,
 	[5] = 0,
 }
