@@ -13,19 +13,19 @@ function PLUGIN:CharacterLoaded(character)
 end
 
 function PLUGIN:CanPlayerEquipItem(client, item, slot)
-	if not IsVaild(client) then return end
+	if not IsValid(client) then return end
 	local char = client:GetCharacter()
 	return not (char:GetData("zombie", false) and (char:GetData("zstage") == 3))
 end
 
 function PLUGIN:CanPlayerInteractItem(client, action)
-	if not IsVaild(client) then return end
+	if not IsValid(client) then return end
 	local char = client:GetCharacter()
 	return not (char:GetData("zombie", false) and (char:GetData("zstage") == 3))
 end
 
 hook.Add("prone.CanEnter", "Infection", function(client)
-	if not IsVaild(client) then return end
+	if not IsValid(client) then return end
 	local char = client:GetCharacter()
 	return not (char:GetData("zombie", false) and (char:GetData("zstage") == 3))
 end)
