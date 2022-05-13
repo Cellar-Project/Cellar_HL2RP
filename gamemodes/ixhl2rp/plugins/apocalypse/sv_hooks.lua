@@ -1,9 +1,9 @@
 local PLUGIN = PLUGIN
 
-function PLUGIN:PlayerLoadedCharacter(client, character, lastChar)
+function PLUGIN:CharacterLoaded(character)
 	if character:GetData("zombie", false) and character:GetData("zstage", 1) != 3 then
 		local timerID = "ixInfection_" .. character:GetID()
-		timer.Create(timerID, 600, 3, function()
+		timer.Create(timerID, 600, 3 - character:GetData("zstage"), function()
 			if not character then
 				timer.Remove(timerID)
 			end
@@ -12,8 +12,20 @@ function PLUGIN:PlayerLoadedCharacter(client, character, lastChar)
 	end
 end
 
+function PLUGIN:CanPlayerEquipItem(client, item, slot)
+	if not IsVaild(client) then return end
+	local char = client:GetCharacter()
+	return not (char:GetData("zombie", false) and (char:GetData("zstage") == 3))
+end
+
+function PLUGIN:CanPlayerInteractItem(client, action)
+	if not IsVaild(client) then return end
+	local char = client:GetCharacter()
+	return not (char:GetData("zombie", false) and (char:GetData("zstage") == 3))
+end
+
 hook.Add("prone.CanEnter", "Infection", function(client)
-	if client:GetCharacter():GetData("zstage") == 3 then
-		return false
-	end
+	if not IsVaild(client) then return end
+	local char = client:GetCharacter()
+	return not (char:GetData("zombie", false) and (char:GetData("zstage") == 3))
 end)

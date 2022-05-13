@@ -39,7 +39,7 @@ date.hour = 20
 date.min = 0
 date.sec = 0
 date.day = 31
-date.month = 12
+date.month = 7
 local vaccineTime = os.time(date)
 
 function ITEM:OnConsume(player, injector, mul, character)
