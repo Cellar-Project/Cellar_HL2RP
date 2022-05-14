@@ -1,14 +1,14 @@
-RECIPE.name = "Утепленные штаны"
+RECIPE.name = "Шапка"
 RECIPE.category = "Портняжное дело"
 RECIPE.requirements = {
-    ["box_of_needles"] = 2,
-    ["mat_cloth"] = 25
+    ["box_of_needles"] = 1,
+    ["mat_cloth"] = 10
 }
 RECIPE.results = {
-    ["therlampants"] = 1
+    ["ushanka"] = 1
 }
 RECIPE.station = "station_tailor"
-RECIPE.skill = {"tailoring", 9}
+RECIPE.skill = {"tailoring", 4}
 RECIPE.tools = {"tool_scissors"}
 RECIPE.description = nil
 RECIPE.model = nil
