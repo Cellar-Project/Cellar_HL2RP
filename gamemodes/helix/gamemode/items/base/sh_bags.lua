@@ -29,8 +29,25 @@ ITEM.functions.View = {
 			if (inventory and inventory.slots) then
 				panel = vgui.Create("ixInventory", IsValid(parent) and parent or nil)
 				panel:SetInventory(inventory)
-				panel:ShowCloseButton(true)
-				panel:SetTitle(item.GetName and item:GetName() or L(item.name))
+				panel:ShowCloseButton(false)
+				--panel:SetTitle(item.GetName and item:GetName() or L(item.name))
+				panel:SetDraggable(true)
+				panel:SetTitle('')
+				panel.Paint = function(self, w, h)
+					surface.SetDrawColor(ColorAlpha(cellar_darker_blue, 35))
+					surface.DrawRect(0, 0, w, h)
+
+					surface.DrawRect(1, 1, w - 1, 1)
+					surface.DrawRect(1, 1, 1, h - 1)
+					surface.DrawRect(w - 2, 1, 1, h - 1)
+					surface.DrawRect(1, h - 2, w - 1, 1)
+
+					surface.SetDrawColor(ColorAlpha(cellar_blue, 57))
+					surface.DrawRect(0, 0, w, 1)
+					surface.DrawRect(0, 0, 1, h)
+					surface.DrawRect(w - 1, 0, 1, h)
+					surface.DrawRect(0, h - 1, w, 1)
+				end
 
 				if (parent != ix.gui.menuInventoryContainer) then
 					panel:Center()
@@ -51,29 +68,29 @@ ITEM.functions.View = {
 		return false
 	end,
 	OnCanRun = function(item)
-		return !IsValid(item.entity) and item:GetData("id") and !IsValid(ix.gui["inv" .. item:GetData("id", "")])
+		return true --!IsValid(item.entity) and item:GetData("id") and !IsValid(ix.gui["inv" .. item:GetData("id", "")])
 	end
 }
-ITEM.functions.combine = {
-	OnRun = function(item, data)
-		ix.item.instances[data[1]]:Transfer(item:GetData("id"), nil, nil, item.player)
+-- ITEM.functions.combine = {
+-- 	OnRun = function(item, data)
+-- 		ix.item.instances[data[1]]:Transfer(item:GetData("id"), nil, nil, item.player)
 
-		return false
-	end,
-	OnCanRun = function(item, data)
-		local index = item:GetData("id", "")
+-- 		return false
+-- 	end,
+-- 	OnCanRun = function(item, data)
+-- 		local index = item:GetData("id", "")
 
-		if (index) then
-			local inventory = ix.item.inventories[index]
+-- 		if (index) then
+-- 			local inventory = ix.item.inventories[index]
 
-			if (inventory) then
-				return true
-			end
-		end
+-- 			if (inventory) then
+-- 				return true
+-- 			end
+-- 		end
 
-		return false
-	end
-}
+-- 		return false
+-- 	end
+-- }
 
 if (CLIENT) then
 	function ITEM:PaintOver(item, width, height)

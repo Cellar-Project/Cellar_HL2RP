@@ -20,13 +20,6 @@ SWEP.UseHands = true
 
 SWEP.ViewModel = "models/weapons/arccw/c_mw3e_qbz97.mdl"
 SWEP.WorldModel = "models/weapons/arccw/c_mw3e_qbz97.mdl"
-SWEP.MirrorVMWM = true
-SWEP.WorldModelOffset = {
-    pos        =    Vector(-8.25, 5, -7.8),
-    ang        =    Angle(-2.5, 2, 180),
-    bone    =    "ValveBiped.Bip01_R_Hand",
-    scale = 1.05,
-}
 SWEP.ViewModelFOV = 60
 
 SWEP.Damage = 40
@@ -78,8 +71,8 @@ SWEP.MagID = "m16a1" -- the magazine pool this gun draws from
 SWEP.ShootVol = 115 -- volume of shoot sound
 SWEP.ShootPitch = 100 -- pitch of shoot sound
 
-SWEP.ShootSound = "ArcCW_MW3E.QBZ97_Fire"
-SWEP.ShootSoundSilenced = "ArcCW_MW3E.M4M16_Sil"
+SWEP.ShootSound = "weapons/arccw/mw3e_qbz97/fire.wav"
+SWEP.ShootSoundSilenced = "weapons/arccw/cod4_m4m16/sil.wav"
 
 SWEP.MeleeSwingSound = "arccw_go/m249/m249_draw.wav"
 SWEP.MeleeMissSound = "weapons/iceaxe/iceaxe_swing1.wav"
@@ -87,13 +80,13 @@ SWEP.MeleeHitNPCSound = "physics/body/body_medium_break2.wav"
 
 SWEP.MuzzleEffect = "muzzleflash_4"
 SWEP.ShellModel = "models/shells/shell_556.mdl"
-SWEP.ShellPitch = 95
+SWEP.ShellPitch = 90
 SWEP.ShellScale = 1.25
 
 SWEP.MuzzleEffectAttachment = 1 -- which attachment to put the muzzle on
 SWEP.CaseEffectAttachment = 2 -- which attachment to put the case effect on
 SWEP.ProceduralViewBobAttachment = 3
-SWEP.CamAttachment = 4
+--SWEP.CamAttachment = 4
 
 SWEP.SpeedMult = 0.95
 SWEP.SightedSpeedMult = 0.5
@@ -172,7 +165,7 @@ SWEP.Animations = {
         Time = 5 / 30,
         ShellEjectAt = 0,
         SoundTable = {
-            {s = "ArcCW_MW3E.Mech_D", t = 1 / 35},
+            {s = "weapons/arccw/mw3e_mech/mech_d", t = 1 / 35},
         },
     },
     ["fire_iron"] = {
@@ -180,7 +173,7 @@ SWEP.Animations = {
         Time = 5 / 30,
         ShellEjectAt = 0,
         SoundTable = {
-            {s = "ArcCW_MW3E.Mech_D", t = 1 / 35},
+            {s = "weapons/arccw/mw3e_mech/mech_d", t = 1 / 35},
         },
     },
     ["reload"] = {
@@ -191,8 +184,8 @@ SWEP.Animations = {
         LHIKIn = 0.2,
         LHIKOut = 0.2,
         SoundTable = {
-            {s = "ArcCW_MW3E.QBZ97_MagOut", t = 0.5},
-            {s = "ArcCW_MW3E.QBZ97_MagIn", t = 1.7},
+            {s = "weapons/arccw/mw3e_qbz97/out.wav", t = 0.5},
+            {s = "weapons/arccw/mw3e_qbz97/in.wav", t = 1.7},
         },
     },
     ["reload_empty"] = {
@@ -203,9 +196,9 @@ SWEP.Animations = {
         LHIKIn = 0.2,
         LHIKOut = 0.2,
         SoundTable = {
-            {s = "ArcCW_MW3E.QBZ97_MagOut", t = 0.5},
-            {s = "ArcCW_MW3E.QBZ97_MagIn", t = 1.7},
-            {s = "ArcCW_MW3E.QBZ97_Chamber", t = 2.5},
+            {s = "weapons/arccw/mw3e_qbz97/out.wav", t = 0.5},
+            {s = "weapons/arccw/mw3e_qbz97/in.wav", t = 1.7},
+            {s = "weapons/arccw/mw3e_qbz97/chamber.wav", t = 2.5},
         },
     },
     ["enter_sprint"] = {
@@ -244,7 +237,7 @@ SWEP.Animations = {
         Time = 5 / 30,
         ShellEjectAt = 0,
         SoundTable = {
-            {s = "ArcCW_MW3E.Mech_D", t = 1 / 35},
+            {s = "weapons/arccw/mw3e_mech/mech_d", t = 1 / 35},
         },
     },
     ["fire_iron_m203"] = {
@@ -252,7 +245,7 @@ SWEP.Animations = {
         Time = 5 / 30,
         ShellEjectAt = 0,
         SoundTable = {
-            {s = "ArcCW_MW3E.Mech_D", t = 1 / 35},
+            {s = "weapons/arccw/mw3e_mech/mech_d", t = 1 / 35},
         },
     },
     ["reload_m203"] = {
@@ -261,8 +254,8 @@ SWEP.Animations = {
         TPAnim = ACT_HL2MP_GESTURE_RELOAD_AR2,
         LHIK = true,
         SoundTable = {
-            {s = "ArcCW_MW3E.QBZ97_MagOut", t = 0.5},
-            {s = "ArcCW_MW3E.QBZ97_MagIn", t = 1.7},
+            {s = "weapons/arccw/mw3e_qbz97/out.wav", t = 0.5},
+            {s = "weapons/arccw/mw3e_qbz97/in.wav", t = 1.7},
         },
     },
     ["reload_empty_m203"] = {
@@ -271,9 +264,9 @@ SWEP.Animations = {
         TPAnim = ACT_HL2MP_GESTURE_RELOAD_AR2,
         LHIK = true,
         SoundTable = {
-            {s = "ArcCW_MW3E.QBZ97_MagOut", t = 0.5},
-            {s = "ArcCW_MW3E.QBZ97_MagIn", t = 1.7},
-            {s = "ArcCW_MW3E.QBZ97_Chamber", t = 2.5},
+            {s = "weapons/arccw/mw3e_qbz97/out.wav", t = 0.5},
+            {s = "weapons/arccw/mw3e_qbz97/in.wav", t = 1.7},
+            {s = "weapons/arccw/mw3e_qbz97/chamber.wav", t = 2.5},
         },
     },
     ["enter_sprint_m203"] = {

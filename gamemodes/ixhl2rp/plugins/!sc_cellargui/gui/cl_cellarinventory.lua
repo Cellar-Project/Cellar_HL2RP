@@ -60,7 +60,7 @@ function PANEL:Init()
 	equipPanel:SetCharacter(LocalPlayer():GetCharacter())
 
 	local canvas = inventoryPanel:Add("DTileLayout")
-
+	
 	local canvasLayout = canvas.PerformLayout
 	canvas.PerformLayout = nil -- we'll layout after we add the panels instead of each time one is added
 	canvas:SetBorder(0)
@@ -85,7 +85,6 @@ function PANEL:Init()
 	--panel.childPanels = {}
 
 	local inventory = LocalPlayer():GetCharacter():GetInventory()
-	local equipment = LocalPlayer():GetCharacter():GetEquipment()
 
 	if (inventory) then
 		panel:SetInventory(inventory)
@@ -93,25 +92,15 @@ function PANEL:Init()
 
 	ix.gui.inv1 = panel
 
-	for _, v in pairs(inventory:GetItems()) do
-		if (!v.isBag) then
-			continue
-		end
-
-		v.functions.View.OnClick(v)
-	end
-
-	--if (equipment) then
-		--if (ix.option.Get("openBags", true)) then
-			for _, v in pairs(equipment:GetItems()) do
-				if (!v.isBag) then
-					continue
-				end
-
-				v.functions.View.OnClick(v)
+	if (ix.option.Get("openBags", true)) then
+		for _, v in pairs(inventory:GetItems()) do
+			if (!v.isBag) then
+				continue
 			end
-		--end
-	--end
+
+			v.functions.View.OnClick(v)
+		end
+	end
 
 	canvas.PerformLayout = canvasLayout
 	canvas:Layout()
@@ -235,7 +224,6 @@ function PANEL:Remove()
 	CloseDermaMenus()
 	gui.EnableScreenClicker(false)
 
-
     local isAnimating = true
     self:MoveTo(ScrW() + ScrW(), ScrH() - ScrH(), 2, .1, .1, function()
         isAnimating = false
@@ -245,9 +233,18 @@ function PANEL:Remove()
 	self:AlphaTo(35, .15, 0)
 	LocalPlayer():StopSound('cellar.tab.amb2')
 
+	ix.gui.menuInventoryContainer = nil
+	ix.gui.inv1 = nil
+	canvasLayout = nil
 end
 
 vgui.Register("cellar.tab.inv", PANEL, "EditablePanel")
+
+hook.Add("PostRenderVGUI", "ixInvHelper", function()
+	local pnl = ix.gui.inv1
+
+	hook.Run("PostDrawInventory", pnl)
+end)
 
 
 

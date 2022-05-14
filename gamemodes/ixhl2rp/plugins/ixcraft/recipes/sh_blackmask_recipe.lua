@@ -1,14 +1,14 @@
-RECIPE.name = "Желтый пуховик"
+RECIPE.name = "Лицевая повязка"
 RECIPE.category = "Портняжное дело"
 RECIPE.requirements = {
-    ["box_of_needles"] = 2,
-    ["mat_cloth"] = 10
+    ["box_of_needles"] = 1,
+    ["mat_cloth"] = 4
 }
 RECIPE.results = {
-    ["yellowshuba"] = 1
+    ["blackmask"] = 1
 }
 RECIPE.station = "station_tailor"
-RECIPE.skill = {"tailoring", 7}
+RECIPE.skill = {"tailoring", 2}
 RECIPE.tools = {"tool_scissors"}
 RECIPE.description = nil
 RECIPE.model = nil

@@ -34,7 +34,7 @@ ix.command.Add("ZAdvance", {
 	end
 })
 
-ix.command.Add("ZRemove", {
+ix.command.Add("ZCure", {
 	description = "Remove disease.",
 	superAdminOnly = true,
 	arguments = ix.type.character,
@@ -47,40 +47,32 @@ ix.command.Add("ZRemove", {
 
 if SERVER then
 	PLUGIN.models = {
-		["models/cellar/characters/oldcitizens/female_01.mdl"] = "models/freshdead/freshdead_05.mdl",
-		["models/cellar/characters/oldcitizens/female_02.mdl"] = "models/freshdead/freshdead_06.mdl",
-		["models/cellar/characters/oldcitizens/female_03.mdl"] = "models/freshdead/freshdead_07.mdl",
-		["models/cellar/characters/oldcitizens/female_04.mdl"] = "models/freshdead/freshdead_05.mdl",
-		["models/cellar/characters/oldcitizens/female_05.mdl"] = "models/freshdead/freshdead_06.mdl",
-		["models/cellar/characters/oldcitizens/female_06.mdl"] = "models/freshdead/freshdead_05.mdl",
-		["models/cellar/characters/oldcitizens/female_07.mdl"] = "models/freshdead/freshdead_06.mdl",
-		["models/cellar/characters/oldcitizens/female_08.mdl"] = "models/freshdead/freshdead_05.mdl",
-		["models/cellar/characters/oldcitizens/female_09.mdl"] = "models/freshdead/freshdead_05.mdl",
-		["models/cellar/characters/oldcitizens/female_10.mdl"] = "models/freshdead/freshdead_06.mdl",
-		["models/cellar/characters/oldcitizens/female_11.mdl"] = "models/freshdead/freshdead_05.mdl",
-		["models/cellar/characters/oldcitizens/female_12.mdl"] = "models/freshdead/freshdead_07.mdl",
-		["models/cellar/characters/oldcitizens/female_13.mdl"] = "models/freshdead/freshdead_07.mdl",
-		["models/cellar/characters/oldcitizens/female_14.mdl"] = "models/freshdead/freshdead_07.mdl",
-		["models/cellar/characters/oldcitizens/female_15.mdl"] = "models/freshdead/freshdead_05.mdl",
-		["models/cellar/characters/oldcitizens/female_16.mdl"] = "models/freshdead/freshdead_06.mdl",
-		["models/cellar/characters/oldcitizens/male_01.mdl"] = "models/freshdead/freshdead_01.mdll",
-		["models/cellar/characters/oldcitizens/male_02.mdl"] = "models/freshdead/freshdead_02.mdl",
-		["models/cellar/characters/oldcitizens/male_03.mdl"] = "models/freshdead/freshdead_03.mdl",
-		["models/cellar/characters/oldcitizens/male_04.mdl"] = "models/freshdead/freshdead_04.mdl",
-		["models/cellar/characters/oldcitizens/male_05.mdl"] = "models/zombie/grabber_06.mdl",
-		["models/cellar/characters/oldcitizens/male_06.mdl"] = "models/zombie/seeker_02.mdl",
-		["models/cellar/characters/oldcitizens/male_07.mdl"] = "models/zombie/grabber_08.mdl",
-		["models/cellar/characters/oldcitizens/male_08.mdl"] = "models/zombie/junkie_03.mdl",
-		["models/cellar/characters/oldcitizens/male_09.mdl"] = "models/zombie/grabber_10.mdl",
-		["models/cellar/characters/oldcitizens/male_10.mdl"] = "models/zombie/grabber_07.mdl",
-		["models/cellar/characters/oldcitizens/male_11.mdl"] = "models/zombie/infected_07.mdl",
-		["models/cellar/characters/oldcitizens/male_12.mdl"] = "models/zombie/grabber_03.mdl",
-		["models/cellar/characters/oldcitizens/male_13.mdl"] = "models/zombie/grabber_06.mdl",
-		["models/cellar/characters/oldcitizens/male_14.mdl"] = "models/corrupt/zombie_02.mdl",
-		["models/cellar/characters/oldcitizens/male_15.mdl"] = "models/zombie/infected_12.mdl",
-		["models/cellar/characters/oldcitizens/male_16.mdl"] = "models/infected/new_infected_01.mdl",
-		["models/cellar/characters/oldcitizens/male_17.mdl"] = "models/zombie/grabber_09.mdl",
-		["models/cellar/characters/oldcitizens/male_18.mdl"] = "models/zombie/grabber_05.mdl"
+		["models/cellar/characters/city3/citizens/female/c3_female_01.mdl"] = "models/freshdead/freshdead_05.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_02.mdl"] = "models/freshdead/freshdead_06.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_03.mdl"] = "models/freshdead/freshdead_07.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_04.mdl"] = "models/freshdead/freshdead_05.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_05.mdl"] = "models/freshdead/freshdead_06.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_06.mdl"] = "models/freshdead/freshdead_05.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_07.mdl"] = "models/freshdead/freshdead_06.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_08.mdl"] = "models/freshdead/freshdead_05.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_09.mdl"] = "models/freshdead/freshdead_05.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_10.mdl"] = "models/freshdead/freshdead_06.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_11.mdl"] = "models/freshdead/freshdead_05.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_12.mdl"] = "models/freshdead/freshdead_07.mdl",
+		["models/cellar/characters/city3/citizens/female/c3_female_13.mdl"] = "models/freshdead/freshdead_07.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_01.mdl"] = "models/freshdead/freshdead_01.mdll",
+		["models/cellar/characters/city3/citizens/male/c3_male_02.mdl"] = "models/freshdead/freshdead_02.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_03.mdl"] = "models/freshdead/freshdead_03.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_04.mdl"] = "models/freshdead/freshdead_04.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_05.mdl"] = "models/zombie/grabber_06.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_06.mdl"] = "models/zombie/seeker_02.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_07.mdl"] = "models/zombie/grabber_08.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_08.mdl"] = "models/zombie/junkie_03.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_09.mdl"] = "models/zombie/grabber_10.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_10.mdl"] = "models/zombie/grabber_07.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_11.mdl"] = "models/zombie/infected_07.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_12.mdl"] = "models/zombie/grabber_03.mdl",
+		["models/cellar/characters/city3/citizens/male/c3_male_13.mdl"] = "models/zombie/grabber_06.mdl"
 	}
 
 	function PLUGIN:StartApocalypse()
@@ -95,27 +87,23 @@ if SERVER then
 		if character:IsOTA() then return end
 		if character:GetFaction() == FACTION_VORTIGAUNT then return end
 		if character:GetData("zombie") then return end
+		if character:GetData("hasVaccine") then return end
 
-		local hasVaccine = character:GetData("hasVaccine")
+		character:SetData("zombie", true)
 
-		if not hasVaccine then
-			character:SetData("zombie", true)
-
-			local timerID = "ixInfection_" .. character:GetID()
-			timer.Create(timerID, 600, 3, function()
-				if not character then
-					timer.Remove(timerID)
-				end
-				self:AdvanceDisease(character)
-			end)
-		end
+		local timerID = "ixInfection_" .. character:GetID()
+		timer.Create(timerID, 600, 3, function()
+			if not character then
+				timer.Remove(timerID)
+			end
+			self:AdvanceDisease(character)
+		end)
 	end
 
 	function PLUGIN:AdvanceDisease(character)
 		if character:IsOTA() then return end
 		if character:GetFaction() == FACTION_VORTIGAUNT then return end
 		if not character:GetData("zombie") then return end
-		print("AdvanceDisease")
 
 		local stage = character:GetData("zstage", 0)
 		stage = math.Clamp(stage + 1, 0, 3)
@@ -155,17 +143,6 @@ if SERVER then
 	end
 end
 
-function PLUGIN:CanPlayerEquipItem(client, item, slot)
-	if IsValid(client) and client:GetCharacter():GetData("zstage") == 3 then
-		return false
-	end
-end
-
-function PLUGIN:CanPlayerInteractItem(client, action)
-	if IsValid(client) and client:GetCharacter():GetData("zstage") == 3 then
-		return false
-	end
-end
 
 function PLUGIN:CanPlayerInteractEntity(client, entity)
 	if IsValid(client) and client:GetCharacter():GetData("zstage") == 3 then

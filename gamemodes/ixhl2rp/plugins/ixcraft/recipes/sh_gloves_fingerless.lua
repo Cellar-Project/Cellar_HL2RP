@@ -1,11 +1,11 @@
-RECIPE.name = "Лицевая повязка"
+RECIPE.name = "Перчатки без пальцев"
 RECIPE.category = "Портняжное дело"
 RECIPE.requirements = {
     ["box_of_needles"] = 1,
-    ["mat_cloth"] = 10
+    ["mat_cloth"] = 2
 }
 RECIPE.results = {
-    ["facial_bandage"] = 1
+    ["gloves_fingerless"] = 1
 }
 RECIPE.station = "station_tailor"
 RECIPE.skill = {"tailoring", 2}
