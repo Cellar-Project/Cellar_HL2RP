@@ -13,8 +13,8 @@ ix.anim.assassin = {
 		attack = ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST,
 		glide = "jump_relaxed",
 		sit = ACT_BUSY_SIT_CHAIR,
-		prone_walk = {"pwalk_all", "pwalk_all"},
-		prone_idle = {"pidle_normal", "pidle_fists_aim"},
+		prone_walk = {"prone_walk_relaxed", "prone_walk_relaxed"},
+		prone_idle = {"prone_idle_relaxed", "prone_idle_relaxed"},
 	},
 	/*pistol = {
 
