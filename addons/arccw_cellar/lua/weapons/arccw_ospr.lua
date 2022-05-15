@@ -50,7 +50,7 @@ SWEP.RecoilPunch = 2
 SWEP.RecoilDirection = Angle(1, 0, 0)
 SWEP.RecoilDirectionSide = Angle(0, 1, 0)
 
-SWEP.Delay = 60 / 600 -- 60 / RPM.
+SWEP.Delay = 500 / 600 -- 60 / RPM.
 SWEP.Num = 1 -- number of shots per trigger pull.
 SWEP.Firemodes = {
 	{
@@ -244,9 +244,8 @@ if CLIENT then
 
 	visor_ui_model = ClientsideModel("models/sniper_ui.mdl", RENDERGROUP_OPAQUE)
 	visor_ui_model:SetNoDraw(true)
-	visor_ui_model:SetMaterial("debug/debugwhite")
 
-	local pos, ang = Vector(0, 0, 0), Angle()
+	local pos, ang, ui_ang = Vector(0, 0, 0), Angle(), Angle(0, -90, 90)
 	local mdlang = Angle(ang)
 	mdlang:RotateAroundAxis(ang:Right(), 0)
 	mdlang:RotateAroundAxis(ang:Forward(), 0)
@@ -327,11 +326,57 @@ if CLIENT then
 	        render.SetMaterial(scope_bg_overlay)
 	        render.DrawScreenQuad()
 	    end
+	end
 
-	   
+	surface.CreateFont("ospr_ui", {
+		font = "Blender Pro Bold",
+		extended = false,
+		size = 26,
+		weight = 1000,
+		antialias = true,
+	})
+
+	surface.CreateFont("ospr_ui.value", {
+		font = "Blender Pro Bold",
+		extended = false,
+		size = 35,
+		weight = 500,
+		antialias = true,
+	})
+
+	local materials = {
+		["static_color"] = Color(0, 255, 255, 255),
+		["strikes"] = Color(0, 255, 255, 76),
+		["inner_circle"] = Color(255, 255, 255, 51),
+		["inner_circle"] = Color(255, 255, 255, 51),
+		["guides_minor"] = Color(255, 255, 255, 25.5),
+		["guides_major"] = Color(255, 255, 255, 64),
+		["horizontal_corners"] = Color(255, 255, 255, 102),
+		["left_slider"] = Color(0, 255, 255, 76),
+		["outer_circle_minor"] = Color(0, 255, 255, 25.5),
+		["outer_circle_major"] = Color(255, 255, 255, 25.5),
+		["white_circles"] = Color(255, 255, 255, 128),
+		["anim_circles"] = Color(0, 255, 255, 25.5),
+		["anim_energy"] = Color(255, 255, 255, 255),
+	}
+
+	for k, v in pairs(materials) do
+		local mat = Material("ospr/"..k)
+
+		if mat:IsError() then continue end
+
+		local tex = GetRenderTargetEx("ospr_"..k, 16, 16, RT_SIZE_OFFSCREEN, MATERIAL_RT_DEPTH_SHARED, 0, 0, IMAGE_FORMAT_RGBA8888)
+		
+		render.PushRenderTarget(tex)
+			render.Clear(v.r, v.g, v.b, v.a)
+		render.PopRenderTarget()
+
+		mat:SetTexture("$basetexture", tex)
 	end
 
 	function SWEP:DrawHUD()
+		local trace = LocalPlayer():GetEyeTrace()
+
 		if self:GetState() != ArcCW.STATE_SIGHTS then
 			return
 		end
@@ -339,18 +384,55 @@ if CLIENT then
 		if self:GetSightDelta() > 0.75 then
 			return
 		end
-		
-		cam.Start3D(EyePos(), ang, 75, 0, 0, nil, nil, 0.1, 1280)
+
+		local proc = string.format("%i%%", 100 * self:GetChargeDelta())
+		cam.Start3D(pos, ang, 75, 0, 0, nil, nil, 0.1, 1280)
 			cam.IgnoreZ(true)
 				render.SuppressEngineLighting(true)
-				render.SetColorModulation(0, 1, 0.95)
-				render.MaterialOverride(debugwhite)
-				visor_ui_model:SetPos(EyePos())
+				//render.SetColorModulation(0, 1, 0.95)
+				//render.MaterialOverride(debugwhite)
+				visor_ui_model:SetPos(pos)
 				visor_ui_model:SetAngles(mdlang)
+				visor_ui_model:FrameAdvance(FrameTime())
 				visor_ui_model:DrawModel()
+
 				render.SuppressEngineLighting(false)
+
+				local ui = visor_ui_model:GetAttachment(1)
+
+				if ui then
+					cam.Start3D2D(ui.Pos, ui_ang, 0.05)
+						local old = DisableClipping(true)
+						surface.SetFont("ospr_ui")
+
+						local w, h = surface.GetTextSize("CHARGE")
+						local y = -5 + -h/2
+
+						surface.SetTextColor(color_black)
+						surface.SetTextPos(-w/2, y) 
+						surface.DrawText("CHARGE")
+
+
+						surface.SetFont("ospr_ui.value")
+
+						w, h = surface.GetTextSize(proc)
+						y = y - h
+
+						surface.SetTextColor(color_white)
+						surface.SetTextPos(-tW/2, y - 3) 
+						surface.DrawText(proc)
+
+						DisableClipping(old)
+					cam.End3D2D()
+				end
 			cam.IgnoreZ(false)
 		cam.End3D()
+	end
+
+	function SWEP:Hook_SelectFireAnimation()
+		visor_ui_model:ResetSequenceInfo()
+		visor_ui_model:SetCycle(0)
+		visor_ui_model:ResetSequence("fire")
 	end
 end
 
@@ -367,7 +449,7 @@ function SWEP:GetChargeDelta()
 		return 0
 	end
 	
-	local delta = math.Clamp((CurTime() - self.LastChargeUpTime) / 5, 0, 1)
+	local delta = math.Clamp((CurTime() - self.LastChargeUpTime) / 3, 0, 1)
 
 	delta = math.abs(delta)
 
@@ -377,12 +459,31 @@ end
 function SWEP:Hook_Think()
 	if SERVER then
 		if self:GetState() == ArcCW.STATE_SIGHTS and !self.LastChargeUpTime then
-			self:StartCharge()
-			self:CallOnClient("StartCharge")
+			if self:GetNextArcCWPrimaryFire() <= CurTime() then
+				self:StartCharge()
+				self:CallOnClient("StartCharge")
+			end
 		elseif self:GetState() != ArcCW.STATE_SIGHTS and self.LastChargeUpTime then
 			self:StopCharge()
 			self:CallOnClient("StopCharge")
 		end
+	else
+		if self:GetState() == ArcCW.STATE_SIGHTS and !self.PlaySightAnim then
+			self.PlaySightAnim = true
+
+			visor_ui_model:ResetSequenceInfo()
+			visor_ui_model:SetCycle(0)
+			visor_ui_model:ResetSequence("draw")
+		elseif self:GetState() != ArcCW.STATE_SIGHTS and self.PlaySightAnim then
+			self.PlaySightAnim = false
+		end
+	end
+end
+
+function SWEP:Hook_PostFireBullets()
+	if SERVER then
+		self:StopCharge()
+		self:CallOnClient("StopCharge")
 	end
 end
 
