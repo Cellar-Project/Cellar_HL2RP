@@ -22,7 +22,7 @@ SWEP.ViewModelFOV = 60
 
 SWEP.DefaultBodygroups = "010000100000"
 
-SWEP.Damage = 30
+SWEP.Damage = 45
 SWEP.DamageMin = 22
 SWEP.BloodDamage = 300
 SWEP.ShockDamage = 350

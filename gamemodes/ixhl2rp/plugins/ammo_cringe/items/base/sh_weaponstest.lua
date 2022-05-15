@@ -1,4 +1,3 @@
-
 ITEM.name = "Weapon"
 ITEM.description = "A Weapon."
 ITEM.category = "Weapons [TEST]"
@@ -264,6 +263,45 @@ ITEM.functions.Equip = {
 			hook.Run("CanPlayerEquipItem", client, item) != false and item.invID == client:GetCharacter():GetInventory():GetID()
 	end
 }
+
+ITEM.functions.awFix = {
+	name = "Исправить",
+	OnRun = function(item)
+
+		local repairtime = 4
+
+		local client = item.player
+
+		local uniqueID = "FixingWeapon"..client:UniqueID()
+
+		client:SetAction("Исправляю неисправность",repairtime,function()
+
+			client:Notify("Вы успешно исправили неисправность.")
+			
+			item:SetData("CantWeaponShoot",nil)
+
+		end)
+
+		timer.Create(uniqueID,0.1,repairtime/0.1,function()
+
+			if !IsValid(client) or (IsValid(client) and client:GetVelocity():Length() != 0) then
+				
+				timer.Remove(uniqueID)
+	
+				client:SetAction()
+	
+			end                            
+	
+		end)
+
+		return false
+
+	end,
+	OnCanRun = function(item)
+		return item:GetData("CantWeaponShoot",false)
+	end
+}
+
 
 function ITEM:WearPAC(client)
 	if (ix.pac and self.pacData) then
