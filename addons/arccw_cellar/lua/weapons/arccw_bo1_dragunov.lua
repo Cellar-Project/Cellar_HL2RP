@@ -33,6 +33,10 @@ SWEP.Damage = 100
 SWEP.DamageMin = 85 -- damage done at maximum range
 SWEP.Range = 400 -- in METRES
 SWEP.RangeMin = 40
+SWEP.BloodDamage = 700
+SWEP.ShockDamage = 800
+SWEP.BleedChance = 90
+SWEP.AmmoItem = "bullets_7x6254mmr"
 
 SWEP.Penetration = 12
 SWEP.DamageType = DMG_BULLET
@@ -68,11 +72,8 @@ SWEP.Firemodes = {
     }
 }
 
-SWEP.NPCWeaponType = {
-    "weapon_ar2",
-    "weapon_crossbow",
-}
-SWEP.NPCWeight = 100
+SWEP.NPCWeaponType = "weapon_ar2"
+SWEP.NPCWeight = 200
 
 SWEP.AccuracyMOA = 1 -- accuracy in Minutes of Angle. There are 60 MOA in a degree.
 SWEP.HipDispersion = 800 -- inaccuracy added by hip firing.
@@ -139,16 +140,13 @@ SWEP.BarrelOffsetHip = Vector(2, 0, -2)
 
 SWEP.BarrelLength = 24
 
-SWEP.AttachmentElements = {
-}
+SWEP.AttachmentElements = {}
 
 SWEP.ExtraSightDist = 3
 
-SWEP.RejectAttachments = {
-}
+SWEP.RejectAttachments = {}
 
-SWEP.Attachments = {
-}
+SWEP.Attachments = {}
 
 SWEP.Animations = {
     ["idle"] = {
