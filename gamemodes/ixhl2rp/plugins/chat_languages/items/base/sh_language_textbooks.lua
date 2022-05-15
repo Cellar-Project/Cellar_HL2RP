@@ -96,25 +96,30 @@ ITEM.functions.Study = {
 					timer.Remove(timerID)
 				end)
 
-				timer.Create(timerID, 0.1, studyProgress / 0.1, function()
-					if (IsValid(client)) then
-						local bNotInInventory = client != item:GetOwner()
+				local actionTimerDelay = 0.1
+				local actionTimerRepetitionCount = math.floor(studyProgress / actionTimerDelay) - 1
 
-						if (bNotInInventory or savedPosition != client:GetPos()) then
-							client:SetAction()
+				if (actionTimerRepetitionCount > 0) then
+					timer.Create(timerID, actionTimerDelay, actionTimerRepetitionCount, function()
+						if (IsValid(client)) then
+							local bNotInInventory = client != item:GetOwner()
 
-							if (!bNotInInventory) then client:NotifyLocalized("noStudyOnMove") end
+							if (bNotInInventory or savedPosition != client:GetPos()) then
+								client:SetAction()
 
-							-- just in case
+								if (!bNotInInventory) then client:NotifyLocalized("noStudyOnMove") end
+
+								-- just in case
+								timer.Remove(timerID)
+							elseif (timer.RepsLeft(timerID) > 0) then
+								character:SetLanguageStudyProgress(item.languageID, item.volume, timer.TimeLeft(actionTimerID))
+							end
+						else
+							timer.Remove(actionTimerID)
 							timer.Remove(timerID)
-						elseif (timer.RepsLeft(timerID) > 0) then
-							character:SetLanguageStudyProgress(item.languageID, item.volume, timer.TimeLeft(actionTimerID))
 						end
-					else
-						timer.Remove(actionTimerID)
-						timer.Remove(timerID)
-					end
-				end)
+					end)
+				end
 			else
 				client:NotifyLocalized("noStudyOnMove")
 			end
