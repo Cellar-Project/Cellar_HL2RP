@@ -1,5 +1,5 @@
 
-net.Receive("ixUpdateNoTradeNotification", function()
+net.Receive("ixUpdateBagLimitNotification", function()
 	local variant = net.ReadUInt(2)
 	local message
 
