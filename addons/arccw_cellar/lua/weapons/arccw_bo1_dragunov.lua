@@ -1,6 +1,6 @@
 SWEP.Base = "arccw_base"
-SWEP.Spawnable = true
-SWEP.Category = "CELLAR" 
+SWEP.Spawnable = true -- this obviously has to be set to true
+SWEP.Category = "CELLAR"
 SWEP.AdminOnly = false
 
 SWEP.PrintName = "Dragunov SVD-63"
@@ -16,12 +16,12 @@ SWEP.Slot = 3
 
 SWEP.UseHands = true
 
-SWEP.ViewModel = "models/weapons/arccw/c_cod4_dragunov.mdl"
-SWEP.WorldModel = "models/weapons/arccw/c_cod4_dragunov.mdl"
+SWEP.ViewModel = "models/weapons/arccw/c_bo1_svd.mdl"
+SWEP.WorldModel = "models/weapons/arccw/c_bo1_svd.mdl"
 SWEP.MirrorVMWM = true
 SWEP.WorldModelOffset = {
-    scale = 1.2,
-    pos        =    Vector(-4.5, 4, -6.3),
+    scale = 1.035,
+    pos        =    Vector(-4.25, 4, -6.5),
     ang        =    Angle(-6, -1.25, 180),
     bone    =    "ValveBiped.Bip01_R_Hand",
 }
@@ -31,16 +31,14 @@ SWEP.DefaultBodygroups = "00000000000"
 
 SWEP.Damage = 100
 SWEP.DamageMin = 85 -- damage done at maximum range
-SWEP.BloodDamage = 1000
-SWEP.ShockDamage = 1500
-SWEP.BleedChance = 90
-SWEP.AmmoItem = "bullets_7x62_54mmr"
-
 SWEP.Range = 400 -- in METRES
+SWEP.RangeMin = 40
+
 SWEP.Penetration = 12
 SWEP.DamageType = DMG_BULLET
-SWEP.ShootEntity = nil
-SWEP.MuzzleVelocity = 830
+SWEP.ShootEntity = nil -- entity to fire, if any
+SWEP.MuzzleVelocity = 830 -- projectile or phys bullet muzzle velocity
+-- IN M/S
 
 SWEP.TracerNum = 1 -- tracer every X
 SWEP.TracerCol = Color(255, 25, 25)
@@ -86,8 +84,9 @@ SWEP.MagID = "svd" -- the magazine pool this gun draws from
 SWEP.ShootVol = 110 -- volume of shoot sound
 SWEP.ShootPitch = 100 -- pitch of shoot sound
 
-SWEP.ShootSound = "ArcCW_COD4E.Dragunov_Fire"
-SWEP.ShootSoundSilenced = "ArcCW_MW3E.RSASS_Sil"
+SWEP.ShootSound = "ArcCW_BO1.SVD_Fire"
+SWEP.ShootSoundSilenced = "ArcCW_BO2.Ballista_Sil"
+SWEP.DistantShootSound = {"^weapons/arccw/bo2_generic_sniper/dist/flux_l.wav", "^weapons/arccw/bo2_generic_sniper/dist/flux_r.wav"}
 
 SWEP.MuzzleEffect = "muzzleflash_1"
 SWEP.ShellModel = "models/shells/shell_556.mdl"
@@ -97,7 +96,12 @@ SWEP.ShellScale = 1.5
 SWEP.MuzzleEffectAttachment = 1 -- which attachment to put the muzzle on
 SWEP.CaseEffectAttachment = 2 -- which attachment to put the case effect on
 SWEP.ProceduralViewBobAttachment = 1
-SWEP.CamAttachment = 3
+SWEP.CamAttachment = 4
+
+SWEP.BulletBones = { -- the bone that represents bullets in gun/mag
+    -- [0] = "bulletchamber",
+    -- [1] = "bullet1"
+}
 
 SWEP.ProceduralRegularFire = false
 SWEP.ProceduralIronFire = false
@@ -105,8 +109,8 @@ SWEP.ProceduralIronFire = false
 SWEP.CaseBones = {}
 
 SWEP.IronSightStruct = {
-    Pos = Vector(-3.525, -4, 2.35),
-    Ang = Angle(0.75, 0.03, 0),
+    Pos = Vector(-3.525, -4, 1.56),
+    Ang = Angle(0, 0.05, 0),
     Magnification = 1.1,
     CrosshairInSights = false,
     SwitchToSound = "", -- sound that plays when switching to this sight
@@ -117,12 +121,6 @@ SWEP.HoldtypeActive = "ar2"
 SWEP.HoldtypeSights = "rpg"
 
 SWEP.AnimShoot = ACT_HL2MP_GESTURE_RANGE_ATTACK_AR2
-
-SWEP.SpeedMult = 0.975
-SWEP.SightedSpeedMult = 0.75
-
-
-SWEP.BarrelLength = 24
 
 SWEP.ActivePos = Vector(0, 2, 1)
 SWEP.ActiveAng = Angle(0, 0, 0)
@@ -139,7 +137,33 @@ SWEP.HolsterAng = Angle(-7.036, 30.016, 0)
 SWEP.BarrelOffsetSighted = Vector(0, 0, -1)
 SWEP.BarrelOffsetHip = Vector(2, 0, -2)
 
+SWEP.BarrelLength = 24
+
+SWEP.AttachmentElements = {
+}
+
 SWEP.ExtraSightDist = 3
+
+SWEP.RejectAttachments = {
+}
+
+SWEP.Attachments = {
+}
+
+SWEP.Hook_ModifyBodygroups = function(wep, data)
+    local vm = data.vm
+    local papcamo = wep.Attachments[8].Installed == "ammo_papunch"
+
+    if papcamo then return vm:SetSkin(3) end
+end
+
+SWEP.Hook_TranslateAnimation = function(wep, anim)
+    local extmag = wep.Attachments[8].Installed == "ammo_papunch"
+
+    if extmag then
+        return anim .. "_ext"
+    end
+end
 
 SWEP.Animations = {
     ["idle"] = {
@@ -148,11 +172,19 @@ SWEP.Animations = {
     },
     ["draw"] = {
         Source = "draw",
-        Time = 1,
+        Time = 56 / 35,
     },
     ["holster"] = {
         Source = "holster",
-        Time = 1,
+        Time = 1.25,
+    },
+    ["ready"] = {
+        Source = "first_draw",
+        Time = 70 / 35,
+        SoundTable = {
+            {s = "ArcCW_BO1.SVD_Back", t = 0.1},
+            {s = "ArcCW_BO1.SVD_Fwd", t = 0.75},
+        },
     },
     ["fire"] = {
         Source = {"fire"},
@@ -160,7 +192,7 @@ SWEP.Animations = {
         ShellEjectAt = 0,
     },
     ["fire_iron"] = {
-        Source = "fire",
+        Source = "fire_ads",
         Time = 13 / 35,
         ShellEjectAt = 0,
     },
@@ -171,8 +203,8 @@ SWEP.Animations = {
         Checkpoints = {33, 55},
         FrameRate = 30,
         SoundTable = {
-            {s = "ArcCW_COD4E.Dragunov_MagOut", t = 0.2},
-            {s = "ArcCW_COD4E.Dragunov_MagIn", t = 1.75},
+            {s = "ArcCW_BO1.SVD_ClipOut", t = 0.2},
+            {s = "ArcCW_BO1.SVD_ClipIn", t = 1.75},
         },
     },
     ["reload_empty"] = {
@@ -182,9 +214,34 @@ SWEP.Animations = {
         Checkpoints = {33, 55, 88},
         FrameRate = 30,
         SoundTable = {
-            {s = "ArcCW_COD4E.Dragunov_MagOut", t = 0.2},
-            {s = "ArcCW_COD4E.Dragunov_MagIn", t = 1.75},
-            {s = "ArcCW_COD4E.Dragunov_Chamber", t = 2.5},
+            {s = "ArcCW_BO1.SVD_ClipOut", t = 0.2},
+            {s = "ArcCW_BO1.SVD_ClipIn", t = 1.75},
+            {s = "ArcCW_BO1.SVD_Back", t = 2.25},
+            {s = "ArcCW_BO1.SVD_Fwd", t = 2.5},
+        },
+    },
+    ["reload_ext"] = {
+        Source = "reload_ext",
+        Time = 114 / 35,
+        TPAnim = ACT_HL2MP_GESTURE_RELOAD_AR2,
+        Checkpoints = {33, 55},
+        FrameRate = 30,
+        SoundTable = {
+            {s = "ArcCW_BO1.SVD_ClipOut", t = 0.2},
+            {s = "ArcCW_BO1.SVD_ClipIn", t = 1.75},
+        },
+    },
+    ["reload_empty_ext"] = {
+        Source = "reload_empty_ext",
+        Time = 142 / 35,
+        TPAnim = ACT_HL2MP_GESTURE_RELOAD_AR2,
+        Checkpoints = {33, 55, 88},
+        FrameRate = 30,
+        SoundTable = {
+            {s = "ArcCW_BO1.SVD_ClipOut", t = 0.2},
+            {s = "ArcCW_BO1.SVD_ClipIn", t = 1.75},
+            {s = "ArcCW_BO1.SVD_Back", t = 2.25},
+            {s = "ArcCW_BO1.SVD_Fwd", t = 2.5},
         },
     },
     ["enter_sprint"] = {
