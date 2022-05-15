@@ -26,7 +26,7 @@ SWEP.DamageMin = 40 -- damage done at maximum range
 SWEP.BloodDamage = 800
 SWEP.ShockDamage = 1000
 SWEP.BleedChance = 75
-SWEP.AmmoItem = "bullets_smg"
+SWEP.AmmoItem = "bullets_127x55"
 
 SWEP.Range = 100 -- in METRES
 SWEP.Penetration = 10
