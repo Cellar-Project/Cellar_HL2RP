@@ -433,7 +433,9 @@ function SWEP:PreDrawViewModel(vm)
     if not vm then return end
 
     if self:ShouldFlatScope() then
-        render.SetBlend(0)
+        if self:GetSightDelta() < 0.75 then
+            render.SetBlend(0)
+        end
     else
         if self:GetState() == ArcCW.STATE_CUSTOMIZE then self:BlurNotWeapon() end
 
