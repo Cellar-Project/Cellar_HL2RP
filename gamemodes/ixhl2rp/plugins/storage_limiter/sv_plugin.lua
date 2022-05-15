@@ -1,4 +1,5 @@
-util.AddNetworkString("ixUpdateNoTradeNotification")
+
+util.AddNetworkString("ixUpdateBagLimitNotification")
 
 local function CanInteractWithStorage(item, inventory)
 	return (!inventory or inventory.GetReceivers) and (item.base == "base_bags" or item.isBag)
@@ -28,6 +29,14 @@ local function CheckStorageLimit(client, item)
 	end
 end
 
+local function ChangeLastNotification(client, bIsSmall)
+	local variant = (bIsSmall == nil and 0) or (bIsSmall == false and 1) or (bIsSmall == true and 2)
+
+	net.Start("ixUpdateBagLimitNotification")
+		net.WriteUInt(variant, 2)
+	net.Send(client)
+end
+
 function PLUGIN:PlayerLoadedCharacter(client, character)
 	local inventory = character:GetInventory()
 	client.ixStorageCount = 0
@@ -55,21 +64,18 @@ function PLUGIN:PlayerLoadedCharacter(client, character)
 	end
 end
 
-function PLUGIN:CanPlayerTakeItem(client, item)
-	local itemTable = ix.item.list[item:GetItemID()]
-	local bCanNotTake, bIsSmall = CheckStorageLimit(client, itemTable)
+function PLUGIN:CanTransferItem(item, _, targetInv)
+	local invOwner = targetInv.GetOwner and targetInv:GetOwner()
 
-	if (bCanNotTake) then
-		if (bIsSmall) then
-			ix.util.NotifyLocalized("invMaxSmallStorages", client, ix.config.Get("inventoryMaxSmallStorages", 2))
-		elseif (bIsSmall == false) then
-			ix.util.NotifyLocalized("invMaxStorages", client, ix.config.Get("inventoryMaxStorages", 1))
-		else
-			ix.util.NotifyLocalized("noDifferentStorages", client)
+	if (invOwner) then
+		local bCanNotTake, bIsSmall = CheckStorageLimit(invOwner, item)
+
+		if (bCanNotTake) then
+			ChangeLastNotification(invOwner, bIsSmall)
+
+			return false
 		end
-
-		return false
-	end
+  	end
 end
 
 function PLUGIN:CanPlayerTradeWithVendor(client, _, uniqueID, isSellingToVendor)
@@ -78,11 +84,7 @@ function PLUGIN:CanPlayerTradeWithVendor(client, _, uniqueID, isSellingToVendor)
 		local bCanNotTake, bIsSmall = CheckStorageLimit(client, itemTable)
 
 		if (bCanNotTake) then
-			local variant = (bIsSmall == nil and 0) or (bIsSmall == false and 1) or (bIsSmall == true and 2)
-
-			net.Start("ixUpdateNoTradeNotification")
-				net.WriteUInt(variant, 2)
-			net.Send(client)
+			ChangeLastNotification(client, bIsSmall)
 
 			return false
 		end
