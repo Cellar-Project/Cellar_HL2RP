@@ -150,21 +150,6 @@ SWEP.RejectAttachments = {
 SWEP.Attachments = {
 }
 
-SWEP.Hook_ModifyBodygroups = function(wep, data)
-    local vm = data.vm
-    local papcamo = wep.Attachments[8].Installed == "ammo_papunch"
-
-    if papcamo then return vm:SetSkin(3) end
-end
-
-SWEP.Hook_TranslateAnimation = function(wep, anim)
-    local extmag = wep.Attachments[8].Installed == "ammo_papunch"
-
-    if extmag then
-        return anim .. "_ext"
-    end
-end
-
 SWEP.Animations = {
     ["idle"] = {
         Source = "idle",
