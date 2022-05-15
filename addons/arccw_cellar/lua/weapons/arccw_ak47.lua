@@ -26,7 +26,7 @@ SWEP.Damage = 35
 SWEP.DamageMin = 32
 SWEP.BloodDamage = 600
 SWEP.ShockDamage = 600
-SWEP.BleedChance = 80
+SWEP.BleedChance = 75
 SWEP.AmmoItem = "bullets_7x62"
 
 SWEP.Range = 100 -- in METRES
