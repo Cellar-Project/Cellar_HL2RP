@@ -1,6 +1,6 @@
 ITEM.name = "Нож"
 ITEM.description = "Этот нож был сделан довольно топорно и неаккуратно, но свою функцию он явно будет выполнять. Если совершить удар в правильную точку на теле то эта топорность в создании сможет даже послужить хорошую службу, ибо осколки от этого ножа останутся в ране врага."
-ITEM.model = "models/weapons/w_knife_t.mdl"
+ITEM.model = "models/weapons/tfa_nmrih/w_me_kitknife.mdl"
 ITEM.class = "arccw_knife"
 ITEM.weaponCategory = "melee"
 ITEM.width = 2

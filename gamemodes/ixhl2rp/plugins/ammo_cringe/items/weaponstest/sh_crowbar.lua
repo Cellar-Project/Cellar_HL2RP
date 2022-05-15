@@ -6,9 +6,9 @@ ITEM.weaponCategory = "melee"
 ITEM.width = 3
 ITEM.height = 1
 ITEM.iconCam = {
-	pos = Vector(0, 200, 0),
-	ang = Angle(0, 270, 0),
-	fov = 8,
+	pos = Vector(349.98196411133, 293.60232543945, 214.72680664063),
+	ang = Angle(24.988748550415, 220, -27.091974258423),
+	fov = 3.0055590500671,
 }
 ITEM.Info = {
 	Type = 1,
