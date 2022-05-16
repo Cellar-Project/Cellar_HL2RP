@@ -1,7 +1,7 @@
 ITEM.name = "Arisaka Type 99"
 ITEM.description = "Стандартная пехотная винтовка Императорской армии и флота Японии во время Второй мировой войны. По сравнению с другими винтовками того времени, она относительно легкая и стреляет патроном меньшего размера."
 ITEM.model = "models/weapons/arccw/w_waw_arisaka.mdl"
-ITEM.class = "arccw_bo1_arisaka"
+ITEM.class = "arccw_waw_arisaka"
 ITEM.weaponCategory = "primary"
 ITEM.width = 5
 ITEM.height = 2
