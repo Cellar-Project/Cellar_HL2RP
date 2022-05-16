@@ -93,6 +93,10 @@ ITEM.functions.Study = {
 					client:NotifyLocalized("languageStudied", languageName)
 					ix.log.Add(client, "studiedLanguage", languageData.name)
 				end, nil, nil, function()
+					if (character) then
+						character:SetLanguageStudyProgress(item.languageID, item.volume, timer.TimeLeft(actionTimerID))
+					end
+
 					timer.Remove(timerID)
 				end)
 
@@ -111,8 +115,6 @@ ITEM.functions.Study = {
 
 								-- just in case
 								timer.Remove(timerID)
-							elseif (timer.RepsLeft(timerID) > 0) then
-								character:SetLanguageStudyProgress(item.languageID, item.volume, timer.TimeLeft(actionTimerID))
 							end
 						else
 							timer.Remove(actionTimerID)
