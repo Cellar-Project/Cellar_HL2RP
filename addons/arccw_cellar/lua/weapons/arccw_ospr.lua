@@ -118,6 +118,7 @@ SWEP.IronSightStruct = {
 	SwitchFromSound = "",
 	ScrollFunc = ArcCW.SCROLL_ZOOM,
 	FlatScope = true,
+	ZoomLevels = 30,
 	MagnifiedOptic = true,
 	CrosshairInSights = false
 }
@@ -178,6 +179,13 @@ SWEP.Animations = {
 	
 }
 SWEP.OSPR = true
+SWEP.Stat_Attack = 40
+SWEP.Stat_DistanceSkillMod = {
+	[1] = -8,
+	[2] = -5,
+	[3] = 0,
+	[4] = 2
+}
 
 if CLIENT then
 	local rt_Store		= render.GetScreenEffectTexture(0)
@@ -263,16 +271,14 @@ if CLIENT then
 			render.SuppressEngineLighting(true)
 
 			for _, ent in ipairs(ents.FindByClass("player")) do
-				if !ent:IsPlayer() then 
-					continue 
-				end
+				local doll = ent:GetNetVar("doll")
+				local ragdoll = doll and Entity(doll)
 
 				render.SetColorModulation(1, 0, 0.25)
 				render.MaterialOverride(wireframe)
 
+				ent = IsValid(ragdoll) and ragdoll or ent
 				ent:DrawModel()
-
-
 		    end
 
 		    render.SuppressEngineLighting(false)
@@ -344,39 +350,59 @@ if CLIENT then
 		antialias = true,
 	})
 
-	local materials = {
-		["static_color"] = Color(0, 255, 255, 255),
-		["strikes"] = Color(0, 255, 255, 76),
-		["inner_circle"] = Color(255, 255, 255, 51),
-		["inner_circle"] = Color(255, 255, 255, 51),
-		["guides_minor"] = Color(255, 255, 255, 25.5),
-		["guides_major"] = Color(255, 255, 255, 64),
-		["horizontal_corners"] = Color(255, 255, 255, 102),
-		["left_slider"] = Color(0, 255, 255, 76),
-		["outer_circle_minor"] = Color(0, 255, 255, 25.5),
-		["outer_circle_major"] = Color(255, 255, 255, 25.5),
-		["white_circles"] = Color(255, 255, 255, 128),
-		["anim_circles"] = Color(0, 255, 255, 25.5),
-		["anim_energy"] = Color(255, 255, 255, 255),
-	}
+	ospr_setup_materials = ospr_setup_materials or false
+	ospr_anim_circles = ospr_anim_circles or nil
+	ospr_anim_energy = ospr_anim_energy or nil
 
-	for k, v in pairs(materials) do
-		local mat = Material("ospr/"..k)
+	local function OSPR_SetupMaterials()
+		local materials = {
+			["static_color"] = Color(0, 255, 255, 255),
+			["strikes"] = Color(0, 255, 255, 76),
+			["inner_circle"] = Color(255, 255, 255, 51),
+			["inner_circle"] = Color(255, 255, 255, 51),
+			["guides_minor"] = Color(255, 255, 255, 25.5),
+			["guides_major"] = Color(255, 255, 255, 64),
+			["horizontal_corners"] = Color(255, 255, 255, 102),
+			["left_slider"] = Color(0, 255, 255, 76),
+			["outer_circle_minor"] = Color(0, 255, 255, 25.5),
+			["outer_circle_major"] = Color(255, 255, 255, 25.5),
+			["white_circles"] = Color(255, 255, 255, 128),
+			["anim_circles"] = Color(0, 255, 255, 25.5),
+			["anim_energy"] = Color(255, 255, 255, 255),
+		}
 
-		if mat:IsError() then continue end
+		for k, v in pairs(materials) do
+			local mat = Material("ospr/"..k)
 
-		local tex = GetRenderTargetEx("ospr_"..k, 16, 16, RT_SIZE_OFFSCREEN, MATERIAL_RT_DEPTH_SHARED, 0, 0, IMAGE_FORMAT_RGBA8888)
-		
-		render.PushRenderTarget(tex)
-			render.Clear(v.r, v.g, v.b, v.a)
-		render.PopRenderTarget()
+			if mat:IsError() then continue end
 
-		mat:SetTexture("$basetexture", tex)
+			local tex
+
+			if k == "anim_circles" then
+				tex = GetRenderTargetEx("ospr_x2"..k, 128, 4, RT_SIZE_OFFSCREEN, MATERIAL_RT_DEPTH_SHARED, 0, 0, IMAGE_FORMAT_RGBA8888)
+				ospr_anim_circles = tex
+			elseif k == "anim_energy" then
+				tex = GetRenderTargetEx("ospr_y2"..k, 128, 128, RT_SIZE_OFFSCREEN, MATERIAL_RT_DEPTH_SHARED, 0, 0, IMAGE_FORMAT_RGBA8888)
+				ospr_anim_energy = tex
+			else
+				tex = GetRenderTargetEx("ospr_"..k, 16, 16, RT_SIZE_OFFSCREEN, MATERIAL_RT_DEPTH_SHARED, 0, 0, IMAGE_FORMAT_RGBA8888)
+			end
+			
+			render.PushRenderTarget(tex)
+				render.Clear(v.r, v.g, v.b, v.a)
+			render.PopRenderTarget()
+
+			mat:SetTexture("$basetexture", tex)
+		end
 	end
 
 	function SWEP:DrawHUD()
-		local trace = LocalPlayer():GetEyeTrace()
+		if !ospr_setup_materials then
+			OSPR_SetupMaterials()
 
+			ospr_setup_materials = true
+		end
+		
 		if self:GetState() != ArcCW.STATE_SIGHTS then
 			return
 		end
@@ -385,12 +411,52 @@ if CLIENT then
 			return
 		end
 
+		if ospr_anim_circles then
+			local reloading = math.Clamp((self:GetNextArcCWPrimaryFire() - CurTime()) / self.Delay, 0, 1)
+			render.PushRenderTarget(ospr_anim_circles)
+				render.Clear(0, 255, 255, 25.5)
+				cam.Start2D()
+					surface.SetDrawColor(0, 255, 255, 255)
+					surface.DrawRect(0, 0, 4 * math.Round(28 * reloading), 4)
+				cam.End2D()
+			render.PopRenderTarget()
+		end
+
+		if ospr_anim_energy then
+			local delta = self:GetChargeDelta()
+
+			render.PushRenderTarget(ospr_anim_energy)
+				render.Clear(255, 255, 255, 255)
+				cam.Start2D()
+					surface.SetDrawColor(0, 255, 255, 255)
+
+					if delta > 0 and delta < 1 then
+						surface.DrawRect(0, 32, 32, 32)
+					end
+
+					if delta > 0.25 then
+						surface.DrawRect(0, 0, 64, 32)
+					end
+
+					if delta > 0.5 then
+						surface.DrawRect(64, 0, 64, 32)
+					end
+
+					if delta > 0.75 then
+						surface.DrawRect(32, 32, 32, 32)
+					end
+
+					if delta >= 1 then
+						surface.DrawRect(0, 64, 128, 64)
+					end
+				cam.End2D()
+			render.PopRenderTarget()
+		end
+
 		local proc = string.format("%i%%", 100 * self:GetChargeDelta())
 		cam.Start3D(pos, ang, 75, 0, 0, nil, nil, 0.1, 1280)
 			cam.IgnoreZ(true)
 				render.SuppressEngineLighting(true)
-				//render.SetColorModulation(0, 1, 0.95)
-				//render.MaterialOverride(debugwhite)
 				visor_ui_model:SetPos(pos)
 				visor_ui_model:SetAngles(mdlang)
 				visor_ui_model:FrameAdvance(FrameTime())
@@ -419,7 +485,7 @@ if CLIENT then
 						y = y - h
 
 						surface.SetTextColor(color_white)
-						surface.SetTextPos(-tW/2, y - 3) 
+						surface.SetTextPos(-w/2, y - 3) 
 						surface.DrawText(proc)
 
 						DisableClipping(old)
@@ -434,6 +500,55 @@ if CLIENT then
 		visor_ui_model:SetCycle(0)
 		visor_ui_model:ResetSequence("fire")
 	end
+
+	local EFFECT = {}
+	local laser2 = CreateMaterial("ospr_laser3", "UnlitGeneric", {
+		["$basetexture"] = "effects/bluelaser1",
+		["$nocull"] = 1,
+		["$nodecal"] = 1,
+		["$additive"] = 1,
+		["$no_fullbright"] = 1,
+		["$model"] = 1,
+		["$nofog"] = 1,
+		["$vertexalpha"] = 1,
+		["$vertexcolor"] = 1
+	})
+	function EFFECT:Init(data)
+		self.EndPos = data:GetOrigin()
+		self.WeaponEnt = data:GetEntity()
+		self.Position = self:GetTracerShootPos(self.EndPos, self.WeaponEnt, 1)
+		self.Color = Color(32, 255, 255, 255)
+		self.Size = 32
+		
+		self.alpha = 200
+		self:SetRenderBoundsWS(self.Position, self.EndPos)
+	end
+
+	function EFFECT:Think()
+		local ft = FrameTime()
+
+		self.Size = Lerp(10 * ft, self.Size, 0)
+		self.alpha = Lerp(5 * ft, self.alpha, 0)
+		local delta = self.alpha / 255
+
+		self.Color.r = 32 * delta
+		self.Color.g = 255 * delta
+		self.Color.b = 255 * delta
+		self.Color.a = self.alpha
+
+		if self.alpha <= 0 then 
+			return false 
+		end	
+
+		return true
+	end
+
+	function EFFECT:Render()
+		render.SetMaterial(laser2)
+		render.DrawBeam(self.Position, self.EndPos, self.Size, 0, 0, self.Color)
+	end
+
+	effects.Register(EFFECT, "ospr.laser")
 end
 
 function SWEP:StartCharge()
@@ -456,6 +571,10 @@ function SWEP:GetChargeDelta()
 	return delta
 end
 
+local function SuppressSelection()
+	return true
+end
+
 function SWEP:Hook_Think()
 	if SERVER then
 		if self:GetState() == ArcCW.STATE_SIGHTS and !self.LastChargeUpTime then
@@ -469,12 +588,16 @@ function SWEP:Hook_Think()
 		end
 	else
 		if self:GetState() == ArcCW.STATE_SIGHTS and !self.PlaySightAnim then
+			hook.Add("SuppressWeaponSelection", "OSPR", SuppressSelection)
+
 			self.PlaySightAnim = true
 
 			visor_ui_model:ResetSequenceInfo()
 			visor_ui_model:SetCycle(0)
 			visor_ui_model:ResetSequence("draw")
 		elseif self:GetState() != ArcCW.STATE_SIGHTS and self.PlaySightAnim then
+			hook.Remove("SuppressWeaponSelection", "OSPR")
+
 			self.PlaySightAnim = false
 		end
 	end
@@ -492,5 +615,39 @@ function SWEP:DoShellEject()
 end
 
 function SWEP:DoEffects()
+	
+end
 
+function SWEP:Hook_BulletHit(hit)
+	if not game.SinglePlayer() and not IsFirstTimePredicted() then return end
+
+	local pos = hit.tr.HitPos
+
+	local effectdata = EffectData()
+	effectdata:SetOrigin(pos)
+	effectdata:SetEntity(self)
+
+	util.Effect("ospr.laser", effectdata)
+end
+
+function SWEP:GetBloodDamageInfo()
+	local delta = math.max(self:GetChargeDelta(), 0.1)
+
+	return self.ShockDamage * delta, self.BloodDamage * delta, self.BleedChance * delta
+end
+
+function SWEP:GetDamage(range, pellet)
+	local charge = math.max(self:GetChargeDelta(), 0.1)
+    local dmgmax = self.Damage * charge
+    local dmgmin = self.DamageMin * charge
+    local delta = 1
+
+    local sran = self.Range
+
+    delta = (range / sran)
+    delta = math.Clamp(delta, 0, 1)
+
+    local lerped = Lerp(delta, dmgmax, dmgmin)
+
+    return lerped
 end
