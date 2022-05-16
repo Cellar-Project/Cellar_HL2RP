@@ -215,3 +215,9 @@ function ix.chat.Send(speaker, chatType, text, bAnonymous, receivers, data)
 		return text
 	end
 end
+
+function PLUGIN:OnCharacterDisconnect(client, character)
+	if (timer.Exists("ixStudyingLanguage" .. client:SteamID())) then
+		client:SetAction()
+	end
+end

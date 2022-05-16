@@ -64,13 +64,14 @@ ix.char.RegisterVar("languagesStudyProgress", {
 	field = "languages_study_progress",
 	fieldType = ix.type.text,
 	default = {},
+	isLocal = true,
+	bNoDisplay = true
 })
 
 ix.char.RegisterVar("usedLanguage", {
 	field = "used_language",
 	fieldType = ix.type.string,
 	default = "",
-	isLocal = true,
 	bNoDisplay = true,
 	OnSet = function(self, value)
 		local oldValue = self.vars.usedLanguage
