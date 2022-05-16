@@ -551,6 +551,8 @@ do
 
 			if weapon.ixItem then
 				weaponMod = (weapon.ixItem.DistanceSkillMod[DistanceType] or 0) * 10
+			else
+				weaponMod = (weapon.Stat_DistanceSkillMod[DistanceType] or 0) * 10
 			end
 
 			local gunBuff = 0
@@ -588,8 +590,12 @@ do
 					local Attack = 1
 					local Armor = 1
 
-					if IsValid(weapon) and weapon.ixItem then
-						Attack = weapon.ixItem.Attack or 1
+					if IsValid(weapon) then 
+						if weapon.ixItem then
+							Attack = weapon.ixItem.Attack or Attack
+						else
+							Attack = weapon.Stat_Attack or Attack
+						end
 					end
 
 					if target.ArmorItems then
