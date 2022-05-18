@@ -1074,3 +1074,4 @@ ix.anim.SetModelClass("models/cellar/characters/custom/m_contractor.mdl", "cella
 ix.anim.SetModelClass("models/berkutcit/c3_berkut.mdl", "cellarMale")
 ix.anim.SetModelClass("models/metropolice/cca_male/cca_berkut.mdl", "cellarMaleMPF")
 ix.anim.SetModelClass("models/cellar/characters/vintagethief/iq.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/frostafan4ik/dance.mdl", "cellarMale")
