@@ -33,7 +33,7 @@ properties.Add("ixViewPlayerAnonID", {
 			local anonid = entity:GetNetVar("AnonID")
 
 			ix.util.Notify("AnonID игрока ".. name .." - ".. anonid .." скопирован в буфер обмена!", client)
-			SetClipboardText(anonid)
+			client:SendLua("SetClipboardText(" .. anonid .. ")")
 		end
 	end
 })
