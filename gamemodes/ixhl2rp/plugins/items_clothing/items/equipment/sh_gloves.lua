@@ -7,5 +7,5 @@ ITEM.slot = EQUIP_HANDS -- слот ( EQUIP_MASK EQUIP_HEAD EQUIP_LEGS EQUIP_HAN
 ITEM.bodyGroups = { -- какие бодигруппы на какие сетаются
     [5] = 3,
 }
-ITEM.CanBreakDown = true -- можно ли порвать на тряпки
+ITEM.CanBreakDown = false -- можно ли порвать на тряпки
 ITEM.thermalIsolation = 4 -- (от 1 до 4)
