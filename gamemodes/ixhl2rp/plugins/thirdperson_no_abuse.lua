@@ -120,17 +120,18 @@ if (CLIENT) then
 	end
 
 	for _, v in ipairs(weapons.GetList()) do
-		function v:DrawWorldModel(flags)
-			local owner = self:GetOwner()
+        v.Old_DrawWorldModel = v.Old_DrawWorldModel or v.DrawWorldModel
+        
+        function v:DrawWorldModel(flags)
+            local owner = self:GetOwner()
 
-			if (IsValid(owner) and owner:IsPlayer() and owner != LocalPlayer() and owner.ixIsHidden) then
-				self:DrawShadow(false)
+            if (IsValid(owner) and owner:IsPlayer() and owner != LocalPlayer() and owner.ixIsHidden) then
+                self:DrawShadow(false)
 
-				return
-			end
+                return
+            end
 
-			self:DrawShadow(true)
-			self:DrawModel(flags)
-		end
-	end
+            self:Old_DrawWorldModel(flags)
+        end
+    end
 end

@@ -407,7 +407,6 @@ function SWEP:DrawWorldModel()
     else
         self:DrawCustomModel(true)
     end
-
     self:DoLaser(true)
 
     if self:ShouldGlint() then self:DoScopeGlint()  end
