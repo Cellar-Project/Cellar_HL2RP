@@ -149,17 +149,14 @@ SWEP.RejectAttachments = {}
 SWEP.Attachments = {}
 
 SWEP.Animations = {
-    ["idle"] = {
-        Source = "idle",
-        Time = 1 / 35,
-    },
+    ["idle"] = false,
+    --{
+       -- Source = "idle",
+       -- Time = 1 / 35,
+   -- },
     ["draw"] = {
         Source = "draw",
         Time = 56 / 35,
-    },
-    ["holster"] = {
-        Source = "holster",
-        Time = 1.25,
     },
     ["ready"] = {
         Source = "first_draw",
