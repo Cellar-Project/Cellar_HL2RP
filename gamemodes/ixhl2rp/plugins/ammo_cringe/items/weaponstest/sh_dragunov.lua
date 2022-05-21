@@ -1,6 +1,10 @@
 ITEM.name = "СВД-63"
 ITEM.description = "Советская полуавтоматическая снайперская винтовка, эстетически схожая с АК-47, созданная для снайперов. Также выпускается китайской оружейной компанией Norinco для китайской армии."
 ITEM.model = "models/weapons/arccw/c_bo1_svd.mdl"
+
+-- test for sniper BGs
+ITEM.SetBodygroups = ( "00111000000" )
+
 ITEM.class = "arccw_bo1_dragunov"
 ITEM.weaponCategory = "primary"
 ITEM.width = 5
@@ -13,19 +17,19 @@ ITEM.iconCam = {
 }
 ITEM.Attack = 20
 ITEM.DistanceSkillMod = {
-	[1] = 1,
-	[2] = 3,
-	[3] = 5,
-	[4] = 4
+	[1] = 5,
+	[2] = 5,
+	[3] = 4,
+	[4] = 3
 }
 ITEM.Info = {
 	Type = nil,
 	Skill = "guns",
 	Distance = {
-		[1] = 1,
-		[2] = 3,
-		[3] = 5,
-		[4] = 4
+		[1] = 5,
+		[2] = 5,
+		[3] = 4,
+		[4] = 3
 	},
 	Dmg = {
 		Attack = nil,

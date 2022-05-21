@@ -23,10 +23,10 @@ SWEP.ViewModelFOV = 60
 SWEP.DefaultBodygroups = "010000100000"
 
 SWEP.Damage = 50
-SWEP.DamageMin = 40
+SWEP.DamageMin = 35
 SWEP.BloodDamage = 600
 SWEP.ShockDamage = 600
-SWEP.BleedChance = 75
+SWEP.BleedChance = 80
 SWEP.AmmoItem = "bullets_7x62"
 
 SWEP.Range = 100 -- in METRES

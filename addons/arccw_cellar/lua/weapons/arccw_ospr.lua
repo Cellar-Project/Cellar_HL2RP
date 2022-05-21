@@ -13,10 +13,10 @@ SWEP.ViewModel = "models/weapons/schwarzkruppzo/c_ospr.mdl"
 SWEP.WorldModel = "models/weapons/schwarzkruppzo/w_ospr.mdl"
 SWEP.ViewModelFOV = 65
 
-SWEP.Damage = 75
-SWEP.DamageMin = 40
-SWEP.BloodDamage = 500
-SWEP.ShockDamage = 3000
+SWEP.Damage = 100
+SWEP.DamageMin = 70
+SWEP.BloodDamage = 1000
+SWEP.ShockDamage = 6000
 SWEP.BleedChance = 100
 SWEP.AmmoItem = "bullets_ar2"
 SWEP.ImpulseSkill = true
@@ -181,10 +181,10 @@ SWEP.Animations = {
 SWEP.OSPR = true
 SWEP.Stat_Attack = 40
 SWEP.Stat_DistanceSkillMod = {
-	[1] = -8,
-	[2] = -5,
-	[3] = 0,
-	[4] = 2
+	[1] = 10,
+	[2] = 10,
+	[3] = 10,
+	[4] = 10
 }
 
 if CLIENT then
@@ -350,7 +350,7 @@ if CLIENT then
 		antialias = true,
 	})
 
-	ospr_setup_materials = ospr_setup_materials or false
+	ospr_setup_materials = false
 	ospr_anim_circles = ospr_anim_circles or nil
 	ospr_anim_energy = ospr_anim_energy or nil
 
@@ -619,8 +619,6 @@ function SWEP:DoEffects()
 end
 
 function SWEP:Hook_BulletHit(hit)
-	if not game.SinglePlayer() and not IsFirstTimePredicted() then return end
-
 	local pos = hit.tr.HitPos
 
 	local effectdata = EffectData()
@@ -628,6 +626,8 @@ function SWEP:Hook_BulletHit(hit)
 	effectdata:SetEntity(self)
 
 	util.Effect("ospr.laser", effectdata)
+
+	return hit
 end
 
 function SWEP:GetBloodDamageInfo()
@@ -648,6 +648,6 @@ function SWEP:GetDamage(range, pellet)
     delta = math.Clamp(delta, 0, 1)
 
     local lerped = Lerp(delta, dmgmax, dmgmin)
-
+    print(lerped)
     return lerped
 end
