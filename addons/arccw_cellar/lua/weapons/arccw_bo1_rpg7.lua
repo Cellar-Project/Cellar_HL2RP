@@ -30,11 +30,15 @@ SWEP.ViewModelFOV = 60
 
 SWEP.DefaultBodygroups = "0000000000"
 
-SWEP.Damage = 600
-SWEP.DamageMin = 600
+SWEP.Damage = 666
+SWEP.DamageMin = 666
 SWEP.Range = 10
+SWEP.BloodDamage = 4444
+SWEP.ShockDamage = 4500
+SWEP.BleedChance = 99
+SWEP.AmmoItem = "bullets_8540rpg"
 
-SWEP.Penetration = 1
+SWEP.Penetration = 50
 SWEP.DamageType = DMG_BUCKSHOT
 SWEP.ShootEntity = "arccw_bo1_rocket_rpg" -- entity to fire, if any
 SWEP.MuzzleVelocity = 5000 -- projectile or phys bullet muzzle velocity
@@ -132,95 +136,11 @@ SWEP.HolsterAng = Angle(-7.036, 30.016, 0)
 SWEP.BarrelOffsetSighted = Vector(0, 0, -1)
 SWEP.BarrelOffsetHip = Vector(2, 0, -2)
 
-SWEP.AttachmentElements = {
-    ["papname1"] = {
-        NamePriority = 10,
-        NameChange = "Pulya",
-    },
-}
+SWEP.AttachmentElements = {}
 
 SWEP.ExtraSightDist = 5
 
-SWEP.Attachments = {
-    {
-        PrintName = "Ammo Type",
-        Slot = {"ammo_pap_launchers"},
-        ExcludeFlags = {"doom_ee"},
-    }, --3
-    {
-        PrintName = "Perk",
-        Slot = {"bo1_perk", "bo1_perk_doomrpg"},
-    }, --4
-    {
-        PrintName = "Charm",
-        Slot = "charm",
-        FreeSlot = true,
-        Bone = "tag_weapon",
-        Offset = {
-            vpos = Vector(3, -0.75, 2.15), -- offset that the attachment will be relative to the bone
-            vang = Angle(0, 0, 0),
-            wpos = Vector(7, 1.6, -4),
-            wang = Angle(-10, 0, 180)
-        },
-        ExcludeFlags = {"doom_ee"},
-    }, --5
-}
-
-SWEP.Hook_NameChange = function(wep, name)
-    local pap = wep:GetBuff_Override("PackAPunch")
-    local doomshotgun = wep:GetBuff_Override("DOOM_EE")
-
-    local gunname = wep.PrintName
-
-    if doomshotgun then
-        gunname = "Rocket Launcher"
-    end
-
-    if pap then
-        gunname = "Rocket Propelled Grievance"
-    end
-
-    return gunname
-end
-
-SWEP.Hook_ModifyBodygroups = function(wep, data)
-    local vm = data.vm
-    local papcamo = wep.Attachments[1].Installed == "ammo_pap_launcher"
-
-    if papcamo then
-        vm:SetSkin(2)
-    end
-
-    if wep:Clip1() == 0 then vm:SetBodygroup(1,1) end
-
-    if wep:GetBuff_Override("DOOM_EE") then
-        vm:SetBodygroup(1,0)
-        vm:SetBodygroup(2,1)
-        wep.ActivePos = Vector(-0.5, 1, 0.25)
-        wep.ActiveAng = Angle(0, 0, 0)
-    else
-        wep.ActivePos = Vector(0, 1, 0.25)
-        wep.ActiveAng = Angle(0, 0, 0)
-    end
-end
-
-SWEP.Hook_ShouldNotFire = function(wep)
-    if !wep:GetBuff_Override("DOOM_EE") and (wep:GetState() != ArcCW.STATE_SIGHTS or wep:GetSightDelta() > 0) then
-        return true
-    end
-end
-
-SWEP.Hook_TranslateAnimation = function(wep, anim)
-
-    if wep:GetBuff_Override("DOOM_EE") then
-        if anim == "idle" then
-            return "idle_doom"
-        end
-        if anim == "fire" then
-            return "fire_doom"
-        end
-    end
-end
+SWEP.Attachments = {}
 
 SWEP.Animations = {
     ["idle"] = {
