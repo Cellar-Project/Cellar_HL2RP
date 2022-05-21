@@ -1,48 +1,49 @@
 SWEP.Base = "arccw_base"
 SWEP.Spawnable = true -- this obviously has to be set to true
-SWEP.Category = "CELLAR" -- edit this if you like
+SWEP.Category = "ArcCW - World at War" -- edit this if you like
 SWEP.AdminOnly = false
 
-SWEP.PrintName = "Arisaka Type 99"
+SWEP.PrintName = "Mosin-Nagant M38"
 SWEP.Trivia_Class = "Rifle"
-SWEP.Trivia_Desc = "Стандартная пехотная винтовка Императорской армии и флота Японии во время Второй мировой войны. По сравнению с другими винтовками того времени, она относительно легкая и стреляет патроном меньшего размера."
-SWEP.Trivia_Manufacturer = "Nagoya Arsenal"
-SWEP.Trivia_Calibre = "7.7x58mm Arisaka"
+SWEP.Trivia_Desc = "The standard soviet infantry rifle during World War 2. For some time there weren't enough issued to supply the whole army due to german intervention."
+SWEP.Trivia_Manufacturer = "Tula Arms"
+SWEP.Trivia_Calibre = "7.62x54mmR"
 SWEP.Trivia_Mechanism = "Bolt Action"
-SWEP.Trivia_Country = "Imperial Japan"
-SWEP.Trivia_Year = 1939
+SWEP.Trivia_Country = "Russian Empire"
+SWEP.Trivia_Year = 1891
 
 SWEP.Slot = 3
 
 SWEP.UseHands = true
 
-SWEP.ViewModel = "models/weapons/arccw/c_waw_arisaka.mdl"
-SWEP.WorldModel = "models/weapons/arccw/w_waw_arisaka.mdl"
-SWEP.MirrorWorldModel = "models/weapons/arccw/w_waw_arisaka.mdl"
+SWEP.ViewModel = "models/weapons/arccw/c_waw_mosin.mdl"
+SWEP.WorldModel = "models/weapons/arccw/w_waw_mosin.mdl"
+SWEP.MirrorWorldModel = "models/weapons/arccw/w_waw_mosin.mdl"
 SWEP.MirrorVMWM = true
 SWEP.WorldModelOffset = {
-    pos        =    Vector(-3.5, 2.5, -4.5),
-    ang        =    Angle(-13, 1, 180),
+    pos        =    Vector(-5.5, 2, -7.5),
+    ang        =    Angle(-10, 0, 180),
     bone    =    "ValveBiped.Bip01_R_Hand",
-    scale   =   0.95
+    scale   =   0.9
 }
 SWEP.ViewModelFOV = 60
 
 SWEP.DefaultBodygroups = "0100000000"
 
-SWEP.Damage = 70
-SWEP.DamageMin = 50
-SWEP.RangeMin = 60
-SWEP.Range = 300
+SWEP.Damage = 110
+SWEP.DamageMin = 70
+SWEP.RangeMin = 70
+SWEP.Range = 350
+SWEP.BloodDamage = 400
+SWEP.ShockDamage = 600
+SWEP.BleedChance = 75
+SWEP.AmmoItem = "bullets_7x6254mmr"
+
 SWEP.Penetration = 16
 SWEP.DamageType = DMG_BULLET
 SWEP.ShootEntity = nil -- entity to fire, if any
 SWEP.MuzzleVelocity = 850 -- projectile or phys bullet muzzle velocity
 -- IN M/S
-SWEP.BloodDamage = 666
-SWEP.ShockDamage = 666
-SWEP.BleedChance = 80
-SWEP.AmmoItem = "bullets_77x58"
 
 SWEP.TracerNum = 1 -- tracer every X
 SWEP.TracerCol = Color(255, 25, 25)
@@ -52,8 +53,8 @@ SWEP.ChamberSize = 0 -- how many rounds can be chambered.
 SWEP.Primary.ClipSize = 5 -- DefaultClip is automatically set.
 SWEP.ExtendedClipSize = 17
 
-SWEP.Recoil = 0.9
-SWEP.RecoilSide = 0.7
+SWEP.Recoil = 1.5
+SWEP.RecoilSide = 1
 SWEP.RecoilRise = 0.75
 SWEP.VisualRecoilMult = 0
 
@@ -62,6 +63,7 @@ SWEP.Num = 1 -- number of shots per trigger pull.
 SWEP.Firemodes = {
     {
         Mode = 1,
+        PrintName = "fcg.bolt",
     },
     {
         Mode = 0
@@ -74,18 +76,18 @@ SWEP.NPCWeaponType = {
 }
 SWEP.NPCWeight = 100
 
-SWEP.AccuracyMOA = 2 -- accuracy in Minutes of Angle. There are 60 MOA in a degree.
+SWEP.AccuracyMOA = 1.75 -- accuracy in Minutes of Angle. There are 60 MOA in a degree.
 SWEP.HipDispersion = 650 -- inaccuracy added by hip firing.
 SWEP.MoveDispersion = 200
 
 SWEP.Primary.Ammo = "ar2" -- what ammo type the gun uses
-SWEP.MagID = "Arisaka" -- the magazine pool this gun draws from
+SWEP.MagID = "mosin" -- the magazine pool this gun draws from
 
 SWEP.ShootVol = 115 -- volume of shoot sound
 
-SWEP.ShootSound = "ArcCW_WAW.Arisaka_Fire"
+SWEP.ShootSound = "ArcCW_WAW.Mosin_Fire"
 SWEP.ShootSoundSilenced = "ArcCW_BO1.FAL_Sil"
-SWEP.DistantShootSound = "ArcCW_WAW.K98_Ringoff"
+SWEP.DistantShootSound = "ArcCW_WAW.Mosin_Ringoff"
 
 SWEP.MuzzleEffect = "muzzleflash_4"
 SWEP.ShellModel = "models/shells/shell_556.mdl"
@@ -97,9 +99,9 @@ SWEP.CaseEffectAttachment = 2 -- which attachment to put the case effect on
 SWEP.ProceduralViewBobAttachment = 1
 SWEP.CamAttachment = 3
 
-SWEP.SpeedMult = 0.89
+SWEP.SpeedMult = 0.9
 SWEP.SightedSpeedMult = 0.5
-SWEP.SightTime = 0.25
+SWEP.SightTime = 0.3
 
 SWEP.BulletBones = { -- the bone that represents bullets in gun/mag
 }
@@ -110,12 +112,15 @@ SWEP.ShotgunReload = false
 SWEP.ManualAction = true
 
 SWEP.CaseBones = {
+    [0] = "tag_stripper",
+    [1] = "tag_round1",
+    [2] = "tag_round2",
 }
 
 SWEP.IronSightStruct = {
-    Pos = Vector(-1.2, -3, 1.05),
-    Ang = Angle(-0.65, -0.085, 0),
-    Magnification = 1.1,
+    Pos = Vector(-0.95, 0, 3.5),
+    Ang = Angle(0.2, 1.575, 0),
+    Magnification = 1.25,
     CrosshairInSights = false,
     SwitchToSound = "", -- sound that plays when switching to this sight
 }
@@ -126,14 +131,14 @@ SWEP.HoldtypeSights = "rpg"
 
 SWEP.AnimShoot = ACT_HL2MP_GESTURE_RANGE_ATTACK_AR2
 
-SWEP.ActivePos = Vector(1.5, -4, 0)
+SWEP.ActivePos = Vector(1.5, -5, 2)
 SWEP.ActiveAng = Angle(0, 0, 0)
 
-SWEP.SprintPos = Vector(5, -4, -2)
-SWEP.SprintAng = Angle(0, 30, 0)
+SWEP.SprintPos = Vector(10, -5, -2)
+SWEP.SprintAng = Angle(-7.036, 45.016, 0)
 
-SWEP.CustomizePos = Vector(16, -3, 0)
-SWEP.CustomizeAng = Angle(15, 40, 30)
+SWEP.CustomizePos = Vector(20, 0, 0)
+SWEP.CustomizeAng = Angle(15, 40, 25)
 
 SWEP.HolsterPos = Vector(3, 0, 0)
 SWEP.HolsterAng = Angle(-7.036, 30.016, 0)
@@ -145,9 +150,89 @@ SWEP.BarrelLength = 30
 
 SWEP.ExtraSightDist = 5
 
-SWEP.AttachmentElements = {}
+SWEP.AttachmentElements = {
+    ["mount"] = {
+        VMElements = {
+            {
+                Model = "models/weapons/arccw/item/bo1_ak_rail.mdl",
+                Bone = "tag_weapon",
+                Scale = Vector(0.375, 0.375, 0.375),
+                Offset = {
+                    pos = Vector(5, 0.325, 0.8),
+                    ang = Angle(0, 90, 0),
+                }
+            },
+        },
+    },
+    ["waw_rus_scope"] = {
+        VMBodygroups = {
+            {ind = 1, bg = 2},
+        },
+    },
+}
 
-SWEP.Attachments = {}
+SWEP.Attachments = {
+    { --1
+        PrintName = "Optic", -- print name
+        DefaultAttName = "Iron Sights",
+        Slot = {"optic", "optic_lp"}, -- what kind of attachments can fit here, can be string or table
+        Bone = "tag_weapon", -- relevant bone any attachments will be mostly referring to
+        Offset = {
+            vpos = Vector(5.5, 0, 1.95), -- 4.6 offset that the attachment will be relative to the bone
+            vang = Angle(0, 0, 0),
+            wpos = Vector(4.5, 1.35, -5.4),
+            wang = Angle(171, 179, 0)
+        },
+        CorrectivePos = Vector(0, 0, 0),
+        CorrectiveAng = Angle(0, 0, 0),
+        InstalledEles = {"mount"},
+        MergeSlots = {9}
+    },
+    {
+        Slot = "waw_rus_scope",
+        Bone = "tag_weapon", -- relevant bone any attachments will be mostly referring to
+        Offset = {
+            vpos = Vector(-15.5, -1.2, 5.75), -- 4.6 offset that the attachment will be relative to the bone
+            vang = Angle(0, 0, 0),
+        },
+        CorrectivePos = Vector(0, 0, 0),
+        CorrectiveAng = Angle(0, 0, 0),
+        Installed = "optic_waw_mosin"
+    },--9
+}
+
+SWEP.Hook_TranslateAnimation = function(wep, anim)
+
+    local snipe = 0
+    if wep:GetBuff_Override("WAW_Mosin_Scope") then snipe = 1 end
+
+    if wep.Attachments[2].Installed == "muzz_waw_bayonet" and anim == "bash" then
+        return "bash_bayo"
+    end
+
+    if snipe == 1 then
+        wep.ActivePos = Vector(0.5, 1, -2)
+        wep.ActiveAng = Angle(0, 0, 0)
+        return anim .. "_snipe"
+    elseif snipe == 0 then
+        wep.ActivePos = Vector(1.5, 1, 2)
+        wep.ActiveAng = Angle(0, 0, 0)
+    end
+
+    if wep:Clip1() == 0 then
+        return anim .. "_empty"
+    end
+
+end
+
+SWEP.Hook_SelectInsertAnimation = function(wep, data)
+    local pap = wep:GetBuff_Override("PackAPunch")
+    local snipe = wep:GetBuff_Override("WAW_Mosin_Scope")
+
+    if pap and snipe then
+        return {count = 9, anim = "sgreload_insert"}
+    end
+end
 
 SWEP.Animations = {
     ["idle"] = {
@@ -161,16 +246,16 @@ SWEP.Animations = {
         LHIKIn = 0.25,
         LHIKOut = 0.25,
     },
-    --[[["holster"] = {
+    ["holster"] = {
         Source = "holster",
         Time = 0.5,
         LHIK = true,
         LHIKIn = 0.25,
         LHIKOut = 0.25,
-    },]]
+    },
     ["ready"] = {
-        Source = "draw",
-        Time = 0.75,
+        Source = "first_draw",
+        Time = 31 / 30,
         LHIK = true,
         LHIKIn = 0.25,
         LHIKOut = 0.25,
@@ -178,33 +263,33 @@ SWEP.Animations = {
     ["fire"] = {
         Source = {"fire"},
         Time = 7 / 30,
-        {s = "ArcCW_WAW.Arisaka_Mech", t = 0 / 30},
+        {s = "ArcCW_WAW.Mosin_Mech", t = 1 / 30},
     },
     ["cycle"] = {
         Source = {"cycle"},
         Time = 28 / 30,
         ShellEjectAt = 10 / 30,
         SoundTable = {
-            {s = "ArcCW_WAW.Arisaka_Up", t = 5 / 30},
-            {s = "ArcCW_WAW.Arisaka_Back", t = 10 / 30},
-            {s = "ArcCW_WAW.Arisaka_Fwd", t = 20 / 30},
-            {s = "ArcCW_WAW.Arisaka_Down", t = 22 / 30},
+            {s = "ArcCW_WAW.Mosin_Up", t = 5 / 30},
+            {s = "ArcCW_WAW.Mosin_Back", t = 10 / 30},
+            {s = "ArcCW_WAW.Mosin_Fwd", t = 20 / 30},
+            {s = "ArcCW_WAW.Mosin_Down", t = 22 / 30},
         },
     },
     ["fire_iron"] = {
         Source = {"fire_ads"},
         Time = 7 / 30,
-        {s = "ArcCW_WAW.Arisaka_Mech", t = 1 / 30},
+        {s = "ArcCW_WAW.Mosin_Mech", t = 1 / 30},
     },
     ["cycle_ads"] = {
         Source = {"cycle_ads"},
         Time = 28 / 30,
         ShellEjectAt = 10 / 30,
         SoundTable = {
-            {s = "ArcCW_WAW.Arisaka_Up", t = 5 / 30},
-            {s = "ArcCW_WAW.Arisaka_Back", t = 10 / 30},
-            {s = "ArcCW_WAW.Arisaka_Fwd", t = 20 / 30},
-            {s = "ArcCW_WAW.Arisaka_Down", t = 22 / 30},
+            {s = "ArcCW_WAW.Mosin_Up", t = 5 / 30},
+            {s = "ArcCW_WAW.Mosin_Back", t = 10 / 30},
+            {s = "ArcCW_WAW.Mosin_Fwd", t = 20 / 30},
+            {s = "ArcCW_WAW.Mosin_Down", t = 22 / 30},
         },
     },
     ["reload"] = {
@@ -216,63 +301,63 @@ SWEP.Animations = {
         LHIKIn = 0,
         LHIKOut = 4,
         SoundTable = {
-            {s = "ArcCW_WAW.Arisaka_Up", t = 0.15 * 1.25},
-            {s = "ArcCW_WAW.Arisaka_Back", t = 0.3 * 1.25},
-            {s = "ArcCW_WAW.K98_Rechamber", t = 0.5 * 1.25},
-            {s = "ArcCW_WAW.Arisaka_Fwd", t = 1.67 * 1.25},
-            {s = "ArcCW_WAW.K98_Eject", t = 1.69 * 1.25},
-            {s = "ArcCW_WAW.Arisaka_Down", t = 1.71 * 1.25},
+            {s = "ArcCW_WAW.Mosin_Up", t = 0.15 * 1.25},
+            {s = "ArcCW_WAW.Mosin_Back", t = 0.3 * 1.25},
+            {s = "ArcCW_WAW.Mosin_Rechamber", t = 0.5 * 1.25},
+            {s = "ArcCW_WAW.Mosin_Fwd", t = 1.67 * 1.25},
+            {s = "ArcCW_WAW.Mosin_Eject", t = 1.69 * 1.25},
+            {s = "ArcCW_WAW.Mosin_Down", t = 1.71 * 1.25},
         },
     },
 
-    ["idle_scope"] = {
-        Source = "idle_scope",
+    ["idle_snipe"] = {
+        Source = "idle_snipe",
         Time = 1 / 30,
     },
-    ["draw_scope"] = {
-        Source = "draw_scope",
+    ["draw_snipe"] = {
+        Source = "draw_snipe",
         Time = 0.75,
         LHIK = true,
         LHIKIn = 0.25,
         LHIKOut = 0.25,
     },
-    ["holster_scope"] = {
-        Source = "holster_scope",
+    ["holster_snipe"] = {
+        Source = "holster_snipe",
         Time = 0.5,
         LHIK = true,
         LHIKIn = 0.25,
         LHIKOut = 0.25,
     },
-    ["ready_scope"] = {
-        Source = "first_draw_scope",
-        Time = 31 / 30,
+    ["ready_snipe"] = {
+        Source = "first_draw_snipe",
+        Time = 45 / 30,
         LHIK = true,
         LHIKIn = 0.25,
         LHIKOut = 0.25,
     },
-    ["fire_scope"] = {
-        Source = {"fire_scope"},
+    ["fire_snipe"] = {
+        Source = {"fire_snipe"},
         Time = 7 / 30,
-        {s = "ArcCW_WAW.Arisaka_Mech", t = 1 / 30},
+        {s = "ArcCW_WAW.Mosin_Mech", t = 1 / 30},
     },
-    ["cycle_scope"] = {
-        Source = {"cycle_scope"},
+    ["cycle_snipe"] = {
+        Source = {"cycle_snipe"},
         Time = 30 / 30,
         ShellEjectAt = 10 / 30,
         SoundTable = {
-            {s = "ArcCW_WAW.Arisaka_Up", t = 5 / 30},
-            {s = "ArcCW_WAW.Arisaka_Back", t = 10 / 30},
-            {s = "ArcCW_WAW.Arisaka_Fwd", t = 20 / 30},
-            {s = "ArcCW_WAW.Arisaka_Down", t = 25 / 30},
+            {s = "ArcCW_WAW.Mosin_Up", t = 5 / 30},
+            {s = "ArcCW_WAW.Mosin_Back", t = 10 / 30},
+            {s = "ArcCW_WAW.Mosin_Fwd", t = 20 / 30},
+            {s = "ArcCW_WAW.Mosin_Down", t = 25 / 30},
         },
     },
-    ["fire_iron_scope"] = {
-        Source = {"fire_scope"},
+    ["fire_iron_snipe"] = {
+        Source = {"fire_snipe"},
         Time = 7 / 30,
-        {s = "ArcCW_WAW.Arisaka_Mech", t = 1 / 30},
+        {s = "ArcCW_WAW.Mosin_Mech", t = 1 / 30},
     },
-    ["cycle_iron_scope"] = {
-        Source = {"cycle_scope"},
+    ["cycle_iron_snipe"] = {
+        Source = {"cycle_snipe"},
         Time = 25 / 30,
         ShellEjectAt = 3 / 30,
     },
@@ -286,9 +371,9 @@ SWEP.Animations = {
         LHIKIn = 0,
         LHIKOut = 4,
         SoundTable = {
-            {s = "ArcCW_WAW.Arisaka_Up", t = 5 / 30},
-            {s = "ArcCW_WAW.Arisaka_Back", t = 10 / 30},
-            {s = "ArcCW_WAW.Arisaka_Insert", t = 35 / 30},
+            {s = "ArcCW_WAW.Mosin_Up", t = 5 / 30},
+            {s = "ArcCW_WAW.Mosin_Back", t = 10 / 30},
+            {s = "ArcCW_WAW.Mosin_Bullet", t = 27 / 30},
         },
     },
     ["sgreload_insert"] = {
@@ -301,7 +386,7 @@ SWEP.Animations = {
         LHIKOut = 4,
         MinProgress = 3 / 30,
         SoundTable = {
-            {s = "ArcCW_WAW.Arisaka_Insert", t = 3 / 30},
+            {s = "ArcCW_WAW.Mosin_Bullet", t = 3 / 30},
         }
     },
     ["sgreload_finish"] = {
@@ -311,8 +396,8 @@ SWEP.Animations = {
         LHIKIn = 0,
         LHIKOut = 4,
         SoundTable = {
-            {s = "ArcCW_WAW.Arisaka_Fwd", t = 5 / 30},
-            {s = "ArcCW_WAW.Arisaka_Down", t = 10 / 30},
+            {s = "ArcCW_WAW.Mosin_Fwd", t = 5 / 30},
+            {s = "ArcCW_WAW.Mosin_Down", t = 10 / 30},
         },
     },
     ["sgreload_finish_empty"] = {
@@ -322,8 +407,8 @@ SWEP.Animations = {
         LHIKIn = 0,
         LHIKOut = 4,
         SoundTable = {
-            {s = "ArcCW_WAW.Arisaka_Fwd", t = 5 / 30},
-            {s = "ArcCW_WAW.Arisaka_Down", t = 10 / 30},
+            {s = "ArcCW_WAW.Mosin_Fwd", t = 5 / 30},
+            {s = "ArcCW_WAW.Mosin_Down", t = 10 / 30},
         },
     },
 
@@ -351,7 +436,7 @@ SWEP.Animations = {
         LHIKOut = 0.25,
     },
     ["idle_ubgl_empty"] = {
-        Source = "idle_glsetup",
+        Source = "idle_glsetup_empty",
         Time = 1 / 30,
         LHIK = true,
         LHIKIn = 0.25,

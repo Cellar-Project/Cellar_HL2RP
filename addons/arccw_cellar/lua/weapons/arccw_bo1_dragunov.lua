@@ -12,7 +12,7 @@ SWEP.Trivia_Mechanism = "Gas Operated, Rotating Bolt"
 SWEP.Trivia_Country = "U.S.S.R."
 SWEP.Trivia_Year = 1963
 
-SWEP.Slot = 3
+SWEP.Slot = 2
 
 SWEP.UseHands = true
 
@@ -27,18 +27,18 @@ SWEP.WorldModelOffset = {
 }
 SWEP.ViewModelFOV = 60
 
-SWEP.DefaultBodygroups = "00000000000"
+SWEP.DefaultBodygroups = "00111000000"
 
-SWEP.Damage = 100
-SWEP.DamageMin = 85 -- damage done at maximum range
+SWEP.Damage = 80
+SWEP.DamageMin = 70 -- damage done at maximum range
 SWEP.Range = 400 -- in METRES
 SWEP.RangeMin = 40
 SWEP.BloodDamage = 300
 SWEP.ShockDamage = 500
-SWEP.BleedChance = 75
+SWEP.BleedChance = 80
 SWEP.AmmoItem = "bullets_7x6254mmr"
 
-SWEP.Penetration = 12
+SWEP.Penetration = 15
 SWEP.DamageType = DMG_BULLET
 SWEP.ShootEntity = nil -- entity to fire, if any
 SWEP.MuzzleVelocity = 830 -- projectile or phys bullet muzzle velocity
@@ -50,8 +50,6 @@ SWEP.TracerWidth = 3
 
 SWEP.ChamberSize = 0 -- how many rounds can be chambered.
 SWEP.Primary.ClipSize = 10 -- DefaultClip is automatically set.
-SWEP.ExtendedClipSize = 20
-SWEP.ReducedClipSize = 5
 
 SWEP.Recoil = 1.4
 SWEP.RecoilSide = 0.75
@@ -79,7 +77,7 @@ SWEP.AccuracyMOA = 1 -- accuracy in Minutes of Angle. There are 60 MOA in a degr
 SWEP.HipDispersion = 800 -- inaccuracy added by hip firing.
 SWEP.MoveDispersion = 50
 
-SWEP.Primary.Ammo = "bullets_7x6254mmr" -- what ammo type the gun uses
+SWEP.Primary.Ammo = "smg1" -- what ammo type the gun uses
 SWEP.MagID = "svd" -- the magazine pool this gun draws from
 
 SWEP.ShootVol = 110 -- volume of shoot sound
@@ -140,20 +138,52 @@ SWEP.BarrelOffsetHip = Vector(2, 0, -2)
 
 SWEP.BarrelLength = 24
 
-SWEP.AttachmentElements = {}
+SWEP.AttachmentElements = {
+    ["rail"] = {
+        VMBodygroups = {
+            {ind = 2, bg = 1},
+            {ind = 3, bg = 1},
+        },
+    },
+}
 
 SWEP.ExtraSightDist = 3
 
 SWEP.RejectAttachments = {}
 
-SWEP.Attachments = {}
-
+SWEP.Attachments = {
+    {
+        PrintName = "Optic", -- print name
+        DefaultAttName = "Iron Sights",
+        Slot = {"optic_sniper", "optic"}, -- what kind of attachments can fit here, can be string or table
+        Bone = "tag_weapon", -- relevant bone any attachments will be mostly referring to
+        Offset = {
+            vpos = Vector(4, 0, 3.8),
+            vang = Angle(0, 0, 0),
+        },
+        InstalledEles = "rail",
+        MergeSlots = {2, 11, 12},
+    },
+    {
+        Slot = "bo1_pso",
+        Bone = "tag_weapon", -- relevant bone any attachments will be mostly referring to
+        VMScale = Vector (1, 1, 1),
+        Offset = {
+            vpos = Vector(3, 0, 3.05),
+            vang = Angle(0, 0, 0),
+        },
+        GivesFlags = {"cobrakai"},
+        CorrectivePos = Vector(0, 0, 0),
+        CorrectiveAng = Angle(0, 0, 0),
+        Installed = "optic_bo1_pso",
+    },
+}
 SWEP.Animations = {
     ["idle"] = false,
-    --{
-       -- Source = "idle",
-       -- Time = 1 / 35,
-   -- },
+    --[[{
+        Source = "idle",
+        Time = 1 / 35,
+    },]]
     ["draw"] = {
         Source = "draw",
         Time = 56 / 35,

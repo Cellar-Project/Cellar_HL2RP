@@ -13,24 +13,24 @@ ITEM.iconCam = {
 }
 ITEM.Attack = 16
 ITEM.DistanceSkillMod = {
-	[1] = 1,
-	[2] = 3,
-	[3] = 2,
+	[1] = 5,
+	[2] = 5,
+	[3] = 3,
 	[4] = 1
 }
 ITEM.Info = {
 	Type = nil,
 	Skill = "guns",
 	Distance = {
-		[1] = 1,
-		[2] = 3,
-		[3] = 2,
+		[1] = 5,
+		[2] = 5,
+		[3] = 3,
 		[4] = 1
 	},
 	Dmg = {
 		Attack = nil,
 		AP = ITEM.Attack,
-		Limb = 50,
+		Limb = 60,
 		Shock = {200, 2000},
 		Blood = {60, 666},
 		Bleed = 70
