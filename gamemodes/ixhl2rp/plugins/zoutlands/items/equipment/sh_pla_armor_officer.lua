@@ -1,5 +1,5 @@
-ITEM.name = "Комплект униформы бойца НОАК Тип 1"
-ITEM.description = "Стандартный комплект униформы бойца НОАК Тип 1."
+ITEM.name = "Офицерский комплект униформы бойца НОАК"
+ITEM.description = "Офицерский комплект униформы бойца НОАК."
 ITEM.category = "НОАК"
 ITEM.model = "models/props_c17/SuitCase001a.mdl"
 ITEM.slot = EQUIP_TORSO
@@ -21,11 +21,11 @@ ITEM.bodyGroups = { -- какие бодигруппы на какие сета�
 
 ITEM.Stats = {
 	[HITGROUP_GENERIC] = 10,
-	[HITGROUP_HEAD] = 14,
-	[HITGROUP_CHEST] = 20,
-	[HITGROUP_STOMACH] = 10,
+	[HITGROUP_HEAD] = 16,
+	[HITGROUP_CHEST] = 30,
+	[HITGROUP_STOMACH] = 20,
 	[4] = 10, -- hands
 	[5] = 10, -- legs
 }
-ITEM.rarity = 1
+ITEM.rarity = 4
 ITEM.thermalIsolation = 4
