@@ -1,12 +1,15 @@
 RECIPE.name = "Нож"
-RECIPE.category = "Оружейник"
+RECIPE.category = "Разобрать"
 RECIPE.requirements = {
-	["metal_scrap"] = 3
+	["knife"] = 1,
 }
 RECIPE.results = {
-	["knife"] = 1
+	["metal_scrap"] = {
+		min = 0,
+		max = 3
+	},
 }
-RECIPE.station = "station_tokar"
+RECIPE.xp = 20
 RECIPE.skill = {"gunsmith", 0}
 RECIPE.tools = {"tool_hammer"}
 RECIPE.description = nil
