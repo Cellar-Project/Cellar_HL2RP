@@ -10,7 +10,6 @@ ITEM.isGrenade = false
 ITEM.weaponCategory = "sidearm"
 ITEM.useSound = "items/ammo_pickup.wav"
 ITEM.hasLock = false
-ITEM.BodyGroups = "00111000000"
 
 -- Inventory drawing
 if (CLIENT) then
@@ -215,7 +214,6 @@ ITEM:Hook("drop", function(item)
 
 		if (IsValid(weapon)) then
 			item:SetData("ammo", weapon:Clip1())
-			item:SetBodyGroups( item.BodyGroups )
 
 			owner:StripWeapon(item.class)
 			owner.carryWeapons[item.weaponCategory] = nil

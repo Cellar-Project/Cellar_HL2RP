@@ -1,6 +1,6 @@
 ITEM.name = "Mk 48 Mod 1"
 ITEM.description = "Бельгийский легкий пулемет. Уменьшенная версия Mk 46 Mod 0, стреляет более мощным патроном 7,62x51 мм НАТО. Используется военно-морскими силами США, USSOCOM и индийскими силами специального назначения."
-ITEM.model = "models/weapons/arccw/w_bo2_mk48.mdl"
+ITEM.model = "models/weapons/w_mach_m249para.mdl"
 ITEM.class = "arccw_bo2_mk48"
 ITEM.weaponCategory = "primary"
 ITEM.classes = {CLASS_EMP, CLASS_EOW}

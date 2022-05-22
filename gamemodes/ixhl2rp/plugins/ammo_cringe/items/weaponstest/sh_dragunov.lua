@@ -1,8 +1,6 @@
 ITEM.name = "СВД-63"
 ITEM.description = "Советская полуавтоматическая снайперская винтовка, эстетически схожая с АК-47, созданная для снайперов. Также выпускается китайской оружейной компанией Norinco для китайской армии."
 ITEM.model = "models/weapons/arccw/c_bo1_svd.mdl"
--- test for sniper BGs
-ITEM.BodyGroups =  "00111000000"
 ITEM.class = "arccw_bo1_dragunov"
 ITEM.weaponCategory = "primary"
 ITEM.width = 5

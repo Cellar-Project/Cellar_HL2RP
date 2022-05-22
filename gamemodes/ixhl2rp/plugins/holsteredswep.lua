@@ -82,25 +82,25 @@ HOLSTER_DRAWINFO["arccw_ak47"] = {
 	model = "models/weapons/w_tdon_mwak_mammal_edition.mdl"
 }
 HOLSTER_DRAWINFO["arccw_bo1_dragunov"] = {
-	pos = Vector(0, 10, 13), -- 1 - ВПЕРЕД НАЗАД(+) 2 - ВВЕРХ-ВНИЗ(+) 3 - ВЛЕВО ВПРАВО(-)
+	pos = Vector(6, 20, 13), -- 1 - ВПЕРЕД НАЗАД(+) 2 - ВВЕРХ-ВНИЗ(+) 3 - ВЛЕВО ВПРАВО(-)
 	ang = Angle(-45, 180, 0),
 	bone = "ValveBiped.Bip01_Spine",
 	model = "models/weapons/arccw/c_bo1_svd.mdl"
 }
 HOLSTER_DRAWINFO["arccw_bo1_l96"] = {
-	pos = Vector(4, 15, 10),
+	pos = Vector(9, 15, 10),
 	ang = Angle(-45, 180, 0),
 	bone = "ValveBiped.Bip01_Spine",
 	model = "models/weapons/arccw/c_bo1_awm.mdl"
 }
 HOLSTER_DRAWINFO["arccw_bo1_rpg7"] = {
-	pos = Vector(4, 24, 8),
+	pos = Vector(4, 10, 8), -- 1 - ВПЕРЕД НАЗАД(+) 2 - ВВЕРХ-ВНИЗ(+) 3 - ВЛЕВО ВПРАВО(-)
 	ang = Angle(-45, 180, 0),
 	bone = "ValveBiped.Bip01_Spine",
 	model = "models/weapons/arccw/c_bo1_rpg7.mdl"
 }
 HOLSTER_DRAWINFO["arccw_bo2_mk48"] = {
-	pos = Vector(4, 15, 10),
+	pos = Vector(8, 15, 10),
 	ang = Angle(-45, 180, 0),
 	bone = "ValveBiped.Bip01_Spine",
 	model = "models/weapons/arccw/w_bo2_mk48.mdl"
@@ -112,8 +112,8 @@ HOLSTER_DRAWINFO["arccw_bo2_type95"] = {
 	model = "models/weapons/arccw/w_bo2_type95.mdl"
 }
 HOLSTER_DRAWINFO["arccw_makarov"] = {
-	pos = Vector(4, -7, 2),
-	ang = Angle(0, 90, 0),
+	pos = Vector(4, -7, -2), -- 1 - ВПЕРЕД НАЗАД(+) 2 - ВВЕРХ-ВНИЗ(+) 3 - ВЛЕВО ВПРАВО(-)
+	ang = Angle(180, -90, 180), -- хер его знает как тут крутить, тут нет логики никакой, только рандом
 	bone = "ValveBiped.Bip01_Pelvis",
 	model = "models/weapons/arccw_ins2/w_makarov.mdl"
 }
