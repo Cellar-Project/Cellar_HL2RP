@@ -104,6 +104,8 @@ do
 			self:SetLimbData(limbData)
 
 			if IsValid(client) then
+				hook.Run("PlayerLimbDamageHealed", client, limb, amount, self)
+				
 				net.Start("ixHealLimbDamage")
 					net.WriteUInt(self:GetID(), 32)
 					net.WriteString(limb)
