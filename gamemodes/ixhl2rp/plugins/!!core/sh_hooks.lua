@@ -137,15 +137,8 @@ local function UpdatePlayerHoldType(client, weapon)
 	local holdType = "normal"
 
 	if (IsValid(weapon)) then
-		local class = weapon:GetClass()
-		local baseTable = ix.anim[client.ixAnimModelClass] or {}
-
 		holdType = weapon.HoldType or weapon:GetHoldType()
 		holdType = HOLDTYPE_TRANSLATOR[holdType] or holdType
-
-		if baseTable and baseTable[class] then
-			holdType = class or holdType
-		end
 	end
 
 	client.ixAnimHoldType = holdType
