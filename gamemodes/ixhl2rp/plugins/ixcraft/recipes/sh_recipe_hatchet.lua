@@ -1,8 +1,8 @@
 RECIPE.name = "Топорик"
 RECIPE.category = "Оружейник"
 RECIPE.requirements = {
-	["metal_reclaimed"] = 2,
-	["metal_scrap"] = 1
+	["metal_scrap"] = 2,
+	["mat_wood"] = 1
 }
 RECIPE.results = {
 	["hatchet"] = 1
