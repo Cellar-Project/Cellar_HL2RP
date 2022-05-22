@@ -3,7 +3,7 @@ local PLUGIN = PLUGIN
 
 PLUGIN.name = "Limbs Penalties"
 PLUGIN.author = "LegAz"
-PLUGIN.description = "Limbs penalties."
+PLUGIN.description = "Add penalties to (almost) every limb when they're damaged."
 
 function PLUGIN:GetLimbsDamage(client, bFraction, ...)
 	local character = client:GetCharacter()
