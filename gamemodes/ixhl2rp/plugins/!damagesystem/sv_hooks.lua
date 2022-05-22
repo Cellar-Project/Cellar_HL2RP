@@ -507,7 +507,7 @@ do
 		end
 	end
 
-	-- limb_penalties task addition
+	-- limbs_penalties task addition
 	local function ScaleHitChanceByHandsDamage(hitChance, character)
 		local leftHandDamage, rightHandDamage = character:GetLimbDamage("leftHand", true), character:GetLimbDamage("rightHand", true)
 
