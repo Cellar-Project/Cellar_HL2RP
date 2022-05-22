@@ -512,7 +512,7 @@ do
 		local leftHandDamage, rightHandDamage = character:GetLimbDamage("leftHand", true), character:GetLimbDamage("rightHand", true)
 
 		if (leftHandDamage > 0 or rightHandDamage > 0) then
-			hitChance = hitChance * (1 - ((leftHandDamage * 0.5) + (rightHandDamage * 0.5))
+			hitChance = hitChance * (1 - ((leftHandDamage * 0.5) + (rightHandDamage * 0.5)))
 		end
 
 		return hitChance
