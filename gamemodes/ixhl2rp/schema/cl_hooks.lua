@@ -258,3 +258,7 @@ function Schema:ShouldDisableThirdperson(client)
 		return true    
 	end
 end
+
+function Schema:InitPostEntity()
+	RunConsoleCommand("r_eyemove", "0")
+end
