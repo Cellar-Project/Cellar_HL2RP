@@ -1,8 +1,7 @@
 RECIPE.name = "Монтировка"
 RECIPE.category = "Оружейник"
 RECIPE.requirements = {
-	["metal_reclaimed"] = 2,
-	["metal_scrap"] = 1,
+	["metal_scrap"] = 3,
 	["metal_armature"] = 1
 }
 RECIPE.results = {
