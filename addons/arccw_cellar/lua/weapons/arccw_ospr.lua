@@ -124,8 +124,8 @@ SWEP.IronSightStruct = {
 }
 
 SWEP.HoldtypeHolstered = "passive"
-SWEP.HoldtypeActive = "passive"
-SWEP.HoldtypeSights = "passive"
+SWEP.HoldtypeActive = "ar2"
+SWEP.HoldtypeSights = "ar2"
 
 SWEP.AnimShoot = ACT_HL2MP_GESTURE_RANGE_ATTACK_AR2
 
@@ -181,10 +181,10 @@ SWEP.Animations = {
 SWEP.OSPR = true
 SWEP.Stat_Attack = 40
 SWEP.Stat_DistanceSkillMod = {
-	[1] = 10,
-	[2] = 10,
-	[3] = 10,
-	[4] = 10
+	[1] = 5,
+	[2] = 5,
+	[3] = 5,
+	[4] = 5
 }
 
 if CLIENT then
@@ -648,6 +648,6 @@ function SWEP:GetDamage(range, pellet)
     delta = math.Clamp(delta, 0, 1)
 
     local lerped = Lerp(delta, dmgmax, dmgmin)
-    print(lerped)
+
     return lerped
 end

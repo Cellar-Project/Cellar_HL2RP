@@ -16,6 +16,18 @@ ix.anim.assassin = {
 		prone_walk = {"prone_walk_relaxed", "prone_walk_relaxed"},
 		prone_idle = {"prone_idle_relaxed", "prone_idle_relaxed"},
 	},
+	arccw_ospr = {
+		[ACT_MP_STAND_IDLE] = {"idle_relaxed", "idle_relaxed"},
+		[ACT_MP_CROUCH_IDLE] = {"crouch_idle_relaxed", "crouch_idle_relaxed"},
+		[ACT_MP_WALK] = {"walk_relaxed", "walk_relaxed"},
+		[ACT_MP_CROUCHWALK] = {"crouch_walk_relaxed", "crouch_walk_relaxed"},
+		[ACT_MP_RUN] = {"run_relaxed", "run_relaxed"},
+		attack = ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST,
+		glide = "jump_relaxed",
+		sit = ACT_BUSY_SIT_CHAIR,
+		prone_walk = {"prone_walk_relaxed", "prone_walk_relaxed"},
+		prone_idle = {"prone_idle_ospr_relaxed", "prone_idle_ospr_angry"},
+	},
 	/*pistol = {
 
 	},
