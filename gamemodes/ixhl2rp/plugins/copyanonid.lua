@@ -1,22 +1,22 @@
-local PLUGIN = PLUGIN or {}
+local PLUGIN = PLUGIN
 
 PLUGIN.name = "Copy AnonID C Menu"
 PLUGIN.author = "Vintage Thief"
 PLUGIN.description = "Plugin allows to Copy AnonID of a player via C menu."
 
 CAMI.RegisterPrivilege({
-    Name = "Helix - Admin Context AnonID",
-    MinAccess = "admin"
+	Name = "Helix - Admin Context AnonID",
+	MinAccess = "admin"
 })
 
-properties.Add("ixViewPlayerAnonID", {
-	MenuLabel = "#View AnonID",
+properties.Add("ixCopyPlayerAnonID", {
+	MenuLabel = "#Copy AnonID",
 	Order = 999,
 	MenuIcon = "icon16/eye.png",
 
 	Filter = function(self, entity, client)
 		return CAMI.PlayerHasAccess(client, "Helix - Admin Context AnonID", nil) and entity:IsPlayer()
-    end,
+	end,
 
 	Action = function(self, entity)
 		self:MsgStart()
@@ -26,14 +26,12 @@ properties.Add("ixViewPlayerAnonID", {
 
 	Receive = function(self, legth, client)
 		if (CAMI.PlayerHasAccess(client, "Helix - Admin Context AnonID", nil)) then
-            local entity = net.ReadEntity()
-
+			local entity = net.ReadEntity()
 			local name = entity:GetCharacter():GetName()
-			--entity:GetCharacter():GetNetVar("AnonID")
-			local anonid = entity:GetNetVar("AnonID")
+			local anonid = entity:GetAnonID()
 
-			ix.util.Notify("AnonID игрока ".. name .." - ".. anonid .." скопирован в буфер обмена!", client)
-			client:SendLua("SetClipboardText(" .. anonid .. ")")
+			ix.util.Notify("AnonID игрока " .. name .. " - " .. anonid .. " скопирован в буфер обмена!", client)
+			client:SendLua("SetClipboardText(\"" .. anonid .. "\")")
 		end
 	end
 })
