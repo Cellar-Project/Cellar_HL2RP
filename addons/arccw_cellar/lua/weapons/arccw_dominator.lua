@@ -22,15 +22,15 @@ SWEP.ViewModelFOV = 60
 SWEP.DefaultBodygroups = "00000000"
 SWEP.DefaultWMBodygroups = "00000000"
 
-SWEP.Damage = 35
-SWEP.DamageMin = 22
-SWEP.BloodDamage = 300
-SWEP.ShockDamage = 400
+SWEP.Damage = 38
+SWEP.DamageMin = 29
+SWEP.BloodDamage = 600
+SWEP.ShockDamage = 1200
 SWEP.BleedChance = 8
 SWEP.AmmoItem = "bullets_dominator"
 
 SWEP.Range = 300 -- in METRES
-SWEP.Penetration = 10
+SWEP.Penetration = 15
 SWEP.DamageType = DMG_SHOCK
 SWEP.ShootEntity = nil -- entity to fire, if any
 SWEP.MuzzleVelocity = 900 -- projectile or phys bullet muzzle velocity
@@ -52,12 +52,12 @@ SWEP.RecoilPunch = 2.0
 SWEP.Delay = 60 / 490 -- 60 / RPM.
 SWEP.Num = 1 -- number of shots per trigger pull.
 SWEP.Firemodes = {
-    {
-        Mode = 2,
-    },
-    {
-        Mode = 0
-    }
+	{
+		Mode = 2,
+	},
+	{
+		Mode = 0
+	}
 }
 
 SWEP.NPCWeaponType = "weapon_ar2"
@@ -98,21 +98,21 @@ SWEP.SightedSpeedMult = 0.5
 SWEP.SightTime = 0.475
 
 SWEP.BulletBones = { -- the bone that represents bullets in gun/mag
-    [6] = "Weapon_Bullet0",
-    [5] = "Weapon_Bullet",
-    [4] = "Weapon_Bullet2",
-    [3] = "Weapon_Bullet3",
-    [2] = "Weapon_Bullet4",
-    [1] = "Weapon_Bullet5",
+	[6] = "Weapon_Bullet0",
+	[5] = "Weapon_Bullet",
+	[4] = "Weapon_Bullet2",
+	[3] = "Weapon_Bullet3",
+	[2] = "Weapon_Bullet4",
+	[1] = "Weapon_Bullet5",
 }
 
 SWEP.CaseBones = {}
 
 SWEP.IronSightStruct = {
-    Pos = Vector(-2.523, -3, 0.469),
-    Ang = Angle(0, 0, 0),
-    Magnification = 1.1,
-    SwitchToSound = "", -- sound that plays when switching to this sight
+	Pos = Vector(-2.523, -3, 0.469),
+	Ang = Angle(0, 0, 0),
+	Magnification = 1.1,
+	SwitchToSound = "", -- sound that plays when switching to this sight
 }
 
 SWEP.HoldtypeHolstered = "passive"
@@ -144,62 +144,62 @@ SWEP.MirrorVMWM = true
 SWEP.Attachments = {}
 
 SWEP.WorldModelOffset = {
-    pos = Vector(-11, 5.5, -5),
-    ang = Angle(-10, 0, 180)
+	pos = Vector(-11, 5.5, -5),
+	ang = Angle(-10, 0, 180)
 }
 
 SWEP.Animations = {
-    ["idle"] = {
-        Source = "idle",
-        Time = 1
-    },
-    ["draw"] = {
-        Source = "draw",
-        Time = 0.35,
-        SoundTable = {{s = "weapons/arccw/m249/m249_draw.wav", t = 0}},
-        LHIK = true,
-        LHIKIn = 0,
-        LHIKOut = 0.25,
-    },
-    ["ready"] = {
-        Source = "deploy",
-        Time = 1,
-        LHIK = true,
-        LHIKIn = 0,
-        LHIKOut = 0.25,
-    },
-    ["fire"] = {
-        Source = "fire",
-        Time = 0.5,
-        ShellEjectAt = 0,
-    },
-    ["fire_iron"] = {
-        Source = "iron",
-        Time = 0.5,
-        ShellEjectAt = 0,
-    },
-    ["reload"] = {
-        Source = "reload",
-        TPAnim = ACT_HL2MP_GESTURE_RELOAD_AR2,
-        FrameRate = 30,
-        LastClip1OutTime = 95/60,
-        LHIK = true,
-        LHIKIn = 0.2,
-        LHIKOut = 0.5,
-    },
-    ["reload_empty"] = {
-        Source = "reload",
-        TPAnim = ACT_HL2MP_GESTURE_RELOAD_AR2,
-        FrameRate = 30,
-        LastClip1OutTime = 95/60,
-        LHIK = true,
-        LHIKIn = 0.2,
-        LHIKOut = 0.5,
-    },
-    ["bash"] = {
-        Source = {"melee"},
-        Time = 30/60,
-    },
+	["idle"] = {
+		Source = "idle",
+		Time = 1
+	},
+	["draw"] = {
+		Source = "draw",
+		Time = 0.35,
+		SoundTable = {{s = "weapons/arccw/m249/m249_draw.wav", t = 0}},
+		LHIK = true,
+		LHIKIn = 0,
+		LHIKOut = 0.25,
+	},
+	["ready"] = {
+		Source = "deploy",
+		Time = 1,
+		LHIK = true,
+		LHIKIn = 0,
+		LHIKOut = 0.25,
+	},
+	["fire"] = {
+		Source = "fire",
+		Time = 0.5,
+		ShellEjectAt = 0,
+	},
+	["fire_iron"] = {
+		Source = "iron",
+		Time = 0.5,
+		ShellEjectAt = 0,
+	},
+	["reload"] = {
+		Source = "reload",
+		TPAnim = ACT_HL2MP_GESTURE_RELOAD_AR2,
+		FrameRate = 30,
+		LastClip1OutTime = 95/60,
+		LHIK = true,
+		LHIKIn = 0.2,
+		LHIKOut = 0.5,
+	},
+	["reload_empty"] = {
+		Source = "reload",
+		TPAnim = ACT_HL2MP_GESTURE_RELOAD_AR2,
+		FrameRate = 30,
+		LastClip1OutTime = 95/60,
+		LHIK = true,
+		LHIKIn = 0.2,
+		LHIKOut = 0.5,
+	},
+	["bash"] = {
+		Source = {"melee"},
+		Time = 30/60,
+	},
 }
 
 
