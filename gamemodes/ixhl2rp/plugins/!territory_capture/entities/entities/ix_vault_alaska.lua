@@ -268,6 +268,10 @@ if (SERVER) then
 				local z_check_mines = ix.config.Get("z_mines")
 				local pla = 3
 
+				if self:GetNetVar("now_time") >= conf_time then
+					self:SetNetVar("reward_done", true)
+				end
+
 				if z_check_metro == pla then
 					self:SetNetVar("nv_metro", true)
 				else
