@@ -14,8 +14,14 @@ if (SERVER) then
 
 	function ENT:Initialize()
 
-		self:SetNetVar("reward_done", false)
+		local conf_time = ix.config.Get("reward_time")
 		self:SetNetVar("now_time", 0)
+
+		if self:GetNetVar("now_time") >= conf_time then
+			self:SetNetVar("reward_done", true)
+		else
+			self:SetNetVar("reward_done", false)
+		end
 		self:SetModel("models/Items/ammocrate_grenade.mdl")
 		self:SetSolid(SOLID_VPHYSICS)
 		self:SetMoveType(MOVETYPE_NONE)
@@ -42,6 +48,10 @@ if (SERVER) then
 			local z_check_fisherhouse = ix.config.Get("z_fisherhouse")
 			local z_check_mines = ix.config.Get("z_mines")
 			local pla = 1
+
+			if self:GetNetVar("now_time") >= conf_time then
+				self:SetNetVar("reward_done", true)
+			end
 
 			if z_check_metro == pla then
 				self:SetNetVar("nv_metro", true)

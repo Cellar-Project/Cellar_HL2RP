@@ -14,8 +14,14 @@ if (SERVER) then
 
 	function ENT:Initialize()
 
-		self:SetNetVar("reward_done", false)
+		local conf_time = ix.config.Get("reward_time")
 		self:SetNetVar("now_time", 0)
+
+		if self:GetNetVar("now_time") >= conf_time then
+			self:SetNetVar("reward_done", true)
+		else
+			self:SetNetVar("reward_done", false)
+		end
 		self:SetModel("models/Items/ammocrate_grenade.mdl")
 		self:SetSolid(SOLID_VPHYSICS)
 		self:SetMoveType(MOVETYPE_NONE)
@@ -23,8 +29,6 @@ if (SERVER) then
 		self:SetUseType(SIMPLE_USE)
 
 		self.nextUseTime = 0
-
-		local conf_time = ix.config.Get("reward_time")
 
 		self.timer_name = "vault_timer" .. self:EntIndex()
 		self.timer_name_tick = "vault_timer_tick" .. self:EntIndex()
@@ -42,6 +46,10 @@ if (SERVER) then
 			local z_check_fisherhouse = ix.config.Get("z_fisherhouse")
 			local z_check_mines = ix.config.Get("z_mines")
 			local pla = 2
+
+			if self:GetNetVar("now_time") >= conf_time then
+				self:SetNetVar("reward_done", true)
+			end
 
 			if z_check_metro == pla then
 				self:SetNetVar("nv_metro", true)
@@ -83,6 +91,8 @@ if (SERVER) then
 		timer.Create( self.timer_name, conf_time, 0, function()
 			self:SetNetVar("reward_done", true)
 		end)
+
+		
 
 		timer.Create( self.timer_name_tick, 1, 0, function()
 
@@ -267,10 +277,6 @@ if (SERVER) then
 				local z_check_fisherhouse = ix.config.Get("z_fisherhouse")
 				local z_check_mines = ix.config.Get("z_mines")
 				local pla = 2
-
-				if self:GetNetVar("now_time") >= conf_time then
-					self:SetNetVar("reward_done", true)
-				end
 
 				if z_check_metro == pla then
 					self:SetNetVar("nv_metro", true)
