@@ -38,7 +38,7 @@ function ITEM:PreCanStudy(_, character)
 	return character:GetStudyProgress(self:GetStudyProgressKey()) != true
 end
 
-function ITEM:CanStudy()
+function ITEM:CanStudy(_, character)
 	local skillInfo = ix.skills.list[self.skillID]
 
 	if (ix.skills.list[self.skillID]) then
