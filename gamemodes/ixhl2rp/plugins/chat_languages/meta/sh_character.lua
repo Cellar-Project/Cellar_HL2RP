@@ -7,12 +7,12 @@ end
 
 function charMeta:GetLanguageStudyProgress(languageID, volumeNumber)
 	if (ix.chatLanguages.Get(languageID)) then
-		local studyProgress = self:GetLanguagesStudyProgress()
+		local studyProgress = self:GetStudyProgress(languageID)
 
-		if (studyProgress[languageID] and volumeNumber) then
-			return studyProgress[languageID][volumeNumber]
+		if (studyProgress and volumeNumber) then
+			return studyProgress[volumeNumber]
 		end
 
-		return studyProgress[languageID]
+		return studyProgress
 	end
 end
