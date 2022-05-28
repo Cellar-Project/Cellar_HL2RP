@@ -11,7 +11,6 @@ ix.util.Include("libs/sv_character.lua")
 ix.util.Include("libs/cl_character.lua")
 ix.util.Include("meta/sv_character.lua")
 ix.util.Include("meta/sh_character.lua")
-ix.util.Include("meta/sv_player.lua")
 
 ix.util.Include("cl_plugin.lua")
 ix.util.Include("sv_plugin.lua")
