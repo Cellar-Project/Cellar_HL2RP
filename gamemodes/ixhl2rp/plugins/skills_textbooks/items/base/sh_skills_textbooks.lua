@@ -33,7 +33,6 @@ function ITEM:GetStudyTimeLeft(_, character)
 	return character:GetStudyProgress(self:GetStudyProgressKey())
 end
 
--- self:GetStudyProgressKey()
 function ITEM:GetMaxStudyTime()
 	return ix.config.Get("skillsTextbooksMinReadTime", 3600) * self.volume
 end
