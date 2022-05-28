@@ -10,11 +10,11 @@ function PLUGIN:InitializedConfig()
 		local preItemID = k .. "_textbook_volume"
 		local preItemName = v.name .. " textbook #%d"
 		local minReadTime = ix.config.Get("skillsTextbooksMinReadTime", 3600)
-		local maxSkillXP = ix.config.Get("skillsTextbooksMinXP", 500)
+		local skillXP = ix.config.Get("skillsTextbooksMinXP", 500)
 
 		for i = 1, ix.config.Get("skillsTextbooksVolumeCount", 3) do
 			local itemID = preItemID .. i
-			local maxSkillXP = maxSkillXP * i
+			skillXP = skillXP * i
 
 			ix.item.Register(itemID, "base_skills_textbooks", false, nil)
 
@@ -22,7 +22,7 @@ function PLUGIN:InitializedConfig()
 				ix.item.list[itemID].name = string.format(preItemName, i)
 				ix.item.list[itemID].model = v.textbookModel or ix.item.list[itemID].model
 				ix.item.list[itemID].skillID = k
-				ix.item.list[itemID].skillXP = maxSkillXP
+				ix.item.list[itemID].skillXP = skillXP
 				ix.item.list[itemID].volume = i
 				ix.item.list[itemID].studyTime = minReadTime * i
 			end

@@ -1,5 +1,4 @@
 
-
 ITEM.name = "Textbook Base"
 ITEM.description = "A Textbook Base."
 ITEM.model = Model("models/props_lab/bindergreen.mdl")
@@ -7,7 +6,8 @@ ITEM.category = "Textbooks"
 ITEM.studyTime = 60
 
 --[[in order to make item on this base work, you have to initilize funcs bellow]]--
--- [CL] GetProgressTooltip(tooltip, client, character) !OPTIONAL!
+-- [CL; OPT] GetProgressTooltip(tooltip, client, character) !OPTIONAL!
+-- [CL; OPT] PopulateTooltip2(baseTooltip, client, character) !OPTIONAL!
 -- [SH] PreCanStudy(client, character)
 -- [SV] CanStudy(client, character)
 -- [SH] GetStudyTimeLeft(client, character)
@@ -21,9 +21,17 @@ if (CLIENT) then
 		local client = LocalPlayer()
 		local character = client:GetCharacter()
 		local studyProgress = self:GetStudyTimeLeft(LocalPlayer(), client:GetCharacter())
-		
+
 		local progressT = tooltip:AddRowAfter("name", "progress")
-		local color, text = self:GetProgressTooltip(progressT, client, character)
+		local color, text
+
+		if (self.PopulateTooltip2) then
+			self:PopulateTooltip2(tooltip, client, character)
+		end
+
+		if (self.GetProgressTooltip) then
+			color, text = self:GetProgressTooltip(progressT, client, character)
+		end
 
 		if (!color and !text) then
 			if (!studyProgress) then
@@ -105,7 +113,7 @@ ITEM.functions.Study = {
 				end
 			end)
 		else
-			client:NotifyLocalized(message)
+			client:NotifyLocalized(message or "unknownError")
 		end
 
 		return false
