@@ -25,12 +25,7 @@ LANGUAGE = {
 	-- language_textbooks base items
 	iLanguageTextbookName = "%s language. Volume %s",
 	iLanguageTextbookDescription = "Moderately weighty book, on the pages of which there is information necessary for a comprehensive study of the language.",
-	studyingLanguage = "Studying language...",
-	noStudyOnMove = "You can't study a language while you in move!",
 	languageStudied = "Congratulations, you've studied %s.",
 	volumeStudied = "You have completed %s of %s %s volumes.",
-	textbookLanguageStudied = "Studied the language itself",
-	textbookNoStudy = "Study not started",
-	textbookStudyInProgress = "Studied %s",
 	textbookStudySuccess = "Study finished"
 }
