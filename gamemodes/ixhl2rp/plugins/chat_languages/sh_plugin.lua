@@ -50,3 +50,22 @@ function PLUGIN:InitializedConfig()
 		end
 	end
 end
+
+-- backward compatibility hack (we will not lose study progress twice)
+if (SERVER) then
+	function PLUGIN:PlayerLoadedCharacter(_, character)
+		if (tonumber(character:GetCreateTime()) > 1653761532 and !character:GetData("bLanguageStudyProgressRestored")) then
+			local studyProgress = character:GetLanguagesStudyProgress()
+
+			if (!table.IsEmpty(studyProgress)) then
+				for k, v in pairs(studyProgress) do
+					character:SetStudyProgress(k, v)
+				end
+	
+				character:SetLanguagesStudyProgress()
+			end
+
+			character:SetData("bLanguageStudyProgressRestored", true)
+		end
+	end
+end
