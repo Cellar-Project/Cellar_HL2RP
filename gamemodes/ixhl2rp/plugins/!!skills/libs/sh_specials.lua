@@ -134,7 +134,7 @@ do
 	end
 
 	function charMeta:GetSpecialBoosts()
-		return self:GetVar("boosts", {})
+		return self:GetVar("specialboosts", {})
 	end
 
 	function charMeta:GetSpecial(key, default)
