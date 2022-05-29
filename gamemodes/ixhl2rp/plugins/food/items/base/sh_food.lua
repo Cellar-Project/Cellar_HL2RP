@@ -13,10 +13,45 @@ ITEM.dDamage = 0
 ITEM.dDrunkTime = 0
 ITEM.dUses = 1
 ITEM.junk = nil
+ITEM.expirationDate = 7 -- in days
 ITEM.useSound = {"npc/barnacle/barnacle_gulp1.wav", "npc/barnacle/barnacle_gulp2.wav"}
+
+if (CLIENT) then
+	function ITEM:PopulateTooltip(tooltip)
+		local expirationDate = self:GetData("expirationDate")
+		local expDateT = tooltip:AddRowAfter("name", "expirationDate")
+		local color, text
+
+		-- we won't be seeing color change, but it's better we prepare it for time when SC does something good with his interface
+		if (expirationDate > os.time()) then
+			color = derma.GetColor("Warning", expDateT)
+			text = "Годно до: " .. os.date("%d.%m - %H:%M", expirationDate)
+		else
+			color = derma.GetColor("Error", expDateT)
+			text = "Просрочено"
+		end
+
+		expDateT:SetBackgroundColor(color)
+		expDateT:SetText(text)
+	end
+end
 
 function ITEM:OnCanUse(client)
 	return true
+end
+
+function ITEM:GetExpirationDate()
+	return os.time() + self.expirationDate * 86400
+end
+
+function ITEM:OnInstanced()
+	self:SetData("expirationDate", self:GetExpirationDate())
+end
+
+function ITEM:OnRestored()
+	if (!self:GetData("expirationDate")) then
+		self:SetData("expirationDate", self:GetExpirationDate())
+	end
 end
 
 function ITEM:OnUse(client, all)
@@ -111,6 +146,10 @@ ITEM.functions.UseAll = {
 		return false
 	end,
 	OnCanRun = function(item)
+		if (item:GetData("expirationDate") <= os.time()) then
+			return false
+		end
+
 		return item:OnCanUse(item.player)
 	end
 }
