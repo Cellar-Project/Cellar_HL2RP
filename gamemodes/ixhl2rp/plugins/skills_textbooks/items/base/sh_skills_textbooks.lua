@@ -65,7 +65,7 @@ function ITEM:OnStudyTimeCapped(_, character, studyTime)
 end
 
 function ITEM:OnTextbookStudied(client, character, result)
-	character:IncreaseSkill(self.skillID, self.skillXP)
+	character:UpdateSkillProgress(self.skillID, self.skillXP)
 	character:SetStudyProgress(self:GetStudyProgressKey(), true)
 
 	local volumeCount = ix.config.Get("skillsTextbooksVolumeCount", 3)
