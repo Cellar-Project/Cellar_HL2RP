@@ -2,7 +2,6 @@
 LANGUAGE = {
 	iSkillTextbookName = "%s. Часть %s",
 	iSkillTextbookDescription = "В меру увесистая книга, на страницах которой находится информация, необходимая для улучшения понимания тех или иных аспектов бытия.",
-	iSkillTextbookUsesLeft = "Использований осталось: %s",
 
 	skillsTextbooks = "Учебники Навыков",
 	["Skills Textbooks"] = "Учебники Навыков",
