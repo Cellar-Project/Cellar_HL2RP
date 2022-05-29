@@ -58,14 +58,9 @@ do
 
 	function charMeta:StatRoll(attributeID)
 		local client = self:GetPlayer()
-		local boost = self:GetSpecialBoosts()
 		local statValue = self:GetSpecial(attributeID, 0)
 		local success = false
 		local value = math.random(1, 10)
-
-		for _, bValue in pairs(boost[attributeID] or {}) do
-			statValue = statValue + bValue
-		end
 
 		if value == 1 then
 			success = true
