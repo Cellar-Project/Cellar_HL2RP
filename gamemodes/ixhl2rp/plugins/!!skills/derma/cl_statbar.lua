@@ -87,12 +87,12 @@ function PANEL:Init()
 					end
 
 					if (boostedValue < 0) then
-						surface.SetDrawColor(200, 40, 40, 230)
+						surface.SetDrawColor(200, 40, 40, 80)
 
 						local bWidth = math.abs(w * boostValue)
 						surface.DrawRect(w * value - bWidth, 0, bWidth, h)
 					else
-						surface.SetDrawColor(40, 200, 40, 230)
+						surface.SetDrawColor(40, 200, 40, 80)
 						surface.DrawRect(w * value, 0, w * boostValue, h)
 					end
 				end
