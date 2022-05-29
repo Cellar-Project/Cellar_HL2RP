@@ -25,10 +25,10 @@ if (CLIENT) then
 	end
 
 	function ITEM:PopulateTooltip2(tooltip)
-		local usesLeft = tooltip:AddRowAfter("progress", "usesLeft")
+		local usesLeft = tooltip:AddRowAfter("description", "usesLeft")
 
 		usesLeft:SetBackgroundColor(derma.GetColor("Warning", usesLeft))
-		usesLeft:SetText(L("iSkillTextbookUsesLeft", self:GetData("usesLeft", self.usesLeft)))
+		usesLeft:SetText(L("usesDesc", self:GetData("usesLeft", self.usesLeft), self.usesLeft))
 		usesLeft:SizeToContents()
 	end
 end

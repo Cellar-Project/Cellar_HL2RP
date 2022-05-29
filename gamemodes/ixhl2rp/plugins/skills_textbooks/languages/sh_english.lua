@@ -2,7 +2,6 @@
 LANGUAGE = {
 	iSkillTextbookName = "%s. Part %s",
 	iSkillTextbookDescription = "Moderately weighty book, on the pages of which there is information necessary for better understanding one or the other thing in life.",
-	iSkillTextbookUsesLeft = "Uses left: %s",
 
 	skillsTextbooks = "Skills Textbooks",
 
