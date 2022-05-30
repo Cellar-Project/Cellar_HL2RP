@@ -78,10 +78,6 @@ if (CLIENT) then
 end
 
 function ITEM:OnCanUse()
-	if (self:GetData("expirationDate") <= os.time()) then
-		return false
-	end
-
 	return true
 end
 
