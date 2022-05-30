@@ -140,10 +140,23 @@ do
 	function charMeta:GetSpecial(key, default)
 		local att = self:GetSpecials()[key] or default
 		local boosts = self:GetSpecialBoosts()[key]
+		local lLimit, uLimit = 0, ix.config.Get("maxAttributes", 10)
 
 		if (boosts) then
 			for _, v in pairs(boosts) do
-				att = att + v
+				local newAtt = att + v
+
+				if (newAtt < lLimit) then
+					att = lLimit
+
+					break
+				elseif (newAtt > uLimit) then
+					att = uLimit
+
+					break
+				end
+
+				att = newAtt
 			end
 		end
 
