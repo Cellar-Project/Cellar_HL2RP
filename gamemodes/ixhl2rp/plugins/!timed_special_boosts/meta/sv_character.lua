@@ -9,6 +9,32 @@ function charMeta:AttachDurationToSpecialBoost(boostID, duration)
 end
 
 function charMeta:AddSpecialBoostWithDuration(boostID, attribID, boostAmount, duration)
-	self:AddSpecialBoost(boostID, attribID, boostAmount)
-	self:AttachDurationToSpecialBoost(boostID, duration)
+	local bSuccess = self:AddSpecialBoost(boostID, attribID, boostAmount)
+
+	if (bSuccess) then
+		self:AttachDurationToSpecialBoost(boostID, duration)
+	end
+end
+
+-- override: Septic wants positive boost to not exceed the number of 3
+function charMeta:AddSpecialBoost(boostID, attribID, boostAmount)
+	local boosts = self:GetVar("specialboosts", {})
+	local attribBoosts = boostAmount
+
+	boosts[attribID] = boosts[attribID] or {}
+
+	for _, v in pairs(boosts[attribID]) do
+		attribBoosts = attribBoosts + v
+
+		if (attribBoosts > 3) then
+			return false
+		end
+	end
+
+	boosts[attribID][boostID] = boostAmount
+
+	hook.Run("CharacterSpecialBoosted", self:GetPlayer(), self, attribID, boostID, boostAmount)
+	self:SetVar("specialboosts", boosts)
+
+	return true
 end
