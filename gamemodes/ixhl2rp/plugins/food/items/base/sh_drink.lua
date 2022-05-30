@@ -13,17 +13,26 @@ ITEM.dDamage = 0
 ITEM.dDrunkTime = 0
 ITEM.dUses = 1
 ITEM.junk = nil
-ITEM.expirationDate = 7 -- in days
 ITEM.useSound = {"npc/barnacle/barnacle_gulp1.wav", "npc/barnacle/barnacle_gulp2.wav"}
+-- legaz: i really don't want to replicate the same code twice, but the drink base was not made by me
+ITEM.expirationDate = 604800 -- 7d
+ITEM.boostsDuration = 3600 -- 1h
+--[[
+ITEM.specialBoosts = {
+	["st"] = 1,
+}
+]]
 
 if (CLIENT) then
 	function ITEM:PopulateTooltip(tooltip)
+		-- expiration date
 		local expirationDate = self:GetData("expirationDate")
 		local expDateT = tooltip:AddRowAfter("name", "expirationDate")
+		local bNotExpired = expirationDate > os.time()
 		local color, text
 
 		-- we won't be seeing color change, but it's better we prepare it for time when SC does something good with his interface
-		if (expirationDate > os.time()) then
+		if (bNotExpired) then
 			color = derma.GetColor("Warning", expDateT)
 			text = "Годно до: " .. os.date("%d.%m - %H:%M", expirationDate)
 		else
@@ -33,15 +42,51 @@ if (CLIENT) then
 
 		expDateT:SetBackgroundColor(color)
 		expDateT:SetText(text)
+
+		-- uses left
+		local uses = tooltip:AddRowAfter("rarity")
+		uses:SetBackgroundColor(derma.GetColor("Warning", tooltip))
+		uses:SetText(L("usesDesc", self:GetData("uses", self.dUses), self.dUses))
+
+		-- boosts on use
+		if (istable(self.specialBoosts)) then
+			local boosts = tooltip:AddRow("boosts")
+			local text = "На " .. self.boostsDuration / 60 .. " мин.:"
+			
+			if (bNotExpired) then
+				color = derma.GetColor("Info", boosts)
+
+				for k, v in pairs(self.specialBoosts) do
+					text = text .. "\n • " .. L(ix.specials.list[k].name)
+					
+					if (v > 0) then
+						text = text .. ": +" .. v
+					else
+						text = text .. ": " .. v
+					end
+				end
+			else
+				color = derma.GetColor("Error", boosts)
+				text = text .. " отравление"
+			end
+
+			boosts:SetBackgroundColor(color)
+			boosts:SetText(text)
+			boosts:SizeToContents()
+		end
 	end
 end
 
 function ITEM:OnCanUse(client)
+	if (self:GetData("expirationDate") <= os.time()) then
+		return false
+	end
+
 	return true
 end
 
 function ITEM:GetExpirationDate()
-	return os.time() + self.expirationDate * 86400
+	return os.time() + self.expirationDate
 end
 
 function ITEM:OnInstanced()
@@ -67,6 +112,7 @@ function ITEM:OnUse(client, all)
 	local health = (self.dHealth * mul) * mod
 	local damage = (self.dDamage * mul) * mod
 	local drunkTime = (self.dDrunkTime * mul) * mod
+	local specialBoosts
 
 	if giveStamina > 0 then
 		client:RestoreStamina(giveStamina)
@@ -86,6 +132,22 @@ function ITEM:OnUse(client, all)
 
 	if damage > 0 then
 		client:TakeDamage(damage, client, client)
+	end
+
+	if (self:GetData("expirationDate") > os.time()) then
+		specialBoosts = istable(self.specialBoosts) and self.specialBoosts or nil
+	else
+		specialBoosts = {}
+
+		for k, v in pairs(ix.specials.list) do
+			specialBoosts[k] = -3
+		end
+	end
+
+	if (istable(specialBoosts)) then
+		for k, v in pairs(specialBoosts) do
+			character:AddSpecialBoostWithDuration(self.uniqueID .. "_" .. k, k, v, self.boostsDuration)
+		end
 	end
 
 	return true
@@ -146,10 +208,6 @@ ITEM.functions.UseAll = {
 		return false
 	end,
 	OnCanRun = function(item)
-		if (item:GetData("expirationDate") <= os.time()) then
-			return false
-		end
-
 		return item:OnCanUse(item.player)
 	end
 }
