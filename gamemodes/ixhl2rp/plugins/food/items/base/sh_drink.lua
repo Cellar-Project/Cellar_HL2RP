@@ -27,12 +27,13 @@ if (CLIENT) then
 	function ITEM:PopulateTooltip(tooltip)
 		-- expiration date
 		local expirationDate = self:GetData("expirationDate")
-		local expDateT = tooltip:AddRowAfter("name", "expirationDate")
 		local bNotExpired = expirationDate and expirationDate > os.time() or nil
 		local color, text
 
 		-- we won't be seeing color change, but it's better we prepare it for time when SC does something good with his interface
 		if (bNotExpired != nil) then
+			local expDateT = tooltip:AddRowAfter("name", "expirationDate")
+
 			if (bNotExpired) then
 				color = derma.GetColor("Warning", expDateT)
 				text = "Годно до: " .. os.date("%d.%m - %H:%M", expirationDate)
@@ -40,10 +41,10 @@ if (CLIENT) then
 				color = derma.GetColor("Error", expDateT)
 				text = "Просрочено"
 			end
-		end
 
-		expDateT:SetBackgroundColor(color)
-		expDateT:SetText(text)
+			expDateT:SetBackgroundColor(color)
+			expDateT:SetText(text)
+		end
 
 		-- uses left
 		local uses = tooltip:AddRowAfter("rarity")
