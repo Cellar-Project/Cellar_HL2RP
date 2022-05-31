@@ -168,7 +168,7 @@ function ITEM:OnUse(client, all)
 
 		if (istable(specialBoosts)) then
 			for k, v in pairs(specialBoosts) do
-				character:AddSpecialBoostWithDuration(self.uniqueID .. "_" .. k, k, v, self.boostsDuration)
+				character:AddSpecialBoostWithDuration(self.uniqueID, k, v, self.boostsDuration)
 			end
 		end
 	end

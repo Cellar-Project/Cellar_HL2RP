@@ -7,20 +7,20 @@ function PLUGIN:InitializedPlugins()
 			local character = client:GetCharacter()
 
 			if (character) then
-				local specialBoosts = character:GetSpecialBoosts()
+				local specialBoostsDuration = character:GetSpecialBoostsDuration()
 
-				for id, special in pairs(specialBoosts) do
-					for id2, boost in pairs(special) do
-						local boostDuration = character:GetSpecialBoostDuration(id2)
+				for k, v in pairs(specialBoostsDuration) do
+					local newDuration = v - calculationDelay
 
-						if (boostDuration) then
-							boostDuration = boostDuration - calculationDelay
-
-							if (boostDuration > 0) then
-								character:AttachDurationToSpecialBoost(id2, boostDuration)
-							else
-								character:AttachDurationToSpecialBoost(id2, nil)
-								character:RemoveSpecialBoost(id2, id)
+					if (newDuration > 0) then
+						character:AttachDurationToSpecialBoost(k, newDuration)
+					else
+						for id, special in pairs(character:GetSpecialBoosts()) do
+							for id2, boost in pairs(special) do
+								if (id2 == k) then
+									character:AttachDurationToSpecialBoost(id2, nil)
+									character:RemoveSpecialBoost(id2, id)
+								end
 							end
 						end
 					end
