@@ -15,8 +15,10 @@ function PLUGIN:OnItemTransferred(item, oldInv, newInv)
 			dateToSet = expirationDate + 2629744 -- month
 			timeLeftToSet = expirationDate - osTime
 		elseif (oldInv.vars and oldInv.vars.isContainer) then
+			local expirationTimeLeft = item:GetData("expirationTimeLeft")
+
 			containerEntity = oldInv.storageInfo.entity
-			dateToSet = osTime + item:GetData("expirationTimeLeft", expirationDate)
+			dateToSet = expirationTimeLeft and osTime + expirationTimeLeft or expirationDate
 		else
 			return
 		end
