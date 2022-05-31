@@ -28,16 +28,18 @@ if (CLIENT) then
 		-- expiration date
 		local expirationDate = self:GetData("expirationDate")
 		local expDateT = tooltip:AddRowAfter("name", "expirationDate")
-		local bNotExpired = expirationDate > os.time()
+		local bNotExpired = expirationDate and expirationDate > os.time() or nil
 		local color, text
 
 		-- we won't be seeing color change, but it's better we prepare it for time when SC does something good with his interface
-		if (bNotExpired) then
-			color = derma.GetColor("Warning", expDateT)
-			text = "Годно до: " .. os.date("%d.%m - %H:%M", expirationDate)
-		else
-			color = derma.GetColor("Error", expDateT)
-			text = "Просрочено"
+		if (bNotExpired != nil) then
+			if (bNotExpired) then
+				color = derma.GetColor("Warning", expDateT)
+				text = "Годно до: " .. os.date("%d.%m - %H:%M", expirationDate)
+			else
+				color = derma.GetColor("Error", expDateT)
+				text = "Просрочено"
+			end
 		end
 
 		expDateT:SetBackgroundColor(color)
@@ -53,12 +55,12 @@ if (CLIENT) then
 			local boosts = tooltip:AddRow("boosts")
 			text = "На " .. self.boostsDuration / 60 .. " мин.:"
 
-			if (bNotExpired) then
+			if (bNotExpired == nil or bNotExpired) then
 				color = derma.GetColor("Info", boosts)
 
 				for k, v in pairs(self.specialBoosts) do
 					text = text .. "\n • " .. L(ix.specials.list[k].name)
-					
+	
 					if (v > 0) then
 						text = text .. ": +" .. v
 					else
@@ -86,11 +88,13 @@ function ITEM:GetExpirationDate()
 end
 
 function ITEM:OnInstanced()
-	self:SetData("expirationDate", self:GetExpirationDate())
+	if (self.expirationDate != false) then
+		self:SetData("expirationDate", self:GetExpirationDate())
+	end
 end
 
 function ITEM:OnRestored()
-	if (!self:GetData("expirationDate")) then
+	if (self.expirationDate != false and !self:GetData("expirationDate")) then
 		self:SetData("expirationDate", self:GetExpirationDate())
 	end
 end
@@ -130,19 +134,23 @@ function ITEM:OnUse(client, all)
 		client:TakeDamage(damage, client, client)
 	end
 
-	if (self:GetData("expirationDate") > os.time()) then
-		specialBoosts = istable(self.specialBoosts) and self.specialBoosts or nil
-	else
-		specialBoosts = {}
+	if (all) then
+		local expirationDate = self:GetData("expirationDate")
 
-		for k, v in pairs(ix.specials.list) do
-			specialBoosts[k] = -3
+		if (expirationDate == nil or expirationDate > os.time()) then
+			specialBoosts = istable(self.specialBoosts) and self.specialBoosts or nil
+		else
+			specialBoosts = {}
+
+			for k, v in pairs(ix.specials.list) do
+				specialBoosts[k] = -3
+			end
 		end
-	end
 
-	if (istable(specialBoosts)) then
-		for k, v in pairs(specialBoosts) do
-			character:AddSpecialBoostWithDuration(self.uniqueID .. "_" .. k, k, v, self.boostsDuration)
+		if (istable(specialBoosts)) then
+			for k, v in pairs(specialBoosts) do
+				character:AddSpecialBoostWithDuration(self.uniqueID .. "_" .. k, k, v, self.boostsDuration)
+			end
 		end
 	end
 
