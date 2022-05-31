@@ -15,9 +15,9 @@ ITEM.dUses = 1
 ITEM.junk = nil
 ITEM.useSound = {"npc/barnacle/barnacle_gulp1.wav", "npc/barnacle/barnacle_gulp2.wav"}
 -- legaz: i really don't want to replicate the same code twice, but the food base was not made by me
+--[[
 ITEM.expirationDate = 604800 -- 7d
 ITEM.boostsDuration = 3600 -- 1h
---[[
 ITEM.specialBoosts = {
 	["st"] = 1,
 }
@@ -51,7 +51,7 @@ if (CLIENT) then
 		uses:SetText(L("usesDesc", self:GetData("uses", self.dUses), self.dUses))
 
 		-- boosts on use
-		if (istable(self.specialBoosts)) then
+		if (istable(self.specialBoosts) and isnumber(self.boostsDuration)) then
 			local boosts = tooltip:AddRow("boosts")
 			text = "На " .. self.boostsDuration / 60 .. " мин.:"
 
@@ -77,25 +77,29 @@ if (CLIENT) then
 			boosts:SizeToContents()
 		end
 	end
+else
+	function ITEM:GenerateExpirationDate()
+		if (self.expirationDate) then
+			self:SetData("expirationDate", os.time() + self.expirationDate)
+
+			return true
+		end
+
+		return false
+	end
 end
 
 function ITEM:OnCanUse()
 	return true
 end
 
-function ITEM:GetExpirationDate()
-	return os.time() + self.expirationDate
-end
-
 function ITEM:OnInstanced()
-	if (self.expirationDate != false) then
-		self:SetData("expirationDate", self:GetExpirationDate())
-	end
+	self:GenerateExpirationDate()
 end
 
 function ITEM:OnRestored()
-	if (self.expirationDate != false and !self:GetData("expirationDate")) then
-		self:SetData("expirationDate", self:GetExpirationDate())
+	if (!self:GetData("expirationDate")) then
+		self:GenerateExpirationDate()
 	end
 end
 
@@ -134,10 +138,10 @@ function ITEM:OnUse(client, all)
 		client:TakeDamage(damage, client, client)
 	end
 
-	if (all) then
+	if (all and isnumber(self.boostsDuration)) then
 		local expirationDate = self:GetData("expirationDate")
 
-		if (expirationDate == nil or expirationDate > os.time()) then
+		if (!expirationDate or expirationDate > os.time()) then
 			specialBoosts = istable(self.specialBoosts) and self.specialBoosts or nil
 		else
 			specialBoosts = {}
