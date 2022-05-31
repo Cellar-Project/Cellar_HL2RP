@@ -27,24 +27,33 @@ if (CLIENT) then
 	function ITEM:PopulateTooltip(tooltip)
 		-- expiration date
 		local expirationDate = self:GetData("expirationDate")
-		local bNotExpired = expirationDate and expirationDate > os.time() or nil
+		local bNotExpired
 		local color, text
 
-		-- we won't be seeing color change, but it's better we prepare it for time when SC does something good with his interface
-		if (bNotExpired != nil) then
-			local expDateT = tooltip:AddRowAfter("name", "expirationDate")
-
-			if (bNotExpired) then
-				color = derma.GetColor("Warning", expDateT)
-				text = "Годно до: " .. os.date("%d.%m - %H:%M", expirationDate)
+		if (isnumber(expirationDate)) then
+			if (expirationDate > os.time()) then
+				bNotExpired = true
 			else
-				color = derma.GetColor("Error", expDateT)
-				text = "Просрочено"
+				bNotExpired = false
 			end
-
-			expDateT:SetBackgroundColor(color)
-			expDateT:SetText(text)
 		end
+
+		local expDateT = tooltip:AddRowAfter("name", "expirationDate")
+
+		-- we won't be seeing color change, but it's better we prepare it for time when SC does something good with his interface
+		if (bNotExpired == true) then
+			color = derma.GetColor("Warning", expDateT)
+			text = "Годно до: " .. os.date("%d.%m - %H:%M", expirationDate)
+		elseif (bNotExpired == false) then
+			color = derma.GetColor("Error", expDateT)
+			text = "Просрочено"
+		else
+			color = derma.GetColor("Success", expDateT)
+			text = "Без срока годности"
+		end
+
+		expDateT:SetBackgroundColor(color)
+		expDateT:SetText(text)
 
 		-- uses left
 		local uses = tooltip:AddRowAfter("rarity")
@@ -80,7 +89,7 @@ if (CLIENT) then
 	end
 else
 	function ITEM:GenerateExpirationDate()
-		if (self.expirationDate) then
+		if (isnumber(self.expirationDate)) then
 			self:SetData("expirationDate", os.time() + self.expirationDate)
 
 			return true
@@ -139,7 +148,7 @@ function ITEM:OnUse(client, all)
 		client:TakeDamage(damage, client, client)
 	end
 
-	if (all and isnumber(self.boostsDuration)) then
+	if (isnumber(self.boostsDuration)) then
 		local expirationDate = self:GetData("expirationDate")
 
 		if (!expirationDate or expirationDate > os.time()) then
