@@ -52,38 +52,43 @@ if (CLIENT) then
 			text = "Без срока годности"
 		end
 
-		expDateT:SetBackgroundColor(color)
+		expDateT:SetTextColor(color)
 		expDateT:SetText(text)
 
 		-- uses left
 		local uses = tooltip:AddRowAfter("rarity")
-		uses:SetBackgroundColor(derma.GetColor("Warning", tooltip))
+		uses:SetTextColor(derma.GetColor("Warning", tooltip))
 		uses:SetText(L("usesDesc", self:GetData("uses", self.dUses), self.dUses))
 
 		-- boosts on use
 		if (istable(self.specialBoosts) and isnumber(self.boostsDuration)) then
 			local boosts = tooltip:AddRow("boosts")
-			text = "На " .. self.boostsDuration / 60 .. " мин.:"
 
 			if (bNotExpired == nil or bNotExpired) then
-				color = derma.GetColor("Info", boosts)
-
 				for k, v in pairs(self.specialBoosts) do
-					text = text .. "\n • " .. L(ix.specials.list[k].name)
-	
+					local lBoost = tooltip:AddRow("boost_" .. k)
+					text = " • " .. L(ix.specials.list[k].name)
+
 					if (v > 0) then
+						color = derma.GetColor("Success", lBoost)
 						text = text .. ": +" .. v
 					else
+						color = derma.GetColor("Error", lBoost)
 						text = text .. ": " .. v
 					end
+
+					lBoost:SetText(text)
+					lBoost:SetTextColor(color)
 				end
+
+				color = derma.GetColor("Info", boosts)
 			else
 				color = derma.GetColor("Error", boosts)
 				text = text .. " отравление"
 			end
 
-			boosts:SetBackgroundColor(color)
-			boosts:SetText(text)
+			boosts:SetTextColor(color)
+			boosts:SetText("На " .. self.boostsDuration / 60 .. " мин.:")
 			boosts:SizeToContents()
 		end
 	end
