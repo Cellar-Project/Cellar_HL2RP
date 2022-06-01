@@ -63,6 +63,7 @@ ix.container.Register("models/props_c17/furniturefridge001a.mdl", {
 	description = "A metal box for keeping food in.",
 	width = 2,
 	height = 3,
+	bRefrigerator = true
 })
 
 ix.container.Register("models/props_wasteland/kitchen_fridge001a.mdl", {
