@@ -9,6 +9,7 @@ ix.container.Register("models/props_interiors/refrigerator03.mdl", {
 	description = "Довольно приятный на вид холодильник, который был собран совсем недавно. Чистый, опрятный и, что самое главное - вместительный.",
 	width = 10,
 	height = 10,
+	bRefrigerator = true
 })
 
 ix.container.Register("models/sickness/fridge_01.mdl", {
@@ -16,6 +17,7 @@ ix.container.Register("models/sickness/fridge_01.mdl", {
 	description = "Холодильник с большой морозильной камерой и множеством места прямо в дверцах. Пахнет и выглядит очень приятно, а на задней его стороне красуется эмблема ‘Сделано в Сити-3’.",
 	width = 10,
 	height = 20,
+	bRefrigerator = true
 })
 
 ix.container.Register("models/props_c17/furnituredresser001a.mdl", {
