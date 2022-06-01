@@ -30,7 +30,7 @@ if (CLIENT) then
 		end
 
 		if (self.GetProgressTooltip) then
-			color, text = self:GetProgressTooltip(progressT, client, character)
+			text, color = self:GetProgressTooltip(progressT, client, character)
 		end
 
 		if (!color and !text) then
