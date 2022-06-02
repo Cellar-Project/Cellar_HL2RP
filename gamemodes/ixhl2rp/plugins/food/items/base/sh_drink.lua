@@ -63,21 +63,22 @@ if (CLIENT) then
 		-- boosts on use
 		if (istable(self.specialBoosts) and isnumber(self.boostsDuration)) then
 			local boosts = tooltip:AddRow("boosts")
+			text = "На " .. self.boostsDuration / 60 .. " мин.:"
 
 			if (bNotExpired == nil or bNotExpired) then
 				for k, v in pairs(self.specialBoosts) do
 					local lBoost = tooltip:AddRow("boost_" .. k)
-					text = " • " .. L(ix.specials.list[k].name)
+					local text2 = " • " .. L(ix.specials.list[k].name)
 
 					if (v > 0) then
 						color = derma.GetColor("Success", lBoost)
-						text = text .. ": +" .. v
+						text2 = text2 .. ": +" .. v
 					else
 						color = derma.GetColor("Error", lBoost)
-						text = text .. ": " .. v
+						text2 = text2 .. ": " .. v
 					end
 
-					lBoost:SetText(text)
+					lBoost:SetText(text2)
 					lBoost:SetTextColor(color)
 				end
 
@@ -88,7 +89,7 @@ if (CLIENT) then
 			end
 
 			boosts:SetTextColor(color)
-			boosts:SetText("На " .. self.boostsDuration / 60 .. " мин.:")
+			boosts:SetText(text)
 			boosts:SizeToContents()
 		end
 	end
@@ -168,6 +169,13 @@ function ITEM:OnUse(client, all)
 
 		if (istable(specialBoosts)) then
 			for k, v in pairs(specialBoosts) do
+				local oldID = self.uniqueID .. k
+
+				if (character:GetSpecialBoost(oldID)) then
+					character:AttachDurationToSpecialBoost(oldID, nil)
+					character:RemoveSpecialBoost(oldID, k)
+				end
+
 				character:AddSpecialBoostWithDuration(self.uniqueID, k, v, self.boostsDuration)
 			end
 		end
