@@ -37,7 +37,7 @@ function PLUGIN:OnItemTransferred(item, oldInv, newInv)
 	end
 end
 
--- func to freeze existing items in refrigerators
+-- code to freeze existing items in refrigerators
 --[[
 for k, v in ipairs(ents.FindByClass("ix_container")) do
 	if (ix.container.stored[v:GetModel()].bRefrigerator) then
@@ -49,7 +49,7 @@ for k, v in ipairs(ents.FindByClass("ix_container")) do
 			for _, v2 in pairs(items) do
 				local expirationDate = v2:GetData("expirationDate")
 
-				if (expirationDate and !v2:GetData("expirationTimeLeft")) then
+				if (expirationDate and !v2:GetData("expirationTimeLeft") and expirationDate > os.time()) then
 					local dateToSet = expirationDate + 2629744 -- month
 					local timeLeftToSet = expirationDate - os.time()
 
