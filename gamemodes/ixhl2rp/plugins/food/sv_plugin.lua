@@ -1,6 +1,4 @@
 
-util.AddNetworkString("ixFoodConservation")
-
 function PLUGIN:OnItemTransferred(item, oldInv, newInv)
 	local osTime = os.time()
 	local expirationDate = item:GetData("expirationDate")
@@ -24,15 +22,10 @@ function PLUGIN:OnItemTransferred(item, oldInv, newInv)
 		end
 
 		if (ix.container.stored[containerEntity:GetModel()].bRefrigerator) then
-			item:SetData("expirationDate", dateToSet)
-			item:SetData("expirationTimeLeft", timeLeftToSet)
+			local playerHumans = player.GetHumans()
 
-			-- the owner has changed so we have to network info like this
-			net.Start("ixFoodConservation")
-				net.WriteUInt(item:GetID(), 32)
-				net.WriteUInt(dateToSet, 32)
-				if (timeLeftToSet) then net.WriteUInt(timeLeftToSet, 32) end
-			net.Broadcast()
+			item:SetData("expirationDate", dateToSet, playerHumans)
+			item:SetData("expirationTimeLeft", timeLeftToSet, playerHumans)
 		end
 	end
 end
