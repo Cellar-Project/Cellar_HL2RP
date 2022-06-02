@@ -61,36 +61,41 @@ if (CLIENT) then
 		uses:SetText(L("usesDesc", self:GetData("uses", self.dUses), self.dUses))
 
 		-- boosts on use
-		if (istable(self.specialBoosts) and isnumber(self.boostsDuration)) then
+		if (isnumber(self.boostsDuration)) then
 			local boosts = tooltip:AddRow("boosts")
 			text = "На " .. self.boostsDuration / 60 .. " мин.:"
+			color = nil
 
 			if (bNotExpired == nil or bNotExpired) then
-				for k, v in pairs(self.specialBoosts) do
-					local lBoost = tooltip:AddRow("boost_" .. k)
-					local text2 = " • " .. L(ix.specials.list[k].name)
+				if (istable(self.specialBoosts)) then
+					for k, v in pairs(self.specialBoosts) do
+						local lBoost = tooltip:AddRow("boost_" .. k)
+						local text2 = " • " .. L(ix.specials.list[k].name)
 
-					if (v > 0) then
-						color = derma.GetColor("Success", lBoost)
-						text2 = text2 .. ": +" .. v
-					else
-						color = derma.GetColor("Error", lBoost)
-						text2 = text2 .. ": " .. v
+						if (v > 0) then
+							color = derma.GetColor("Success", lBoost)
+							text2 = text2 .. ": +" .. v
+						else
+							color = derma.GetColor("Error", lBoost)
+							text2 = text2 .. ": " .. v
+						end
+
+						lBoost:SetText(text2)
+						lBoost:SetTextColor(color)
 					end
 
-					lBoost:SetText(text2)
-					lBoost:SetTextColor(color)
+					color = derma.GetColor("Info", boosts)
 				end
-
-				color = derma.GetColor("Info", boosts)
 			else
 				color = derma.GetColor("Error", boosts)
 				text = text .. " отравление"
 			end
 
-			boosts:SetTextColor(color)
-			boosts:SetText(text)
-			boosts:SizeToContents()
+			if (color) then
+				boosts:SetTextColor(color)
+				boosts:SetText(text)
+				boosts:SizeToContents()
+			end
 		end
 	end
 else
