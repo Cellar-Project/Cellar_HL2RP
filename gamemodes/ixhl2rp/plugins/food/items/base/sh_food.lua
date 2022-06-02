@@ -169,6 +169,13 @@ function ITEM:OnUse(client, all)
 
 		if (istable(specialBoosts)) then
 			for k, v in pairs(specialBoosts) do
+				local oldID = self.uniqueID .. k
+
+				if (character:GetSpecialBoost(oldID)) then
+					character:AttachDurationToSpecialBoost(oldID, nil)
+					character:RemoveSpecialBoost(oldID, k)
+				end
+
 				character:AddSpecialBoostWithDuration(self.uniqueID, k, v, self.boostsDuration)
 			end
 		end
