@@ -56,7 +56,7 @@ if (CLIENT) then
 		expDateT:SetText(text)
 
 		-- uses left
-		local uses = tooltip:AddRowAfter("rarity")
+		local uses = tooltip:AddRowAfter("rarity", "uses")
 		uses:SetTextColor(derma.GetColor("Warning", tooltip))
 		uses:SetText(L("usesDesc", self:GetData("uses", self.dUses), self.dUses))
 
@@ -95,6 +95,8 @@ if (CLIENT) then
 				boosts:SetTextColor(color)
 				boosts:SetText(text)
 				boosts:SizeToContents()
+			else
+				boosts:Remove()
 			end
 		end
 	end
