@@ -1081,3 +1081,5 @@ ix.anim.SetModelClass("models/cellar/characters/vladivostok/male/male_07.mdl", "
 ix.anim.SetModelClass("models/cellar/characters/vladivostok/male/male_08.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/vladivostok/male/male_10.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/vladivostok/male/male_12.mdl", "cellarMale")
+ix.anim.SetModelClass("models/cellar/characters/city3/citizens/female/adala.mdl", "cellarFemale")
+ix.anim.SetModelClass("models/cellar/sl/malfunction_ota.mdl.mdl", "cellarOTA")
