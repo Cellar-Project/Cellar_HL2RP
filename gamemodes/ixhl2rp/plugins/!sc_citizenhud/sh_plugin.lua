@@ -51,7 +51,7 @@ function PLUGIN:HUDPaint()
         return 
     end
 
-    if character:GetFaction() == FACTION_CITIZEN or character:IsCityAdmin() or character:GetFaction() == FACTION_VORTIGAUNT or character:IsCWU() then
+    if character:GetFaction() == FACTION_CITIZEN or character:IsCityAdmin() or character:GetFaction() == FACTION_VORTIGAUNT or character:IsCWU() or character:GetFaction() == FACTION_PLA then
 
         PLUGIN.lerphunger = Lerp(0.1 * FrameTime(), PLUGIN.lerphunger, LocalPlayer():GetCharacter():GetHunger()/100)
         oldhunger = math.Round(PLUGIN.lerphunger, 2)
