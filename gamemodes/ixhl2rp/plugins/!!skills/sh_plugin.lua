@@ -560,7 +560,7 @@ else
 		local pointsmax = 6 + (5 + (5 * math.min(lvl, 5)) + (1 * math.max(lvl - 5, 0)))
 
 		for k, v in pairs(ix.specials.list) do
-			pointsmax = pointsmax - LocalPlayer():GetCharacter():GetSpecial(k)
+			pointsmax = pointsmax - LocalPlayer():GetCharacter():GetSpecials()[k]
 		end
 
 		local w, h = ScrW(), ScrH()
