@@ -437,8 +437,10 @@ else
 		stats.attributes.offset = w1 * 1.75
 		stats.attributes:SetWide(w1 * 2.75)
 
+		local charSpecials = LocalPlayer():GetCharacter():GetSpecials()
+
 		for k, v in SortedPairsByMemberValue(ix.specials.list, "weight") do
-			specials[k] = default and 1 or LocalPlayer():GetCharacter():GetSpecial(k)
+			specials[k] = default and 1 or charSpecials[k]
 
 			local bar = stats.attributes:Add("ixStatBar")
 			bar:Dock(TOP)
