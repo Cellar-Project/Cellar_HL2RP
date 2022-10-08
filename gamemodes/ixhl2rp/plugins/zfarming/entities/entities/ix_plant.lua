@@ -1,5 +1,5 @@
 ENT.Type = "anim"
-ENT.Author = "Vintage Thief, maxxoft"
+ENT.Author = "maxxoft"
 ENT.PrintName = "Растение"
 ENT.Description = "Посаженное растение"
 ENT.Spawnable = false
@@ -25,53 +25,111 @@ if (SERVER) then
 			physicsObject:EnableMotion(false)
 		end
 
+		self:SetNetVar("health", 10)
+		self:SetGrowthPoints(0)
+		self:SetPhase(1)
+
 		self.timerName = "phasetimer" .. self:EntIndex()
-
-		local phaseTime = ix.config.Get("phasetime")
-		self.growthPoints = 0
-		self.phase = 0
-
+		local phaseTime = ix.config.Get("phaseTime") * 60
 		timer.Create(self.timerName, phaseTime, 0, function()
-			local phaseAmount = ix.config.Get("phaseamount")
-			local phaseRate = ix.config.Get("phaserate")
+			local phaseMaxPoints = ix.config.Get("phaseMaxPoints")
+			local phaseRate = ix.config.Get("phaseRate")
 			local phases = ix.config.Get("phases")
-			self.growthPoints = self.growthPoints + phaseRate
 
-			if (self.growthPoints >= phaseAmount) then
-				self.phase = self.phase + 1
-				self.growthPoints = 0
-				PLUGIN:SaveData()
+			self:SetGrowthPoints(self:GetGrowthPoints() + phaseRate)
+			self:SetNetVar("health", self:GetNetVar("health") - .5)
+
+			if (self:GetGrowthPoints() >= phaseMaxPoints) then
+				self:SetPhase(self:GetPhase() + 1)
+				self:SetGrowthPoints(0)
 			end
 
-			if (self.phase >= phases) then
+			if self:GetNetVar("health") <= 0 then
+				self:Die()
+			end
+
+			if (self:GetPhase() >= phases) and not self:GetNetVar("dead") then
 				self:EndGrowth()
 			end
+
+			PLUGIN:SaveData()
 		end)
 
-		self:SetModel(PLUGIN.growmodels[math.random(1, #PLUGIN.growmodels)])
+		self:SetModel(PLUGIN.growModels[math.random(#PLUGIN.growModels)])
+	end
+
+	function ENT:OnSelectHarvest(client)
+		if not self:GetNetVar("grown") then return end
+		if client:EyePos():Distance(self:GetPos()) > 90 then return end
+
+		local character = client:GetCharacter()
+		local inventory = character:GetInventory()
+		local skill = character:GetSkillModified("farming")
+		local modifier = math.Clamp(skill / 10, .1, 1)
+		local productAmount = math.floor(self.item.maxAmount * modifier)
+		local success
+
+		while productAmount > 0 do
+			success, _ = inventory:Add(self.product)
+			if not success then break end
+			productAmount = productAmount - 1
+		end
+
+		if not success then
+			for k = 0, productAmount do ix.item.Spawn(self.product, self:GetPos() + Vector(0, 0, 2)) end
+		end
+
+		local seedsAmount = math.random(0, skill)
+		if (seedsAmount > 0) then
+			for k = 0, seedsAmount do ix.item.Spawn(self:GetPlantClass(), self:GetPos() + Vector(0, 2, 3)) end
+		end
+
+		self:Remove()
+	end
+
+	function ENT:OnSelectDestroy(client)
+		if client:EyePos():Distance(self:GetPos()) > 90 then return end
+
+		self:Remove()
+		client:NotifyLocalized("plantDestroyed")
+	end
+
+	function ENT:OnSelectWater(client)
+		if (self:GetNetVar("health", 10)) >= 10 then
+			client:NotifyLocalized("wateringNotNeeded")
+			return
+		end
+		if client:EyePos():Distance(self:GetPos()) > 90 then return end
+
+		local points = 0
+		local inventory = client:GetCharacter():GetInventory()
+
+		for k, item in pairs(inventory:GetItems()) do
+			if item.base == "base_drink" then
+				local basePoints = PLUGIN.waterItems[item.uniqueID]
+				if basePoints then
+					points = points + basePoints * (item:GetData("uses", item.dUses) / item.dUses) -- TODO: add skill bonus
+					self.SetNetVar("health", self.GetNetVar("health") + points)
+					item:Remove()
+					client:NotifyLocalized("plantWatered")
+					client:GetCharacter():DoAction("farmingWater")
+					return
+				end
+			end
+		end
+		client:NotifyLocalized("wateringNoItem")
 	end
 
 	function ENT:SetPlantClass(class)
-		self.class = class
+		self.item = ix.item.Get(class)
 	end
 
 	function ENT:SetPlantName(name)
-		self.name = name
 		self:SetNetVar("name", name)
 	end
 
-	function ENT:Use(activator)
-		if (activator:IsPlayer() and self.grown) then
-			ix.item.Spawn(self.product, self:GetPos() + Vector(0, 0, 2))
-			if (math.random(0, 1) == 1) then
-				ix.item.Spawn(self.class, self:GetPos() + Vector(0, 0, 3))
-			end
-			self:Remove()
-		end
-	end
-
 	function ENT:GetPlantClass()
-		return self.class
+		return self.item.uniqueID
 	end
 
 	function ENT:SetPhase(iPhase)
@@ -91,13 +149,20 @@ if (SERVER) then
 	end
 
 	function ENT:EndGrowth()
-		self.grown = true
 		self:SetNetVar("grown", true)
 		timer.Remove(self.timerName)
 	end
 
+	function ENT:Die()
+		self:SetNetVar("grown", false)
+		self:SetNetVar("dead", true)
+		if (self.timerName and timer.Exists(self.timerName)) then
+			timer.Remove(self.timerName)
+		end
+	end
+
 	function ENT:OnRemove()
-		if (self.timerName) then
+		if (self.timerName and timer.Exists(self.timerName)) then
 			timer.Remove(self.timerName)
 		end
 	end
@@ -105,23 +170,55 @@ if (SERVER) then
 else
 
 	function ENT:OnPopulateEntityInfo(tooltip)
-		local name = self:GetPlantName()
 		local description
 
 		if (self:GetNetVar("grown")) then
-			description = "Растение выросло."
+			description = L"plantGrown"
+		elseif self:GetNetVar("dead") then
+			description = L"plantDead"
 		else
-			description = "Растение еще не выросло."
+			description = L"plantNotGrown"
 		end
 
 		local title = tooltip:AddRow("name")
-		title:SetText(name)
+		title:SetText(self:GetPlantName())
 		title:SetImportant()
 		title:SizeToContents()
 
 		local panel = tooltip:AddRow("description")
 		panel:SetText(description)
 		panel:SizeToContents()
+
+		local healthbar = tooltip:Add("EditablePanel")
+		healthbar:Dock(TOP)
+		healthbar:SetHeight(3)
+		healthbar.Paint = function(this, w, h)
+			if self:GetNetVar("dead") then return end
+			surface.SetDrawColor(Color(23, 204, 47))
+			surface.DrawRect(0, 0, w * (self:GetNetVar("health") / 10), 2)
+		end
+	end
+
+	function ENT:GetEntityMenu()
+		local options = {
+			[L"menuDestroy"] = function()
+				ix.menu.NetworkChoice(self, "Destroy")
+			end
+		}
+
+		if self:GetNetVar("grown") then
+			options[L"menuHarvest"] = function()
+				ix.menu.NetworkChoice(self, "Harvest")
+			end
+		end
+
+		if self:GetNetVar("health") < 10 then
+			options[L"menuWater"] = function()
+				ix.menu.NetworkChoice(self, "Water")
+			end
+		end
+
+		return options
 	end
 
 end
@@ -129,7 +226,7 @@ end
 do
 
 	function ENT:GetPlantName()
-		return self.name or self:GetNetVar("name")
+		return self:GetNetVar("name")
 	end
 
 end

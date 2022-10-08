@@ -5,28 +5,27 @@ ITEM.category = "categoryFarming"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.rarity = 1
-ITEM.surfaces = {
+
+local surfaces = {
 	[MAT_DIRT] = true,
-	[MAT_GRASS] = true,
-	[MAT_FOLIAGE] = true
+	[MAT_GRASS] = true
 }
 
-
 ITEM.functions.Plant = {
-	name = "Посадить",
+	name = "plant",
 	icon = "icon16/accept.png",
 	OnRun = function(item)
 		local client = item.player
 		local tr = client:GetEyeTraceNoCursor()
 
-		if (tr.Hit and item.surfaces[tr.MatType]) then
-			if client:EyePos():Distance(tr.HitPos) > 90 then
-				client:Notify("Поверхность слишком далеко.")
-				return false
-			end
+		if client:EyePos():Distance(tr.HitPos) > 90 then
+			client:NotifyLocalized("surfaceTooFar")
+			return false
+		end
 
+		if (tr.Hit and surfaces[tr.MatType]) then
 			if tr.Entity:IsPlayer() then
-				client:Notify("Некорректная поверхность.")
+				client:NotifyLocalized("wrongSurface")
 				return false
 			end
 
@@ -37,6 +36,7 @@ ITEM.functions.Plant = {
 			plant:SetPlantName(item.plantName)
 			plant.product = item.product
 			plant:Spawn()
+			client:GetCharacter():DoAction("farmingPlant")
 			return true
 		end
 
