@@ -22,7 +22,7 @@ if SERVER then
 		local inventory = clientTarget:GetCharacter():GetInventory()
 		ix.storage.Open(ply, inventory, {
 			entity = clientTarget,
-			name = clientTarget:GetName(),
+			name = "Инвентарь лежачего",
 			searchTime = 0
 		})
 
