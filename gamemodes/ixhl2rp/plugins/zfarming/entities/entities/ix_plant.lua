@@ -95,7 +95,8 @@ if (SERVER) then
 	end
 
 	function ENT:OnSelectWater(client)
-		if (self:GetNetVar("health", 10)) >= 10 then
+		local curHealth = self.GetNetVar("health", 10)
+		if curHealth >= 10 then
 			client:NotifyLocalized("wateringNotNeeded")
 			return
 		end
@@ -109,8 +110,10 @@ if (SERVER) then
 				local basePoints = PLUGIN.waterItems[item.uniqueID]
 				if basePoints then
 					points = points + basePoints * (item:GetData("uses", item.dUses) / item.dUses) -- TODO: add skill bonus
-					self.SetNetVar("health", self.GetNetVar("health") + points)
+					self.SetNetVar("health", math.Clamp(curHealth + points, 0, 10))
+					local junk = item.junk
 					item:Remove()
+					inventory:Add(junk)
 					client:NotifyLocalized("plantWatered")
 					client:GetCharacter():DoAction("farmingWater")
 					return
