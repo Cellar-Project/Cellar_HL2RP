@@ -35,7 +35,3 @@ function PLUGIN:LoadData()
 		end
 	end
 end
-
-function PLUGIN:DoPluginIncludes(path)
-	ix.plugin.Get("ixcraft").craft.LoadFromDir(path .. "/recipes", "recipe")
-end
