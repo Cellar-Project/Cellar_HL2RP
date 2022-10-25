@@ -7,11 +7,11 @@ function PLUGIN:SaveData()
 			v:GetModel(),
 			v:GetPos(),
 			v:GetAngles(),
+			v:GetNetVar("health", 10),
+			v:GetNetVar("dead", false),
+			v:GetGrowthPoints(),
 			v:GetPlantClass(),
 			v:GetPhase(),
-			v:GetGrowthPoints(),
-			v.product,
-			v:GetPlantName(),
 		}
 	end
 	self:SetData(data)
@@ -27,11 +27,11 @@ function PLUGIN:LoadData()
 			entity:SetAngles(v[3])
 			entity:Spawn()
 			entity:SetModel(v[1] or "models/props/de_train/bush2.mdl")
-			entity:SetPlantClass(v[4])
-			entity:SetPhase(v[5])
-			entity:GetGrowthPoints(v[6])
-			entity.product = v[7]
-			entity:SetPlantName(v[8])
+			entity:SetNetVar("health", v[4])
+			entity:SetNetVar("dead", v[5])
+			entity:SetGrowthPoints(v[6])
+			entity:SetPlantClass(v[7])
+			entity:SetPhase(v[8])
 		end
 	end
 end
