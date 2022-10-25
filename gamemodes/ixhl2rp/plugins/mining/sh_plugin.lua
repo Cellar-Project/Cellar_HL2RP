@@ -50,12 +50,16 @@ ix.command.Add("SpawnOre", {
 	adminOnly = true,
 	arguments = {ix.type.string},
 	OnRun = function(self, client, oreID)
-		if ix.item.Get(oreID) then
+		print("Triggered command!")
+		print(oreID)
+		if ix.item.list[oreID] then
+			print("if passed")
 			local pos = client:GetShootPos()
 			local ent = ents.Create("ix_mining_vein")
 			ent:SetOreClass(oreID)
 			ent:Spawn()
 			ent:SetPos(pos)
+			print(ent)
 		end
 	end
 })
