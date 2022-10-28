@@ -3,6 +3,6 @@ ix.command.Add("CharDailyReset", {
     superAdminOnly = true,
     arguments = ix.type.character,
     OnRun = function(self, client, target)
-        
+        target:DailyStatus = PLUGIN.globalDailyTime or os.time()
     end
 })
