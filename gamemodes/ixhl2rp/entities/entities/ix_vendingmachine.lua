@@ -25,6 +25,8 @@ function ENT:GetAllStock()
 end
 
 if (SERVER) then
+	ENT.questCoolDown = {}
+
 	function ENT:Initialize()
 		self:SetModel("models/props_interiors/vendingmachinesoda01a.mdl")
 		self:PhysicsInit(SOLID_VPHYSICS)
@@ -110,22 +112,14 @@ if (SERVER) then
 		elseif character:GetData("quests")["cwu_water"] and
 		character:GetData("cwuWater") < 3 then
 			local charID = character:GetID()
-			local coolDowns = self:GetData("playerCooldown", {})
-			if coolDowns[charID] then return end
+			local questStartTime = character:GetData("quests", {})["cwu_water"]
 
-			character:SetData("cwuWater", character:GetData("cwuWater") + 1)
-			client:Notify("Вы зарядили 1 картридж воды в автомат.")
-
-			coolDowns[charID] = true
-			self:SetData("playerCooldown", coolDowns)
-			timer.Simple(2000, function()
-				if IsValid(self) then
-					coolDowns = self:GetData("playerCooldown", {})
-					coolDowns[charID] = nil
-					self:SetData("playerCooldown", coolDowns)
-				end
-			end)
-
+			if self.questCooldown[charID] != questStartTime then
+				character:SetData("cwuWater", character:GetData("cwuWater") + 1)
+				client:Notify("Вы зарядили 1 картридж воды в автомат.")
+				self.questCoolDown[charID] = questStartTime
+				self:ResetStock()
+			end
 			return
 		end
 

@@ -242,7 +242,7 @@ ix.dialogues.Add("mark_pootis", {
 			elseif choice.work == 4 then
 				if SERVER then
 					local quests = character:GetData("quests", {})
-					quests["cwu_water"] = true
+					quests["cwu_water"] = os.time()
 					character:SetData("cwuWater", 0)
 					character:SetData("quests", quests)
 					net.Start("ixUpdateQuests")
