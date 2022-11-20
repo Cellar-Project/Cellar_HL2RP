@@ -127,14 +127,14 @@ else
 		title:SizeToContents()
 		title:Dock(TOP)
 
-		local title = b:Add("DLabel")
+		title = b:Add("DLabel")
 		title:SetFont("ixTaskDesc")
 		title:DockMargin(0, 2, 0, 0)
 		title:SetText("")
 		title:SizeToContents()
 		title:Dock(TOP)
 
-		local timerID = "ixQuestText"..id
+		local timerID = "ixQuestText" .. id
 		timer.Create(timerID, 0.25, 0, function()
 			if !IsValid(ix.gui.quest) or !IsValid(title) then
 				timer.Remove(timerID)
@@ -164,6 +164,12 @@ else
 		title = "Ежедневная работа в ГСР",
 		func = function()
 			return string.format("Собрать в городе мусор [%s/4]", LocalPlayer():GetCharacter():GetData("cwuGarbage", 0))
+		end
+	}
+	QuestData["cwu_water"] = {
+		title = "Ежедневная работа в ГСР",
+		func = function()
+			return string.format("Заменить картриджи в автоматах [%s/3]", LocalPlayer():GetCharacter():GetData("cwuWater", 0))
 		end
 	}
 

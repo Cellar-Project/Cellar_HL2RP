@@ -203,16 +203,16 @@ ix.dialogues.Add("mark_pootis", {
 				gender = GENDER_MALE
 			},
 		},
-		choices = function(client, npc, dialogue) 
+		choices = function(client, npc, dialogue)
 			local choices = {}
 
 			if (!dialogue.data.workcooldown or (dialogue.data.workcooldown and os.time() > dialogue.data.workcooldown)) and !dialogue.data.haswork then
 				choices = {
-					--{label = "Влажная уборка.", work = 1, topic = "GET_WORK1"}, 
-					{label = "Уборка мусора в городе.", work = 2, topic = "GET_WORK2"},
-					--{label = "Разнос корреспонденции.", topic = "GET_WORK3"}, 
-					--{label = "Пополнение картриджей автоматов с водой.", topic = "GET_WORK4"}, 
-					--{label = "Перенос стройматериалов.", topic = "GET_WORK5"}, 
+					--{label = "Влажная уборка.", work = 1, topic = "GET_WORK1"},
+					{label = "Уборка мусора в городе.", work = 2},
+					--{label = "Разнос корреспонденции.", topic = "GET_WORK3"},
+					{label = "Замена картриджей автоматов с водой.", work = 4},
+					--{label = "Перенос стройматериалов.", topic = "GET_WORK5"},
 					{label = "Я передумал, извини.", topic = "OKAY_NO_WORK"}
 				}
 			else
@@ -239,6 +239,19 @@ ix.dialogues.Add("mark_pootis", {
 				dialogue.data.haswork = true
 
 				return "GarbageWork"
+			elseif choice.work == 4 then
+				if SERVER then
+					local quests = character:GetData("quests", {})
+					quests["cwu_water"] = true
+					character:SetData("cwuWater", 0)
+					character:SetData("quests", quests)
+					net.Start("ixUpdateQuests")
+					net.Send(client)
+				end
+
+				dialogue.data.haswork = true
+
+				return "WaterWork"
 			end
 
 			return choice.topic and choice.topic or "OKAY_NO_WORK"
@@ -294,6 +307,56 @@ ix.dialogues.Add("mark_pootis", {
 		},
 		response = "Бери перчатки, пакет и шуруй на улицу. Уберешь 4 куч, которых тут довольно много, после чего можешь возвращаться. И не смей мухлевать - мы следим.",
 		choices = {"GOODBYE"}
+	},
+	["WaterWork"] = {
+		data = {
+			haswork = true,
+		},
+		response = "Вот тебе картриджи. Пополни три городских автомата с водой и возвращайся за наградой.",
+		choices = {"GOODBYE"}
+	},
+	["WaterWorkDone"] = {
+		response = {
+			[1] = {
+				text = {
+					"Неплохо, такие работники мне нравятся! Вот, твои десять токенов за работу.",
+					"Хорошая работа. Вот твоя награда.",
+					"Достойная плата за достойную работу.",
+				},
+			},
+		},
+		topic = {
+			[1] = {
+				text = "Я пополнила автоматы с водой.",
+				gender = GENDER_FEMALE
+			},
+			[2] = {
+				text = "Я пополнил автоматы с водой.",
+				gender = GENDER_MALE
+			},
+		},
+		select = function(client, npc, self)
+			local character = client:GetCharacter()
+			if SERVER then
+				local quests = character:GetData("quests", {})
+				quests["cwu_water"] = nil
+
+				character:SetData("quests", quests)
+				character:SetMoney(character:GetMoney() + 10)
+				net.Start("ixUpdateQuests")
+				net.Send(client)
+
+				client:NotifyLocalized("Вы получили 10 токенов.")
+			end
+
+			self.data.haswork = false
+			self.data.workcooldown = os.time() + 14400
+		end,
+		condition = function(client, npc, self)
+			local character = client:GetCharacter()
+
+			return self.data.haswork and character:GetData("quests", {})["cwu_water"] and character:GetData("cwuWater", 0) == 3
+		end
 	},
 	["WhereIam"] = {
 		response = "Ты находишься в офисе Гражданского Союза Рабочих. Тут, обычно, люди получают разную работу - подай и принеси, ну или устраиваются на более престижные должности на завод, например. Если тебе интересно узнать подробнее - поймай другого сотрудника, который не будет так занят, как я. Они помогут тебе.",

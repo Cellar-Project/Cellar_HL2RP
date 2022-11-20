@@ -102,19 +102,36 @@ if (SERVER) then
 	end
 
 	function ENT:Use(client)
+		local character = client:GetCharacter()
 		local buttonID = self:GetClosestButton(client)
 
 		if (buttonID) then
 			client:EmitSound("buttons/lightswitch2.wav", 40, 150)
-		else
+		elseif character:GetData("quests")["cwu_water"] and
+		character:GetData("cwuWater") < 3 then
+			local charID = character:GetID()
+			local coolDowns = self:GetData("playerCooldown", {})
+			if coolDowns[charID] then return end
+
+			character:SetData("cwuWater", character:GetData("cwuWater") + 1)
+			client:Notify("Вы зарядили 1 картридж воды в автомат.")
+
+			coolDowns[charID] = true
+			self:SetData("playerCooldown", coolDowns)
+			timer.Simple(2000, function()
+				if IsValid(self) then
+					coolDowns = self:GetData("playerCooldown", {})
+					coolDowns[charID] = nil
+					self:SetData("playerCooldown", coolDowns)
+				end
+			end)
+
 			return
 		end
 
 		if (self.nextUseTime > CurTime()) then
 			return
 		end
-
-		local character = client:GetCharacter()
 
 		if (!character:IsCombine()) then
 			local itemInfo = self.Items[buttonID]
