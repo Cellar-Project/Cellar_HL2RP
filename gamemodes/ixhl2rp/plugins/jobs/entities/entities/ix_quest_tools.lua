@@ -8,6 +8,8 @@ ENT.PrintName = "Quest Pickup"
 ENT.Spawnable = true
 ENT.AdminSpawnable = true
 
+local PLUGIN = PLUGIN
+
 
 function ENT:Initialize()
 	self:SetModel("models/hunter/blocks/cube025x025x025.mdl")
@@ -20,9 +22,11 @@ function ENT:Initialize()
 	self:DrawShadow(false)
 
 	self:SetData("uniqueID", self:GetData("uniqueID", math.random(1, 10000)))
+
+	PLUGIN:SaveData()
 end
 
--- HACK: probably gonna remove this soon
+-- XXX: probably gonna remove this soon
 -- if CLIENT then
 -- 	function ENT:Initialize()
 -- 		-- TODO: move this code in a function that
@@ -40,7 +44,7 @@ function ENT:Use(activator, caller)
 end
 
 function ENT:Draw()
-	if not activator:GetData("questsVisibleTools", {})[self:GetData("uniqueID")] then return end
+	if not LocalPlayer():GetData("questsVisibleTools", {})[self:GetData("uniqueID")] then return end
 	self:DrawModel()
 	-- self.csModel:SetPos(self:GetPos())
 	-- self.csModel:SetAngles(self:GetAngles())
