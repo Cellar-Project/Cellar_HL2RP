@@ -146,6 +146,12 @@ QuestData["cwu_water"] = {
 		return string.format("Заменить картриджи в автоматах [%s/3]", LocalPlayer():GetCharacter():GetData("cwuWater", 0))
 	end
 }
+QuestData["cwu_tools"] = {
+	title = "Ежедневная работа в ГСР",
+	func = function()
+		return string.format("Найти инструменты [%s/5]", LocalPlayer():GetCharacter():GetData("cwuTools", 0))
+	end
+}
 
 net.Receive("ixUpdateQuests", function(len)
 	local character = LocalPlayer():GetCharacter()

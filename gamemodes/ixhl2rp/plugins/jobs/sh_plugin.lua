@@ -77,7 +77,7 @@ ix.dialogues.Add("mark_pootis", {
 					{label = "Уборка мусора в городе.", work = 2},
 					--{label = "Разнос корреспонденции.", topic = "GET_WORK3"},
 					{label = "Замена картриджей автоматов с водой.", work = 4},
-					--{label = "Перенос стройматериалов.", topic = "GET_WORK5"},
+					{label = "Поиск инструментов.", work = 5},
 					{label = "Я передумал, извини.", topic = "OKAY_NO_WORK"}
 				}
 			else
@@ -104,6 +104,7 @@ ix.dialogues.Add("mark_pootis", {
 				dialogue.data.haswork = true
 
 				return "GarbageWork"
+
 			elseif choice.work == 4 then
 				if SERVER then
 					local quests = character:GetData("quests", {})
@@ -117,6 +118,20 @@ ix.dialogues.Add("mark_pootis", {
 				dialogue.data.haswork = true
 
 				return "WaterWork"
+
+			elseif choice.work == 5 then
+				if SERVER then
+					local quests = character:GetData("quests", {})
+					quests["cwu_tools"] = true
+					character:SetData("cwuTools", 0)
+					character:SetData("quests", quests)
+					net.Start("ixUpdateQuests")
+					net.Send(client)
+				end
+
+				dialogue.data.haswork = true
+
+				return "ToolsWork"
 			end
 
 			return choice.topic and choice.topic or "OKAY_NO_WORK"
@@ -222,6 +237,13 @@ ix.dialogues.Add("mark_pootis", {
 
 			return self.data.haswork and character:GetData("quests", {})["cwu_water"] and character:GetData("cwuWater", 0) == 3
 		end
+	},
+	["ToolsWork"] = {
+		data = {
+			haswork = true,
+		},
+		response = "Есть информация, что по городу разбросано немало инструментов после некоторых событий. Лишними они не будут, так что если сможешь найти штук пять, то приноси.",
+		choices = {"GOODBYE"}
 	},
 	["WhereIam"] = {
 		response = "Ты находишься в офисе Гражданского Союза Рабочих. Тут, обычно, люди получают разную работу - подай и принеси, ну или устраиваются на более престижные должности на завод, например. Если тебе интересно узнать подробнее - поймай другого сотрудника, который не будет так занят, как я. Они помогут тебе.",
