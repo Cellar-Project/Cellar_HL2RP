@@ -13,7 +13,15 @@ ix.util.Include("sv_hooks.lua")
 ix.dialogues.Add("mark_pootis", {
 	["GREETINGS"] = {
 		response = "Привет. Чем могу быть полезен?",
-		choices = {"GarbageWorkDone", "WaterWorkDone", "CWUWork", "WhereIam", "CWUSetup", "GOODBYE"}
+		choices = {
+			"GarbageWorkDone",
+			"WaterWorkDone",
+			"ToolsWorkDone",
+			"CWUWork",
+			"WhereIam",
+			"CWUSetup",
+			"GOODBYE"
+		}
 	},
 	["OKAY_NO_WORK"] = {
 		response = "Ладно.",
@@ -51,7 +59,7 @@ ix.dialogues.Add("mark_pootis", {
 					if self.data.haswork then
 						return gender == GENDER_MALE and "Ты уже брал работу. Для начала выполни ее, а потом уже обращайся." or "Ты уже брала работу. Для начала выполни ее, а потом уже обращайся."
 					elseif self.data.workcooldown and os.time() < self.data.workcooldown then
-						return gender == GENDER_MALE and "Извини. Для тебя лимиты пока-что превышены, так что приходи чуть позже." or "Извини. Для тебя лимиты пока-что превышены, так что приходи чуть позже."
+						return gender == GENDER_MALE and "Извини. Для тебя лимиты пока что превышены, так что приходи чуть позже." or "Извини. Для тебя лимиты пока что превышены, так что приходи чуть позже."
 					end
 
 					return "Ну, по другому вопросу ко мне, обычно, и не обращаются. Чем хочешь заняться сегодня?"
@@ -244,6 +252,49 @@ ix.dialogues.Add("mark_pootis", {
 		},
 		response = "Есть информация, что по городу разбросано немало инструментов после некоторых событий. Лишними они не будут, так что если сможешь найти штук пять, то приноси.",
 		choices = {"GOODBYE"}
+	},
+	["ToolsWorkDone"] = {
+		response = {
+			[1] = {
+				text = {
+					"Неплохо, такие работники мне нравятся! Вот, твои десять токенов за работу.",
+					"Хорошая работа. Вот твоя награда.",
+					"Достойная плата за достойную работу.",
+				},
+			},
+		},
+		topic = {
+			[1] = {
+				text = "Я собрала инструменты.",
+				gender = GENDER_FEMALE
+			},
+			[2] = {
+				text = "Я собрал инструменты.",
+				gender = GENDER_MALE
+			}
+		},
+		select = function(client, npc, self)
+			local character = client:GetCharacter()
+			if SERVER then
+				local quests = character:GetData("quests", {})
+				quests["cwu_tools"] = nil
+
+				character:SetData("quests", quests)
+				character:SetMoney(character:GetMoney() + 10)
+				net.Start("ixUpdateQuests")
+				net.Send(client)
+
+				client:NotifyLocalized("Вы получили 10 токенов.")
+			end
+
+			self.data.haswork = false
+			self.data.workcooldown = os.time() + 14400
+		end,
+		condition = function(client, npc, self)
+			local character = client:GetCharacter()
+
+			return self.data.haswork and character:GetData("quests", {})["cwu_tools"] and character:GetData("cwuTools", 0) >= 5
+		end
 	},
 	["WhereIam"] = {
 		response = "Ты находишься в офисе Гражданского Союза Рабочих. Тут, обычно, люди получают разную работу - подай и принеси, ну или устраиваются на более престижные должности на завод, например. Если тебе интересно узнать подробнее - поймай другого сотрудника, который не будет так занят, как я. Они помогут тебе.",
