@@ -26,15 +26,6 @@ function ENT:Initialize()
 	PLUGIN:SaveData()
 end
 
--- XXX: probably gonna remove this soon
--- if CLIENT then
--- 	function ENT:Initialize()
--- 		-- TODO: move this code in a function that
--- 		-- triggers when we send in the net message
--- 		self.csModel = ClientsideModel(self:GetModel())
--- 	end
--- end
-
 function ENT:Use(activator, caller)
 	if not activator:IsPlayer() then return end
 	if not activator:GetData("questsVisibleTools", {})[self:GetData("uniqueID")] then return end
@@ -44,8 +35,7 @@ function ENT:Use(activator, caller)
 end
 
 function ENT:Draw()
-	if not LocalPlayer():GetData("questsVisibleTools", {})[self:GetData("uniqueID")] then return end
+	local drawTools = ix.option.Get("drawTools")
+	if not LocalPlayer():GetData("questsVisibleTools", {})[self:GetData("uniqueID")] or drawTools then return end
 	self:DrawModel()
-	-- self.csModel:SetPos(self:GetPos())
-	-- self.csModel:SetAngles(self:GetAngles())
 end

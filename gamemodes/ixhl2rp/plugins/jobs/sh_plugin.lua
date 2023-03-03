@@ -8,7 +8,14 @@ PLUGIN.desc = "Adds a job system."
 ix.util.Include("sv_plugin.lua")
 ix.util.Include("cl_plugin.lua")
 ix.util.Include("sv_hooks.lua")
+ix.util.Include("cl_hooks.lua")
 
+
+ix.option.Add("drawTools", ix.type.bool, false, {
+	hidden = function()
+		return LocalPlayer():IsAdmin()
+	end
+})
 
 ix.dialogues.Add("mark_pootis", {
 	["GREETINGS"] = {
@@ -193,7 +200,7 @@ ix.dialogues.Add("mark_pootis", {
 		data = {
 			haswork = true,
 		},
-		response = "Бери перчатки, пакет и шуруй на улицу. Уберешь 4 куч, которых тут довольно много, после чего можешь возвращаться. И не смей мухлевать - мы следим.",
+		response = "Бери перчатки, пакет и шуруй на улицу. Уберешь 4 кучи, которых тут довольно много, после чего можешь возвращаться. И не смей мухлевать - мы следим.",
 		choices = {"GOODBYE"}
 	},
 	["WaterWork"] = {
