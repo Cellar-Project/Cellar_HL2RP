@@ -9,3 +9,13 @@ function Schema:AddCombineDisplayMessage(text, color, ...)
 		ix.gui.combine:AddLine(text, color, nil, ...)
 	end
 end
+
+
+Schema.randomDisplayLines = {
+	"Calibrating geonavigation system...",
+	"Checking for facial recognition system updates...",
+	"Updating list of active squads...",
+	"Datafile database updated.",
+	"Encrypting data for secure transmission...",
+}
+

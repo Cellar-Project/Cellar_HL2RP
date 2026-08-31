@@ -150,7 +150,11 @@ ix.command.Add("CharFallOver", {
 ix.command.Add("DoorKick", {
 	description = "Выбить дверь.",
 	OnCheckAccess = function(self, client)
-		if (!client:IsCombine()) or (!client:GetData("zombie", false)) then
+		-- Only Combine units (augmented strength) or infected/zombified
+		-- characters (stage-3 frenzy) can kick doors. Previously the check
+		-- read `(!IsCombine) or (!zombie)`, which denied access unless the
+		-- player was *both* Combine *and* zombie - effectively unreachable.
+		if (!client:IsCombine() and !client:GetData("zombie", false)) then
 			return false
 		end
 
