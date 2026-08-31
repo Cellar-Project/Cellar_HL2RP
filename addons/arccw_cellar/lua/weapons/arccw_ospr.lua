@@ -648,6 +648,5 @@ function SWEP:GetDamage(range, pellet)
     delta = math.Clamp(delta, 0, 1)
 
     local lerped = Lerp(delta, dmgmax, dmgmin)
-    print(lerped)
     return lerped
 end
