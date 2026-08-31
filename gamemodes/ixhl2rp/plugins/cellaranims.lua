@@ -1054,8 +1054,6 @@ ix.anim.SetModelClass("models/cellar/characters/city3/metropolice/female/cca_fem
 ix.anim.SetModelClass("models/cultist.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/characters/city3/citizens/male/c3_varg.mdl", "cellarMale")
 ix.anim.SetModelClass("models/vintagethief/f_garo.mdl", "cellarFemale")
-ix.anim.SetModelClass("models/cellar/characters/city3/pla/male/male_pla.mdl", "cellarOTA")
-ix.anim.SetModelClass("models/cellar/characters/city3/pla/female/female_pla.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/custom/ac_female_lalalar.mdl", "cellarFemale")
 ix.anim.SetModelClass("models/cellar/vintagethief/characters/male/delta_john.mdl", "cellarMale")
 ix.anim.SetModelClass("models/cellar/vintagethief/characters/male/dorin.mdl", "cellarMale")
