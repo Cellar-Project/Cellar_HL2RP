@@ -324,12 +324,18 @@ function PANEL:LoadNames()
 		button:SetText(k)
 		button.Text = k
 		button.DoClick = function(this)
-			Derma_Query("Представляться под именем "..k.."?","Выберите операцию","Выбрать",function() AW_RECOGNIZE_SELECTEDNAME = k end,"Удалить",
+			Derma_Query("Представляться под именем "..k.."?","Выберите операцию","Выбрать",
+			function() 
+				AW_RECOGNIZE_SELECTEDNAME = k 
+
+				for k,v in pairs(self.buttons)do
+					v:SetDisabled(!AW_RECOGNIZE_SELECTEDNAME)
+				end
+			
+			end,"Удалить",
             function() 
                 netstream.Start("aw_ActionName",{k,true})
-                timer.Simple(0.1,function()
-					self:LoadNames()
-				end)
+				self:LoadNames()
             end,"Отменить")
 		end
 		self.list:AddItem(button)

@@ -437,8 +437,10 @@ else
 		stats.attributes.offset = w1 * 1.75
 		stats.attributes:SetWide(w1 * 2.75)
 
+		local charSpecials = LocalPlayer():GetCharacter():GetSpecials()
+
 		for k, v in SortedPairsByMemberValue(ix.specials.list, "weight") do
-			specials[k] = default and 1 or LocalPlayer():GetCharacter():GetSpecial(k)
+			specials[k] = default and 1 or charSpecials[k]
 
 			local bar = stats.attributes:Add("ixStatBar")
 			bar:Dock(TOP)
@@ -560,7 +562,7 @@ else
 		local pointsmax = 6 + (5 + (5 * math.min(lvl, 5)) + (1 * math.max(lvl - 5, 0)))
 
 		for k, v in pairs(ix.specials.list) do
-			pointsmax = pointsmax - LocalPlayer():GetCharacter():GetSpecial(k)
+			pointsmax = pointsmax - LocalPlayer():GetCharacter():GetSpecials()[k]
 		end
 
 		local w, h = ScrW(), ScrH()

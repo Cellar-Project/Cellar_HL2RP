@@ -160,6 +160,12 @@ function PLUGIN:HandleDatafile(player, target)
 				end
 			end
 		end
+
+		-- If the table search did not find a matching datafile, stop here
+		-- instead of falling through to the player branch and crashing.
+		if istable(target) then
+			return false
+		end
 	end
 
 	local playerValue = player:GetCharacter():ReturnDatafilePermission()

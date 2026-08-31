@@ -174,6 +174,20 @@ end
 
 -- Called when the player attempts to primary fire.
 function SWEP:PrimaryAttack()
+
+	if (!self.Owner:Alive()) then return false end
+
+	local v_thirst = (self.Owner:GetCharacter():GetThirst() - 20)
+	local v_hunger = (self.Owner:GetCharacter():GetHunger() - 20)
+
+	if self.Owner:Health() <= 50 or v_thirst < 0 or v_hunger < 0 then
+		if SERVER then
+			self.Owner:NotifyLocalized("Вы слишком слабы, чтобы использовать свои силы!")
+		end
+
+		return
+	end
+
 	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 
 	if (self.bIsFiring or !self:CanPrimaryAttack()) then return end
@@ -185,7 +199,9 @@ function SWEP:PrimaryAttack()
 		self.IronSightsAng  = Vector(-5, 100, 10)
 	end
 
-	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+	if SERVER then
+		self.Owner:ForceSequence("Zapattack1", nil, 1.1, true)
+	end
 
 	local chargeSound = CreateSound(self.Owner, "NPC_Vortigaunt.ZapPowerup")
 	chargeSound:Play()
@@ -193,15 +209,16 @@ function SWEP:PrimaryAttack()
 	ParticleEffectAttach("vortigaunt_charge_token", PATTACH_POINT_FOLLOW, self.Owner, self.Owner:LookupAttachment("leftclaw"))
 	ParticleEffectAttach("vortigaunt_charge_token", PATTACH_POINT_FOLLOW, self.Owner, self.Owner:LookupAttachment("rightclaw"))
 
-	timer.Simple(1, function()
-		if !IsValid(self.Owner) or CLIENT then
-			return
-		end
+	-- timer.Simple(1, function()
+	-- 	if !IsValid(self.Owner) or CLIENT then
+	-- 		return
+	-- 	end
 
-		self.Owner:SetAnimation( PLAYER_ATTACK1 )
-	end)
+	-- 	self.Owner:SetAnimation( PLAYER_ATTACK1 )
+	-- end)
 
 	timer.Simple(0.5, function()
+
 		chargeSound:Stop()
 
 		if !IsValid(self.Owner) then
@@ -228,6 +245,7 @@ function SWEP:PrimaryAttack()
 		if (SERVER) then
 			local damage = 1 //self.Owner:GetCharacter():GetSkillScale("vort_beam")
 			local damageInfo = DamageInfo()
+
 			damageInfo:SetAttacker(self.Owner)
 			damageInfo:SetInflictor(self)
 			damageInfo:SetDamage(damage)
@@ -236,15 +254,32 @@ function SWEP:PrimaryAttack()
 			damageInfo:SetDamagePosition(tr.HitPos)
 			damageInfo:SetDamageType(DMG_SHOCK)
 
-			for k, v in ipairs(ents.FindInSphere(tr.HitPos, 48)) do
-				local target = IsValid(v.ixPlayer) and v.ixPlayer or v
+			local trent = tr.Entity
+			local character = self.Owner:GetCharacter()
 
-				if target and (target:IsNPC() or target:IsPlayer()) then
-					if target:Team() == FACTION_VORTIGAUNT then continue end
-					
-					target:TakeDamageInfo(damageInfo)
+			character:SetHunger( math.Clamp(character:GetHunger() - 4, 0, 100))
+			character:SetThirst( math.Clamp(character:GetThirst() - 4, 0, 100))
+
+			if IsValid(trent) and (trent:IsPlayer() or trent:IsNPC()) then
+				trent:TakeDamageInfo(damageInfo)
+			else
+				for k, v in ipairs(ents.FindInSphere(tr.HitPos, 48)) do
+					-- local isplayer = v:IsPlayer()
+					-- if isplayer then
+					-- 	if v:Team() == FACTION_VORTIGAUNT then continue end
+					-- end
+					-- if !v:IsNPC() and !isplayer then continue end
+
+					if (v:IsPlayer() and v:Team() == FACTION_VORTIGAUNT) or (!v:IsNPC() and !v:IsPlayer()) then
+						continue
+					end
+	
+					v:TakeDamageInfo(damageInfo)
+	
 				end
 			end
+
+			
 		end
 
 		local viewModel = self.Owner:GetViewModel()

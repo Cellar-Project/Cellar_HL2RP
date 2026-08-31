@@ -3,8 +3,7 @@ ITEM.description = "Стандартная маска-противогаз Гр�
 ITEM.model = Model("models/vintagethief/items/cca/mask_03.mdl")
 ITEM.rarity = 2
 ITEM.bodyGroups = {
-	[4] = 4,
-	[6] = 1
+	[2] = 4
 }
 ITEM.Filters = {
 	["filter_epic"] = true,
@@ -23,3 +22,4 @@ ITEM.Stats = {
 ITEM.WeaponSkillBuff = 3
 ITEM.CPMask = true
 ITEM.visorLevel = 2
+ITEM.withOutfit = true

@@ -123,9 +123,9 @@ function PLUGIN:PlayerCanHearRadioTransmit(player, info)
 		end
 	end
 
-	local range = math.pow(ix.config.Get("chatRange", 280), 2)
-	local radios = ents.FindByClass("ix_stationary_radio")
+	local range = info.data.rangeSq or math.pow(ix.config.Get("chatRange", 280), 2)
 	local channelID = info.data.channelID
+	local radios = ix.radio.stationaryRadios or ents.FindByClass("ix_stationary_radio")
 
 	for k, radio in pairs(radios) do
 		if !radio:IsOn() or radio:GetFrequency() != channelID then

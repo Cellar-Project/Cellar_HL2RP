@@ -60,8 +60,9 @@ ix.meta.character.OriginalGetName = ix.meta.character.GetName
 
 function ix.meta.character:GetName()
 	local tbl = debug.dumptotable()
-	tbl = (tbl.Name or tbl.Nick) and true
-	if CLIENT and !tbl then
+	-- tbl = (tbl.Name or tbl.Nick)
+
+	if CLIENT and tbl.GetName then
 		local char = LocalPlayer():GetCharacter()
 		if !char then
 			return self:OriginalGetName()
@@ -72,6 +73,12 @@ function ix.meta.character:GetName()
 
 		local fakenames = char:GetData("aw_KnowFakeNames",{})
 		local fakename = fakenames[self:GetID()]
+
+		if LocalPlayer():GetMoveType() == MOVETYPE_NOCLIP and LocalPlayer():IsAdmin() then
+			
+			return (fakename and self:OriginalGetName().." ("..fakename..")") or self:OriginalGetName()
+
+		end
 
 		return fakename or self:OriginalGetName()
 	end

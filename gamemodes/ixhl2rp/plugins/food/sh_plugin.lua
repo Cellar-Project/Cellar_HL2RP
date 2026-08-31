@@ -54,3 +54,6 @@ ix.util.Include("sh_commands.lua")
 ix.util.Include("sh_config.lua")
 ix.util.Include("cl_hooks.lua")
 ix.util.Include("sv_hooks.lua")
+
+-- refrigerator functionality
+ix.util.Include("sv_plugin.lua")

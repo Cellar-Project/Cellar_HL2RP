@@ -49,7 +49,9 @@ function PLUGIN:CalculateThermalLimbDamage(temperature, client, equipment, damag
 
 	-- calculate damage through outfit:
 	if outfit or isVort then
-		resist = equipment["torso"].thermalIsolation or 0
+		if not isVort then
+			resist = equipment["torso"].thermalIsolation or 0
+		end
 
 		if resist >= damage then
 			damage = 0

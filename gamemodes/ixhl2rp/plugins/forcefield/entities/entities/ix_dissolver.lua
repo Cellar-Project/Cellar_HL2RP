@@ -180,8 +180,12 @@ return entity end
 	local beep_occurrence = -beep_delay
 
 	function ENT:Think()
+		if not self:GetToggle() then
+			self:NextThink(CurTime() + 0.25)
+			return true
+		end
+
 		local cur_time = CurTime()
-		local beep_time_elapsed = cur_time - beep_occurrence
 
 		if self:GetToggle() then
 			local entities = ents.FindInBox(self:GetPos() - Vector(0, 0, 55), self:GetDummy():GetPos() + self:GetUp() * 150 + Vector(5, 5, 0))
@@ -199,7 +203,7 @@ return entity end
 				end
 
 				if entity:GetClass() == "player" and not entity:GetNetVar("dissolve") then
-					if not entity:GetCharacter():HasIDAccess(self:GetAccess()) and entity:GetMoveType() ~= MOVETYPE_NOCLIP then
+					if not entity:GetCharacter():HasIDAccess(self:GetAccess()) and not entity.ixObsData then
 						if entity:IsDispatch() then return end
 
 						entity:SetNetVar("dissolve", true)
@@ -245,7 +249,7 @@ return entity end
 			if table.HasValue(data, "player") then
 				for k, v in pairs(ents.FindInSphere(self:GetPos() + self:GetRight() * -(self:GetPos():Distance(self:GetDummy():GetPos()) / 2), 200)) do
 					if v:IsPlayer() and v:Alive() then
-						if not v:GetCharacter():HasIDAccess(self:GetAccess()) and v:GetMoveType() ~= MOVETYPE_NOCLIP then
+						if not v:GetCharacter():HasIDAccess(self:GetAccess()) and not v.ixObsData then
 							if v:IsDispatch() then continue end
 							if not self:GetNetVar("light") then
 								if (not self.Warning or CurTime() >= self.Warning) then
@@ -266,7 +270,7 @@ return entity end
 
 					if self.BeepDouble then
 						if (not self.Beep2 or CurTime() >= self.Beep2) then
-							self:EmitSound("hl2rp/walloflight/wol2.wav")
+						self:EmitSound("hl2rp/walloflight/wol2.wav")
 							self:GetDummy():EmitSound("hl2rp/walloflight/wol2.wav")
 							self.BeepDouble = false
 							self.Beep2 = CurTime() + 15 -- fix spam (W and S)
@@ -275,6 +279,9 @@ return entity end
 				end
 			end
 		end
+
+		self:NextThink(CurTime() + 0.25)
+		return true
 	end
 
 	function ENT:OnRemove()

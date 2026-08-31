@@ -75,11 +75,41 @@ HOLSTER_DRAWINFO["arccw_ar2"] = {
 	bone = "ValveBiped.Bip01_Spine",
 	model = "models/weapons/w_irifle.mdl"
 }
-HOLSTER_DRAWINFO["arccw_ak47"] = {
-	pos = Vector(4, 15, -5),
+HOLSTER_DRAWINFO["arccw_bo1_dragunov"] = {
+	pos = Vector(6, 20, 13), -- 1 - ВПЕРЕД НАЗАД(+) 2 - ВВЕРХ-ВНИЗ(+) 3 - ВЛЕВО ВПРАВО(-)
 	ang = Angle(-45, 180, 0),
 	bone = "ValveBiped.Bip01_Spine",
-	model = "models/weapons/w_tdon_mwak_mammal_edition.mdl"
+	model = "models/weapons/arccw/c_bo1_svd.mdl"
+}
+HOLSTER_DRAWINFO["arccw_bo1_l96"] = {
+	pos = Vector(9, 15, 10),
+	ang = Angle(-45, 180, 0),
+	bone = "ValveBiped.Bip01_Spine",
+	model = "models/weapons/arccw/c_bo1_awm.mdl"
+}
+HOLSTER_DRAWINFO["arccw_bo1_rpg7"] = {
+	pos = Vector(4, 10, 8), -- 1 - ВПЕРЕД НАЗАД(+) 2 - ВВЕРХ-ВНИЗ(+) 3 - ВЛЕВО ВПРАВО(-)
+	ang = Angle(-45, 180, 0),
+	bone = "ValveBiped.Bip01_Spine",
+	model = "models/weapons/arccw/c_bo1_rpg7.mdl"
+}
+HOLSTER_DRAWINFO["arccw_bo2_mk48"] = {
+	pos = Vector(8, 15, 10),
+	ang = Angle(-45, 180, 0),
+	bone = "ValveBiped.Bip01_Spine",
+	model = "models/weapons/arccw/w_bo2_mk48.mdl"
+}
+HOLSTER_DRAWINFO["arccw_bo2_type95"] = {
+	pos = Vector(4, 15, 10), -- 1 - ВПЕРЕД НАЗАД(+) 2 - ВВЕРХ-ВНИЗ(+) 3 - ВЛЕВО ВПРАВО(-)
+	ang = Angle(-45, 180, 0),
+	bone = "ValveBiped.Bip01_Spine",
+	model = "models/weapons/arccw/w_bo2_type95.mdl"
+}
+HOLSTER_DRAWINFO["arccw_waw_arisaka"] = {
+	pos = Vector(4, 15, 10),
+	ang = Angle(-45, 180, 0),
+	bone = "ValveBiped.Bip01_Spine",
+	model = "models/weapons/arccw/w_waw_arisaka.mdl"
 }
 HOLSTER_DRAWINFO["arccw_spas12"] = {
 	pos = Vector(4, 16, 0),
@@ -153,7 +183,7 @@ function PLUGIN:PostPlayerDraw(client)
 		if (not IsValid(client.holsteredWeapons[class])) then
 			local model =
 				ClientsideModel(drawInfo.model, RENDERGROUP_TRANSLUCENT)
-			model:SetNoDraw(true)
+				model:SetNoDraw(true)
 			client.holsteredWeapons[class] = model
 		end
 

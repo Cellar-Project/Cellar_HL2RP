@@ -1,3 +1,4 @@
+
 local PLUGIN = PLUGIN
 
 do
@@ -506,6 +507,17 @@ do
 		end
 	end
 
+	-- limbs_penalties task addition
+	local function ScaleHitChanceByHandsDamage(hitChance, character)
+		local leftHandDamage, rightHandDamage = character:GetLimbDamage("leftHand", true), character:GetLimbDamage("rightHand", true)
+
+		if (leftHandDamage > 0 or rightHandDamage > 0) then
+			hitChance = hitChance * (1 - ((leftHandDamage * 0.5) + (rightHandDamage * 0.5)))
+		end
+
+		return hitChance
+	end
+
 	function PLUGIN:DoRangeAttack(entity, character, weapon, trace, dmgInfo, highNum, penetration)
 		if highNum then
 			local data = {}
@@ -551,6 +563,8 @@ do
 
 			if weapon.ixItem then
 				weaponMod = (weapon.ixItem.DistanceSkillMod[DistanceType] or 0) * 10
+			else
+				weaponMod = (weapon.Stat_DistanceSkillMod[DistanceType] or 0) * 10
 			end
 
 			local gunBuff = 0
@@ -565,6 +579,8 @@ do
 			local luckMod = character:GetSpecial("lk")
 			local perceptionMod = (character:GetSpecial("pe") + 5) / 10
 			local hitChance = (weaponMod + (weaponSkill * perceptionMod) + luckMod)
+
+			hitChance = ScaleHitChanceByHandsDamage(hitChance, character)
 
 			local SkillTest = isRagdoll and true or math.random(1, 100) < (10 + hitChance)
 			local AgilityTest = false
@@ -588,8 +604,12 @@ do
 					local Attack = 1
 					local Armor = 1
 
-					if IsValid(weapon) and weapon.ixItem then
-						Attack = weapon.ixItem.Attack or 1
+					if IsValid(weapon) then 
+						if weapon.ixItem then
+							Attack = weapon.ixItem.Attack or Attack
+						else
+							Attack = weapon.Stat_Attack or Attack
+						end
 					end
 
 					if target.ArmorItems then
@@ -678,7 +698,9 @@ do
 			local luckMod = character:GetSpecial("lk")
 			local agilityMod = (character:GetSpecial("ag") * 2)
 			local hitChance = ((isStanding and 25 or 0) + (isBackstab and 100 or 0) + weaponSkill + agilityMod + luckMod) * (0.75 + 0.5 * currentStamina / maxStamina)
-			
+
+			hitChance = ScaleHitChanceByHandsDamage(hitChance, character)
+
 			local skilltest = isRagdoll and true or math.random(1, 100) < (hitChance - evasionChance)
 		
 			local ParryTest = false
@@ -808,7 +830,9 @@ do
 			local luckMod = character:GetSpecial("lk")
 			local agilityMod = (character:GetSpecial("ag") * 2)
 			local hitChance = ((isStanding and 25 or 0) + (isBackstab and 100 or 0) + weaponSkill + agilityMod + luckMod) * (0.75 + 0.5 * currentStamina / maxStamina)
-			
+
+			hitChance = ScaleHitChanceByHandsDamage(hitChance, character)
+
 			local skilltest = isRagdoll and true or math.random(1, 100) < (hitChance - evasionChance)
 		
 			local ParryTest = false

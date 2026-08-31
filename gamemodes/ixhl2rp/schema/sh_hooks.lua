@@ -315,8 +315,20 @@ function Schema:InitializedChatClasses()
 		description = "@cmdOOC",
 		noSpaceAfter = true
 	})
+
+	-- Register chat languages alongside the chat classes. This used to live
+	-- in a second `Schema:InitializedChatClasses` definition further down the
+	-- file, which silently shadowed the chat-class registration above.
+	ix.chatLanguages.AddChatType("radio")
+	ix.chatLanguages.AddChatType("radio_eavesdrop")
+	ix.chatLanguages.AddChatType("request")
+	ix.chatLanguages.AddChatType("request_eavesdrop")
+	ix.chatLanguages.AddChatType("request_loopback")
+	ix.chatLanguages.AddChatType("dispatch")
+	ix.chatLanguages.AddChatType("dispatch_radio")
+	ix.chatLanguages.AddChatType("dispatch_chat")
+	ix.chatLanguages.AddChatType("broadcast")
 end
-Schema:InitializedChatClasses()
 do
 	local chatTypes = {
 		["ic"] = true,
@@ -376,17 +388,10 @@ function Schema:InitializedPlugins()
 	end
 end
 
-function Schema:InitializedChatClasses()
-	ix.chatLanguages.AddChatType("radio")
-	ix.chatLanguages.AddChatType("radio_eavesdrop")
-	ix.chatLanguages.AddChatType("request")
-	ix.chatLanguages.AddChatType("request_eavesdrop")
-	ix.chatLanguages.AddChatType("request_loopback")
-	ix.chatLanguages.AddChatType("dispatch")
-	ix.chatLanguages.AddChatType("dispatch_radio")
-	ix.chatLanguages.AddChatType("dispatch_chat")
-	ix.chatLanguages.AddChatType("broadcast")
-end
+-- Schema:InitializedChatClasses is defined once at the top of this file and
+-- now also registers the chat-language types. The duplicate definition that
+-- used to live here was removed because it shadowed the chat-class
+-- registration above.
 
 function Schema:PhysgunPickup(client, entity)
 	if (entity:GetNWBool("IsPermaEntity")) then

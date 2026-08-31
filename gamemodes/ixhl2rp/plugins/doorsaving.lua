@@ -116,31 +116,45 @@ if SERVER then
 	PLUGIN.doorUsers = PLUGIN.doorUsers or {}
 
 	function PLUGIN:SaveData()
-		for k, v in pairs(self.doors) do
-			local doorEntity = ents.GetMapCreatedEntity(k)
-
-			self.doors[k] = {v, doorEntity:IsLocked()}
-		end
-
-		self:SetData(self.doors)
+		local doorsData = {}
 
 		for k, v in pairs(self.doors) do
-			self.doors[k] = v[1]
+			local door = ents.GetMapCreatedEntity(k)
+
+			-- The map-created entity may have gone away (e.g. the door was
+			-- removed by a mapper, or the saved id is stale after a map
+			-- change). In that case keep the access record but skip the
+			-- lock-state flag so we don't error reading IsLocked() on NULL.
+			if IsValid(door) then
+				doorsData[k] = door:IsLocked() and {v, true} or v
+			else
+				doorsData[k] = v
+			end
 		end
+
+		self:SetData(doorsData)
 	end
 
 	function PLUGIN:LoadData()
 		self.doors = {}
 		self.doorUsers = {}
 
-		local data = self:GetData()
+		local data = self:GetData() or {}
 
 		for doorID, info in pairs(data) do
-			if (info[2]) then
-				ents.GetMapCreatedEntity(doorID):Fire("lock")
+			if (isbool(info[2])) then
+				local door = ents.GetMapCreatedEntity(doorID)
+
+				-- Same caveat as SaveData: the door entity may not exist
+				-- on this map. Skip the relock if so, but still unwrap the
+				-- access map so character permissions are restored.
+				if IsValid(door) then
+					door:Fire("lock")
+				end
+
+				info = info[1]
 			end
 
-			info = info[1]
 			self.doors[doorID] = info
 
 			for charID, access in pairs(info) do
@@ -151,8 +165,11 @@ if SERVER then
 	end
 
 	function PLUGIN:DoorSetAccess(client, door, access, notBuy)
+		-- Walk up to the parent door so all child doors share one access
+		-- record. Previously this recursed with the same `door` argument,
+		-- which stack-overflowed on any parented door.
 		if door.ixParent then
-			self:DoorSetAccess(client, door, access, notBuy)
+			self:DoorSetAccess(client, door.ixParent, access, notBuy)
 
 			return
 		end
@@ -176,7 +193,7 @@ if SERVER then
 
 	function PLUGIN:DoorRemoveAccess(client, door)
 		if door.ixParent then
-			self:DoorRemoveAccess(client, door)
+			self:DoorRemoveAccess(client, door.ixParent)
 
 			return
 		end
@@ -200,7 +217,7 @@ if SERVER then
 
 	function PLUGIN:DoorResetAccess(door)
 		if door.ixParent then
-			self:DoorResetAccess(door)
+			self:DoorResetAccess(door.ixParent)
 
 			return
 		end

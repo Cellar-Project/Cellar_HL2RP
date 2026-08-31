@@ -72,7 +72,7 @@ local zombie_models = {
 	"models/freshdead/freshdead_07.mdl",
 	"models/freshdead/freshdead_05.mdl",
 	"models/freshdead/freshdead_06.mdl",
-	"models/freshdead/freshdead_01.mdll",
+	"models/freshdead/freshdead_01.mdl",
 	"models/freshdead/freshdead_02.mdl",
 	"models/freshdead/freshdead_03.mdl",
 	"models/freshdead/freshdead_04.mdl",
