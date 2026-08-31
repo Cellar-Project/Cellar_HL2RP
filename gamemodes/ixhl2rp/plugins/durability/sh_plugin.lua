@@ -50,15 +50,6 @@ if CLIENT then
 		panel:SetBackgroundColor(Color(219, 52, 52))
 		panel:SizeToContents()
 	end
-
-	-- netstream.Hook("aw_SendDurabilityFunc",function(weapon,id,bool)
-	-- 	ix.item.instances[id].functions.awFix = bool and {
-	-- 		name = "Исправить",
-	-- 		OnRun = function()
-	-- 			return false
-	-- 		end
-	-- 	}
-	-- end)
 end
 
 function PLUGIN:InitializedPlugins()

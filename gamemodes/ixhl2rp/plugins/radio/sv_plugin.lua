@@ -1,5 +1,25 @@
 util.AddNetworkString("PlayVRadio")
 
+-- Cache for stationary radios to avoid expensive ents.FindByClass calls
+ix.radio.stationaryRadios = ix.radio.stationaryRadios or {}
+
+hook.Add("OnEntityCreated", "ixRadioCacheNewEntity", function(entity)
+	if IsValid(entity) and entity:GetClass() == "ix_stationary_radio" then
+		table.insert(ix.radio.stationaryRadios, entity)
+	end
+end)
+
+hook.Add("EntityRemoved", "ixRadioCacheRemovedEntity", function(entity)
+	if entity:GetClass() == "ix_stationary_radio" then
+		for i = 1, #ix.radio.stationaryRadios do
+			if ix.radio.stationaryRadios[i] == entity then
+				table.remove(ix.radio.stationaryRadios, i)
+				break
+			end
+		end
+	end
+end)
+
 function ix.radio:HasPlayerChannel(player, channelID, channelNumber)
 	local channel = self:FindByID(channelID)
 

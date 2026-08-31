@@ -2,7 +2,7 @@ local PLUGIN = PLUGIN
 
 PLUGIN.RepairTime = 4
 
-function PLUGIN:Tick()
+local function TickDurability()
     local curTime = CurTime()
 
     for _, v in ipairs(player.GetAll()) do
@@ -31,6 +31,8 @@ function PLUGIN:Tick()
 
                 end
 
+
+
                 if (!v:IsWepRaised()) then
                     canShoot = false
                 end
@@ -44,6 +46,8 @@ function PLUGIN:Tick()
         end
     end
 end
+
+timer.Create("ixDurabilityTick", 0.1, 0, TickDurability)
 
 function PLUGIN:EntityFireBullets(entity, bullet)
     if (IsValid(entity) and entity:IsPlayer()) then
