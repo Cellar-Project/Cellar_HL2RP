@@ -11,7 +11,7 @@ ITEM.iconCam = {
 	ang = Angle(0, 270, 0),
 	fov = 6.4705882352941,
 }
-ITEM.Attack = 14
+ITEM.Attack = 10
 ITEM.Info = {
 	Type = nil,
 	Skill = "guns",
