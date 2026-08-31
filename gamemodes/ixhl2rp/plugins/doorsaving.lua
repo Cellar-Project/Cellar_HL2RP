@@ -118,10 +118,18 @@ if SERVER then
 	function PLUGIN:SaveData()
 		local doorsData = {}
 
-        for k, v in pairs(self.doors) do
+		for k, v in pairs(self.doors) do
 			local door = ents.GetMapCreatedEntity(k)
 
-			doorsData[k] = door:IsLocked() and {v, true} or v
+			-- The map-created entity may have gone away (e.g. the door was
+			-- removed by a mapper, or the saved id is stale after a map
+			-- change). In that case keep the access record but skip the
+			-- lock-state flag so we don't error reading IsLocked() on NULL.
+			if IsValid(door) then
+				doorsData[k] = door:IsLocked() and {v, true} or v
+			else
+				doorsData[k] = v
+			end
 		end
 
 		self:SetData(doorsData)
@@ -131,12 +139,18 @@ if SERVER then
 		self.doors = {}
 		self.doorUsers = {}
 
-		local data = self:GetData()
+		local data = self:GetData() or {}
 
 		for doorID, info in pairs(data) do
 			if (isbool(info[2])) then
 				local door = ents.GetMapCreatedEntity(doorID)
-				door:Fire("lock")
+
+				-- Same caveat as SaveData: the door entity may not exist
+				-- on this map. Skip the relock if so, but still unwrap the
+				-- access map so character permissions are restored.
+				if IsValid(door) then
+					door:Fire("lock")
+				end
 
 				info = info[1]
 			end
@@ -151,8 +165,11 @@ if SERVER then
 	end
 
 	function PLUGIN:DoorSetAccess(client, door, access, notBuy)
+		-- Walk up to the parent door so all child doors share one access
+		-- record. Previously this recursed with the same `door` argument,
+		-- which stack-overflowed on any parented door.
 		if door.ixParent then
-			self:DoorSetAccess(client, door, access, notBuy)
+			self:DoorSetAccess(client, door.ixParent, access, notBuy)
 
 			return
 		end
@@ -176,7 +193,7 @@ if SERVER then
 
 	function PLUGIN:DoorRemoveAccess(client, door)
 		if door.ixParent then
-			self:DoorRemoveAccess(client, door)
+			self:DoorRemoveAccess(client, door.ixParent)
 
 			return
 		end
@@ -200,7 +217,7 @@ if SERVER then
 
 	function PLUGIN:DoorResetAccess(door)
 		if door.ixParent then
-			self:DoorResetAccess(door)
+			self:DoorResetAccess(door.ixParent)
 
 			return
 		end

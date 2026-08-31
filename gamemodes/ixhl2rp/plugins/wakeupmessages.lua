@@ -17,7 +17,7 @@ local wakeupmessages = {
 
 function PLUGIN:PlayerSpawn(ply)
 	local char = ply:GetCharacter()
-	if not (ply:IsValid() or ply:Alive()) then return end
+	if not (ply:IsValid() and ply:Alive()) then return end
 	if (not char) then return end
 	if char:IsDispatch() then return end
 	ply:ConCommand("play music/stingers/hl1_stinger_song16.mp3")
