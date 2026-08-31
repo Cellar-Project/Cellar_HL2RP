@@ -60,7 +60,7 @@ if SERVER then
 		["models/cellar/characters/city3/citizens/female/c3_female_11.mdl"] = "models/freshdead/freshdead_05.mdl",
 		["models/cellar/characters/city3/citizens/female/c3_female_12.mdl"] = "models/freshdead/freshdead_07.mdl",
 		["models/cellar/characters/city3/citizens/female/c3_female_13.mdl"] = "models/freshdead/freshdead_07.mdl",
-		["models/cellar/characters/city3/citizens/male/c3_male_01.mdl"] = "models/freshdead/freshdead_01.mdll",
+		["models/cellar/characters/city3/citizens/male/c3_male_01.mdl"] = "models/freshdead/freshdead_01.mdl",
 		["models/cellar/characters/city3/citizens/male/c3_male_02.mdl"] = "models/freshdead/freshdead_02.mdl",
 		["models/cellar/characters/city3/citizens/male/c3_male_03.mdl"] = "models/freshdead/freshdead_03.mdl",
 		["models/cellar/characters/city3/citizens/male/c3_male_04.mdl"] = "models/freshdead/freshdead_04.mdl",

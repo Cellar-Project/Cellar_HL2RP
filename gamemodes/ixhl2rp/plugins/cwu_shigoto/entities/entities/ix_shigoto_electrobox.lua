@@ -22,12 +22,5 @@ if (SERVER) then
 
 		self.nextUseTime = 0
 
-
     end
-end
-
-local qte_num = ix.config.Get("qte_numbers") 
-
-for k,v in RandomPairs(qte_num) do
-    print( v )
 end
