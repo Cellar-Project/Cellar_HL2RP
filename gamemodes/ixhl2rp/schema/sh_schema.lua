@@ -7,6 +7,11 @@ Schema.description = ""
 ix.util.Include("libs/thirdparty/sh_netstream2.lua")
 ix.util.Include("libs/sh_factiongroups.lua")
 
+-- Asset fallback layer must load before any other schema or plugin code
+-- so Schema.assets.{Material,Model,Sound,Font} are available everywhere.
+ix.util.Include("libs/sh_assets.lua")
+ix.util.Include("libs/sh_asset_manifest.lua")
+
 ix.util.Include("sh_configs.lua")
 ix.util.Include("sh_commands.lua")
 
