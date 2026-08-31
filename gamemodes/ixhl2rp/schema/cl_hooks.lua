@@ -54,8 +54,13 @@ function Schema:CharacterLoaded(character)
 	if (character:IsCombine()) then
 		vgui.Create("ixCombineDisplay")
 
+		-- Capture the local player explicitly so the timer closure does not
+		-- depend on an undefined `client` upvalue. `LocalPlayer()` is stable
+		-- for the lifetime of the client session, so it is safe to cache.
+		local localPlayer = LocalPlayer()
+
 		timer.Create("ixRandomDisplayLines", 12, 0, function()
-			if (IsValid(client) and client:IsCombine()) then
+			if (IsValid(localPlayer) and localPlayer:IsCombine()) then
 				local text = self.randomDisplayLines[math.random(1, #self.randomDisplayLines)]
 
 				if (istable(text)) then
