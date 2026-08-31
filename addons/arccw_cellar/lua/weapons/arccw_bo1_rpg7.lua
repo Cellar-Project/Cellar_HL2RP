@@ -20,7 +20,7 @@ SWEP.NoHideLeftHandInCustomization = true
 SWEP.ViewModel = "models/weapons/arccw/c_bo1_rpg7.mdl"
 SWEP.MirrorVMWM = true
 SWEP.WorldModelOffset = {
-    pos        =    Vector(1, 1.5, -7.25),
+    pos        =    Vector(0, 3, 0),
     ang        =    Angle(-6, -2, 180),
     bone    =    "ValveBiped.Bip01_R_Hand",
     scale   =  1.2
@@ -73,9 +73,9 @@ SWEP.Firemodes = {
 SWEP.NPCWeaponType = {"weapon_rpg"}
 SWEP.NPCWeight = 100
 
-SWEP.AccuracyMOA = 25 -- accuracy in Minutes of Angle. There are 60 MOA in a degree.
-SWEP.HipDispersion = 1500 -- inaccuracy added by hip firing.
-SWEP.MoveDispersion = 400
+SWEP.AccuracyMOA = 0 -- rocket launchers should fire straight
+SWEP.HipDispersion = 0 -- no random hip spread for a rocket tube
+SWEP.MoveDispersion = 0
 
 SWEP.Primary.Ammo = "RPG_Round" -- what ammo type the gun uses
 
@@ -108,7 +108,7 @@ SWEP.BulletBones = { -- the bone that represents bullets in gun/mag
 SWEP.CaseBones = {}
 
 SWEP.IronSightStruct = {
-    Pos = Vector(0, 3, -0),
+    Pos = Vector(-5.5, -7, 1.8),
     Ang = Angle(0, 0, 0),
     Magnification = 1.1,
     CrosshairInSights = false,
