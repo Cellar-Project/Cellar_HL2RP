@@ -9,7 +9,7 @@ ix.util.Include("libs/sh_chat_languages.lua")
 -- this is not the best way to create a char var, but we have no reasons to let it be stolen
 ix.util.Include("libs/sv_character.lua")
 ix.util.Include("libs/cl_character.lua")
-ix.util.Include("meta/sv_player.lua")
+ix.util.Include("meta/sv_character.lua")
 ix.util.Include("meta/sh_character.lua")
 
 ix.util.Include("cl_plugin.lua")
@@ -47,6 +47,25 @@ function PLUGIN:InitializedConfig()
 					ix.item.list[itemID].studyTime = ix.config.Get("languageTextbooksMinReadTime", 3600) * i
 				end
 			end
+		end
+	end
+end
+
+-- backward compatibility hack (we will not lose study progress twice)
+if (SERVER) then
+	function PLUGIN:PlayerLoadedCharacter(_, character)
+		if (tonumber(character:GetCreateTime()) <= 1653963226 and !character:GetData("bLanguageStudyProgressRestored")) then
+			local studyProgress = character:GetLanguagesStudyProgress()
+
+			if (!table.IsEmpty(studyProgress)) then
+				for k, v in pairs(studyProgress) do
+					character:SetStudyProgress(k, v)
+				end
+	
+				character:SetLanguagesStudyProgress()
+			end
+
+			character:SetData("bLanguageStudyProgressRestored", true)
 		end
 	end
 end

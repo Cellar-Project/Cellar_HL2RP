@@ -25,6 +25,8 @@ function ENT:GetAllStock()
 end
 
 if (SERVER) then
+	ENT.questCoolDown = {}
+
 	function ENT:Initialize()
 		self:SetModel("models/props_interiors/vendingmachinesoda01a.mdl")
 		self:PhysicsInit(SOLID_VPHYSICS)
@@ -102,19 +104,28 @@ if (SERVER) then
 	end
 
 	function ENT:Use(client)
+		local character = client:GetCharacter()
 		local buttonID = self:GetClosestButton(client)
 
 		if (buttonID) then
 			client:EmitSound("buttons/lightswitch2.wav", 40, 150)
-		else
+		elseif character:GetData("quests")["cwu_water"] and
+		character:GetData("cwuWater") < 3 then
+			local charID = character:GetID()
+			local questStartTime = character:GetData("quests", {})["cwu_water"]
+
+			if self.questCooldown[charID] != questStartTime then
+				character:SetData("cwuWater", character:GetData("cwuWater") + 1)
+				client:Notify("Вы зарядили 1 картридж воды в автомат.")
+				self.questCoolDown[charID] = questStartTime
+				self:ResetStock()
+			end
 			return
 		end
 
 		if (self.nextUseTime > CurTime()) then
 			return
 		end
-
-		local character = client:GetCharacter()
 
 		if (!character:IsCombine()) then
 			local itemInfo = self.Items[buttonID]

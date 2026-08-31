@@ -190,7 +190,6 @@ function SWEP:PrimaryAttack()
 		return false
 	end
 
-	
 	local value = (self.Owner:GetLocalVar("stm", 0) - 20)
 
 	if self.Owner:Health() <= 50 or value < 0 or !HasFood(self.Owner, 15) then
@@ -200,16 +199,12 @@ function SWEP:PrimaryAttack()
 
 		return
 	end
-
 	if (IsValid(target.ixPlayer)) then
 		target = target.ixPlayer
 	end
-
 	if (target:GetPos():DistToSqr(self.Owner:GetShootPos()) > 105 * 105) then return end
-
 	self:SetNextPrimaryFire( 10 )
 	self:SendWeaponAnim( ACT_VM_SECONDARYATTACK )
-
 	if (CLIENT) then
 		-- Adjust these variables to move the viewmodel's position
 		self.IronSightsPos  = Vector(0, -5, -55)
@@ -221,65 +216,67 @@ function SWEP:PrimaryAttack()
 			self:DispatchEffect("vortigaunt_charge_token")
 			self.Owner:EmitSound( "npc/vort/health_charge.wav", 100, 150, 1, CHAN_AUTO )
 			self:SendWeaponAnim( ACT_VM_RELOAD )
-			self.Owner:ForceSequence("heal_cycle", function()
-				if (!self.Owner:Alive()) then return end
-				if (target:GetPos():DistToSqr(self.Owner:GetShootPos()) <= 105 * 105) then
-					if (target:IsPlayer()) then
-						local character = target:GetCharacter()
+			timer.Simple(2, function()
+				self.Owner:ForceSequence("heal_cycle", function()
+					if (!self.Owner:Alive()) then return end
+					if (target:GetPos():DistToSqr(self.Owner:GetShootPos()) <= 105 * 105) then
+						if (target:IsPlayer()) then
+							local character = target:GetCharacter()
 
-						character:HealLimbs(40)
-						character:SetBlood(math.min(character:GetBlood() + 800, 5000))
-						character:SetShock(math.max(character:GetShock() - 2500, 0))
-						character:SetRadLevel(math.max(character:GetRadLevel() - 350, 0))
+							character:HealLimbs(40)
+							character:SetBlood(math.min(character:GetBlood() + 800, 5000))
+							character:SetShock(math.max(character:GetShock() - 2500, 0))
+							character:SetRadLevel(math.max(character:GetRadLevel() - 350, 0))
 
-						character:SetBleeding(false)
-						character:SetFeelPain(false)
+							character:SetBleeding(false)
+							character:SetFeelPain(false)
 
-						if !target:InCriticalState() then
-							target:SetHealth(ix.plugin.list["!damagesystem"]:GetMinimalHealth(character))
+							if !target:InCriticalState() then
+								target:SetHealth(ix.plugin.list["!damagesystem"]:GetMinimalHealth(character))
+							end
+
+							local isUnconscious = target:IsUnconscious()
+
+							if isUnconscious and math.random(0, 100) < 30 then
+								target:SetAction("@wakingUp", 30, function(client)
+									client.ixUnconsciousOut = nil
+									client:SetLocalVar("knocked", false)
+									client:SetRagdolled(false)
+								end)
+
+								target.ixUnconsciousOut = true
+							end
+							self.Owner:ConsumeStamina(10)
+							ConsumeFood(self.Owner, 15)
 						end
+					else
+						self.Owner:StopSound("npc/vort/health_charge.wav")
+					end
 
-						local isUnconscious = target:IsUnconscious()
+					self.Owner:StopParticles()
+					self:SendWeaponAnim( ACT_VM_PULLBACK )
+				end)
+				timer.Simple(4, function()
+					self.Owner:ForceSequence("heal_end", function()
+						self:SetNextPrimaryFire( 0 )
+						self.Owner:StopSound("npc/vort/health_charge.wav")
+						self.Owner:Freeze(false)
 
-						if isUnconscious and math.random(0, 100) < 30 then
-							target:SetAction("@wakingUp", 30, function(client)
-								client.ixUnconsciousOut = nil
-								client:SetLocalVar("knocked", false)
-								client:SetRagdolled(false)
-							end)
+						local viewModel = self.Owner:GetViewModel()
 
-							target.ixUnconsciousOut = true
+						if (IsValid(viewModel)) then
+							viewModel:SetPlaybackRate(1)
+							viewModel:ResetSequence(ACT_VM_FISTS_DRAW)
 						end
-
-						self.Owner:ConsumeStamina(10)
-						ConsumeFood(self.Owner, 15)
-					end
-				else
-					self.Owner:StopSound("npc/vort/health_charge.wav")
-				end
-
-				self.Owner:StopParticles()
-				self:SendWeaponAnim( ACT_VM_PULLBACK )
-				self.Owner:ForceSequence("heal_end", function()
-					self:SetNextPrimaryFire( 0 )
-					self.Owner:StopSound("npc/vort/health_charge.wav")
-					self.Owner:Freeze(false)
-
-					local viewModel = self.Owner:GetViewModel()
-
-					if (IsValid(viewModel)) then
-						viewModel:SetPlaybackRate(1)
-						viewModel:ResetSequence(ACT_VM_FISTS_DRAW)
-					end
+					end)
 				end)
 			end)
 		end)
-
 		self.Owner:Freeze(true)
 	end
 
 	if (CLIENT) then
-		timer.Simple(8, function()
+		timer.Simple(7, function()
 		-- Adjust these variables to move the viewmodel's position
 			self.IronSightsPos = Vector(-5, -5, -55)
 			self.IronSightsAng = Vector(35, 15, 10)

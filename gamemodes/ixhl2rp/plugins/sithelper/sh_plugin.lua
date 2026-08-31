@@ -27,7 +27,17 @@ PLUGIN.sitStances = {
 	"stances_sitground",
 	"stances_sitwall",
 	"stances_sit08",
-	"stances_sit09"
+	"stances_sit09",
+	"stances_check",
+	"stances_lean01",
+	"stances_lean02",
+	"stances_down01",
+	"stances_down02",
+	"stances_down03",
+	"stances_arrest",
+	"stances_stand01",
+	"stances_stand02",
+	"stances_stand03",
 };
 
 PLUGIN.sitOffsets = {
@@ -41,7 +51,17 @@ PLUGIN.sitOffsets = {
 	Vector(12, 0, 0),
 	Vector(12, 0, 0),
 	Vector(20, 0, 0),
-	Vector(20, 0, 0)
+	Vector(20, 0, 0),
+	Vector(0, 0, 0),
+	Vector(18, 0, 0),
+	Vector(12, 0, 0),
+	Vector(0, 0, 0),
+	Vector(0, 0, 0),
+	Vector(0, 0, 0),
+	Vector(0, 0, 0),
+	Vector(0, 0, 0),
+	Vector(0, 0, 0),
+	Vector(0, 0, 0),
 };
 
 PLUGIN.sitOffsetsF = {

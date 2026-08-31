@@ -59,9 +59,9 @@ function ITEM:OnItemEquipped(client)
 	client:GetCharacter():SetData("heavy", true)
 end
 
-function ITEM:OnItemUnequipped(client) 
+function ITEM:OnItemUnequipped(client)
 	client:SetPrimaryVisorColor(Vector(0, 0, 0))
 	client:SetSecondaryVisorColor(Vector(0, 0, 0))
 
-	client:GetCharacter():SetData("heavy", true)
+	client:GetCharacter():SetData("heavy", false)
 end

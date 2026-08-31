@@ -106,7 +106,15 @@ function SWEP:PrimaryAttack()
 
     delay = self:GetBuff_Hook("Hook_ModifyRPM", delay) or delay
 
-    self:SetNextArcCWPrimaryFire(CurTime() + delay)
+    local curtime = CurTime()
+    local curatt = self:GetNextArcCWPrimaryFire()
+    local diff = curtime - curatt
+
+    if diff > engine.TickInterval() or diff < 0 then
+        curatt = curtime
+    end
+
+    self:SetNextArcCWPrimaryFire(curatt + delay)
 
     local num = self:GetBuff_Override("Override_Num")
 

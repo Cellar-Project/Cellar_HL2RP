@@ -216,5 +216,11 @@ SWEP.Animations = {
     ["reload"] = {
         Source = "reload",
         TPAnim = ACT_HL2MP_GESTURE_RELOAD_AR2,
+        SoundTable = {
+            {s = "weapons/tfa_mmod/ar2/ar2_magout.wav", t = 0.25},
+            {s = "weapons/tfa_mmod/ar2/ar2_rotate.wav", t = 0.35},
+            {s = "weapons/tfa_mmod/ar2/ar2_magin.wav", t = 1.25},
+            {s = "weapons/tfa_mmod/ar2/ar2_reload_push.wav", t = 1.35}
+        },
     },
 }

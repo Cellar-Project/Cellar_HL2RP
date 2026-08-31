@@ -4,6 +4,9 @@ local PANEL = {}
 AccessorFunc(PANEL, "money", "Money", FORCE_NUMBER)
 
 function PANEL:Init()
+	local arrow = Material('cellar/main/tab/arrow.png')
+	local arrowHovered = Material('cellar/main/tab/arrowhovered.png')
+
 	self:DockPadding(1, 1, 1, 1)
 	self:SetTall(64)
 	self:Dock(BOTTOM)
@@ -14,8 +17,15 @@ function PANEL:Init()
 	self.moneyLabel:SetText("")
 	self.moneyLabel:SetTextInset(2, 0)
 	self.moneyLabel:SizeToContents()
-	self.moneyLabel.Paint = function(panel, width, height)
-		derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, ix.config.Get("color"))
+	self.moneyLabel.Paint = function(panel, w, h)
+		surface.SetDrawColor(ColorAlpha(cellar_darker_blue, 35))
+		surface.DrawRect(0, 0, w, h)
+
+		surface.SetDrawColor(ColorAlpha(cellar_blue, 57))
+		surface.DrawRect(0, 0, w, 1)
+		surface.DrawRect(0, 0, 1, h)
+		surface.DrawRect(w - 1, 0, 1, h)
+		surface.DrawRect(0, h - 1, w, 1)
 	end
 
 	self.amountEntry = self:Add("ixTextEntry")
@@ -23,6 +33,16 @@ function PANEL:Init()
 	self.amountEntry:SetFont("ixGenericFont")
 	self.amountEntry:SetNumeric(true)
 	self.amountEntry:SetValue("0")
+	self.amountEntry.Paint = function(panel, w, h)
+		surface.SetDrawColor(ColorAlpha(cellar_darker_blue, 35))
+		surface.DrawRect(0, 0, w, h)
+
+		surface.SetDrawColor(ColorAlpha(cellar_blue, 57))
+		surface.DrawRect(0, 0, w, 1)
+		surface.DrawRect(0, 0, 1, h)
+		surface.DrawRect(w - 1, 0, 1, h)
+		surface.DrawRect(0, h - 1, w, 1)
+	end
 
 	self.transferButton = self:Add("DButton")
 	self.transferButton:SetFont("ixIconsMedium")
@@ -34,6 +54,16 @@ function PANEL:Init()
 		if (amount != 0) then
 			self:OnTransfer(amount)
 		end
+	end
+	self.transferButton.Paint = function(self, w, h)
+		surface.SetDrawColor(ColorAlpha(cellar_darker_blue, 35))
+		surface.DrawRect(0, 0, w, h)
+
+		surface.SetDrawColor(ColorAlpha(cellar_blue, 57))
+		surface.DrawRect(0, 0, w, 1)
+		surface.DrawRect(0, 0, 1, h)
+		surface.DrawRect(w - 1, 0, 1, h)
+		surface.DrawRect(0, h - 1, w, 1)
 	end
 
 	self.bNoBackgroundBlur = true
@@ -87,11 +117,26 @@ function PANEL:Init()
 	self.storageInventory = self:Add("ixInventory")
 	self.storageInventory.bNoBackgroundBlur = true
 	self.storageInventory:ShowCloseButton(true)
-	self.storageInventory:SetTitle("Storage")
+	self.storageInventory:SetTitle(nil)
 	self.storageInventory.Close = function(this)
 		net.Start("ixStorageClose")
 		net.SendToServer()
 		self:Remove()
+	end
+	self.storageInventory.Paint = function(self, w, h)
+		surface.SetDrawColor(ColorAlpha(cellar_darker_blue, 35))
+		surface.DrawRect(0, 0, w, h)
+
+		surface.DrawRect(1, 1, w - 1, 1)
+		surface.DrawRect(1, 1, 1, h - 1)
+		surface.DrawRect(w - 2, 1, 1, h - 1)
+		surface.DrawRect(1, h - 2, w - 1, 1)
+
+		surface.SetDrawColor(ColorAlpha(cellar_blue, 57))
+		surface.DrawRect(0, 0, w, 1)
+		surface.DrawRect(0, 0, 1, h)
+		surface.DrawRect(w - 1, 0, 1, h)
+		surface.DrawRect(0, h - 1, w, 1)
 	end
 
 	self.storageMoney = self.storageInventory:Add("ixStorageMoney")
@@ -106,10 +151,26 @@ function PANEL:Init()
 	ix.gui.inv1 = self:Add("ixInventory")
 	ix.gui.inv1.bNoBackgroundBlur = true
 	ix.gui.inv1:ShowCloseButton(true)
+	ix.gui.inv1:SetTitle('')
 	ix.gui.inv1.Close = function(this)
 		net.Start("ixStorageClose")
 		net.SendToServer()
 		self:Remove()
+	end
+	ix.gui.inv1.Paint = function(self, w, h)
+		surface.SetDrawColor(ColorAlpha(cellar_darker_blue, 35))
+		surface.DrawRect(0, 0, w, h)
+
+		surface.DrawRect(1, 1, w - 1, 1)
+		surface.DrawRect(1, 1, 1, h - 1)
+		surface.DrawRect(w - 2, 1, 1, h - 1)
+		surface.DrawRect(1, h - 2, w - 1, 1)
+
+		surface.SetDrawColor(ColorAlpha(cellar_blue, 57))
+		surface.DrawRect(0, 0, w, 1)
+		surface.DrawRect(0, 0, 1, h)
+		surface.DrawRect(w - 1, 0, 1, h)
+		surface.DrawRect(0, h - 1, w, 1)
 	end
 
 	self.localMoney = ix.gui.inv1:Add("ixStorageMoney")

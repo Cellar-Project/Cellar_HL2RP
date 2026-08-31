@@ -125,6 +125,10 @@ CLASS.infoTable = {
 			local attack = player:TraceHullAttack(player:EyePos(), player:EyePos() + player:EyeAngles():Forward() * 50,  Vector(-20,-20,-20),  Vector(20,20,20), 20, DMG_SLASH, 1, true);
 
 			if (IsValid(attack)) then
+				if (attack:IsPlayer() or attack:IsNPC()) then
+					attack:SetVelocity(player:GetVelocity():GetNormalized() * 300);
+				end
+
 				attack:SetVelocity(player:GetVelocity():GetNormalized() * 300);
 				player:SoundEvent("melee_hit");
 				player.canAttack = nil;

@@ -243,7 +243,7 @@ function PANEL:Init()
 		self.limbs:SetTall(260)
 
 		self.limbsS = self.limbs:Add("ixLimbStatus")
-		self.limbsS:SetPos(self:GetWide() / 1.5, 260 / 2 - 240 / 2)
+		self.limbsS:SetPos(self.stats:GetWide() * 0.5 - self.limbsS:GetWide() * 0.5, 8)
 
 		self.attributes:SizeToContents()
 

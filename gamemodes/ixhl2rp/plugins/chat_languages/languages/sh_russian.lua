@@ -27,15 +27,9 @@ LANGUAGE = {
 	iLanguageTextbookName = "%s язык. Том %s",
 	iLanguageTextbookDescription = "В меру увесистая книга, на страницах которой находится информация, необходимая для всестороннего изучения языка.",
 	Study = "Изучить",
-	studyingLanguage = "Изучаем язык...",
-	noStudyOnMove = "Нельзя изучать язык в движении!",
 	languageStudied = "Поздравляем, Вы изучили %s язык.",
 	volumeStudied = "Вы изучили %s-й из %s томов по языку %s.",
-	textbookStudyProgress = "Прогресс: %s",
-	textbookLanguageStudied = "изучен сам язык",
-	textbookNoStudy = "изучение не начато",
-	textbookStudyInProgress = "изучено %s",
-	textbookStudySuccess = "изучение завершено",
+	textbookLanguageStudied = "Изучен сам язык",
 
 	-- languages names
 	Chinese = "Китайский",

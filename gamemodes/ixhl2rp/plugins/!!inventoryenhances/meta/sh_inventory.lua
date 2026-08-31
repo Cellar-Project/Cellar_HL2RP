@@ -27,8 +27,17 @@ end
 
 function META:CanItemFit(x, y, w, h, item2)
 	if self.vars.isEquipment then
-		local item = (self.slots[x] or {})[y]
-		local can = (!item and true or (item.id == item2.id))
+		-- Equipment is a single 1-wide column where each row IS a slot
+		-- index. Items occupy exactly one cell (slots[1][y]); item.width
+		-- and item.height are visual hints for icon rendering, not slot
+		-- occupancy. Reject anything outside x=1 / y in [1, self.h] so
+		-- out-of-range coordinates can never reach the DB.
+		if (x ~= 1 or not y or y < 1 or y > self.h) then
+			return false
+		end
+
+		local item = (self.slots[1] or {})[y]
+		local can = (not item) or (item == true) or (item2 and item.id == item2.id) or false
 
 		if (hook.Run("CanTransferEquipment", item2, self, self, y) == false) then
 			return false
@@ -116,7 +125,20 @@ if SERVER then
 
 			if (x and y) then
 				if targetInv.vars.isEquipment then
+					-- Equipment: x=1, y in [1, targetInv.h]; one item per slot.
+					-- item.width/height do not affect occupancy here.
+					if (y < 1 or y > targetInv.h) then
+						return false, "noFit"
+					end
+
 					targetInv.slots[1] = targetInv.slots[1] or {}
+
+					local existing = targetInv.slots[1][y]
+
+					if (istable(existing) and existing.id ~= item.id) then
+						return false, "noFit"
+					end
+
 					targetInv.slots[1][y] = item
 				else
 					targetInv.slots[x] = targetInv.slots[x] or {}
@@ -181,7 +203,20 @@ if SERVER then
 						end
 					end
 				else
+					-- Equipment: validate y bounds and reserve a single slot
+					-- placeholder before the async ix.item.Instance callback.
+					if (y < 1 or y > targetInv.h) then
+						return false, "noFit"
+					end
+
 					targetInv.slots[1] = targetInv.slots[1] or {}
+
+					local existing = targetInv.slots[1][y]
+
+					if (istable(existing)) then
+						return false, "noFit"
+					end
+
 					targetInv.slots[1][y] = true
 				end
 
@@ -197,7 +232,7 @@ if SERVER then
 					end
 				end
 
-				ix.item.Instance(targetInv:GetID(), uniqueID, data, x, y, function(newItem)
+				ix.item.Instance(targetInv:GetID(), uniqueID, data or {}, x, y, function(newItem)
 					newItem.gridX = x
 					newItem.gridY = y
 
@@ -211,6 +246,7 @@ if SERVER then
 							end
 						end
 					else
+						-- Equipment: place the new item in its single slot.
 						targetInv.slots[1] = targetInv.slots[1] or {}
 						targetInv.slots[1][y] = newItem
 					end
@@ -227,6 +263,58 @@ if SERVER then
 				return false, "noFit"
 			end
 		end
+	end
+
+	-- Override META:Remove so it sweeps every column actually present in
+	-- self.slots (not just 1..self.w). The original loop misses ghost cells
+	-- that bad historical writes may have left in slots[x>w]; without this,
+	-- those references stay alive even after the DB row is deleted, which
+	-- can block future placements and produce confusing "phantom" items.
+	function META:Remove(id, bNoReplication, bNoDelete, bTransferring)
+		local x2, y2
+
+		for x, column in pairs(self.slots or {}) do
+			if (istable(column)) then
+				for y, slot in pairs(column) do
+					if (istable(slot) and slot.id == id) then
+						column[y] = nil
+						x2 = x2 or x
+						y2 = y2 or y
+					end
+				end
+			end
+		end
+
+		if (SERVER and !bNoReplication) then
+			local receivers = self:GetReceivers()
+
+			if (istable(receivers)) then
+				net.Start("ixInventoryRemove")
+					net.WriteUInt(id, 32)
+					net.WriteUInt(self:GetID(), 32)
+				net.Send(receivers)
+			end
+
+			if (!bTransferring) then
+				hook.Run("InventoryItemRemoved", self, ix.item.instances[id])
+			end
+
+			if (!bNoDelete) then
+				local item = ix.item.instances[id]
+
+				if (item and item.OnRemoved) then
+					item:OnRemoved()
+				end
+
+				local query = mysql:Delete("ix_items")
+					query:Where("item_id", id)
+				query:Execute()
+
+				ix.item.instances[id] = nil
+			end
+		end
+
+		return x2, y2
 	end
 end
 

@@ -3,19 +3,97 @@ if (SERVER) then
 	util.AddNetworkString("ixPickedUpPlayer")
 else
 	net.Receive("ixPickedUpPlayer", function()
-		local hands = net.ReadEntity()
+		local client = LocalPlayer()
 		local heldPlayer = net.ReadEntity()
 
-		if (heldPlayer != game.GetWorld()) then
-			hands.heldEntity = heldPlayer
-			hands.heldEntity.ixPlayer = net.ReadEntity()
+		if (IsValid(heldPlayer) and heldPlayer != game.GetWorld()) then
+			client.ixHeldPlayer = heldPlayer
 		else
-			hands.heldEntity = nil
+			client.ixHeldPlayer = nil
 		end
 	end)
 end
 
 local ix_hands = weapons.Get("ix_hands")
+
+-- DropObject is not being called if held entity being removed
+function ix_hands:Think()
+	if (!IsValid(self:GetOwner())) then
+		return
+	end
+
+	if (CLIENT) then
+		local viewModel = self:GetOwner():GetViewModel()
+
+		if (IsValid(viewModel) and self.NextAllowedPlayRateChange < CurTime()) then
+			viewModel:SetPlaybackRate(1)
+		end
+	else
+		if (self:IsHoldingObject()) then
+			local physics = self:GetHeldPhysicsObject()
+			local bIsRagdoll = self.heldEntity:IsRagdoll()
+			local holdDistance = bIsRagdoll and self.holdDistance * 0.5 or self.holdDistance
+			local targetLocation = self:GetOwner():GetShootPos() + self:GetOwner():GetForward() * holdDistance
+
+			if (bIsRagdoll) then
+				targetLocation.z = math.min(targetLocation.z, self:GetOwner():GetShootPos().z - 32)
+			end
+
+			if (!IsValid(physics)) then
+				self:DropObject()
+				return
+			end
+
+			if (physics:GetPos():DistToSqr(targetLocation) > self.maxHoldDistanceSquared) then
+				self:DropObject()
+			else
+				local physicsObject = self.holdEntity:GetPhysicsObject()
+				local currentPlayerAngles = self:GetOwner():EyeAngles()
+				local client = self:GetOwner()
+
+				if (client:KeyDown(IN_ATTACK2)) then
+					local cmd = client:GetCurrentCommand()
+					self.heldObjectAngle:RotateAroundAxis(currentPlayerAngles:Forward(), cmd:GetMouseX() / 15)
+					self.heldObjectAngle:RotateAroundAxis(currentPlayerAngles:Right(), cmd:GetMouseY() / 15)
+				end
+
+				self.lastPlayerAngles = self.lastPlayerAngles or currentPlayerAngles
+				self.heldObjectAngle.y = self.heldObjectAngle.y - math.AngleDifference(self.lastPlayerAngles.y, currentPlayerAngles.y)
+				self.lastPlayerAngles = currentPlayerAngles
+
+				physicsObject:Wake()
+				physicsObject:ComputeShadowControl({
+					secondstoarrive = 0.01,
+					pos = targetLocation,
+					angle = self.heldObjectAngle,
+					maxangular = 256,
+					maxangulardamp = 10000,
+					maxspeed = 256,
+					maxspeeddamp = 10000,
+					dampfactor = 0.8,
+					teleportdistance = self.maxHoldDistance * 0.75,
+					deltatime = FrameTime()
+				})
+
+				if (physics:GetStress() > self.maxHoldStress) then
+					self:DropObject()
+				end
+			end
+		elseif (self.bHeldPlayerSent) then
+			self:GetOwner().ixHeldPlayer = nil
+	
+			net.Start("ixPickedUpPlayer")
+			net.Send(self:GetOwner())
+	
+			self.bHeldPlayerSent = nil
+		end
+
+		-- Prevents the camera from getting stuck when the object that the client is holding gets deleted.
+		if(!IsValid(self.heldEntity) and self:GetOwner():GetLocalVar("bIsHoldingObject", true)) then
+			self:GetOwner():SetLocalVar("bIsHoldingObject", false)
+		end
+	end
+end
 
 function ix_hands:PickupObject(entity)
 	if (self:IsHoldingObject() or
@@ -70,9 +148,9 @@ function ix_hands:PickupObject(entity)
 
 	-- PickupObject func is being executed only on server
 	if (self.heldEntity.ixPlayer) then
+		self:GetOwner().ixHeldPlayer = self.heldEntity.ixPlayer
+
 		net.Start("ixPickedUpPlayer")
-			net.WriteEntity(self)
-			net.WriteEntity(self.heldEntity)
 			net.WriteEntity(self.heldEntity.ixPlayer)
 		net.Send(self:GetOwner())
 
@@ -83,8 +161,9 @@ end
 function ix_hands:DropObject(bThrow)
 	-- DropObject func is being executed only on server
 	if (self.bHeldPlayerSent) then
+		self:GetOwner().ixHeldPlayer = nil
+
 		net.Start("ixPickedUpPlayer")
-			net.WriteEntity(self)
 		net.Send(self:GetOwner())
 
 		self.bHeldPlayerSent = nil

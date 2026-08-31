@@ -6,25 +6,23 @@ ix.char.RegisterVar("studiedLanguages", {
 	field = "studied_languages",
 	fieldType = ix.type.text,
 	default = {},
-	OnSet = function(character, key, value, bNoReplication, receiver)
+	OnSet = function(self, key, value)
 		if (ix.chatLanguages.Get(key) and (!value or isbool(value))) then
-			local studiedLanguages = character:GetStudiedLanguages()
-			local client = character:GetPlayer()
+			local studiedLanguages = self:GetStudiedLanguages()
+			local client = self:GetPlayer()
 
 			studiedLanguages[key] = value
 
-			if (!bNoReplication and IsValid(client)) then
-				net.Start("ixCharacterStudiedLanguagesChanged")
-					net.WriteUInt(character:GetID(), 32)
-					net.WriteString(key)
-					net.WriteType(value)
-				net.Send(receiver or client)
-			end
+			net.Start("ixCharacterStudiedLanguagesChanged")
+				net.WriteUInt(self:GetID(), 32)
+				net.WriteString(key)
+				net.WriteType(value)
+			net.Send(receiver or client)
 
-			character.vars.studiedLanguages = studiedLanguages
+			self.vars.studiedLanguages = studiedLanguages
 
-			if (!value and character:GetUsedLanguage() == key) then
-				character:SetUsedLanguage("")
+			if (!value and self:GetUsedLanguage() == key) then
+				self:SetUsedLanguage("")
 			end
 		else
 			return false
@@ -45,8 +43,8 @@ ix.char.RegisterVar("studiedLanguages", {
 			end
 		end
 	end,
-	OnGet = function(character, key, default)
-		local studiedLanguages = character.vars.studiedLanguages or {}
+	OnGet = function(self, key, default)
+		local studiedLanguages = self.vars.studiedLanguages or {}
 
 		if (key) then
 			if (!studiedLanguages) then
@@ -62,11 +60,18 @@ ix.char.RegisterVar("studiedLanguages", {
 	end
 })
 
+ix.char.RegisterVar("languagesStudyProgress", {
+	field = "languages_study_progress",
+	fieldType = ix.type.text,
+	default = {},
+	isLocal = true,
+	bNoDisplay = true
+})
+
 ix.char.RegisterVar("usedLanguage", {
 	field = "used_language",
 	fieldType = ix.type.string,
 	default = "",
-	isLocal = true,
 	bNoDisplay = true,
 	OnSet = function(self, value)
 		local oldValue = self.vars.usedLanguage

@@ -5,10 +5,10 @@ ITEM.genderReplacement = {
 	[GENDER_FEMALE] = "models/cellar/characters/city3/overwatch/ota_elite.mdl"
 }
 ITEM.Stats = {
-	[HITGROUP_GENERIC] = 10,
-	[HITGROUP_HEAD] = 18,
-	[HITGROUP_CHEST] = 20,
-	[HITGROUP_STOMACH] = 10,
+	[HITGROUP_GENERIC] = 20,
+	[HITGROUP_HEAD] = 25,
+	[HITGROUP_CHEST] = 35,
+	[HITGROUP_STOMACH] = 25,
 	[4] = 10, -- hands
 	[5] = 10, -- legs
 }

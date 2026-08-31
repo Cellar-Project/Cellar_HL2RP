@@ -66,6 +66,11 @@ ix.char.RegisterVar("usedLanguage", {
 	bNoDisplay = true
 })
 
+ix.char.RegisterVar("languagesStudyProgress", {
+	default = {},
+	bNoDisplay = true,
+})
+
 net.Receive("ixCharacterStudiedLanguagesChanged", function()
 	local id = net.ReadUInt(32)
 	local key = net.ReadString()

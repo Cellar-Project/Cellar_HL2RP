@@ -45,9 +45,9 @@ if CLIENT then
 	end
 	netstream.Hook("aw_recyclemenu",function(data)
 		local menu = DermaMenu()
-		for k,v in pairs(PLUGIN.VariantsUse)do
+		for k,v in pairs(PLUGIN.VariantsUse) do
 			menu:AddOption(k,function() netstream.Start("aw_recyclemenuresult",{data,k}) end)
 		end
-		menu:Open(ScrW()/2,ScrH()/2)
+		menu:Open(ScrW() / 2, ScrH() / 2)
 	end)
 end

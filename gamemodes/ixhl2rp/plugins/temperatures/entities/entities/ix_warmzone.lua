@@ -8,13 +8,9 @@ ENT.Spawnable = false
 if (SERVER) then
 	function ENT:Initialize()
 		self:SetModel("models/hunter/blocks/cube4x4x2.mdl")
-		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetMoveType(MOVETYPE_NONE)
-		self:SetSolid(SOLID_VPHYSICS)
+		self:SetSolid(SOLID_NONE)
 
-		self:GetPhysicsObject():Wake()
-
-		self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 		self:SetTrigger(true)
 		self:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
 	end

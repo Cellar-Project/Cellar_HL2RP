@@ -33,10 +33,6 @@ function ix.chatLanguages.Get(uniqueID)
 	return ix.chatLanguages.list[uniqueID]
 end
 
-function ix.chatLanguages.GetStudyTimeLeftGenericDataKey(uniqueID)
-	return uniqueID .. "StudyTimeLeftTextbook"
-end
-
 function ix.chatLanguages.AddChatType(uniqueID)
 	if (ix.chat.classes[uniqueID]) then
 		ix.chatLanguages.chatTypesList[uniqueID] = true

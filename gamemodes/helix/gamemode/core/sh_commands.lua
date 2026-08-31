@@ -517,6 +517,7 @@ ix.command.Add("PlyWhitelist", {
 
 		if (faction) then
 			if (target:SetWhitelisted(faction.index, true)) then
+				if faction.name == "Zombie" then target:SetData("z_whitelist", true) end
 				for _, v in ipairs(player.GetAll()) do
 					if (self:OnCheckAccess(v) or v == target) then
 						v:NotifyLocalized("whitelist", client:GetName(), target:GetName(), L(faction.name, v))

@@ -137,6 +137,12 @@ if (CLIENT) then
 			return
 		end
 
+		local suppressWeaponSelection = (hook.Run("SuppressWeaponSelection") == true)
+
+		if suppressWeaponSelection then
+			return
+		end
+		
 		if (bValid and currentWeapon:GetClass() == "gmod_tool") then
 			local tool = client:GetTool()
 			bTool = tool and (tool.Scroll != nil)
