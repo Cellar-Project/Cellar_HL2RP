@@ -11,6 +11,7 @@ ENT.bNoPersist = true
 
 
 if (SERVER) then
+	local warnedWeather = false
 
 	function ENT:Initialize()
 
@@ -27,9 +28,18 @@ if (SERVER) then
 		self.timer_name = "watertimer" .. self:EntIndex()
 
 		local conf_time = ix.config.Get("watertimer")
-		local water_n = 0
 
 		timer.Create( self.timer_name, conf_time, 0, function()
+		local weather = StormFox2 and StormFox2.Weather
+
+		if not (weather and isfunction(weather.IsRaining) and isfunction(weather.IsSnowing)) then
+			if not warnedWeather then
+				warnedWeather = true
+				ErrorNoHalt("[ix water_collect] StormFox2 Weather.IsRaining/IsSnowing unavailable; rain collection skipped.\n")
+			end
+
+			return
+		end
 
 		local conf_limit = ix.config.Get("waterlimit")
 		local conf_tick = ix.config.Get("watertick")
@@ -48,9 +58,9 @@ if (SERVER) then
 				skyhit = false 
 		end
 
-		if skyhit and (StormFox2.Weather:IsRaining() or StormFox2.Weather:IsSnowing()) then
+		if skyhit and (weather:IsRaining() or weather:IsSnowing()) then
 
-			water_n = math.Clamp( water_n + conf_tick, 0, conf_limit)
+			local water_n = math.Clamp( self:GetNetVar("wamount", 0) + conf_tick, 0, conf_limit)
 
 			self:SetNetVar("wamount", water_n)
 			

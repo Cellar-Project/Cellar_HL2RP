@@ -55,10 +55,24 @@ function PLUGIN:PrePlayerLoadedCharacter(client, character, oldcharacter)
 	end
 end
 
-require("statusx")
-require("query")
+for _, moduleName in ipairs({"statusx", "query"}) do
+	local loaded, reason = pcall(function()
+		require(moduleName)
 
-query.EnableInfoDetour(true)
+		if moduleName == "statusx" then
+			assert(istable(statusx) and isstring(statusx.Version), "statusx.Version is unavailable")
+		else
+			assert(istable(query) and isfunction(query.EnableInfoDetour), "query.EnableInfoDetour is unavailable")
+			assert(query.EnableInfoDetour(true) != false, "query.EnableInfoDetour rejected initialization")
+		end
+	end)
+
+	if not loaded then
+		ErrorNoHalt("[ix anonymous] Required server module '" .. moduleName .. "' failed: " .. tostring(reason) ..
+			"\nNative anonymity is incomplete; real player identity may be exposed. Continuing for local development only. " ..
+			"Install compatible statusx/query modules in garrysmod/lua/bin and restart before hosting players.\n")
+	end
+end
 
 function PLUGIN:GetOnline()
 	return player.GetCount()
