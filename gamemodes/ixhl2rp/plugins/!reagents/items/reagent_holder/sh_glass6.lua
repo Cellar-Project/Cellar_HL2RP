@@ -1,5 +1,5 @@
 ITEM.name = "\"Тумблер\""
-ITEM.model = Model("models/cellar/liquid/glass6.mdl")
+ITEM.model = Schema.assets.Model("models/cellar/liquid/glass6.mdl", "models/props_junk/garbage_coffeemug001a.mdl")
 ITEM.description = ""
 ITEM.volume = 150
 ITEM.value = 0

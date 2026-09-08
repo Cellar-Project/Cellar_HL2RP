@@ -31,7 +31,7 @@ local typeTexts = {
 }
 
 function PLUGIN:InitializedChatClasses()
-	local iconDefault = ix.util.GetMaterial("cellar/chat/radio_hand.png")
+	local iconDefault = Schema.assets.Material("cellar/chat/radio_hand.png")
 
 	ix.chat.Register("radio", {
 		color = Color(75, 150, 50),
@@ -79,7 +79,7 @@ function PLUGIN:InitializedChatClasses()
 			data.useSound = false
 			hook.Run("AdjustRadioEavesdrop", data)
 
-			chat.AddText(class.color, ix.util.GetMaterial("cellar/chat/eaves_radiohand.png"), string.format(class.format,
+			chat.AddText(class.color, Schema.assets.Material("cellar/chat/eaves_radiohand.png"), string.format(class.format,
 				name, typeTexts[data.typeText] or typeTexts[1], text))
 
 			if (data.useSound and isstring(data.sound)) then

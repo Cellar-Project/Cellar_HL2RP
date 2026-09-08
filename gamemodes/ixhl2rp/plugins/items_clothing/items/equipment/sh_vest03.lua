@@ -1,5 +1,5 @@
 ITEM.name = "Бронежилет ГО 3 класса защиты"
-ITEM.model = "models/cellar/items/city3/clothing/refuge_vest.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/refuge_vest.mdl", "models/props_c17/suitcase001a.mdl")
 ITEM.width = 3 -- ширина
 ITEM.height = 2 -- высота
 ITEM.description = "Усовершенствованный бронежилет сил ГО, снятый с одного из убитых сотрудников. Плотно облегает грудь и способен остановить большой калибр. Помимо этого включает в себя элементы защиты для рук."

@@ -62,8 +62,10 @@ function PANEL:Paint(w, h)
 	surface.SetFont("cellar.main.btn")
 
     surface.SetDrawColor(color_white)
-    surface.SetMaterial(frame)
-    surface.DrawTexturedRect(0, 0, w, h)
+    if (not frame:IsError()) then
+        surface.SetMaterial(frame)
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 
     draw.SimpleText('12345', 'cellar.charname.blur', 45, 93, cellar_blur_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText('12345', 'cellar.charname', 45, 93, Color(56, 207, 248, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -93,7 +95,7 @@ concommand.Add('test222', testremove)
 
 PANEL = {}
 function PANEL:Init()
-    local cross = Material('cellar/main/tab/crosshovered.png')
+    local cross = Schema.assets.Material('cellar/main/tab/crosshovered.png')
     if IsValid(Jopa) then
         Jopa:Remove()
     end

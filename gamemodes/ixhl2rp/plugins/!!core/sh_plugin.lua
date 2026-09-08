@@ -52,7 +52,7 @@ do
 
 				local icon = serverguard.ranks:GetRank(serverguard.player:GetRank(speaker)).texture or "icon16/user.png"
 
-				icon = Material(hook.Run("GetPlayerIcon", speaker) or icon)
+				icon = Schema.assets.Material(hook.Run("GetPlayerIcon", speaker) or icon, "icon16/user.png")
 
 				chat.AddText(icon, Color(255, 50, 50), "[OOC] ", speaker, color_white, ": "..text)
 			end,

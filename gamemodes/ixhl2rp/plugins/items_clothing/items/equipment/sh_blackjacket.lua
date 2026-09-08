@@ -1,5 +1,5 @@
 ITEM.name = "Черная куртка"
-ITEM.model = "models/cellar/items/city3/clothing/top_03.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/top_03.mdl", "models/props_c17/suitcase_passenger_physics.mdl")
 ITEM.width = 2 -- ширина
 ITEM.height = 2 -- высота
 ITEM.description = "Черная куртка, сотканная из приятной на ощуп ткани. Она плотно прилегает к телу и может согреть морозным вечерком, если повезет. В остальном, ничего, кроме красоты она не предоставляет."

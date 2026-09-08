@@ -1,5 +1,5 @@
 ITEM.name = "Берет"
-ITEM.model = "models/cellar/items/city3/clothing/beret.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/beret.mdl", "models/props_c17/suitcase_passenger_physics.mdl")
 ITEM.width = 1 -- ширина
 ITEM.height = 1 -- высота
 ITEM.description = "Стильный берет для стильных людей! Не обладает какими-либо термоизоляционными особенностями, но выглядит довольно приятно."

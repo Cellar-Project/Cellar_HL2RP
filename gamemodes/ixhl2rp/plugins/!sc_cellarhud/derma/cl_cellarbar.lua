@@ -253,7 +253,7 @@ function PANEL:Init()
 	self.icon:SetPos(self:GetWide() - 8 - ICONFRAME_SIZE, 2)
 	self.icon:SetSize(ICONFRAME_SIZE, ICONFRAME_SIZE)
 	self.icon.Paint = function(me, w, h)
-		local icon = Material('cellar/main/hud/bullets.png')
+		local icon = Schema.assets.Material('cellar/main/hud/bullets.png')
 		
 		surface.SetDrawColor(self.clip < 0.3 and LerpColor(self.critAlpha/100, ColorAlpha(cellar_blue, 135), self.barCritInside) or ColorAlpha(cellar_blue, 135))
 		surface.SetMaterial(icon)

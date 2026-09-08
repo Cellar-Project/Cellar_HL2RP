@@ -1,5 +1,5 @@
 ITEM.name = "Шапка-ушанка"
-ITEM.model = "models/cellar/items/city3/clothing/ushanka.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/ushanka.mdl", "models/props_c17/suitcase_passenger_physics.mdl")
 ITEM.width = 1 -- ширина
 ITEM.height = 1 -- высота
 ITEM.description = "Самый главный атрибут коммуниста - шапка-ушанка, прошедшая через огонь и воду самых будоражащих мир событий."

@@ -1,5 +1,5 @@
 ITEM.name = "Перчатки без пальцев"
-ITEM.model = "models/cmbfdr/items/gloves.mdl"
+ITEM.model = Schema.assets.Model("models/cmbfdr/items/gloves.mdl", "models/props_c17/briefcase001a.mdl")
 ITEM.width = 1 -- ширина
 ITEM.height = 1 -- высота
 ITEM.description = "Неплохие перчатки без пальцев, помогут согреться в городской обстановке."

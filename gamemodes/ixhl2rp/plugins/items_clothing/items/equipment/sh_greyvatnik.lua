@@ -1,5 +1,5 @@
 ITEM.name = "Серый ватник"
-ITEM.model = "models/cellar/items/city3/clothing/top_05.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/top_05.mdl", "models/props_c17/suitcase_passenger_physics.mdl")
 ITEM.width = 2 -- ширина
 ITEM.height = 2 -- высота
 ITEM.description = "Ватник серого цвета, который плотно прилегает к вашему телу. Помимо этого, несмотря на невзрачность и старость, он очень хорошо согревает даже в самую холодную погоду."

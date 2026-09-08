@@ -13,7 +13,7 @@ local code_colors = {
 	{Color(255, 29, 93), Color(255, 29, 93, 38)},
 }
 local area_color = {Color(255, 255, 255), Color(255, 255, 255, 45)}
-local leader_ico = Material("cellar/ui/dispatch/leader.png")
+local leader_ico = Schema.assets.Material("cellar/ui/dispatch/leader.png")
 
 function PANEL:GetHeaderColor(isText)
 	return (self.hovered and isText) and focus_color or (self.hovered and header_colors[self.type][1] or (isText and header_colors[self.type][1] or header_colors[self.type][2]))

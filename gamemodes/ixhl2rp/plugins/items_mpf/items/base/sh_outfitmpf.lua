@@ -1,7 +1,7 @@
 ITEM.base = "base_equipment"
 ITEM.name = "Base Outfit MPF"
 ITEM.description = ""
-ITEM.model = "models/items/mpfequipment.mdl"
+ITEM.model = Schema.assets.Model("models/items/mpfequipment.mdl", "models/props_c17/suitcase001a.mdl")
 ITEM.slot = EQUIP_TORSO
 ITEM.isOutfit = true
 ITEM.width = 2

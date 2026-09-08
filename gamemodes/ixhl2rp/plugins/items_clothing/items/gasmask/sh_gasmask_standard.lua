@@ -1,5 +1,5 @@
 ITEM.name = "Противогаз ГП-7"
-ITEM.model = Model("models/cellar/items/city3/clothing/gp5.mdl")
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/gp5.mdl", "models/props_c17/briefcase001a.mdl")
 ITEM.width = 1 -- ширина
 ITEM.height = 1 -- высота
 ITEM.description = "Старый противогаз советского образца. Судя по стертой маркировке где-то внутри самого противогаза, он успел побывать на складах не одной армии. В нем бывает довольно холодно временами."

@@ -1,5 +1,5 @@
 
-local initialIcon = Material("flags32/flag_gb.png", "smooth")
+local initialIcon = Material("flags16/gb.png", "smooth")
 -- change if different with one in chatbox plugin
 local chatBorder = 32
 local indentFromChat = 4

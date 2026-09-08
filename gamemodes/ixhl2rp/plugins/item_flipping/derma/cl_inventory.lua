@@ -144,7 +144,9 @@ function PANEL:AddIcon(model, x, y, w, h, skin)
 
 			panel.Icon:SetVisible(false)
 			panel.ExtraPaint = function(this, panelX, panelY)
-				local exIcon = ikon:GetIcon(iconName)
+				local model = itemTable:GetModel()
+				local name = iconName .. "_" .. util.CRC(model)
+				local exIcon = ikon:GetIcon(name)
 
 				if (exIcon) then
 					surface.SetMaterial(exIcon)
@@ -158,10 +160,10 @@ function PANEL:AddIcon(model, x, y, w, h, skin)
 					end
 
 					ikon:renderIcon(
-						iconName,
+						name,
 						itemTable.width,
 						itemTable.height,
-						itemTable:GetModel(),
+						model,
 						iconCam
 					)
 				end

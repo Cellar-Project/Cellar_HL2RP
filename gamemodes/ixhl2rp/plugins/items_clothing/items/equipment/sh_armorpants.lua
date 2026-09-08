@@ -1,5 +1,5 @@
 ITEM.name = "Штаны с бронепластинами"
-ITEM.model = "models/cellar/items/city3/clothing/pants_padded.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/pants_padded.mdl", "models/props_c17/suitcase_passenger_physics.mdl")
 ITEM.width = 2 -- ширина
 ITEM.height = 2 -- высота
 ITEM.description = "Обычные джинсы с приделанными к ним бронепластинами. Некоторые из них сокрыты внутри самой ткани штанов, из-за чего пришлось пожертвовать термоизоляцией. Зато пулеизоляция хотя-бы минимальная, но имеется."

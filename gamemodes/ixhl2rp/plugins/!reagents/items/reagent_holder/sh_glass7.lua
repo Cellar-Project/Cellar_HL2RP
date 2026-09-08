@@ -1,5 +1,5 @@
 ITEM.name = "Винный бокал"
-ITEM.model = Model("models/cellar/liquid/glass7.mdl")
+ITEM.model = Schema.assets.Model("models/cellar/liquid/glass7.mdl", "models/props_junk/garbage_glassbottle003a.mdl")
 ITEM.description = ""
 ITEM.volume = 400
 ITEM.value = 0

@@ -1,6 +1,6 @@
 ITEM.name = "Униформа сотрудника ГО"
 ITEM.description = "Униформа сотрудника Гражданской Обороны с инсигниями Города-3. В комплекте идут стандартные штаны, сапоги и все остальные атрибуты правосудия Альянса."
-ITEM.model = "models/cellar/items/city3/clothing/mpfequipment_c3.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/mpfequipment_c3.mdl", "models/props_c17/suitcase001a.mdl")
 ITEM.Stats = {
     [HITGROUP_GENERIC] = 0,
     [HITGROUP_HEAD] = 0,

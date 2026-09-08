@@ -1,7 +1,7 @@
 DEFINE_BASECLASS("DButton")
 local PANEL = {}
-local button = Material("cellar/main/tab/closebutton16x16.png")
-local buttonhover = Material("cellar/main/tab/closebuttonhovered.png")
+local button = Schema.assets.Material("cellar/main/tab/closebutton16x16.png")
+local buttonhover = Schema.assets.Material("cellar/main/tab/closebuttonhovered.png")
 function PANEL:Init()
 	self.BaseClass.SetText(self, "")
 

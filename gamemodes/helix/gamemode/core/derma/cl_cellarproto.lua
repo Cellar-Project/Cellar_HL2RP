@@ -1,3 +1,12 @@
+-- Other schemas may load these panels without the Cellar asset helper.
+local function UIMaterial(path, fallbackPath, flags)
+	if (Schema and Schema.assets and Schema.assets.Material) then
+		return Schema.assets.Material(path, fallbackPath, flags)
+	end
+
+	return Material(path, flags)
+end
+
 local texBorder = {
 	[1] = Material("cellar/main/border_left.png"),
 	[2] = Material("cellar/main/border_hor.png"),
@@ -22,62 +31,80 @@ local function DrawBorders()
 	local wide = w - x
 	local tall = 0
 
-	surface.SetMaterial(texBorder[2])
-	surface.DrawTexturedRect(x, y, wide, 8)
+	if (not texBorder[2]:IsError()) then
+		surface.SetMaterial(texBorder[2])
+		surface.DrawTexturedRect(x, y, wide, 8)
+	end
 
 	x = x - 64
 	y = y - 29
 
-	surface.SetMaterial(texBorder[4])
-	surface.DrawTexturedRect(x, y, 64, 64)
+	if (not texBorder[4]:IsError()) then
+		surface.SetMaterial(texBorder[4])
+		surface.DrawTexturedRect(x, y, 64, 64)
+	end
 
 	wide = (w - 169 - (w - x))
 	y = y + 6
 	x = x - wide
 
 
-	surface.SetMaterial(texBorder[2])
-	surface.DrawTexturedRect(x, y, wide, 8)
+	if (not texBorder[2]:IsError()) then
+		surface.SetMaterial(texBorder[2])
+		surface.DrawTexturedRect(x, y, wide, 8)
+	end
 
 	y = y - 6
 	x = x - 128
 
-	surface.SetMaterial(texBorder[1])
-	surface.DrawTexturedRect(x, y, 128, 128)
+	if (not texBorder[1]:IsError()) then
+		surface.SetMaterial(texBorder[1])
+		surface.DrawTexturedRect(x, y, 128, 128)
+	end
 
 	y = y + 128
 	x = x + 5
 	tall = h - 48 - y
 
-	surface.SetMaterial(texBorder[3])
-	surface.DrawTexturedRect(x, y, 8, tall)
+	if (not texBorder[3]:IsError()) then
+		surface.SetMaterial(texBorder[3])
+		surface.DrawTexturedRect(x, y, 8, tall)
+	end
 
 
 	x = x + 3
 	y = y - 5 + tall
 	wide = math.floor(w * 0.4651041666666667) - x
 
-	surface.SetMaterial(texBorder[2])
-	surface.DrawTexturedRect(x, y, wide, 8)
+	if (not texBorder[2]:IsError()) then
+		surface.SetMaterial(texBorder[2])
+		surface.DrawTexturedRect(x, y, wide, 8)
+	end
 
 	y = y - 36
 	x = x + wide
 
-	surface.SetMaterial(texBorder[5])
-	surface.DrawTexturedRect(x, y, 64, 64)
+	if (not texBorder[5]:IsError()) then
+		surface.SetMaterial(texBorder[5])
+		surface.DrawTexturedRect(x, y, 64, 64)
+	end
 
 	x = x + 64
 	y = y + 51
 	wide = w - 128 - x
 
-	surface.SetMaterial(texBorder[2])
-	surface.DrawTexturedRect(x, y, wide, 8)
+	if (not texBorder[2]:IsError()) then
+		surface.SetMaterial(texBorder[2])
+		surface.DrawTexturedRect(x, y, wide, 8)
+	end
 
 	x = w - 128
 	y = y - 115
 
-	surface.SetMaterial(texBorder[6])
-	surface.DrawTexturedRect(x, y, 128, 128)
+	if (not texBorder[6]:IsError()) then
+		surface.SetMaterial(texBorder[6])
+		surface.DrawTexturedRect(x, y, 128, 128)
+	end
 end
 
 local btnWidth = 285 - 32
@@ -177,13 +204,13 @@ local btnColors = {
 		Color(201, 45, 45, 160)
 	},
 }
-local bg = Material("cellar/main/btn_background.png")
+local bg = UIMaterial("cellar/main/btn_background.png", "vgui/gradient-d")
 local icons = {
-	Material("cellar/main/new.png"),
-	Material("cellar/main/chars.png"),
-	Material("cellar/main/info.png"),
-	Material("cellar/main/content.png"),
-	Material("cellar/main/exit.png"),
+	UIMaterial("cellar/main/new.png"),
+	UIMaterial("cellar/main/chars.png"),
+	UIMaterial("cellar/main/info.png"),
+	UIMaterial("cellar/main/content.png"),
+	UIMaterial("cellar/main/exit.png"),
 }
 surface.CreateFont("cellar.main.btn", {
 	font = "Nagonia",
@@ -280,8 +307,10 @@ function PANEL:Paint(w, h)
 
 	if self.icon > 0 then
 		surface.SetDrawColor(color[4])
-		surface.SetMaterial(icons[self.icon])
-		surface.DrawTexturedRect(0, h / 2 - 16, 32, 32)
+		if (not icons[self.icon]:IsError()) then
+			surface.SetMaterial(icons[self.icon])
+			surface.DrawTexturedRect(0, h / 2 - 16, 32, 32)
+		end
 	end
 end
 vgui.Register("cellar.main.btn", PANEL, "DButton")
@@ -292,7 +321,7 @@ local clrConsole = Color(102, 150, 190, 64)
 local testBG = Material("cellar/main/bg/00.png")
 local testBG2 = Material("cellar/main/bg/01.png")
 local shadow = Material("cellar/main/shadow.png")
-local warning = Material("cellar/main/warning.png")
+local warning = UIMaterial("cellar/main/warning.png", "icon16/error.png")
 surface.CreateFont("cellar.main.warn", {
 	font = "Nagonia",
 	extended = true,
@@ -343,12 +372,12 @@ local function LerpKeyframes( curTime, keyframes, easein, easeout )
 	
 end
 local backgrounds = {
-	[1] = {Material("cellar/main/bg/00.png")},
-	[2] = {Material("cellar/main/bg/01.png")},
-	[3] = {Material("cellar/main/bg/02.png")},
-	[4] = {Material("cellar/main/bg/03.png")},
-	[5] = {Material("cellar/main/bg/04.png")},
-	[6] = {Material("cellar/main/bg/05.png")},
+	[1] = {UIMaterial("cellar/main/bg/00.png", "vgui/gradient-d")},
+	[2] = {UIMaterial("cellar/main/bg/01.png", "vgui/gradient-d")},
+	[3] = {UIMaterial("cellar/main/bg/02.png", "vgui/gradient-d")},
+	[4] = {UIMaterial("cellar/main/bg/03.png", "vgui/gradient-d")},
+	[5] = {UIMaterial("cellar/main/bg/04.png", "vgui/gradient-d")},
+	[6] = {UIMaterial("cellar/main/bg/05.png", "vgui/gradient-d")},
 }
 local cache_backgrounds = table.Copy(backgrounds)
 local rand = math.random
@@ -511,8 +540,10 @@ function PANEL:Paint(w, h)
 		self.background:PaintManual()
 
 		surface.SetDrawColor(color_white)
-		surface.SetMaterial(shadow)
-		surface.DrawTexturedRect(0, 0, w, h)
+		if (not shadow:IsError()) then
+			surface.SetMaterial(shadow)
+			surface.DrawTexturedRect(0, 0, w, h)
+		end
 
 		surface.SetMaterial(rt_mat)
 		surface.SetDrawColor(color_white)
@@ -522,9 +553,11 @@ function PANEL:Paint(w, h)
 	DrawBorders()
 
 	local h = ScrH() - 70 - 155
-	surface.SetMaterial(console)
-	surface.SetDrawColor(clrConsole)
-	surface.DrawTexturedRectUV(ScrW() - 512, 70 + 7, 512, h, 0, 0, 1, h / 1024)
+	if (not console:IsError()) then
+		surface.SetMaterial(console)
+		surface.SetDrawColor(clrConsole)
+		surface.DrawTexturedRectUV(ScrW() - 512, 70 + 7, 512, h, 0, 0, 1, h / 1024)
+	end
 
 	local clr = Color(248, 230, 80, 140 + 70 * math.abs(math.sin(CurTime() * 2)))
 	surface.SetDrawColor(clr)
@@ -537,8 +570,10 @@ function PANEL:Paint(w, h)
 
 	surface.DrawText(text)
 
-	surface.SetMaterial(warning)
-	surface.DrawTexturedRect(110, 602 - 56, 32, 32)
+	if (not warning:IsError()) then
+		surface.SetMaterial(warning)
+		surface.DrawTexturedRect(110, 602 - 56, 32, 32)
+	end
 end
 
 vgui.Register("cellar.main", PANEL, "EditablePanel")

@@ -26,41 +26,41 @@ end
 
 local icons = {
 	gun = {
-		mat = Material("cellar/ui/dispatch/ico/gun"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/gun"),
 		color = Color(255, 50, 70)
 	},
 	death = {
-		mat = Material("cellar/ui/dispatch/ico/death"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/death"),
 		color = Color(200, 64, 64)
 	},
 	attack = {
-		mat = Material("cellar/ui/dispatch/ico/attack"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/attack"),
 		color =  Color(255, 50, 70)
 	},
 	factory = {
-		mat = Material("cellar/ui/dispatch/ico/factory"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/factory"),
 		color =  Color(31, 171, 125),
 		text_color = color_white
 	},
 	hazard = {
-		mat = Material("cellar/ui/dispatch/ico/hazard"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/hazard"),
 		color =  Color(175, 200, 125),
 		text_color = color_white
 	},
 	protect = {
-		mat = Material("cellar/ui/dispatch/ico/protect"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/protect"),
 		color =  Color(0, 225, 255)
 	},
 	regroup = {
-		mat = Material("cellar/ui/dispatch/ico/regroup"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/regroup"),
 		color =  Color(0, 225, 255)
 	},
 	poi = {
-		mat = Material("cellar/ui/dispatch/ico/poi"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/poi"),
 		color =  Color(255, 200, 64)
 	},
 	warn = {
-		mat = Material("cellar/ui/dispatch/ico/warn"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/warn"),
 		color = Color(255, 50, 70)
 	},
 }

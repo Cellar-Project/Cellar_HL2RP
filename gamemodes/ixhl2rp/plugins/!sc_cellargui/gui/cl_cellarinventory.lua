@@ -1,10 +1,10 @@
 --[[ ВНИМАНИЕ, ПАНЕЛЬ ОСНОВАНА НА helix/core/derma/cl_inventoy.lua, ixhl2rp/plugins/!!inventoryenhances/derma/cl_equipmentframe.lua И НЕ БУДЕТ РАБОТАТЬ КОРРЕКТНО БЕЗ ВЫШЕУКАЗАННЫХ ФАЙЛОВ]]--
 
 PANEL = {}
-local background = Material('cellar/main/tab/backgroundtab.png')
+local background = Schema.assets.Material('cellar/main/tab/backgroundtab.png')
 local television = Material('cellar/main/tvtexture.png')
 local staticborder = Material('cellar/main/tab/tabborders.png')
-local infoicon = Material("cellar/main/info.png")
+local infoicon = Schema.assets.Material("cellar/main/info.png")
 
 function PANEL:Init()
 	if IsValid(cellar_tab_inv) then
@@ -78,8 +78,10 @@ function PANEL:Init()
 	panel.Paint = function(self, w, h)
 		local frame = Material('cellar/main/tab/invborder.png')
 		surface.SetDrawColor(color_white)
-		surface.SetMaterial(frame)
-		surface.DrawTexturedRect(0, 0, self:GetWide(), self:GetTall())
+		if (not frame:IsError()) then
+			surface.SetMaterial(frame)
+			surface.DrawTexturedRect(0, 0, self:GetWide(), self:GetTall())
+		end
 	end
 	panel.bNoBackgroundBlur = true
 	--panel.childPanels = {}
@@ -169,17 +171,23 @@ function PANEL:Paint(w, h)
 	surface.DrawRect(0, 0, w, h)
 
 	surface.SetDrawColor(ColorAlpha(color_white, 90))
-	surface.SetMaterial(television)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not television:IsError()) then
+		surface.SetMaterial(television)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 
 	surface.SetDrawColor(ColorAlpha(color_white, 240))
-	surface.SetMaterial(staticborder)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not staticborder:IsError()) then
+		surface.SetMaterial(staticborder)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 	surface.SetDrawColor(ColorAlpha(color_black, 255))
-	surface.SetMaterial(vignette)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not vignette:IsError()) then
+		surface.SetMaterial(vignette)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 	surface.SetDrawColor(ColorAlpha(color_white, 255))
 

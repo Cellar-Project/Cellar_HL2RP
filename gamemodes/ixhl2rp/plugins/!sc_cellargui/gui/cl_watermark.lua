@@ -27,7 +27,7 @@ sound.Add( {
 	volume = 0.3,
 	level = 80,
 	pitch = {95, 110},
-	sound = "cellar/ui/dronelooping.wav"
+	sound = Schema.assets.Sound("cellar/ui/dronelooping.wav")
 } )
 sound.Add( {
 	name = "cellar.tab.amb2",
@@ -35,7 +35,7 @@ sound.Add( {
 	volume = 0.3,
 	level = 80,
 	pitch = {95, 110},
-	sound = "cellar/ui/otherlooping25.wav"
+	sound = Schema.assets.Sound("cellar/ui/otherlooping25.wav")
 } )
 
 
@@ -54,7 +54,7 @@ sound.Add( {
 	volume = 0.4,
 	level = 80,
 	pitch = {95, 110},
-	sound = "cellar/ui/info.mp3"
+	sound = Schema.assets.Sound("cellar/ui/info.mp3")
 } )
 
 surface.CreateFont("cellar.derma", {
@@ -370,7 +370,7 @@ function PANEL:Init()
 	back.DoClick = function()
 		self.closing = true 
 		LocalPlayer():StopSound('cellar.info.amb')
-		surface.PlaySound('cellar/ui/infooutro25.mp3')
+		surface.PlaySound(Schema.assets.Sound('cellar/ui/infooutro25.mp3'))
 		self:Remove()
 	end
 
@@ -389,14 +389,18 @@ function PANEL:Paint(w, h)
 	
 	local tsin = TimedSin(.4, 10, 120, 0)
 	surface.SetDrawColor(ColorAlpha(color_white, 90 + tsin))
-	surface.SetMaterial(doorlogo)
-	surface.DrawTexturedRect(12, ScrH()/2.75, 256, 64)
+	if (not doorlogo:IsError()) then
+		surface.SetMaterial(doorlogo)
+		surface.DrawTexturedRect(12, ScrH()/2.75, 256, 64)
+	end
 	/*raw.SimpleText("CELLAR PROJECT", "cellar.tab", ScrW() - ScrW()/2 + 36, ScrH()/3.9 + 30, Color(43, 157, 189, 90 + tsin), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	draw.SimpleText("CELLAR PROJECT", "cellar.tab.blur", ScrW() - ScrW()/2 + 36, ScrH()/3.9 + 30, Color(43, 157, 189,  90 + tsin), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)*/
 
 	surface.SetDrawColor(ColorAlpha(color_white, 90 + tsin))
-	surface.SetMaterial(yufulogo)
-	surface.DrawTexturedRect(ScrW() - 256 - 12, ScrH()/2.75, 256, 64)
+	if (not yufulogo:IsError()) then
+		surface.SetMaterial(yufulogo)
+		surface.DrawTexturedRect(ScrW() - 256 - 12, ScrH()/2.75, 256, 64)
+	end
 
 	draw.SimpleText("Бета-версия: некоторые функции могут отсутствовать или работать некорректно.", "cellar.tab",  ScrW() - ScrW()/2, ScrH() - ScrH()/2.4, ColorAlpha(color_orange,  90 + tsin), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	draw.SimpleText("Бета-версия: некоторые функции могут отсутствовать или работать некорректно.", "cellar.tab.blur",  ScrW() - ScrW()/2, ScrH() - ScrH()/2.4, ColorAlpha(color_orange,  90 + tsin), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -423,7 +427,7 @@ function PANEL:OnKeyCodePressed(key)
 
 	if (key == KEY_TAB) then
 		LocalPlayer():StopSound('cellar.info.amb')
-		surface.PlaySound('cellar/ui/infooutro25.mp3')
+		surface.PlaySound(Schema.assets.Sound('cellar/ui/infooutro25.mp3'))
 		self:Remove()
 	end
 end

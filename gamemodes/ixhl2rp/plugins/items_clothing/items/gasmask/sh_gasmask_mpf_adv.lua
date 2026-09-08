@@ -1,6 +1,6 @@
 ITEM.name = "Продвинутая маска"
 ITEM.description = "Продвинутая маска-противогаз Гражданской Обороны без визора и с упрощенной системой фильтрации."
-ITEM.model = Model("models/vintagethief/items/cca/mask_01.mdl")
+ITEM.model = Schema.assets.Model("models/vintagethief/items/cca/mask_01.mdl", "models/props_c17/briefcase001a.mdl")
 ITEM.rarity = 2
 ITEM.bodyGroups = {
 	[2] = 2,

@@ -1,6 +1,6 @@
 
 local lossGoalColor = Color(105, 105, 105)
-local initialIcon = Material("flags20/flag_gb.png")
+local initialIcon = Material("flags16/gb.png")
 
 CHAT_FLAG_ICON = CHAT_FLAG_ICON
 MESSAGE_LOSS_FRACTION = MESSAGE_LOSS_FRACTION

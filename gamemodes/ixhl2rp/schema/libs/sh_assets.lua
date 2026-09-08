@@ -57,7 +57,8 @@ Schema.assets.manifest = Schema.assets.manifest or {
 
 -- ---------------------------------------------------------------------
 -- Internal caches
--- Keyed by the originally-requested path so repeat lookups are cheap.
+-- Keyed by the requested path and caller fallback so callers cannot
+-- accidentally inherit each other's fallback choice.
 -- The material object cache additionally keys by material flags so a
 -- caller asking for the same texture with different `Material()` flags
 -- still gets distinct material instances.
@@ -80,23 +81,23 @@ local function NormalizeMaterialPath(path)
 	return (path:gsub("%s.*$", ""))
 end
 
-local function MaterialFileExists(path)
+local function FindMaterialPath(path)
 	path = NormalizeMaterialPath(path)
-	if (not path or path == "") then return false end
+	if (not path or path == "") then return nil end
 
 	-- If the caller already specified an extension (e.g. .png) the
 	-- file must literally exist as-is under `materials/`. Otherwise
-	-- the engine looks for a `.vmt`, optionally backed by a `.png` or
-	-- `.jpg` of the same name.
+	-- prefer a `.vmt`; image files need their extension passed to Material.
 	local ext = path:match("%.([%a%d]+)$")
 	if (ext) then
-		return file.Exists("materials/" .. path, "GAME")
+		return file.Exists("materials/" .. path, "GAME") and path or nil
 	end
 
-	return file.Exists("materials/" .. path .. ".vmt", "GAME")
-		or file.Exists("materials/" .. path .. ".png", "GAME")
-		or file.Exists("materials/" .. path .. ".jpg", "GAME")
-		or file.Exists("materials/" .. path .. ".jpeg", "GAME")
+	for _, extension in ipairs({".vmt", ".png", ".jpg", ".jpeg"}) do
+		if (file.Exists("materials/" .. path .. extension, "GAME")) then
+			return extension == ".vmt" and path or path .. extension
+		end
+	end
 end
 
 local function ModelFileExists(path)
@@ -144,27 +145,22 @@ function Schema.assets.MaterialPath(path, fallbackPath)
 		return Schema.assets.defaultMaterialPath
 	end
 
-	local cached = materialPathCache[path]
+	local cacheKey = path .. "\1" .. (fallbackPath or "")
+	local cached = materialPathCache[cacheKey]
 	if (cached ~= nil) then return cached end
 
-	local resolved
-	if (MaterialFileExists(path)) then
-		resolved = path
-	elseif (fallbackPath and MaterialFileExists(fallbackPath)) then
-		resolved = fallbackPath
-	else
-		local manifestPath = ResolveFromManifest("materials", NormalizeMaterialPath(path), MaterialFileExists)
-		resolved = manifestPath or Schema.assets.defaultMaterialPath
-	end
+	local resolved = FindMaterialPath(path)
+		or FindMaterialPath(fallbackPath)
+		or FindMaterialPath(Schema.assets.manifest.materials[NormalizeMaterialPath(path)])
+		or Schema.assets.defaultMaterialPath
 
-	materialPathCache[path] = resolved
+	materialPathCache[cacheKey] = resolved
 	return resolved
 end
 
 --- Returns a cached `IMaterial` for the given path, falling back to
---  stock content when the original asset is missing. Mirrors the
---  signature of `Material()` so call sites can swap with minimal
---  changes.
+--  stock content when the original asset is missing. Unlike Material(),
+--  the optional flags are the third argument, after the fallback path.
 -- @realm shared
 -- @string path Original (possibly-missing) material path.
 -- @string[opt] fallbackPath Caller-supplied stock replacement.
@@ -172,11 +168,25 @@ end
 -- @treturn IMaterial Cached material object.
 function Schema.assets.Material(path, fallbackPath, materialFlags)
 	local resolved = Schema.assets.MaterialPath(path, fallbackPath)
-	local cacheKey = resolved .. "\1" .. (materialFlags or "")
+	local cacheKey = (isstring(path) and path or "") .. "\1" .. resolved .. "\1" .. (fallbackPath or "") .. "\1" .. (materialFlags or "")
 
 	local mat = materialObjectCache[cacheKey]
 	if (not mat) then
 		mat = Material(resolved, materialFlags)
+
+		if (mat:IsError()) then
+			local mapped = Schema.assets.manifest.materials[NormalizeMaterialPath(path)]
+
+			for _, candidate in ipairs({fallbackPath or "", mapped or "", Schema.assets.defaultMaterialPath}) do
+				local alternative = FindMaterialPath(candidate)
+
+				if (alternative and alternative != resolved) then
+					mat = Material(alternative, materialFlags)
+					if (not mat:IsError()) then break end
+				end
+			end
+		end
+
 		materialObjectCache[cacheKey] = mat
 	end
 
@@ -194,7 +204,8 @@ function Schema.assets.Model(path, fallbackPath)
 		return Schema.assets.defaultModelPath
 	end
 
-	local cached = modelPathCache[path]
+	local cacheKey = path .. "\1" .. (fallbackPath or "")
+	local cached = modelPathCache[cacheKey]
 	if (cached ~= nil) then return cached end
 
 	local resolved
@@ -207,7 +218,7 @@ function Schema.assets.Model(path, fallbackPath)
 		resolved = manifestPath or Schema.assets.defaultModelPath
 	end
 
-	modelPathCache[path] = resolved
+	modelPathCache[cacheKey] = resolved
 	return resolved
 end
 
@@ -222,7 +233,8 @@ function Schema.assets.Sound(path, fallbackPath)
 		return Schema.assets.defaultSoundPath
 	end
 
-	local cached = soundPathCache[path]
+	local cacheKey = path .. "\1" .. (fallbackPath or "")
+	local cached = soundPathCache[cacheKey]
 	if (cached ~= nil) then return cached end
 
 	local resolved
@@ -235,7 +247,7 @@ function Schema.assets.Sound(path, fallbackPath)
 		resolved = manifestPath or Schema.assets.defaultSoundPath
 	end
 
-	soundPathCache[path] = resolved
+	soundPathCache[cacheKey] = resolved
 	return resolved
 end
 
@@ -245,7 +257,7 @@ end
 
 --- Returns true if `path` exists in the mounted content.
 -- @realm shared
-function Schema.assets.MaterialExists(path) return MaterialFileExists(path) end
+function Schema.assets.MaterialExists(path) return FindMaterialPath(path) ~= nil end
 function Schema.assets.ModelExists(path)    return ModelFileExists(path) end
 function Schema.assets.SoundExists(path)    return SoundFileExists(path) end
 

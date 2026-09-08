@@ -38,7 +38,7 @@ function PANEL:OnCursorEntered()
 	if (self:GetHovered()) then return end
 
 	self:SetHovered(true)
-	surface.PlaySound("terminals/button_rollover.ogg")
+	surface.PlaySound(Schema.assets.Sound("terminals/button_rollover.ogg"))
 end
 
 function PANEL:OnCursorExited()
@@ -377,7 +377,7 @@ function PANEL:Error(message)
 		end
 
 		self.grace = CurTime() + 0.2
-		surface.PlaySound("terminals/click.wav")
+		surface.PlaySound(Schema.assets.Sound("terminals/click.wav"))
 	end
 end
 
@@ -424,8 +424,10 @@ function PANEL:ShowInfoPanel(loadTime)
 	self.infoPanel:SetAlpha(0)
 	self.infoPanel:Dock(FILL)
 	self.infoPanel.Paint = function(s, w, h)
-		surface.SetMaterial(cmb)
-		surface.DrawTexturedRect(0, 25, 62, 62)
+		if (not cmb:IsError()) then
+			surface.SetMaterial(cmb)
+			surface.DrawTexturedRect(0, 25, 62, 62)
+		end
 		draw.SimpleText(self.name or LocalPlayer():Name(), "TerminalSubTitleLight", 80, 25, color_black, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 
 		surface.SetDrawColor(semiBlue)
@@ -467,7 +469,7 @@ function PANEL:ShowInfoPanel(loadTime)
 		button.nextClick = CurTime() + 1
 		self.grace = CurTime() + 0.2
 
-		surface.PlaySound("terminals/click.wav")
+		surface.PlaySound(Schema.assets.Sound("terminals/click.wav"))
 
 		if (CurTime() < (LocalPlayer().nextRequest or 0)) then
 			self:Error(Format("ERR: Must wait %s second(s) before\nrequesting another officer!", math.floor(LocalPlayer().nextRequest - CurTime())))
@@ -543,7 +545,7 @@ end
 
 function PANEL:OnMousePressed(key)
 	if (key == MOUSE_LEFT and self.mainMenu and !self.loading and !IsValid(self.error) and CurTime() > (self.grace or 0)) then
-		surface.PlaySound("terminals/button_push.ogg")
+		surface.PlaySound(Schema.assets.Sound("terminals/button_push.ogg"))
 
 		local item
 		local character = LocalPlayer():GetCharacter()
@@ -587,7 +589,7 @@ do
 	end
 
 	local grad = Material("vgui/gradient-l")
-	local hand = Material("vgui/terminals/reticle_finger.png", "smooth")
+	local hand = Schema.assets.Material("vgui/terminals/reticle_finger.png", nil, "smooth")
 	local regOffset = 11.3
 
 	function PANEL:DrawScreen(w, h)
@@ -660,8 +662,10 @@ do
 		surface.DrawRect(0, h - scrollMod2, w, 200)
 
 		surface.SetDrawColor(0, 0, 0, alpha)
-		surface.SetMaterial(pixelMat)
-		surface.DrawTexturedRectUV(0, 0, w, h, 0, 0, w, h)
+		if (not pixelMat:IsError()) then
+			surface.SetMaterial(pixelMat)
+			surface.DrawTexturedRectUV(0, 0, w, h, 0, 0, w, h)
+		end
 
 		render.PopFilterMin()
 		render.PopFilterMag()

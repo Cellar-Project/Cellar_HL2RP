@@ -1,5 +1,5 @@
 ITEM.name = "Противогаз 'Чистильщика'"
-ITEM.model = "models/cellar/items/city3/clothing/worker_helmet.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/worker_helmet.mdl", "models/props_c17/briefcase001a.mdl")
 ITEM.width = 2 -- ширина
 ITEM.height = 2 -- высота
 ITEM.description = "Маска, способная напомнить о самых страшных событиях, которые уже произошли или только будут происходить в будущем."

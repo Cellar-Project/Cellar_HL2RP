@@ -23,4 +23,4 @@ ITEM.primaryVisor = Vector(0.15, 0.8, 2)
 ITEM.secondaryVisor = Vector(0.15, 0.8, 2)
 ITEM.rarity = 3
 ITEM.thermalIsolation = 3
-ITEM.model = "models/cellar/items/city3/clothing/vest_02.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/vest_02.mdl", "models/props_c17/suitcase001a.mdl")

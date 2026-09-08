@@ -154,47 +154,47 @@ end
 
 local icons = {
 	[1] = {
-		mat = Material("cellar/ui/dispatch/ico/gun"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/gun"),
 		type = "gun",
 		color = Color(255, 50, 70),
 	},
 	[2] = {
-		mat = Material("cellar/ui/dispatch/ico/attack"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/attack"),
 		type = "attack",
 		color =  Color(255, 50, 70)
 	},
 	[3] = {
-		mat = Material("cellar/ui/dispatch/ico/hazard"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/hazard"),
 		type = "hazard",
 		color =  Color(175, 200, 125),
 	},
 	[4] = {
-		mat = Material("cellar/ui/dispatch/ico/factory"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/factory"),
 		type = "factory",
 		color =  Color(31, 171, 125),
 	},
 	[5] = {
-		mat = Material("cellar/ui/dispatch/ico/poi"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/poi"),
 		type = "poi",
 		color =  Color(255, 200, 64)
 	},
 	[6] = {
-		mat = Material("cellar/ui/dispatch/ico/protect"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/protect"),
 		type = "protect",
 		color =  Color(0, 225, 255)
 	},
 	[7] = {
-		mat = Material("cellar/ui/dispatch/ico/regroup"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/regroup"),
 		type = "regroup",
 		color =  Color(0, 225, 255)
 	},
 	[8] = {
-		mat = Material("cellar/ui/dispatch/ico/death"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/death"),
 		type = "death",
 		color = Color(200, 64, 64)
 	},
 	[9] = {
-		mat = Material("cellar/ui/dispatch/ico/warn"),
+		mat = Schema.assets.Material("cellar/ui/dispatch/ico/warn"),
 		type = "warn",
 		color = Color(255, 50, 70)
 	},

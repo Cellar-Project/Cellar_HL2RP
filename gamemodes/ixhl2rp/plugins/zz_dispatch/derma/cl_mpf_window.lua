@@ -42,7 +42,7 @@ local function scale(px)
 end
 
 PANEL = {}
-local background = Material("cellar/ui/dispatch/bg.png", "smooth")
+local background = Schema.assets.Material("cellar/ui/dispatch/bg.png", nil, "smooth")
 local border_size = scale(64)
 
 function PANEL:Init()

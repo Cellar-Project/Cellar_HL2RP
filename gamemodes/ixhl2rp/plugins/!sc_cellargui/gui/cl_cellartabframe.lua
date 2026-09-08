@@ -29,8 +29,10 @@ function PANEL:Paint(w, h)
 	surface.SetFont("cellar.main.btn")
 
     surface.SetDrawColor(color_white)
-    surface.SetMaterial(frame)
-    surface.DrawTexturedRect(0, 0, w, h)
+    if (not frame:IsError()) then
+        surface.SetMaterial(frame)
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 end
 
 function PANEL:Remove()

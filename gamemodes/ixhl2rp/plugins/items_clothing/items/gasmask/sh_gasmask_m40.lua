@@ -1,5 +1,5 @@
 ITEM.name = "Противогаз M40"
-ITEM.model = Model("models/cellar/items/city3/clothing/m40.mdl")
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/m40.mdl", "models/props_c17/briefcase001a.mdl")
 ITEM.width = 1 -- ширина
 ITEM.height = 1 -- высота
 ITEM.description = "Американский противогаз, разработанный во времена войны во Вьетнаме. Удобный и крепкий."

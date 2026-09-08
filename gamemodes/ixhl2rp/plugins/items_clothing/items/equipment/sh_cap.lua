@@ -1,5 +1,5 @@
 ITEM.name = "Серая бейсболка"
-ITEM.model = "models/cellar/items/city3/clothing/cap.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/cap.mdl", "models/props_c17/suitcase_passenger_physics.mdl")
 ITEM.width = 1 -- ширина
 ITEM.height = 1 -- высота
 ITEM.description = "Обычная бейсболка с модным козырьком. В условиях суровой погоды в Городе-3 - абсолютно бесполезная, но если в этом городе когда-нибудь будет довольно жарко и будет слепить солнце, то, быть может, эта бейсболка вам пригодится."

@@ -1,5 +1,5 @@
 ITEM.name = "Баллистический шлем"
-ITEM.model = "models/cellar/items/city3/clothing/helmet.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/helmet.mdl", "models/props_c17/briefcase001a.mdl")
 ITEM.width = 1 -- ширина
 ITEM.height = 1 -- высота
 ITEM.description = "Довольно гладкий шлем, который, возможно, сможет защитить вашу черепушку от одной-двух пуль, если они самого малого калибра, летели до вас за киллометр и на пути к вам пули развалились на мелкие части. В остальных случаях никто, кроме Бога вам не поможет."

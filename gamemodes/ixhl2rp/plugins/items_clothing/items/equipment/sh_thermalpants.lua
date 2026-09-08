@@ -1,5 +1,5 @@
 ITEM.name = "Утепленные штаны"
-ITEM.model = "models/cellar/items/city3/clothing/pants_03.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/pants_03.mdl", "models/props_c17/suitcase_passenger_physics.mdl")
 ITEM.width = 2 -- ширина
 ITEM.height = 2 -- высота
 ITEM.description = "На первый взгляд - обычные джинсы и ничем непримечательны, но при должном ношении или вскрытии оказывается, что они были утеплены при помощи самодельных пуховых вставок, из-за чего в них довольно тепло."

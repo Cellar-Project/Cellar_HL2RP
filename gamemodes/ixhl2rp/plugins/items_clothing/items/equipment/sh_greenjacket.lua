@@ -1,5 +1,5 @@
 ITEM.name = "Зеленая куртка"
-ITEM.model = "models/cellar/items/city3/clothing/top_02.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/top_02.mdl", "models/props_c17/suitcase_passenger_physics.mdl")
 ITEM.width = 2 -- ширина
 ITEM.height = 2 -- высота
 ITEM.description = "Приятная на вид зеленая курточка, предназначенная для начала осени, когда впервые пробиваются отрицательные температуры. Наврядли она способна на что-то большее, но, кажется, в ней вы выглядите довольно стильно."

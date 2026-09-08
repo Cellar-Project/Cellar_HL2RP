@@ -1,5 +1,5 @@
 ITEM.name = "Зеленые штаны"
-ITEM.model = "models/cellar/items/city3/clothing/pants_02.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/pants_02.mdl", "models/props_c17/suitcase_passenger_physics.mdl")
 ITEM.width = 2 -- ширина
 ITEM.height = 2 -- высота
 ITEM.description = "Модные зеленоватые штаны. Какого именно они цвета, на самом деле, сложно сказать, но вы точно знаете, что это смесь зеленого и сероватого. От обычыных мало чем отличаются, но когда и кого это волновало?"

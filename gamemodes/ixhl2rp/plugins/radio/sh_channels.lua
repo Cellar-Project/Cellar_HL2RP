@@ -55,7 +55,7 @@ do
 	CHANNEL.defaultPriority = 10
 	CHANNEL.stationaryCanAccess = false
 	CHANNEL.color = Color(50, 180, 215, 255)
-	CHANNEL.icon = ix.util.GetMaterial("cellar/chat/radio_union.png")
+	CHANNEL.icon = Schema.assets.Material("cellar/chat/radio_union.png")
 	CHANNEL:Register()
 
 	-- intercom um
@@ -91,7 +91,7 @@ do
 	CHANNEL.defaultPriority = 11
 	CHANNEL.stationaryCanAccess = false
 	CHANNEL.color = Color(200, 75, 75)
-	CHANNEL.icon = ix.util.GetMaterial("cellar/chat/dispatch.png")
+	CHANNEL.icon = Schema.assets.Material("cellar/chat/dispatch.png")
 	CHANNEL:Register()
 
 	-- proselyte

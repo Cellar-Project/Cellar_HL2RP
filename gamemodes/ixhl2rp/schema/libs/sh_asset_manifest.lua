@@ -43,7 +43,49 @@ do
 	materials["cellar/chat/yell.png"]      = "icon16/sound.png"
 	materials["cellar/chat/dispatch.png"]  = "icon16/transmit.png"
 	materials["cellar/chat/broadcast.png"] = "icon16/transmit_blue.png"
-	materials["cellar/chat/roll.png"]      = "icon16/dice.png"
+	materials["cellar/chat/roll.png"]      = "icon16/calculator.png"
+	materials["cellar/chat/radio_hand.png"] = "icon16/transmit.png"
+	materials["cellar/chat/eaves_radiohand.png"] = "icon16/sound_low.png"
+	materials["cellar/chat/radio_union.png"] = "icon16/transmit_blue.png"
+	materials["cellar/chat/request.png"] = "icon16/comment.png"
+	materials["cellar/chat/eaves_request.png"] = "icon16/sound_low.png"
+
+	-- UI icons retain their original materials whenever the content is mounted.
+	materials["cellar/main/new.png"] = "icon16/user_add.png"
+	materials["cellar/main/chars.png"] = "icon16/group.png"
+	materials["cellar/main/info.png"] = "icon16/information.png"
+	materials["cellar/main/content.png"] = "icon16/box.png"
+	materials["cellar/main/exit.png"] = "icon16/door_out.png"
+	materials["cellar/main/tab/closebutton16x16.png"] = "icon16/cross.png"
+	materials["cellar/main/tab/closebuttonhovered.png"] = "icon16/cross.png"
+	materials["cellar/main/tab/crosshovered.png"] = "icon16/cross.png"
+	materials["cellar/main/hud/hunger.png"] = "icon16/cake.png"
+	materials["cellar/main/hud/thirst.png"] = "icon16/cup.png"
+	materials["cellar/main/hud/geiger.png"] = "icon16/error.png"
+	materials["cellar/main/hud/filter.png"] = "icon16/shield.png"
+	materials["cellar/main/hud/bullets.png"] = "icon16/package.png"
+	materials["cellar/main/hud/snowflake.png"] = "icon16/weather_snow.png"
+
+	-- Base backgrounds only. Missing borders, logos and overlays are skipped
+	-- at their draw sites rather than replaced with opaque placeholder boxes.
+	materials["cellar/main/tab/backgroundalpha.png"] = "vgui/gradient-d"
+	materials["cellar/main/tab/backgroundtab.png"] = "vgui/gradient-d"
+	materials["cellar/main/tab/backgroundtabmirrored.png"] = "vgui/gradient-d"
+	materials["cellar/main/tab/otherbackground.png"] = "vgui/gradient-d"
+	materials["cellar/ui/dispatch/bg.png"] = "vgui/gradient-d"
+
+	materials["cellar/ui/dispatch/camera.png"] = "icon16/camera.png"
+	materials["cellar/ui/dispatch/leader.png"] = "icon16/star.png"
+	materials["cellar/ui/dispatch/ico/gun"] = "icon16/bomb.png"
+	materials["cellar/ui/dispatch/ico/attack"] = "icon16/exclamation.png"
+	materials["cellar/ui/dispatch/ico/hazard"] = "icon16/error.png"
+	materials["cellar/ui/dispatch/ico/factory"] = "icon16/building.png"
+	materials["cellar/ui/dispatch/ico/poi"] = "icon16/flag_blue.png"
+	materials["cellar/ui/dispatch/ico/protect"] = "icon16/shield.png"
+	materials["cellar/ui/dispatch/ico/regroup"] = "icon16/group.png"
+	materials["cellar/ui/dispatch/ico/death"] = "icon16/cancel.png"
+	materials["cellar/ui/dispatch/ico/warn"] = "icon16/exclamation.png"
+	materials["vgui/terminals/reticle_finger.png"] = "icon16/cursor.png"
 end
 
 -- ---------------------------------------------------------------------
@@ -67,35 +109,38 @@ do
 
 	-- Radios (`plugins/radio/items/base/sh_radios.lua`). Stock HL2
 	-- ships a citizen radio model that is an obvious visual match.
-	models["models/cellar/items/radio.mdl"] = "models/props_lab/citizenradio.mdl"
+	models["models/cellar/items/handheld_radio.mdl"] = "models/props_lab/citizenradio.mdl"
 
 	-- Reagent containers (`plugins/!reagents/items/reagent_holder/*`).
-	-- All glass / pitcher variants point at lost cellar meshes; group
-	-- them onto a stock glass jar so loot drops still look like
-	-- liquid containers rather than `models/error.mdl`.
-	local reagentJar = "models/props_junk/glassjug01.mdl"
-	models["models/cellar/items/reagents/glass1.mdl"]  = reagentJar
-	models["models/cellar/items/reagents/glass2.mdl"]  = reagentJar
-	models["models/cellar/items/reagents/glass3.mdl"]  = reagentJar
-	models["models/cellar/items/reagents/glass4.mdl"]  = reagentJar
-	models["models/cellar/items/reagents/glass5.mdl"]  = reagentJar
-	models["models/cellar/items/reagents/glass6.mdl"]  = reagentJar
-	models["models/cellar/items/reagents/glass7.mdl"]  = reagentJar
-	models["models/cellar/items/reagents/glass8.mdl"]  = reagentJar
-	models["models/cellar/items/reagents/glass9.mdl"]  = reagentJar
-	models["models/cellar/items/reagents/glass10.mdl"] = reagentJar
-	models["models/cellar/items/reagents/pitcher.mdl"] = "models/props_junk/glassjug01.mdl"
+	-- Match the current item paths and their stock bottle/cup placeholders.
+	for _, index in ipairs({1, 4, 5, 7, 8, 9}) do
+		models["models/cellar/liquid/glass" .. index .. ".mdl"] = "models/props_junk/garbage_glassbottle003a.mdl"
+	end
+
+	for _, index in ipairs({2, 3, 6, 10}) do
+		models["models/cellar/liquid/glass" .. index .. ".mdl"] = "models/props_junk/garbage_coffeemug001a.mdl"
+	end
+
+	models["models/cellar/liquid/pitcher.mdl"] = "models/props_junk/garbage_milkcarton002a.mdl"
 end
 
 -- ---------------------------------------------------------------------
 -- Sounds
--- The Cellar UI sound family (`sound/cellar/ui/*`) is entirely lost.
--- Rather than route every UI cue through this manifest, individual
--- call sites pass an appropriate Helix-shipped fallback (e.g.
--- `Helix.Whoosh`, `Helix.Press`) directly via the helper's second
--- argument. The default `common/null.wav` therefore acts as a silent
--- last-resort for any sound that nothing has explicitly remapped.
+-- Paths are relative to sound/. Scripted names such as Helix.Press must
+-- remain at EmitSound/StopSound call sites, not pass through the resolver.
 -- ---------------------------------------------------------------------
+do
+	local sounds = manifest.sounds
+
+	sounds["cellar/ui/dronelooping.wav"] = "common/null.wav"
+	sounds["cellar/ui/otherlooping25.wav"] = "common/null.wav"
+	sounds["cellar/ui/info.mp3"] = "common/null.wav"
+	sounds["cellar/ui/droneoutro25.mp3"] = "common/null.wav"
+	sounds["cellar/ui/infooutro25.mp3"] = "common/null.wav"
+	sounds["terminals/button_rollover.ogg"] = "buttons/button15.wav"
+	sounds["terminals/button_push.ogg"] = "buttons/button14.wav"
+	sounds["terminals/click.wav"] = "buttons/button14.wav"
+end
 
 -- ---------------------------------------------------------------------
 -- Fonts

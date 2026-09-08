@@ -1,5 +1,5 @@
 ITEM.name = "Бронежилет кустарного производства"
-ITEM.model = "models/cellar/items/city3/clothing/refuge_metropolice_vest.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/refuge_metropolice_vest.mdl", "models/props_c17/suitcase001a.mdl")
 ITEM.width = 3 -- ширина
 ITEM.height = 2 -- высота
 ITEM.description = "Легкий бронежилет, украденный со склада или тела сотрудника Гражданской Обороны."

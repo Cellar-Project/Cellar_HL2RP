@@ -1,17 +1,17 @@
 ITEM.name = "Доступ Сверхчеловеческого Надзора"
 ITEM.width = 1
 ITEM.height = 1
-ITEM.iconCam = {
+ITEM.model = Schema.assets.Model("models/vintagethief/cellarproject/cid_card.mdl", "models/props_lab/clipboard.mdl")
+ITEM.iconCam = ITEM.model == "models/vintagethief/cellarproject/cid_card.mdl" and {
 	pos = Vector(0, 0, 12),
 	ang = Angle(90, 0, -45),
 	fov = 45,
-}
+} or false
 ITEM.access = {
 	["DATAFILE_MEDIUM"] = true,
 	["cmb*"] = true,
 	["BROADCAST"] = true,
 }
-ITEM.model = Model("models/vintagethief/cellarproject/cid_card.mdl")
 ITEM.description = ""
 ITEM.isEquipment = true
 ITEM.slot = 9 --EQUIP_CID

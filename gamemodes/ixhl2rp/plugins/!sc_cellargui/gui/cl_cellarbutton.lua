@@ -5,11 +5,11 @@ local buttonnew = Material("cellar/main/button_cellar.png")
 local buttonnewhover = Material("cellar/main/button_cellar_hovered_blue.png")
 local buttonnewtoggled = Material("cellar/main/cellar_button_toggled.png")
 local icons = {
-	Material("cellar/main/new.png"),
-	Material("cellar/main/chars.png"),
-	Material("cellar/main/info.png"),
-	Material("cellar/main/content.png"),
-	Material("cellar/main/exit.png"),
+	Schema.assets.Material("cellar/main/new.png"),
+	Schema.assets.Material("cellar/main/chars.png"),
+	Schema.assets.Material("cellar/main/info.png"),
+	Schema.assets.Material("cellar/main/content.png"),
+	Schema.assets.Material("cellar/main/exit.png"),
 }
 surface.CreateFont("cellar.main.btn", {
 	font = "Nagonia",
@@ -80,7 +80,10 @@ function PANEL:Paint(w, h)
         surface.SetDrawColor(color_white)
         surface.SetMaterial(buttonnew)
     end
-    surface.DrawTexturedRect(0, 0, w, h)
+    -- Keep missing button artwork transparent; text and icons still draw.
+    if (not (self:IsHovered() and buttonnewtoggled or buttonnew):IsError()) then
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 
 
 
@@ -122,11 +125,11 @@ local buttonnew = Material("cellar/main/cellar_buttonlist.png")
 local buttonnewhover = Material("cellar/main/cellar_buttonlisthover.png")
 local buttonnewtoggled = Material("cellar/main/cellar_buttonlisttoggle.png")
 local icons = {
-	Material("cellar/main/new.png"),
-	Material("cellar/main/chars.png"),
-	Material("cellar/main/info.png"),
-	Material("cellar/main/content.png"),
-	Material("cellar/main/exit.png"),
+	Schema.assets.Material("cellar/main/new.png"),
+	Schema.assets.Material("cellar/main/chars.png"),
+	Schema.assets.Material("cellar/main/info.png"),
+	Schema.assets.Material("cellar/main/content.png"),
+	Schema.assets.Material("cellar/main/exit.png"),
 }
 function PANEL:Init()
 	self.BaseClass.SetText(self, "")
@@ -183,7 +186,9 @@ function PANEL:Paint(w, h)
         surface.SetDrawColor(color_white)
         surface.SetMaterial(buttonnew)
     end
-    surface.DrawTexturedRect(0, 0, w, h)
+    if (not (self:IsHovered() and buttonnewtoggled or buttonnew):IsError()) then
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 
 
 

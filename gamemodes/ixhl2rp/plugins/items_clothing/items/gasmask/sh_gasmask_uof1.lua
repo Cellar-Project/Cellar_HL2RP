@@ -7,7 +7,7 @@ ITEM.description = [[Очень трудная в изготовке серия 
 крупнокалиберного оружия, без риска получить контузию. Левая часть 
 оптики подключена к адаптивному интерфейсу, схожему с интерфейсом шлема Око-М2. 
 Единственное возможное неудобство - тяжесть и неудобство при его ношении неподготовленным бойцом.]]
-ITEM.model = Model("models/union_of_freedom/helmet.mdl")
+ITEM.model = Schema.assets.Model("models/union_of_freedom/helmet.mdl", "models/props_c17/briefcase001a.mdl")
 ITEM.rarity = 2
 ITEM.bodyGroups = {
 	[0] = 10

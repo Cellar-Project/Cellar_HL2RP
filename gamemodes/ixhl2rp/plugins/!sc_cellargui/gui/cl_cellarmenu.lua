@@ -5,10 +5,10 @@ local testBG = Material("cellar/main/bg/00.png")
 local testBG2 = Material("cellar/main/bg/01.png")
 local shadow = Material("cellar/main/shadow.png")
 local warning = Material("cellar/main/warning.png")
-local background = Material('cellar/main/tab/backgroundalpha.png')
+local background = Schema.assets.Material('cellar/main/tab/backgroundalpha.png')
 local television = Material('cellar/main/tvtexture.png')
 local staticborder = Material('cellar/main/tab/bigborder.png')
-local infoicon = Material("cellar/main/info.png")
+local infoicon = Schema.assets.Material("cellar/main/info.png")
 
 
 function PANEL:Init()
@@ -268,17 +268,24 @@ function PANEL:Paint(w, h)
 	surface.DrawRect(0, 0, w, h)
 
 	surface.SetDrawColor(ColorAlpha(color_white, 90))
-	surface.SetMaterial(television)
-	surface.DrawTexturedRect(0, 0, w, h)
+	-- Decorative overlays have no opaque fallback.
+	if (not television:IsError()) then
+		surface.SetMaterial(television)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 
 	surface.SetDrawColor(ColorAlpha(color_white, 240))
-	surface.SetMaterial(staticborder)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not staticborder:IsError()) then
+		surface.SetMaterial(staticborder)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 	surface.SetDrawColor(ColorAlpha(color_black, 255))
-	surface.SetMaterial(vignette)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not vignette:IsError()) then
+		surface.SetMaterial(vignette)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 end
 
@@ -323,7 +330,7 @@ function PANEL:Remove()
 	timer.Simple(.55, function() self:SetVisible(false) end)
 	LocalPlayer():StopSound('cellar.tab.amb')
 	LocalPlayer():StopSound('cellar.info.amb')
-	surface.PlaySound('cellar/ui/droneoutro25.mp3')
+	surface.PlaySound(Schema.assets.Sound('cellar/ui/droneoutro25.mp3'))
 end
 
 vgui.Register("cellar.tab", PANEL, "EditablePanel")

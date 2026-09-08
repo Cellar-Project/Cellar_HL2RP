@@ -293,17 +293,19 @@ function PANEL:AddIcon(model, x, slot, w, h, skin)
 	if (itemTable.exRender) then
 		panel.Icon:SetVisible(false)
 		panel.ExtraPaint = function(this, panelX, panelY)
-			local exIcon = ikon:GetIcon(itemTable.uniqueID)
+			local model = itemTable:GetModel()
+			local name = itemTable.uniqueID .. "_" .. util.CRC(model)
+			local exIcon = ikon:GetIcon(name)
 			if (exIcon) then
 				surface.SetMaterial(exIcon)
 				surface.SetDrawColor(color_white)
 				surface.DrawTexturedRect(0, 0, panelX, panelY)
 			else
 				ikon:renderIcon(
-					itemTable.uniqueID,
+					name,
 					itemTable.width,
 					itemTable.height,
-					itemTable:GetModel(),
+					model,
 					itemTable.iconCam
 				)
 			end

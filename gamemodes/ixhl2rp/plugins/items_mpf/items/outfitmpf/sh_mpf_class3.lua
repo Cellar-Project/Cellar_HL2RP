@@ -1,6 +1,6 @@
 ITEM.name = "Униформа сотрудника ГО / Класс 3"
 ITEM.description = "Униформа сотрудника Гражданской Обороны с инсигниями Города-3. В комплекте имеются более укрепленные бронепластины в штанах и руках, а также слот для надевания бронежилета 3 класса защиты. Терморегуляция улучшена, имеется место для шевронов за хорошую службу на благо Вселенского Союза."
-ITEM.model = "models/cellar/items/city3/clothing/vest_02.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/vest_02.mdl", "models/props_c17/suitcase001a.mdl")
 ITEM.Stats = {
 	[HITGROUP_GENERIC] = 0,
 	[HITGROUP_HEAD] = 0,

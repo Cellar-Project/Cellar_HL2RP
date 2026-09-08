@@ -1,5 +1,5 @@
 ITEM.name = "Шапка"
-ITEM.model = "models/cellar/items/city3/clothing/beanie.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/beanie.mdl", "models/props_c17/suitcase_passenger_physics.mdl")
 ITEM.width = 1 -- ширина
 ITEM.height = 1 -- высота
 ITEM.description = "Обычная шапочка, которая плотно прилегает к голове при помощи довольно упругих резинок. Может довольно хорошо согреть в ненастную погоду, но сам материал довольно некачественен, из-за чего расчитывать на то, что шапка защитит в экстремальных условиях не приходится."

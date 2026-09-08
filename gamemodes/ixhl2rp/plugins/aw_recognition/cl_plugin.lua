@@ -85,11 +85,11 @@ local btnColors = {
 }
 local bg = Material("cellar/main/btn_background.png")
 local icons = {
-	Material("cellar/main/new.png"),
-	Material("cellar/main/chars.png"),
-	Material("cellar/main/info.png"),
-	Material("cellar/main/content.png"),
-	Material("cellar/main/exit.png"),
+	Schema.assets.Material("cellar/main/new.png"),
+	Schema.assets.Material("cellar/main/chars.png"),
+	Schema.assets.Material("cellar/main/info.png"),
+	Schema.assets.Material("cellar/main/content.png"),
+	Schema.assets.Material("cellar/main/exit.png"),
 }
 surface.CreateFont("cellar.f3.btn", {
 	font = "Nagonia",

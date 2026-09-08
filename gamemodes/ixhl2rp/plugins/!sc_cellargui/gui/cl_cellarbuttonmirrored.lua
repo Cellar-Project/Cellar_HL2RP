@@ -45,7 +45,9 @@ function PANEL:Paint(w, h)
         surface.SetDrawColor(color_white)
         surface.SetMaterial(button)
     end
-    surface.DrawTexturedRect(0, 0, w, h)
+    if (not (self:IsHovered() and buttonhover or button):IsError()) then
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 
 
 

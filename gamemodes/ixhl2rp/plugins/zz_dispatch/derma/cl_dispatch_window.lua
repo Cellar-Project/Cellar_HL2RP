@@ -229,7 +229,7 @@ do
 	local high = Color(0, 100, 64, 2)
 	local focus_color = Color(0, 0, 0, 225)
 	local header_colors = {Color(0, 255, 255), Color(0, 255, 255, 19)}
-	local ico = Material("cellar/ui/dispatch/camera.png")
+	local ico = Schema.assets.Material("cellar/ui/dispatch/camera.png")
 	local PANEL = {}
 
 	function PANEL:GetHeaderColor(isText)
@@ -484,7 +484,7 @@ end
 
 do
 	local PANEL = {}
-	local background = Material("cellar/ui/dispatch/bg.png", "smooth")
+	local background = Schema.assets.Material("cellar/ui/dispatch/bg.png", nil, "smooth")
 	local border_size = scale(64)
 	local x2, y2 = 0, 0
 

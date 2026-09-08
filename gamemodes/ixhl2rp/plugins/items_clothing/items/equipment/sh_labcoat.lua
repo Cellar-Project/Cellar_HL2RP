@@ -1,5 +1,5 @@
 ITEM.name = "Лабораторный халат"
-ITEM.model = "models/cellar/items/city3/clothing/halat.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/halat.mdl", "models/props_c17/suitcase_passenger_physics.mdl")
 ITEM.width = 2 -- ширина
 ITEM.height = 2 -- высота
 ITEM.description = "Самый обычный белый лабораторный халат, одинаково подойдет к ношению для представителей любого пола."

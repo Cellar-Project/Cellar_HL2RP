@@ -1,7 +1,7 @@
 --[[ ВНИМАНИЕ, ПАНЕЛЬ ОСНОВАНА НА gamemodes/helix/core/derma/cl_help.lua И НЕ БУДЕТ РАБОТАТЬ КОРРЕКТНО БЕЗ ВЫШЕУКАЗАННОГО ФАЙЛА]]--
 
 PANEL = {}
-local background = Material('cellar/main/tab/backgroundtabmirrored.png')
+local background = Schema.assets.Material('cellar/main/tab/backgroundtabmirrored.png')
 local television = Material('cellar/main/tvtexture.png')
 local staticborder = Material('cellar/main/tab/tabbordersmirrored.png')
 
@@ -84,22 +84,30 @@ function PANEL:Paint(w, h)
 	surface.DrawRect(0, 0, w, h)
 
 	surface.SetDrawColor(ColorAlpha(color_white, 90))
-	surface.SetMaterial(television)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not television:IsError()) then
+		surface.SetMaterial(television)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 
 	surface.SetDrawColor(ColorAlpha(color_white, 240))
-	surface.SetMaterial(staticborder)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not staticborder:IsError()) then
+		surface.SetMaterial(staticborder)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 	surface.SetDrawColor(ColorAlpha(color_black, 255))
-	surface.SetMaterial(vignette)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not vignette:IsError()) then
+		surface.SetMaterial(vignette)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 	local scoreboarder = Material('cellar/main/tab/scoreboarder1642x880.png')
     surface.SetDrawColor(color_white)
-    surface.SetMaterial(scoreboarder)
-    surface.DrawTexturedRect(ScrW() - ScrW() * .9276, ScrH() - ScrH() * .915, ScrW() * .8547, ScrH() * .8148)
+    if (not scoreboarder:IsError()) then
+        surface.SetMaterial(scoreboarder)
+        surface.DrawTexturedRect(ScrW() - ScrW() * .9276, ScrH() - ScrH() * .915, ScrW() * .8547, ScrH() * .8148)
+    end
 
     /*surface.SetDrawColor(Color(56, 207, 248, 45))
     surface.SetMaterial(logo128)

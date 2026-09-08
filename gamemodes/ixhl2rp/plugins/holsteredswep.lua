@@ -170,7 +170,8 @@ function PLUGIN:PostPlayerDraw(client)
 	for k, v in pairs(client.holsteredWeapons) do
 		local weapon = client:GetWeapon(k)
 		if (not IsValid(weapon)) then
-			v:Remove()
+			if (IsValid(v)) then v:Remove() end
+			client.holsteredWeapons[k] = nil
 		end
 	end
 
@@ -180,14 +181,25 @@ function PLUGIN:PostPlayerDraw(client)
 		local drawInfo = HOLSTER_DRAWINFO[class]
 		if (not drawInfo or not drawInfo.model) then continue end
 
-		if (not IsValid(client.holsteredWeapons[class])) then
-			local model =
-				ClientsideModel(drawInfo.model, RENDERGROUP_TRANSLUCENT)
-				model:SetNoDraw(true)
-			client.holsteredWeapons[class] = model
+		local modelPath = Schema.assets.Model(drawInfo.model)
+		local drawModel = client.holsteredWeapons[class]
+
+		if (IsValid(drawModel) and drawModel:GetModel() != modelPath) then
+			drawModel:Remove()
+			drawModel = nil
+			client.holsteredWeapons[class] = nil
 		end
 
-		local drawModel = client.holsteredWeapons[class]
+		-- Unmapped weapon packs have no credible generic prop replacement.
+		if (modelPath == Schema.assets.defaultModelPath) then continue end
+
+		if (not IsValid(drawModel)) then
+			drawModel = ClientsideModel(modelPath, RENDERGROUP_TRANSLUCENT)
+			if (not IsValid(drawModel)) then continue end
+			drawModel:SetNoDraw(true)
+			client.holsteredWeapons[class] = drawModel
+		end
+
 		local boneIndex = client:LookupBone(drawInfo.bone)
 
 		if (not boneIndex or boneIndex < 0) then continue end

@@ -670,7 +670,7 @@ function PANEL:Paint(width, height)
 	BaseClass.Paint(self, width, height)
 
 	local w, h = width, height
-	local background = Material('cellar/main/tab/otherbackground.png')
+	local background = Schema.assets.Material('cellar/main/tab/otherbackground.png')
 	local television = Material('cellar/main/tvtexture.png')
 	local staticborder = Material('cellar/main/tab/otherborders.png')
 	local vignette = ix.util.GetMaterial("helix/gui/vignette.png")
@@ -686,17 +686,23 @@ function PANEL:Paint(width, height)
 	surface.DrawRect(0, 0, w, h)
 
 	surface.SetDrawColor(ColorAlpha(color_white, 90))
-	surface.SetMaterial(television)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not television:IsError()) then
+		surface.SetMaterial(television)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 
 	surface.SetDrawColor(ColorAlpha(color_white, 240))
-	surface.SetMaterial(staticborder)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not staticborder:IsError()) then
+		surface.SetMaterial(staticborder)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 	surface.SetDrawColor(ColorAlpha(color_black, 255))
-	surface.SetMaterial(vignette)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not vignette:IsError()) then
+		surface.SetMaterial(vignette)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 end
 
 vgui.Register("ixCharMenuNew", PANEL, "ixCharMenuPanel")

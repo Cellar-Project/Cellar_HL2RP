@@ -1,4 +1,13 @@
 
+-- Other schemas may load these panels without the Cellar asset helper.
+local function UIMaterial(path, fallbackPath, flags)
+	if (Schema and Schema.assets and Schema.assets.Material) then
+		return Schema.assets.Material(path, fallbackPath, flags)
+	end
+
+	return Material(path, flags)
+end
+
 local errorModel = "models/error.mdl"
 local PANEL = {}
 
@@ -368,7 +377,7 @@ function PANEL:Init()
 		local gradientUp = surface.GetTextureID("vgui/gradient-u")
 		local gradientLeft = surface.GetTextureID("vgui/gradient-l")
 		local gradientRadial = Material("helix/gui/radial-gradient.png")
-		local gradientCenter = Material('cellar/main/gradientcenter.png')
+		local gradientCenter = UIMaterial('cellar/main/gradientcenter.png', 'vgui/gradient-d')
 
 		surface.SetFont('cellar.main.btn')
 		local hov = me:IsHovered()
@@ -604,7 +613,7 @@ function PANEL:Paint(width, height)
 	derma.SkinFunc("PaintCharacterLoadBackground", self, width, height)
 
 	local w, h = width, height
-	local background = Material('cellar/main/tab/otherbackground.png')
+	local background = UIMaterial('cellar/main/tab/otherbackground.png', 'vgui/gradient-d')
 	local television = Material('cellar/main/tvtexture.png')
 	local staticborder = Material('cellar/main/tab/otherborders.png')
 	local vignette = ix.util.GetMaterial("helix/gui/vignette.png")
@@ -620,17 +629,23 @@ function PANEL:Paint(width, height)
 	surface.DrawRect(0, 0, w, h)
 
 	surface.SetDrawColor(ColorAlpha(color_white, 90))
-	surface.SetMaterial(television)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not television:IsError()) then
+		surface.SetMaterial(television)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 
 	surface.SetDrawColor(ColorAlpha(color_white, 240))
-	surface.SetMaterial(staticborder)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not staticborder:IsError()) then
+		surface.SetMaterial(staticborder)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 	surface.SetDrawColor(ColorAlpha(color_black, 255))
-	surface.SetMaterial(vignette)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not vignette:IsError()) then
+		surface.SetMaterial(vignette)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 end
 
 vgui.Register("ixCharMenuLoad", PANEL, "ixCharMenuPanel")

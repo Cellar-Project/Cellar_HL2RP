@@ -24,7 +24,7 @@ function Schema:InitializedChatClasses()
 
 			local translated = L2("icFormat", name, text)
 
-			chat.AddText(color, ix.util.GetMaterial("cellar/chat/ic.png"), translated or string.format(self.format, name, text))
+			chat.AddText(color, Schema.assets.Material("cellar/chat/ic.png"), translated or string.format(self.format, name, text))
 		end
 	})
 
@@ -40,7 +40,7 @@ function Schema:InitializedChatClasses()
 				L"someone" or hook.Run("GetCharacterName", speaker, "w") or
 				(IsValid(speaker) and speaker:Name() or "Console")
 
-			chat.AddText(self.color, ix.util.GetMaterial("cellar/chat/whisper.png"), L2("wFormat", name, text))
+			chat.AddText(self.color, Schema.assets.Material("cellar/chat/whisper.png"), L2("wFormat", name, text))
 		end
 	})
 
@@ -56,7 +56,7 @@ function Schema:InitializedChatClasses()
 				L"someone" or hook.Run("GetCharacterName", speaker, "y") or
 				(IsValid(speaker) and speaker:Name() or "Console")
 
-			chat.AddText(self.color, ix.util.GetMaterial("cellar/chat/yell.png"), L2("yFormat", name, text))
+			chat.AddText(self.color, Schema.assets.Material("cellar/chat/yell.png"), L2("yFormat", name, text))
 		end
 	})
 
@@ -72,7 +72,7 @@ function Schema:InitializedChatClasses()
 			end
 		end,
 		OnChatAdd = function(class, speaker, text)
-			chat.AddText(class.color, ix.util.GetMaterial("cellar/chat/dispatch.png"), string.format(class.format, text))
+			chat.AddText(class.color, Schema.assets.Material("cellar/chat/dispatch.png"), string.format(class.format, text))
 		end
 	})
 
@@ -137,7 +137,7 @@ function Schema:InitializedChatClasses()
 			end
 		end,
 		OnChatAdd = function(class, speaker, text)
-			chat.AddText(class.color, ix.util.GetMaterial("cellar/chat/broadcast.png"), string.format(class.format, IsValid(speaker) and speaker:Name() or "Broadcast", text))
+			chat.AddText(class.color, Schema.assets.Material("cellar/chat/broadcast.png"), string.format(class.format, IsValid(speaker) and speaker:Name() or "Broadcast", text))
 		end
 	})
 
@@ -255,7 +255,7 @@ function Schema:InitializedChatClasses()
 		CanHear = ix.config.Get("chatRange", 280),
 		deadCanChat = true,
 		OnChatAdd = function(self, speaker, text, bAnonymous, data)
-			chat.AddText(self.color, ix.util.GetMaterial("cellar/chat/roll.png"), string.format(self.format,
+			chat.AddText(self.color, Schema.assets.Material("cellar/chat/roll.png"), string.format(self.format,
 				L("rollOutput", speaker:GetName(), text, data.max or 100)
 			))
 		end
@@ -264,7 +264,7 @@ function Schema:InitializedChatClasses()
 	ix.chat.Register("chess", {
 		CanHear = ix.config.Get("chatRange", 280),
 		OnChatAdd = function(self, speaker, text)
-			chat.AddText(ix.util.GetMaterial("cellar/chat/roll.png"), Color(100, 185, 100), text)
+			chat.AddText(Schema.assets.Material("cellar/chat/roll.png"), Color(100, 185, 100), text)
 		end,
 	})
 
@@ -307,7 +307,7 @@ function Schema:InitializedChatClasses()
 
 			local icon = serverguard.ranks:GetRank(serverguard.player:GetRank(speaker)).texture or "icon16/user.png"
 
-			icon = Material(hook.Run("GetPlayerIcon", speaker) or icon)
+			icon = Schema.assets.Material(hook.Run("GetPlayerIcon", speaker) or icon, "icon16/user.png")
 
 			chat.AddText(icon, Color(255, 50, 50), "[OOC] ", speaker, color_white, ": "..text)
 		end,

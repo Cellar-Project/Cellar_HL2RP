@@ -1,7 +1,7 @@
 
 ITEM.name = "Radio Base"
 ITEM.description = "A shiny handheld radio with a frequency tuner."
-ITEM.model = "models/cellar/items/handheld_radio.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/handheld_radio.mdl", "models/props_lab/citizenradio.mdl")
 ITEM.category = "Коммуникация"
 ITEM.isEquipment = true
 ITEM.slot = EQUIP_RADIO

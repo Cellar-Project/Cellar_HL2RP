@@ -1,8 +1,8 @@
 PANEL = {}
-local background = Material('cellar/main/tab/otherbackground.png')
+local background = Schema.assets.Material('cellar/main/tab/otherbackground.png')
 local television = Material('cellar/main/tvtexture.png')
 local staticborder = Material('cellar/main/tab/otherborders.png')
-local infoicon = Material("cellar/main/info.png")
+local infoicon = Schema.assets.Material("cellar/main/info.png")
 
 local function CalculateWidestName(tbl)
 	local highest = 0
@@ -383,17 +383,23 @@ function PANEL:Paint(w, h)
 	surface.DrawRect(0, 0, w, h)
 
 	surface.SetDrawColor(ColorAlpha(color_white, 90))
-	surface.SetMaterial(television)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not television:IsError()) then
+		surface.SetMaterial(television)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 
 	surface.SetDrawColor(ColorAlpha(color_white, 240))
-	surface.SetMaterial(staticborder)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not staticborder:IsError()) then
+		surface.SetMaterial(staticborder)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
 	surface.SetDrawColor(ColorAlpha(color_black, 255))
-	surface.SetMaterial(vignette)
-	surface.DrawTexturedRect(0, 0, w, h)
+	if (not vignette:IsError()) then
+		surface.SetMaterial(vignette)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
 
     surface.SetDrawColor(cellar_blue)
     surface.DrawCircle(self.model:GetWide() * 1, self.model:GetTall()/1.6, 10)
@@ -423,8 +429,10 @@ function PANEL:Paint(w, h)
 	surface.DrawLine(ScrW() * .77, ScrH() * .1361, self.stats:GetX() + self.stats:GetWide()/2, ScrH() * .2407)*/
 
 	surface.SetDrawColor(color_white)
-	surface.SetMaterial(skillsline)
-	surface.DrawTexturedRectRotated(self.stats:GetX() - 16, self.model:GetTall()/1.6, ScrH() * .50, 16, 90)
+	if (not skillsline:IsError()) then
+		surface.SetMaterial(skillsline)
+		surface.DrawTexturedRectRotated(self.stats:GetX() - 16, self.model:GetTall()/1.6, ScrH() * .50, 16, 90)
+	end
    
 
 end
@@ -513,8 +521,10 @@ function PANEL:Paint(w, h)
     local name = LocalPlayer():GetName():utf8upper()
 
     surface.SetDrawColor(color_white)
-    surface.SetMaterial(label)
-    surface.DrawTexturedRect(0, 0, w, h)
+    if (not label:IsError()) then
+        surface.SetMaterial(label)
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 
     draw.SimpleText(name, 'cellar.derma.light.blur', w/2., h/2.7, cellar_blur_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText(name, 'cellar.derma.light', w/2., h/2.7, cellar_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -553,8 +563,10 @@ function PANEL:Paint(w, h)
     end
 
     surface.SetDrawColor(color_white)
-    surface.SetMaterial(label)
-    surface.DrawTexturedRect(0, 0, w, h)
+    if (not label:IsError()) then
+        surface.SetMaterial(label)
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 
     draw.SimpleText(gender, 'cellar.derma.light.blur', w/2, h/2.7, cellar_blur_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText(gender, 'cellar.derma.light', w/2., h/2.7, cellar_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -590,8 +602,10 @@ function PANEL:Paint(w, h)
     end
 
     surface.SetDrawColor(color_white)
-    surface.SetMaterial(label)
-    surface.DrawTexturedRect(0, 0, w, h)
+    if (not label:IsError()) then
+        surface.SetMaterial(label)
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 
     
     draw.SimpleText(money, "cellar.derma.light.blur", w/2, h/2.7, cellar_blur_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -664,8 +678,10 @@ function PANEL:Paint(w, h)
     local label = Material('cellar/main/tab/chardescline.png')
 
     surface.SetDrawColor(color_white)
-    surface.SetMaterial(label)
-    surface.DrawTexturedRect(0, 0, w, h)
+    if (not label:IsError()) then
+        surface.SetMaterial(label)
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 end
 
 vgui.Register("cellar.information.desc", PANEL, "DLabel")
@@ -693,8 +709,10 @@ function PANEL:Paint(w, h)
     local level = 'LEVEL: '..lvl
 
     surface.SetDrawColor(color_white)
-    surface.SetMaterial(label)
-    surface.DrawTexturedRect(0, 0, w, h)
+    if (not label:IsError()) then
+        surface.SetMaterial(label)
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 
     draw.SimpleText(level, 'cellar.derma.light.blur', w/2, h/1.525, cellar_blur_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText(level, 'cellar.derma.light', w/2., h/1.525, cellar_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -726,8 +744,10 @@ function PANEL:Paint(w, h)
     local contents = L(faction.name):utf8upper()
 
     surface.SetDrawColor(color_white)
-    surface.SetMaterial(label)
-    surface.DrawTexturedRect(0, 0, w, h)
+    if (not label:IsError()) then
+        surface.SetMaterial(label)
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 
     draw.SimpleText(contents, 'cellar.derma.light.blur', w/2, h/1.525, cellar_blur_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText(contents, 'cellar.derma.light', w/2., h/1.525, cellar_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -766,8 +786,10 @@ function PANEL:Paint(w, h)
     end
 
     surface.SetDrawColor(color_white)
-    surface.SetMaterial(label)
-    surface.DrawTexturedRect(0, 0, w, h)
+    if (not label:IsError()) then
+        surface.SetMaterial(label)
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
 
     draw.SimpleText(contents, 'cellar.derma.light.blur', w/2, h/1.525, cellar_blur_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText(contents, 'cellar.derma.light', w/2., h/1.525, cellar_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)

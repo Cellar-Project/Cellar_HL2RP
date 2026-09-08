@@ -1,6 +1,6 @@
 ITEM.name = "Бронированный шлем ГО"
 ITEM.description = "Наилучшее изобретение на вооружении сил CCA, тактический шлем с умным интерфейсом, который хорошо защищает от пуль и помогает ориентироваться в бою."
-ITEM.model = Model("models/items/mask_05.mdl")
+ITEM.model = Schema.assets.Model("models/items/mask_05.mdl", "models/props_c17/briefcase001a.mdl")
 ITEM.rarity = 3
 ITEM.bodyGroups = {
 	[1] = 1,

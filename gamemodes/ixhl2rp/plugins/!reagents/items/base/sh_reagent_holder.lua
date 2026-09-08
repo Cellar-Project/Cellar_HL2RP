@@ -151,12 +151,24 @@ function ITEM:OnEntityCreated(entity)
 end
 
 function ITEM:OnEntityInstanced(entity)
-	if !self.LiquidPhysData then 
+	local model = self.model
+	-- Liquid bone indices belong only to the authored Cellar rigs.
+	if !self.LiquidPhysData or !(model:match("^models/cellar/liquid/glass[1-9]%.mdl$")
+		or model == "models/cellar/liquid/glass10.mdl" or model == "models/cellar/liquid/pitcher.mdl")
+		or !Schema.assets.ModelExists(model) then
 		return
 	end
 
 	timer.Simple(0, function()
+		if !IsValid(entity) or entity:GetModel() != model then
+			return
+		end
+
 		entity.SetLiquidLevel = function(this, level)
+			if this:GetModel() != model then
+				return
+			end
+
 			for k, v in ipairs(self.LiquidPhysData) do
 				if !v[4] then
 					local frac = v[2] * (1 - level)

@@ -32,7 +32,7 @@ function PANEL:Init()
     self.hunger:SetPos(0, 0)
     self.hunger:SetSize(ICON_FRAME_SIZE, ICON_FRAME_SIZE)
     self.hunger.Paint = function(me, w, h)
-        local icon = Material('cellar/main/hud/hunger.png')
+        local icon = Schema.assets.Material('cellar/main/hud/hunger.png')
 
         if self.hinside < 0.3 then
             self.hColorInside = LerpColor(self.critAlpha/100, color_yellow, self.frameCritInside)
@@ -60,7 +60,7 @@ function PANEL:Init()
     self.thirst:SetPos(ICON_FRAME_SIZE + 8, 0)
     self.thirst:SetSize(ICON_FRAME_SIZE, ICON_FRAME_SIZE)
     self.thirst.Paint = function(me, w, h)
-        local icon = Material('cellar/main/hud/thirst.png')
+        local icon = Schema.assets.Material('cellar/main/hud/thirst.png')
 
         if self.tinside < 0.3 then
             self.tColorInside = LerpColor(self.critAlpha/100, color_yellow, self.frameCritInside)
@@ -139,7 +139,7 @@ function PANEL:Init()
     self.geiger:SetPos(0, 0)
     self.geiger:SetSize(ICON_FRAME_SIZE, ICON_FRAME_SIZE)
     self.geiger.Paint = function(me, w, h)
-        local icon = Material('cellar/main/hud/geiger.png')
+        local icon = Schema.assets.Material('cellar/main/hud/geiger.png')
 
         surface.SetDrawColor(self.hinside > 0.3 and self.hinside < 0.6 and LerpColor(self.critAlpha/100, self.frameInside, color_yellow) or self.hinside > 0.6 and LerpColor(self.critAlpha/100, color_yellow, self.frameCritInside) or self.frameInside)
 
@@ -159,7 +159,7 @@ function PANEL:Init()
     self.filter:SetPos(self:GetWide() - ICON_FRAME_SIZE, 0)
     self.filter:SetSize(ICON_FRAME_SIZE, ICON_FRAME_SIZE)
     self.filter.Paint = function(me, w, h)
-        local icon = Material('cellar/main/hud/filter.png')
+        local icon = Schema.assets.Material('cellar/main/hud/filter.png')
 
         surface.SetDrawColor(self.tinside > 0.3 and self.tinside < 0.6 and LerpColor(self.critAlpha/100, self.frameInside, color_yellow) or self.tinside < 0.3 and LerpColor(self.critAlpha/100, color_yellow, self.frameCritInside) or self.frameInside)
 
@@ -230,7 +230,7 @@ function PANEL:Init()
     self.temperature:SetPos(0, 0)
     self.temperature:SetSize(ICON_FRAME_SIZE, ICON_FRAME_SIZE)
     self.temperature.Paint = function(me, w, h)
-        local icon = Material('cellar/main/hud/snowflake.png')
+        local icon = Schema.assets.Material('cellar/main/hud/snowflake.png')
 
         surface.SetDrawColor(self.tinside < 0.6 and LerpColor(self.critAlpha/100, self.frameInside, color_yellow) or self.tinside < 0.3 and LerpColor(self.critAlpha/100, color_yellow, self.frameCritInside) or self.frameInside)
 

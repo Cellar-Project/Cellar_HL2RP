@@ -1,5 +1,5 @@
 ITEM.name = "Бронежилет Солдата Патруля"
-ITEM.model = "models/cellar/items/city3/clothing/combine_armor_vest.mdl"
+ITEM.model = Schema.assets.Model("models/cellar/items/city3/clothing/combine_armor_vest.mdl", "models/props_c17/suitcase001a.mdl")
 ITEM.width = 3 -- ширина
 ITEM.height = 3 -- высота
 ITEM.description = "Бронежилет, снятый с убитого солдата Патруля. Очень тяжелый и неповоротливый, но может, возможно, остановить подавляющее большинство пуль."

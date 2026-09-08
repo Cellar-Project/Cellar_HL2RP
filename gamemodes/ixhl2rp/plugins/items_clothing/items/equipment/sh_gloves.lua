@@ -1,5 +1,5 @@
 ITEM.name = "Перчатки с пальцами"
-ITEM.model = "models/cmbfdr/items/gloves.mdl"
+ITEM.model = Schema.assets.Model("models/cmbfdr/items/gloves.mdl", "models/props_c17/briefcase001a.mdl")
 ITEM.width = 1 -- ширина
 ITEM.height = 1 -- высота
 ITEM.description = "Большие резиновые перчатки, которые плотно прилегают к пальцам. Хорошо согревают даже в самую холодную погоду в этом дренном городе."

@@ -3,7 +3,7 @@ ITEM.description = [[Баллистический шлем произведен�
 популярный у спецподразделений всего мира. Имеет хорошие технические параметры, 
 и очень легок. Может быть модифицирован различными 
 компонентами, фонарями, приборами ночного видения, тепловизорами.]]
-ITEM.model = Model("models/union_of_freedom/helmet4.mdl")
+ITEM.model = Schema.assets.Model("models/union_of_freedom/helmet4.mdl", "models/props_c17/briefcase001a.mdl")
 ITEM.rarity = 2
 ITEM.bodyGroups = {
 	[0] = 3,

@@ -47,7 +47,7 @@ ix.chat.Register("adminchat", {
 	OnChatAdd = function(self, speaker, text)
 		local icon = serverguard.ranks:GetRank(serverguard.player:GetRank(speaker)).texture or "icon16/user.png"
 
-		icon = Material(hook.Run("GetPlayerIcon", speaker) or icon)
+		icon = Schema.assets.Material(hook.Run("GetPlayerIcon", speaker) or icon, "icon16/user.png")
 
 		if (CAMI.PlayerHasAccess(LocalPlayer(), "Helix - Admin Chat", nil) and CAMI.PlayerHasAccess(speaker, "Helix - Admin Chat", nil)) then
 			chat.AddText(icon, Color(255, 215, 0), "[А] ", Color(128, 0, 255, 255), (speaker:AnonSteamName() and "("..speaker:AnonSteamName()..") " or "")..speaker:Name(), ": ", Color(255, 255, 255), text)
