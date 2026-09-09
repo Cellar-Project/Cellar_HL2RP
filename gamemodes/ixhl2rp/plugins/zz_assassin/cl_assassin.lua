@@ -97,7 +97,10 @@ function PLUGIN:HUDPaint()
 	-- Two quick beats per cycle, like a real pulse.
 	local beat = math.max(math.sin(phase * math.pi * 2) ^ 8, math.sin((phase - 0.16) * math.pi * 2) ^ 8 * 0.7)
 	local bPlay = CurTime() >= nextHeartbeat
-	local closest
+
+	if (bPlay) then
+		nextHeartbeat = CurTime() + HEARTBEAT_PERIOD
+	end
 
 	for _, target in ipairs(player.GetAll()) do
 		if (target == client or !target:Alive() or !target:GetCharacter()) then
@@ -111,7 +114,17 @@ function PLUGIN:HUDPaint()
 		end
 
 		local fraction = 1 - math.sqrt(distanceSquared) / range
-		local screen = GetHeadPosition(target):ToScreen()
+		local center = target:WorldSpaceCenter()
+
+		-- Each body is its own sound source, so the beat arrives from their direction
+		-- with the engine's own distance falloff. sound.Play is client-only, so nobody
+		-- else hears it, and unlike Entity:EmitSound it cannot take over a sound
+		-- channel on the target and cut off one of their own sounds.
+		if (bPlay) then
+			sound.Play(heartbeatSound, center, 60, 92 + fraction * 22, 0.35 + fraction * 0.4)
+		end
+
+		local screen = center:ToScreen()
 
 		if (!screen.visible) then
 			continue
@@ -122,15 +135,5 @@ function PLUGIN:HUDPaint()
 		surface.SetMaterial(heartbeatMaterial)
 		surface.SetDrawColor(215, 30, 30, (40 + beat * 130) * (0.35 + fraction * 0.65))
 		surface.DrawTexturedRect(screen.x - size * 0.5, screen.y - size * 0.5, size, size)
-
-		if (!closest or fraction > closest) then
-			closest = fraction
-		end
-	end
-
-	if (bPlay and closest) then
-		nextHeartbeat = CurTime() + HEARTBEAT_PERIOD
-		-- Louder and higher pitched the closer the nearest body is.
-		client:EmitSound(heartbeatSound, 45, 90 + closest * 25, 0.25 + closest * 0.45, CHAN_STATIC)
 	end
 end
