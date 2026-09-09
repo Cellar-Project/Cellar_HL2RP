@@ -1,7 +1,7 @@
 ITEM.name = "Handmade Health Kit"
 ITEM.PrintName = "iDIYHealthKit"
 ITEM.description = "iDIYHealthKitDesc"
-ITEM.model = Model("models/crunchy/props/eft_props/ifak.mdl")
+ITEM.model = Schema.assets.Model("models/crunchy/props/eft_props/ifak.mdl", "models/items/healthkit.mdl")
 ITEM.useSound = "items/medshot4.wav"
 ITEM.cost = 60
 ITEM.dUses = 2

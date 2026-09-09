@@ -1,17 +1,17 @@
 ITEM.name = "Импульсный дробовик"
 ITEM.description = "Тяжелый импульсный дробовик производства Вселенского Союза. Очень разрушительное оружие в тесных пространствах."
-ITEM.model = "models/hlvr/weapons/w_shotgun_heavy/w_shotgun_heavy_hlvr.mdl"
+ITEM.model = Schema.assets.Model("models/hlvr/weapons/w_shotgun_heavy/w_shotgun_heavy_hlvr.mdl", "models/weapons/w_shotgun.mdl")
 ITEM.class = "arccw_heavyshotgun"
 ITEM.weaponCategory = "primary"
 ITEM.width = 3
 ITEM.height = 2
 ITEM.hasLock = true
 ITEM.impulse = true
-ITEM.iconCam = {
+ITEM.iconCam = ITEM.model == "models/hlvr/weapons/w_shotgun_heavy/w_shotgun_heavy_hlvr.mdl" and {
 	pos = Vector(-200, 5.289870262146, 1.5059641599655),
 	ang = Angle(0, -0, 0),
 	fov = 9.8072509180853,
-}
+} or false
 ITEM.Attack = 13
 ITEM.Info = {
 	Type = nil,

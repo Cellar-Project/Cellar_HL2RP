@@ -180,13 +180,13 @@ if (SERVER) then
 				self.on = false;
 				self:SetSkin(1);
 				self.dummy:SetSkin(1);
-				self:EmitSound("shield/deactivate.wav");
+				self:EmitSound(Schema.assets.Sound("shield/deactivate.wav", "ambient/machines/thumper_shutdown1.wav"));
 				self:SetCollisionGroup(COLLISION_GROUP_WORLD);
 			elseif (self.mode == 1) then
 				self.on = true;
 				self:SetSkin(0);
 				self.dummy:SetSkin(0);
-				self:EmitSound("shield/activate.wav");
+				self:EmitSound(Schema.assets.Sound("shield/activate.wav", "ambient/machines/thumper_startup1.wav"));
 				self:SetCollisionGroup(COLLISION_GROUP_NONE);
 			end;
 

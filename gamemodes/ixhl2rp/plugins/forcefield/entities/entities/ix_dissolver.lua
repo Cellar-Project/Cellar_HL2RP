@@ -117,7 +117,7 @@ if (SERVER) then
 		self:EmitSound("ambient/levels/citadel/weapon_disintegrate" .. math.random(1, 4) .. ".wav")
 
 		timer.Simple(0.1, function()
-			self:EmitSound("hl2rp/walloflight/wol1.wav", 90)
+			self:EmitSound(Schema.assets.Sound("hl2rp/walloflight/wol1.wav", "buttons/blip1.wav"), 90)
 			self:EmitSound("ambient/levels/citadel/weapon_disintegrate" .. math.random(1, 4) .. ".wav")
 
 			timer.Create(ragdoll:EntIndex() .. "_dissolveloop", 0.5, 2, function()
@@ -233,8 +233,9 @@ return entity end
 
 		if self:GetToggle() and self:GetNetVar("light") then
 			if (not self.Beep or CurTime() >= self.Beep) then
-				self:EmitSound("hl2rp/walloflight/wol1.wav")
-				self:GetDummy():EmitSound("hl2rp/walloflight/wol1.wav")
+				local beepSound = Schema.assets.Sound("hl2rp/walloflight/wol1.wav", "buttons/blip1.wav")
+				self:EmitSound(beepSound)
+				self:GetDummy():EmitSound(beepSound)
 				self.Beep = CurTime() + 2
 			end
 		end
@@ -270,8 +271,9 @@ return entity end
 
 					if self.BeepDouble then
 						if (not self.Beep2 or CurTime() >= self.Beep2) then
-						self:EmitSound("hl2rp/walloflight/wol2.wav")
-							self:GetDummy():EmitSound("hl2rp/walloflight/wol2.wav")
+							local clearSound = Schema.assets.Sound("hl2rp/walloflight/wol2.wav", "buttons/combine_button2.wav")
+							self:EmitSound(clearSound)
+							self:GetDummy():EmitSound(clearSound)
 							self.BeepDouble = false
 							self.Beep2 = CurTime() + 15 -- fix spam (W and S)
 						end
@@ -298,16 +300,18 @@ return entity end
 	function ENT:toggle(boolean)
 		self:SetToggle(boolean)
 
+		local enableSound = Schema.assets.Sound('hl2rp/forcefield/enable.mp3', 'ambient/machines/thumper_startup1.wav')
+
 		if self:GetToggle() then
 			self:SetSkin(0)
 			self.dummy:SetSkin(0)
-			self:EmitSound('hl2rp/forcefield/enable.mp3')
-			self:GetDummy():EmitSound('hl2rp/forcefield/enable.mp3')
+			self:EmitSound(enableSound)
+			self:GetDummy():EmitSound(enableSound)
 		else
 			self:SetSkin(1)
 			self.dummy:SetSkin(1)
-			self:EmitSound('hl2rp/forcefield/enable.mp3')
-			self:GetDummy():EmitSound('hl2rp/forcefield/disable.mp3')
+			self:EmitSound(enableSound)
+			self:GetDummy():EmitSound(Schema.assets.Sound('hl2rp/forcefield/disable.mp3', 'ambient/machines/thumper_shutdown1.wav'))
 		end
 		--[[-------------------------------------------------------------------------
 		self:SetSkin(self:GetToggle() and 0 or 1)

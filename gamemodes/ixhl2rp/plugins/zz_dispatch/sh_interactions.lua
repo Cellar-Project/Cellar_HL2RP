@@ -558,13 +558,13 @@ dispatch.WorldAction({
 			entity.on = false
 			entity:SetSkin(1)
 			entity.dummy:SetSkin(1)
-			entity:EmitSound("shield/deactivate.wav")
+			entity:EmitSound(Schema.assets.Sound("shield/deactivate.wav", "ambient/machines/thumper_shutdown1.wav"))
 			entity:SetCollisionGroup(COLLISION_GROUP_WORLD)
 		elseif entity.mode == 1 then
 			entity.on = true
 			entity:SetSkin(0)
 			entity.dummy:SetSkin(0)
-			entity:EmitSound("shield/activate.wav")
+			entity:EmitSound(Schema.assets.Sound("shield/activate.wav", "ambient/machines/thumper_startup1.wav"))
 			entity:SetCollisionGroup(COLLISION_GROUP_NONE)
 		end
 	end

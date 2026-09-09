@@ -56,11 +56,18 @@ end
 
 function PANEL:Paint(w, h)
 	if self.character then
-		surface.SetDrawColor(self.colorBG)
-		surface.SetMaterial(self.texBG)
-		surface.DrawTexturedRect(0, 0, w, h)
+		-- Limb silhouettes are full-panel overlays; a missing texture is skipped
+		-- rather than drawn as an error checkerboard. The tooltip still lists
+		-- every limb's health.
+		if (self.texBG and not self.texBG:IsError()) then
+			surface.SetDrawColor(self.colorBG)
+			surface.SetMaterial(self.texBG)
+			surface.DrawTexturedRect(0, 0, w, h)
+		end
 
 		for k, v in pairs(self.tex) do
+			if (not v[2] or v[2]:IsError()) then continue end
+
 			local limbColor = ix.limb:GetColor(self.character:GetLimbHealth(v[1]))
 
 			surface.SetDrawColor(limbColor.r, limbColor.g, limbColor.b, 150)

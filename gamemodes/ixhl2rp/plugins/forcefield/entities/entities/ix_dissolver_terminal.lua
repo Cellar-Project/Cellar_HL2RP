@@ -55,7 +55,7 @@ if (SERVER) then
 	local default_delay = 10
 
 	function ENT:hack(delay)
-		self:EmitSound("hl2rp/forcefield/hacked.wav")
+		self:EmitSound(Schema.assets.Sound("hl2rp/forcefield/hacked.wav", "buttons/combine_button7.wav"))
 
 		for i = 1, #self:get_dissolvers() do
 			local dissolver = self:get_dissolvers()[i]

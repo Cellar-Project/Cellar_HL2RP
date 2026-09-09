@@ -308,23 +308,40 @@ local right = Material("dialogui/border_right.png")
 local top = Material("dialogui/border_up.png")
 local iconSize = 48
 function PANEL:Paint(w, h)
-	surface.SetDrawColor(color_white)
-	surface.SetMaterial(bg)
-	surface.DrawTexturedRect(18, 18, w - 36, h)
+	if (bg:IsError()) then
+		-- Missing dialogue background: keep the text readable on a plain dark panel.
+		surface.SetDrawColor(0, 0, 0, 200)
+		surface.DrawRect(18, 18, w - 36, h)
+	else
+		surface.SetDrawColor(color_white)
+		surface.SetMaterial(bg)
+		surface.DrawTexturedRect(18, 18, w - 36, h)
+	end
 
-	do
+	-- Border decorations are skipped individually when their artwork is missing.
+	surface.SetDrawColor(color_white)
+
+	if (not leftcorner:IsError()) then
 		surface.SetMaterial(leftcorner)
 		surface.DrawTexturedRect(0, 0, iconSize, iconSize)
+	end
 
+	if (not left:IsError()) then
 		surface.SetMaterial(left)
 		surface.DrawTexturedRect(7, iconSize, 14, h - iconSize)
+	end
 
+	if (not top:IsError()) then
 		surface.SetMaterial(top)
 		surface.DrawTexturedRect(iconSize, 7, w - (iconSize * 2), 14)
+	end
 
+	if (not rightcorner:IsError()) then
 		surface.SetMaterial(rightcorner)
 		surface.DrawTexturedRect(w - iconSize, 0, iconSize, iconSize)
+	end
 
+	if (not right:IsError()) then
 		surface.SetMaterial(right)
 		surface.DrawTexturedRect(w - 14 - 7, iconSize, 14, h - iconSize)
 	end

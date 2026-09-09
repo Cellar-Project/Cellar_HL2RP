@@ -190,7 +190,7 @@ net.Receive("ScannerTerminalDeploy2", function(len, player)
 	scanner:Spawn()
 	scanner.Rebel = true
 	scanner:SetID(PLUGIN.activeID)
-	scanner:SetModel("models/customscan/superbeescanner.mdl")
+	scanner:SetModel(Schema.assets.Model("models/customscan/superbeescanner.mdl", "models/shield_scanner.mdl"))
 	scanner:PrecacheGibs()
 	scanner:ResetSequence("idle")
 

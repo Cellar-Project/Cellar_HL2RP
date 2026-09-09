@@ -86,6 +86,17 @@ do
 	materials["cellar/ui/dispatch/ico/death"] = "icon16/cancel.png"
 	materials["cellar/ui/dispatch/ico/warn"] = "icon16/exclamation.png"
 	materials["vgui/terminals/reticle_finger.png"] = "icon16/cursor.png"
+
+	-- Weapon tooltip stat icons (`plugins/weapons/items/base/sh_weapons.lua`).
+	materials["cellar/ui/weaponry/ap.png"]       = "icon16/shield.png"
+	materials["cellar/ui/weaponry/attack.png"]   = "icon16/gun.png"
+	materials["cellar/ui/weaponry/limbdmg.png"]  = "icon16/user_red.png"
+	materials["cellar/ui/weaponry/shockdmg.png"] = "icon16/lightning.png"
+	materials["cellar/ui/weaponry/blooddmg.png"] = "icon16/heart.png"
+	materials["cellar/ui/weaponry/bleed.png"]    = "icon16/heart_delete.png"
+
+	-- Critical-state marker drawn over downed players (`plugins/!damagesystem/cl_hooks.lua`).
+	materials["cellar/ui/crit.png"] = "icon16/heart_delete.png"
 end
 
 -- ---------------------------------------------------------------------

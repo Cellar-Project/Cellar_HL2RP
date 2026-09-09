@@ -49,7 +49,7 @@ if (CLIENT) then
 		self.text:SetText(value)
 	end
 	function PANEL:Paint(width, height)
-		if self.icon then
+		if self.icon and not self.icon:IsError() then
 			surface.SetMaterial(self.icon)
 			surface.SetDrawColor(color_white)
 			surface.DrawTexturedRect(0, 0, 24, 24)
@@ -68,12 +68,12 @@ if (CLIENT) then
 	end
 
 	local icons = {
-		[1] = Material("cellar/ui/weaponry/ap.png"),
-		[2] = Material("cellar/ui/weaponry/attack.png"),
-		[3] = Material("cellar/ui/weaponry/limbdmg.png"),
-		[4] = Material("cellar/ui/weaponry/shockdmg.png"),
-		[5] = Material("cellar/ui/weaponry/blooddmg.png"),
-		[6] = Material("cellar/ui/weaponry/bleed.png"),
+		[1] = Schema.assets.Material("cellar/ui/weaponry/ap.png"),
+		[2] = Schema.assets.Material("cellar/ui/weaponry/attack.png"),
+		[3] = Schema.assets.Material("cellar/ui/weaponry/limbdmg.png"),
+		[4] = Schema.assets.Material("cellar/ui/weaponry/shockdmg.png"),
+		[5] = Schema.assets.Material("cellar/ui/weaponry/blooddmg.png"),
+		[6] = Schema.assets.Material("cellar/ui/weaponry/bleed.png"),
 	}
 	local Dist = {
 		[1] = "На ближней: %s",

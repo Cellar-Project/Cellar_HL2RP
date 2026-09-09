@@ -58,7 +58,7 @@ end
 function ENT:CreateDummyRation()
 	local entity = ents.Create("prop_physics")
 	entity:SetAngles(self:GetAngles())
-	entity:SetModel("models/mres/consumables/tag_mre.mdl")
+	entity:SetModel(Schema.assets.Model("models/mres/consumables/tag_mre.mdl", "models/weapons/w_package.mdl"))
 	entity:SetPos(self:GetPos() + self:GetForward() * -5 + self:GetRight() * 1 + self:GetUp() * -8)
 	entity:Spawn()
 	

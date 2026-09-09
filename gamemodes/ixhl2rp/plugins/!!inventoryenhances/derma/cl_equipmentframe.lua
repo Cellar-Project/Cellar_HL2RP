@@ -382,8 +382,10 @@ function PANEL:Paint()
 	local prolongedW = TimedSin(.95, 8, 20, 33)
 	--derma.SkinFunc("PaintCategoryPanel", self, "", ix.config.Get("color") or color_white)
 	surface.SetDrawColor(color_white)
-	surface.SetMaterial(frame)
-	surface.DrawTexturedRect(0, 0, self:GetWide(), self:GetTall())
+	if (not frame:IsError()) then
+		surface.SetMaterial(frame)
+		surface.DrawTexturedRect(0, 0, self:GetWide(), self:GetTall())
+	end
 
 	draw.RoundedBox(0, anim1, 32 * .33, prolongedW, 2, colors[1])
 	draw.RoundedBox(0, -anim2 + 66, 32 * .7, prolongedW, 2, colors[2])

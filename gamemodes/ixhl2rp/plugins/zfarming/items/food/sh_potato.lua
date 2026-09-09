@@ -1,6 +1,6 @@
 ITEM.name = "Картофель"
 ITEM.description = "Картофель, выращенный вручную."
-ITEM.model = "models/foodnhouseholditems/potato.mdl"
+ITEM.model = Schema.assets.Model("models/foodnhouseholditems/potato.mdl", "models/props_phx/misc/potato.mdl")
 ITEM.cost = 8
 ITEM.width = 1
 ITEM.height = 1

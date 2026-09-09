@@ -108,11 +108,11 @@ ix.command.Add("Nightvision", {
 	OnRun = function(self, client)
 		if !client:GetData("nightvisionfx") then
 			client:SetData("nightvisionfx", true)
-			sound.Play("cellar/misc/nightvision.wav", client:EyePos(), 55)
+			sound.Play(Schema.assets.Sound("cellar/misc/nightvision.wav", "items/flashlight1.wav"), client:EyePos(), 55)
 			return "ПНВ активирован"
 		else
 			client:SetData("nightvisionfx", false)
-			sound.Play("cellar/misc/switch.wav", client:EyePos(), 55)
+			sound.Play(Schema.assets.Sound("cellar/misc/switch.wav", "buttons/lightswitch2.wav"), client:EyePos(), 55)
 			return "ПНВ деактивирован"
 		end
 	end

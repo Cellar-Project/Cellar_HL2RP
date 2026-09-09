@@ -211,7 +211,7 @@ do
 end
 
 do
-	local crit_material = Material("cellar/ui/crit.png")
+	local crit_material = Schema.assets.Material("cellar/ui/crit.png")
 	local size = 32
 	local mid  = size / 2
 	local abs = math.abs
