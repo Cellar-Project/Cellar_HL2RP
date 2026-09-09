@@ -13,6 +13,18 @@ if (CLIENT) then
 
 	local matrixScale = Vector(1, 1, 0)
 
+	-- Engine weapons (gmod_tool, HL2 arsenal) expose localization tokens such as
+	-- "#GMOD_TOOL" as their print name; resolve them the same way the stock HUD does.
+	local function GetWeaponDisplayName(weapon)
+		local name = weapon:GetPrintName()
+
+		if (name:sub(1, 1) == "#") then
+			name = language.GetPhrase(name:sub(2))
+		end
+
+		return name:utf8upper()
+	end
+
 	function PLUGIN:LoadFonts(font, genericFont)
 		surface.CreateFont("ixWeaponSelectFont", {
 			font = font,
@@ -72,7 +84,7 @@ if (CLIENT) then
 				end
 
 				surface.SetFont("ixWeaponSelectFont")
-				local weaponName = weapons[i]:GetPrintName():utf8upper()
+				local weaponName = GetWeaponDisplayName(weapons[i])
 				local _, ty = surface.GetTextSize(weaponName)
 				local scale = 1 - math.abs(theta * 2)
 

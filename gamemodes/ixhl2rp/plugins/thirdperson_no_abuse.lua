@@ -119,19 +119,40 @@ if (CLIENT) then
 		end
 	end
 
+	-- Each wrapper calls the original captured for *its own* table. Resolving it
+	-- through `self` instead (self:Old_DrawWorldModel) breaks weapons whose
+	-- DrawWorldModel calls self.BaseClass.DrawWorldModel(self): the base wrapper
+	-- would resolve Old_DrawWorldModel to the derived original again and recurse
+	-- until the stack overflows (ArcCW stunstick).
 	for _, v in ipairs(weapons.GetList()) do
-        v.Old_DrawWorldModel = v.Old_DrawWorldModel or v.DrawWorldModel
-        
-        function v:DrawWorldModel(flags)
-            local owner = self:GetOwner()
+		local original = rawget(v, "Old_DrawWorldModel") or rawget(v, "DrawWorldModel")
 
-            if (IsValid(owner) and owner:IsPlayer() and owner != LocalPlayer() and owner.ixIsHidden) then
-                self:DrawShadow(false)
+		if (!original) then
+			local inherited = weapons.Get(v.ClassName)
 
-                return
-            end
+			-- A base class defines it: that base's own wrapper applies through inheritance.
+			if (inherited and inherited.DrawWorldModel) then
+				continue
+			end
 
-            self:Old_DrawWorldModel(flags)
-        end
-    end
+			-- Nothing in the chain defines it: mirror the engine default so hiding still works.
+			original = function(weapon)
+				weapon:DrawModel()
+			end
+		end
+
+		v.Old_DrawWorldModel = original
+
+		function v:DrawWorldModel(flags)
+			local owner = self:GetOwner()
+
+			if (IsValid(owner) and owner:IsPlayer() and owner != LocalPlayer() and owner.ixIsHidden) then
+				self:DrawShadow(false)
+
+				return
+			end
+
+			return original(self, flags)
+		end
+	end
 end

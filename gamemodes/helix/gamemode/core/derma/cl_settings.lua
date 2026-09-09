@@ -565,6 +565,8 @@ function PANEL:GetRowPanelName(type)
 	return panelMap[type] or "ixSettingsRow"
 end
 
+-- Returns the existing category panel when two keys translate to the same
+-- phrase, so callers that customize the returned panel never receive nil.
 function PANEL:AddCategory(name)
 	local panel = self.categories[name]
 
@@ -575,8 +577,9 @@ function PANEL:AddCategory(name)
 		panel:DockMargin(0, 8, 0, 0)
 
 		self.categories[name] = panel
-		return panel
 	end
+
+	return panel
 end
 
 function PANEL:AddRow(type, category)

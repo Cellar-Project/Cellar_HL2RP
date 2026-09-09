@@ -140,8 +140,11 @@ if (CLIENT) then
 			endpos = offset,
 			mins = Vector(-4, -4, -4),
 			maxs = Vector(4, 4, 4),
+			-- Ignore the player and anything parented to them (legs, holstered props);
+			-- with `or` the trace started inside the player's own hull and always
+			-- reported the camera as blocked.
 			filter = function(entity)
-				return entity != client or entity:GetOwner() != client
+				return entity != client and entity:GetOwner() != client
 			end
 		})
 
