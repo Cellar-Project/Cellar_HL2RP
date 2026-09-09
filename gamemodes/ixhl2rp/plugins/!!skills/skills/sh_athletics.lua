@@ -15,5 +15,6 @@ local function CalcAthleticsSpeed(athletics)
 end
 
 function SKILL:OnLevelUp(client, character)
-	client:SetRunSpeed(ix.config.Get("runSpeed") * CalcAthleticsSpeed(character:GetSkillModified("athletics")))
+	client:SetRunSpeed(ix.config.Get("runSpeed") * CalcAthleticsSpeed(character:GetSkillModified("athletics")) *
+		(hook.Run("GetRunSpeedMultiplier", client) or 1))
 end

@@ -67,5 +67,8 @@ FACTION.npcRelations = {
 }
 
 FACTION_ASS = FACTION.index
+-- Alias: schema/factions/sh_assassin.lua declares FACTION_ASSASSIN for the same
+-- faction table, so keep both globals pointing at the same index.
+FACTION_ASSASSIN = FACTION.index
 
 Schema:SetFactionGroup(FACTION_ASS, FACTION_GROUP_OTA)

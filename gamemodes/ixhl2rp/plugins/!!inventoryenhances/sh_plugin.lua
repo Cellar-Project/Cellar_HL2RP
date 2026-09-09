@@ -149,6 +149,14 @@ function PLUGIN:CanTransferEquipment(item, oldInv, newInv, slot)
 		return false, error
 	end
 
+	-- Lets a faction or plugin veto a whole slot. Returning nil means "no opinion",
+	-- so this cannot be answered by an unrelated listener the way CanPlayerEquipItem is.
+	local allowed, reason = hook.Run("PlayerCanWearEquipment", newInv.GetOwner and newInv:GetOwner(), item, slot)
+
+	if allowed == false then
+		return false, reason
+	end
+
 	if item.isOutfit and item.slot == EQUIP_TORSO then
 		for z = 1, 7 do
 			if z == EQUIP_EARS then continue end

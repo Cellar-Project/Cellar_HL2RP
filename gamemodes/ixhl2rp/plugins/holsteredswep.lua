@@ -157,6 +157,8 @@ HOLSTER_DRAWINFO["arccw_smg1"] = {
 function PLUGIN:PostPlayerDraw(client)
 	if (not ix.config.Get("showHolsteredWeps")) then return end
 	if (not client:GetChar()) then return end
+	-- A cloaked assassin's body is not drawn; holstered models must not float there.
+	if (client:GetNetVar("assassinCloak", false)) then return end
 	if (client == LocalPlayer() and not client:ShouldDrawLocalPlayer()) then
 		return
 	end

@@ -256,6 +256,11 @@ ITEM.functions.Equip = {
 	OnCanRun = function(item)
 		local client = item.player
 
+		-- Same slot veto the equipment inventory applies, for these legacy outfits.
+		if (IsValid(client) and hook.Run("PlayerCanWearEquipment", client, item, item.slot) == false) then
+			return false
+		end
+
 		return !IsValid(item.entity) and IsValid(client) and item:GetData("equip") != true and item:CanEquipOutfit() and
 			hook.Run("CanPlayerEquipItem", client, item) != false and item.invID == client:GetCharacter():GetInventory():GetID()
 	end

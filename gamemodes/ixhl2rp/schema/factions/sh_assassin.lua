@@ -2,13 +2,19 @@ FACTION.name = "Ассассин Патруля"
 FACTION.isDefault = false
 FACTION.color = Color(151, 42, 97)
 -- FACTION.scoreboardClass = "scOTA"
+-- This file and plugins/zz_assassin/factions/sh_assassin.lua both resolve to the
+-- faction uniqueID "assassin", so they share one table and the plugin copy (which
+-- loads later) wins on every field it sets. The model and gender below are kept in
+-- sync with it on purpose; only models/schwarzkruppzo/assassin.mdl has an animation
+-- class registered (see plugins/zz_assassin/sh_plugin.lua). Do not delete this file:
+-- faction indices are assigned in load order, so removing it renumbers other factions.
 FACTION.models = {
-	[1] = {"models/cellar/characters/combine/assassin_female.mdl"}
+	[1] = {"models/schwarzkruppzo/assassin.mdl"}
 }
 
 FACTION.runSounds = {[0] = "NPC_CombineS.RunFootstepLeft", [1] = "NPC_CombineS.RunFootstepRight"}
 -- FACTION.typingBeeps = {"NPC_MetroPolice.Radio.On", "NPC_MetroPolice.Radio.Off"}
-FACTION.genders = {1}
+FACTION.genders = {2}
 
 FACTION.isGloballyRecognized = true
 FACTION.dontNeedFood = true

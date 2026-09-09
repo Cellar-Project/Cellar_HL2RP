@@ -44,7 +44,10 @@ local function RecalculateSpeedPenalty(client, limb, character)
 	end
 
 	local walkSpeed = ix.config.Get("walkSpeed") * slowDownFormula
-	local runSpeed = ix.config.Get("runSpeed") * CalcAthleticsSpeed(character:GetSkillModified("athletics")) * slowDownFormula
+	-- Same multiplier the skills plugin applies, or a faction bonus set here would be
+	-- silently reverted on every limb damage/heal event.
+	local runSpeed = ix.config.Get("runSpeed") * CalcAthleticsSpeed(character:GetSkillModified("athletics")) *
+		slowDownFormula * (hook.Run("GetRunSpeedMultiplier", client) or 1)
 
 	if (!client:IsProne() and (firstLegDamage == 1 or secondLegDamage == 1)) then
 		prone.Enter(client)

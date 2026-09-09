@@ -601,7 +601,10 @@ do
 					local targetSpeedMod = isStanding and 0 or 1 + math.Clamp(math.Remap(target:GetVelocity():LengthSqr(), 2500, 55225, 0, 1), 0, 1)
 					local evasionChance = ((hitChance + AttackRolls[1]) - ((DefendRolls[1] + targetAgilityMod + targetLuckMod) * targetSpeedMod))
 
-					AgilityTest = math.random(1, 100) < (math.Clamp(evasionChance, 51, 89) + (targetCharacter:GetData("neo") or 0))
+					local hitMod = hook.Run("GetHitChanceMultiplier", target, targetCharacter, entity) or 1
+
+					AgilityTest = math.random(1, 100) <
+						((math.Clamp(evasionChance, 51, 89) + (targetCharacter:GetData("neo") or 0)) * hitMod)
 				else
 					AgilityTest = true
 				end
@@ -706,6 +709,7 @@ do
 			local hitChance = ((isStanding and 25 or 0) + (isBackstab and 100 or 0) + weaponSkill + agilityMod + luckMod) * (0.75 + 0.5 * currentStamina / maxStamina)
 
 			hitChance = ScaleHitChanceByHandsDamage(hitChance, character)
+			hitChance = hitChance * (hook.Run("GetHitChanceMultiplier", target, targetCharacter, entity) or 1)
 
 			local skilltest = isRagdoll and true or math.random(1, 100) < (hitChance - evasionChance)
 		
@@ -838,6 +842,7 @@ do
 			local hitChance = ((isStanding and 25 or 0) + (isBackstab and 100 or 0) + weaponSkill + agilityMod + luckMod) * (0.75 + 0.5 * currentStamina / maxStamina)
 
 			hitChance = ScaleHitChanceByHandsDamage(hitChance, character)
+			hitChance = hitChance * (hook.Run("GetHitChanceMultiplier", target, targetCharacter, entity) or 1)
 
 			local skilltest = isRagdoll and true or math.random(1, 100) < (hitChance - evasionChance)
 		

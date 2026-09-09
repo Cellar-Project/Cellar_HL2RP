@@ -4,6 +4,12 @@ function CHAR:IsDispatch()
 	return self:GetFaction() == FACTION_DISPATCH
 end
 
+-- See the note in schema/meta/sh_player.lua: FACTION_ASS is only defined once
+-- the zz_assassin plugin has loaded.
+function CHAR:IsAssassin()
+	return FACTION_ASS != nil and self:GetFaction() == FACTION_ASS
+end
+
 function CHAR:GetIDCard()
 	if !self:GetEquipment() then
 		return
