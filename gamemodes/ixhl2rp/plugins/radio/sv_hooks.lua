@@ -128,12 +128,12 @@ function PLUGIN:PlayerCanHearRadioTransmit(player, info)
 	local radios = ix.radio.stationaryRadios or ents.FindByClass("ix_stationary_radio")
 
 	for k, radio in pairs(radios) do
-		if !radio:IsOn() or radio:GetFrequency() != channelID then
+		if !IsValid(radio) or !radio:IsOn() or radio:GetFrequency() != channelID then
 			continue
-		else
-			if player:GetPos():DistToSqr(radio:GetPos()) < range then
-				return true
-			end
+		end
+
+		if player:GetPos():DistToSqr(radio:GetPos()) < range then
+			return true
 		end
 	end
 end
@@ -147,20 +147,22 @@ function PLUGIN:LoadData()
 
 	if (data) then
 		for _, v in ipairs(data) do
+			-- Tuple layout is defined by PLUGIN:SaveRadios in sv_plugin.lua:
+			-- pos, angles, on, frequency, tuningEnabled, radioItem, moveable, model
 			local entity = ents.Create("ix_stationary_radio")
 			entity:SetPos(v[1])
 			entity:SetAngles(v[2])
 			entity:SetModel(v[8] or "models/props_lab/citizenradio.mdl")
 			entity:Spawn()
-			entity:SetOn(v[4])
-			entity:SetFrequency(v[5])
-			entity:SetChannelTuningEnabled(v[6])
-			entity:SetRadioItem(v[7])
+			entity:SetOn(v[3])
+			entity:SetFrequency(v[4])
+			entity:SetChannelTuningEnabled(v[5])
+			entity:SetRadioItem(v[6])
 
 			local physObject = entity:GetPhysicsObject()
 
 			if (IsValid(physObject)) then
-				physObject:EnableMotion(v[8] and false or true)
+				physObject:EnableMotion(v[7] == true)
 			end
 		end
 	end

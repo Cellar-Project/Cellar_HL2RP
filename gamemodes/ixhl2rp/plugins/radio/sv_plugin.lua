@@ -1,10 +1,11 @@
 util.AddNetworkString("PlayVRadio")
 
--- Cache for stationary radios to avoid expensive ents.FindByClass calls
-ix.radio.stationaryRadios = ix.radio.stationaryRadios or {}
+-- Cache for stationary radios to avoid expensive ents.FindByClass calls.
+-- Seeded from the live world so a hot reload picks up radios that already exist.
+ix.radio.stationaryRadios = ents.FindByClass("ix_stationary_radio")
 
 hook.Add("OnEntityCreated", "ixRadioCacheNewEntity", function(entity)
-	if IsValid(entity) and entity:GetClass() == "ix_stationary_radio" then
+	if IsValid(entity) and entity:GetClass() == "ix_stationary_radio" and !table.HasValue(ix.radio.stationaryRadios, entity) then
 		table.insert(ix.radio.stationaryRadios, entity)
 	end
 end)
@@ -115,8 +116,8 @@ function ix.radio:ResetTransmitChannel(player)
 
 	if !channel then
 		for chnlID, v in pairs(player.globalChannels) do
-			local chnl = self:FindByID(chnl)
-			if (chnl and (!channel) or channel.defaultPriority < chnl.defaultPriority) then
+			local chnl = self:FindByID(chnlID)
+			if chnl and (!channel or channel.defaultPriority < chnl.defaultPriority) then
 				channel = chnl
 			end
 		end
@@ -150,12 +151,9 @@ end
 function ix.radio:RemoveChannelFromPlayer(player, channelID)
 	local channel = self:FindByID(channelID)
 	if channel then
-		local ret = nil
-		if !channel.global then
-			ret = table.remove(player.listenChannels, channel.uniqueID)
-		else
-			ret = table.remove(player.globalChannels, channel.uniqueID)
-		end
+		local list = channel.global and player.globalChannels or player.listenChannels
+		local ret = list[channel.uniqueID]
+		list[channel.uniqueID] = nil
 
 		if ret then
 			if channel.uniqueID == player:GetNetVar("radioChannel") then
@@ -170,7 +168,7 @@ function ix.radio:RemoveChannelFromPlayer(player, channelID)
 end
 
 function ix.radio:RegisterSayType(sayType, range, typetext)
-	if range and isnumber(range) and typetext and isstring(typeText) then
+	if isnumber(range) and isstring(typetext) then
 		self.sayTypes[sayType] = {range, typetext}
 	end
 end
@@ -323,7 +321,7 @@ function ix.radio:SayRadio(client, text, data, bNoErrors)
 
 		if #listeners > 0 then
 			ix.chat.Send(info.player, "radio", info.text, false, listeners, info.data)
-			ix.radio:SendVoiceline(info, lsisteners)
+			ix.radio:SendVoiceline(info, listeners)
 		end
 
 		hook.Run("AdjustRadioTransmitEavesdroppers", info, eavesdroppers)
