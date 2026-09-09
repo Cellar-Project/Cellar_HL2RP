@@ -96,7 +96,15 @@ function LABEL:GetText() return self.text end
 
 function LABEL:SetText(text)
 	self.text = text or ""
-	self:SizeToContents()
+
+	-- Docked labels only care about height; skipping the resize when it is
+	-- unchanged avoids a layout pass on every clock tick.
+	surface.SetFont(self.font)
+	local textW, textH = surface.GetTextSize(self.text)
+
+	if (textH + 2 != self:GetTall()) then
+		self:SetSize(textW + 8, textH + 2)
+	end
 end
 
 function LABEL:SizeToContents()
@@ -106,8 +114,17 @@ function LABEL:SizeToContents()
 end
 
 function LABEL:Paint(w, h)
-	local x = self.alignX == TEXT_ALIGN_CENTER and w / 2 or 4
-	ix.infoMenu.DrawText(self.text, self.font, x, h / 2, self.color, self.alignX, TEXT_ALIGN_CENTER)
+	if (self.alignX != TEXT_ALIGN_CENTER) then
+		ix.infoMenu.DrawText(self.text, self.font, 4, h / 2, self.color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+		return
+	end
+
+	-- Nagonia digits are proportional, so a centered clock would shift with every
+	-- second. Center on the width of a digit-normalized copy instead, then draw
+	-- left-aligned from that fixed origin.
+	surface.SetFont(self.font)
+	local stableW = surface.GetTextSize((self.text:gsub("%d", "0")))
+	ix.infoMenu.DrawText(self.text, self.font, (w - stableW) / 2, h / 2, self.color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
 
 vgui.Register("ixInfoMenuLabel", LABEL, "Panel")
