@@ -7,8 +7,8 @@ PLUGIN.description = "Adds the ability to grow plants."
 
 ix.util.Include("sv_hooks.lua")
 
-ix.config.Add("phaseTime", 1800, "Time a plant needs to get a next portion of growth points (minutes).", nil, {
-	data = {min = 1, max = 2500},
+ix.config.Add("phaseTime", 1800, "Time a plant needs to get a next portion of growth points (seconds).", nil, {
+	data = {min = 10, max = 86400},
 	category = "categoryFarming"
 })
 

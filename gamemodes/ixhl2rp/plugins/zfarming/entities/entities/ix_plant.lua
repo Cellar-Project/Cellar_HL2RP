@@ -10,13 +10,11 @@ if (SERVER) then
 	local PLUGIN = PLUGIN
 
 	function ENT:Initialize()
-		local pos = self:GetPos()
-
 		self:SetMoveType(MOVETYPE_NONE)
 		self:SetUseType(SIMPLE_USE)
 		self:SetSolid(SOLID_BBOX)
 		self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-		self:SetCollisionBounds(pos - Vector(3, 3, 3), pos + Vector(3, 3, 3))
+		self:SetCollisionBounds(Vector(-3, -3, -3), Vector(3, 3, 3))
 		self:PhysicsInit(SOLID_BBOX)
 
 		local physicsObject = self:GetPhysicsObject()
@@ -28,60 +26,78 @@ if (SERVER) then
 		self:SetNetVar("health", 10)
 		self:SetGrowthPoints(0)
 		self:SetPhase(1)
+		self:SetModel(PLUGIN.growModels[math.random(#PLUGIN.growModels)])
 
 		self.timerName = "phasetimer" .. self:EntIndex()
-		local phaseTime = ix.config.Get("phaseTime") * 60
-		timer.Create(self.timerName, phaseTime, 0, function()
-			local phaseMaxPoints = ix.config.Get("phaseMaxPoints")
-			local phaseRate = ix.config.Get("phaseRate")
-			local phases = ix.config.Get("phases")
+		self:SyncLifecycle()
+	end
 
-			self:SetGrowthPoints(self:GetGrowthPoints() + phaseRate)
-			self:SetNetVar("health", self:GetNetVar("health") - .5)
+	function ENT:GrowthTick()
+		local phaseMaxPoints = ix.config.Get("phaseMaxPoints")
+		local phaseRate = ix.config.Get("phaseRate")
 
-			if (self:GetGrowthPoints() >= phaseMaxPoints) then
-				self:SetPhase(self:GetPhase() + 1)
-				self:SetGrowthPoints(0)
+		self:SetGrowthPoints(self:GetGrowthPoints() + phaseRate)
+		self:SetNetVar("health", self:GetNetVar("health", 10) - .5)
+
+		if (self:GetGrowthPoints() >= phaseMaxPoints) then
+			self:SetPhase(self:GetPhase() + 1)
+			self:SetGrowthPoints(0)
+		end
+
+		self:SyncLifecycle()
+		PLUGIN:SaveData()
+	end
+
+	-- Derives grown/dead and the growth timer from health and phase. Used after
+	-- every tick and after restoring a plant from disk, so a saved plant comes
+	-- back in the same lifecycle state it was in when saved.
+	function ENT:SyncLifecycle()
+		if (self:GetNetVar("health", 10) <= 0 or self:GetNetVar("dead", false)) then
+			self:Die()
+		elseif (self:GetPhase() >= ix.config.Get("phases")) then
+			self:EndGrowth()
+		else
+			self:SetNetVar("grown", false)
+			self:StartGrowthTimer()
+		end
+	end
+
+	function ENT:StartGrowthTimer()
+		timer.Create(self.timerName, ix.config.Get("phaseTime"), 0, function()
+			if (!IsValid(self)) then
+				timer.Remove(self.timerName)
+				return
 			end
 
-			if self:GetNetVar("health") <= 0 then
-				self:Die()
-			end
-
-			if (self:GetPhase() >= phases) and not self:GetNetVar("dead") then
-				self:EndGrowth()
-			end
-
-			PLUGIN:SaveData()
+			self:GrowthTick()
 		end)
-
-		self:SetModel(PLUGIN.growModels[math.random(#PLUGIN.growModels)])
 	end
 
 	function ENT:OnSelectHarvest(client)
 		if not self:GetNetVar("grown") then return end
 		if client:EyePos():Distance(self:GetPos()) > 90 then return end
+		if !self.item then return end
 
 		local character = client:GetCharacter()
 		local inventory = character:GetInventory()
-		local skill = character:GetSkillModified("farming")
+		local skill = math.max(character:GetSkillModified("farming") or 0, 0)
 		local modifier = math.Clamp(skill / 10, .1, 1)
-		local productAmount = math.floor(self.item.maxAmount * modifier)
-		local success
+		local productAmount = math.floor((self.item.maxAmount or 1) * modifier)
+		local product = self.product or self.item.product
 
-		while productAmount > 0 do
-			success, _ = inventory:Add(self.product)
-			if not success then break end
-			productAmount = productAmount - 1
+		if (product) then
+			while productAmount > 0 do
+				if not inventory:Add(product) then break end
+				productAmount = productAmount - 1
+			end
+
+			for _ = 1, productAmount do
+				ix.item.Spawn(product, self:GetPos() + Vector(0, 0, 2))
+			end
 		end
 
-		if not success then
-			for k = 0, productAmount do ix.item.Spawn(self.product, self:GetPos() + Vector(0, 0, 2)) end
-		end
-
-		local seedsAmount = math.random(0, skill)
-		if (seedsAmount > 0) then
-			for k = 0, seedsAmount do ix.item.Spawn(self:GetPlantClass(), self:GetPos() + Vector(0, 2, 3)) end
+		for _ = 1, math.random(0, math.floor(skill)) do
+			ix.item.Spawn(self:GetPlantClass(), self:GetPos() + Vector(0, 2, 3))
 		end
 
 		self:Remove()
@@ -109,11 +125,17 @@ if (SERVER) then
 			if item.base == "base_drink" then
 				local basePoints = PLUGIN.waterItems[item.uniqueID]
 				if basePoints then
-					points = points + basePoints * (item:GetData("uses", item.dUses) / item.dUses) -- TODO: add skill bonus
+					local maxUses = item.dUses or 1
+					points = points + basePoints * (item:GetData("uses", maxUses) / maxUses) -- TODO: add skill bonus
 					self:SetNetVar("health", math.Clamp(curHealth + points, 0, 10))
-					local junk = item.junk
+
+					local junk = item.junk or PLUGIN.itemReplacers[item.uniqueID]
 					item:Remove()
-					inventory:Add(junk)
+
+					if (junk) then
+						inventory:Add(junk)
+					end
+
 					client:NotifyLocalized("plantWatered")
 					client:GetCharacter():DoAction("farmingWater")
 					return
@@ -125,6 +147,14 @@ if (SERVER) then
 
 	function ENT:SetPlantClass(class)
 		self.item = ix.item.Get(class)
+
+		if (self.item) then
+			self.product = self.product or self.item.product
+
+			if (!self:GetNetVar("name") and self.item.plantName) then
+				self:SetPlantName(self.item.plantName)
+			end
+		end
 	end
 
 	function ENT:SetPlantName(name)
@@ -132,7 +162,7 @@ if (SERVER) then
 	end
 
 	function ENT:GetPlantClass()
-		return self.item.uniqueID
+		return self.item and self.item.uniqueID
 	end
 
 	function ENT:SetPhase(iPhase)
@@ -151,23 +181,25 @@ if (SERVER) then
 		return self.growthPoints
 	end
 
+	function ENT:StopGrowthTimer()
+		if (self.timerName and timer.Exists(self.timerName)) then
+			timer.Remove(self.timerName)
+		end
+	end
+
 	function ENT:EndGrowth()
 		self:SetNetVar("grown", true)
-		timer.Remove(self.timerName)
+		self:StopGrowthTimer()
 	end
 
 	function ENT:Die()
 		self:SetNetVar("grown", false)
 		self:SetNetVar("dead", true)
-		if (self.timerName and timer.Exists(self.timerName)) then
-			timer.Remove(self.timerName)
-		end
+		self:StopGrowthTimer()
 	end
 
 	function ENT:OnRemove()
-		if (self.timerName and timer.Exists(self.timerName)) then
-			timer.Remove(self.timerName)
-		end
+		self:StopGrowthTimer()
 	end
 
 else
@@ -184,7 +216,7 @@ else
 		end
 
 		local title = tooltip:AddRow("name")
-		title:SetText(self:GetPlantName())
+		title:SetText(self:GetPlantName() or self.PrintName)
 		title:SetImportant()
 		title:SizeToContents()
 
