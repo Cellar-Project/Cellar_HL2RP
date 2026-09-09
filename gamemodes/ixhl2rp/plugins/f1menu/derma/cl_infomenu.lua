@@ -60,6 +60,21 @@ function ix.infoMenu.PaintBox(w, h)
 	draw.RoundedBox(0, 0, h - 2, w, 2, blue)
 end
 
+local headerFonts = {"cellar.derma", "cellar.derma.light", "cellar.mini", "cellar.hud.light"}
+
+--- Largest Cellar font whose rendering of `text` fits within `maxWidth`.
+function ix.infoMenu.FitFont(text, maxWidth)
+	for _, font in ipairs(headerFonts) do
+		surface.SetFont(font)
+
+		if (surface.GetTextSize(text) <= maxWidth) then
+			return font
+		end
+	end
+
+	return headerFonts[#headerFonts]
+end
+
 --- Paints the bracketed header bar (top rule, angled shoulders, centered title).
 function ix.infoMenu.PaintHeader(text, w, h)
 	local blue = Blue()
@@ -73,7 +88,8 @@ function ix.infoMenu.PaintHeader(text, w, h)
 	surface.DrawLine(inset, 0, inset + drop, drop)
 	surface.DrawLine(w - inset, 0, w - inset - drop, drop)
 
-	ix.infoMenu.DrawText(text, "cellar.derma", w / 2, h / 2 + 4, blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	local font = ix.infoMenu.FitFont(text, w - 16)
+	ix.infoMenu.DrawText(text, font, w / 2, drop + (h - drop) / 2 + 2, blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 -- ---------------------------------------------------------------------
@@ -174,7 +190,7 @@ function PANEL:Populate()
 
 	self.header = self:Add("Panel")
 	self.header:Dock(TOP)
-	self.header:SetTall(40)
+	self.header:SetTall(46)
 	self.header:DockMargin(0, 0, 0, 8)
 	self.header.text = L("Персонаж и ролевая информация"):utf8upper()
 	self.header.Paint = function(this, w, h)
