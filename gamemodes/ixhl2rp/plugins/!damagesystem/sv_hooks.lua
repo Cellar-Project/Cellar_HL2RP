@@ -44,17 +44,23 @@ do
 
 				return
 			end
-			
+
+			-- Bleeding and damage ticks keep calling this while the player is already
+			-- down; only the first entry announces and stamps critTime.
+			local alreadyCritical = self:InCriticalState()
+
 			self:SetHealth(1)
 			self:SetNetVar("crit", true)
 
-			if self:IsCombine() then
-				local letter = dispatch.AddWaypoint(self:GetShootPos(), "ПОТЕРЯ БИО-СИГНАЛА", "death", 30)
-				Schema:AddCombineDisplayMessage(string.format("Метка %s: потерян био-сигнал с наземной единицей!", letter), color_red)
-			end
+			if !alreadyCritical then
+				if self:IsCombine() then
+					local letter = dispatch.AddWaypoint(self:GetShootPos(), "ПОТЕРЯ БИО-СИГНАЛА", "death", 30)
+					Schema:AddCombineDisplayMessage(string.format("Метка %s: потерян био-сигнал с наземной единицей!", letter), color_red)
+				end
 
-			character:SetData("crit", true)
-			character:SetData("critTime", os.time() + 600)
+				character:SetData("crit", true)
+				character:SetData("critTime", os.time() + 600)
+			end
 
 			if !IsValid(self.ixRagdoll) then
 				self:SetRagdolled(true)
