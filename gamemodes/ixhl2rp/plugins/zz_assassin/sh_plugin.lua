@@ -34,9 +34,6 @@ ix.config.Add("assassinNoFallDamage", true, "Whether assassins are immune to fal
 	category = "categoryAssassin"
 })
 
-ix.config.Add("assassinProportionFix", true, "Layer the rig's proportion correction onto stock animations (raised weapons, prone). Turn off to compare; the bespoke relaxed animations are never affected.", nil, {
-	category = "categoryAssassin"
-})
 
 ix.config.Add("assassinRunSpeedBonus", 25, "Extra sprint speed for assassins (%).", nil, {
 	data = {min = 0, max = 100},

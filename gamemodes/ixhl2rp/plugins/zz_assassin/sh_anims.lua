@@ -15,31 +15,26 @@ local PLUGIN = PLUGIN
 	tools/patch-assassin-model.cjs builds player/assassin_cellar.mdl, which includes both
 	anim models with the proportions AUTOPLAY flag cleared. This file drives that model:
 	lowered/unarmed states use the bespoke relaxed set, raised states use the stock
-	per-weapon aim sets, prone is whatever f_anm provides on this server, and the
-	proportions delta is re-applied as a gesture layer only while a stock sequence plays.
+	per-weapon aim sets, and prone is whatever f_anm provides on this server.
+
+	The proportions delta stays inert. It was measured at 1.7-2.2 units on the calves and
+	feet and 1.0 on the hands, and re-applying it as a gesture layer made no visible
+	difference in game, so the layer and its config were dropped rather than kept as dead
+	per-frame work. Leaving AUTOPLAY cleared is what keeps the bespoke animations exact.
 ]]
 
 PLUGIN.model = "models/schwarzkruppzo/player/assassin_cellar.mdl"
 PLUGIN.legacyModel = "models/schwarzkruppzo/assassin.mdl"
+PLUGIN.handsModel = "models/weapons/schwarzkruppzo/c_arms_assassin.mdl"
 
--- Every sequence in assassin_anims.mdl. Anything the rig plays that is not in here comes
--- from f_anm.mdl and needs the proportion fix layered on.
-PLUGIN.customSequences = {}
-
-for _, name in ipairs({
-	"reference", "body_rot_z", "spine_rot_z", "head_rot_z", "head_rot_y", "head_rot_x", "neck_trans_x",
-	"valvebiped", "gmod_breath_layer", "gmod_breath_layer_lock_hands", "gmod_breath_layer_lock_right",
-	"gmod_breath_layer_sitting", "jump_delta", "land", "glide_layer", "glide",
-	"idle_ospr_angry", "walk_ospr_angry",
-	"idle_relaxed", "LineIdle02", "walk_relaxed", "crouch_idle_relaxed", "crouch_walk_relaxed", "run_relaxed", "jump_relaxed",
-	"prone_idle_relaxed", "prone_walk_relaxed", "aimlayer_prone_ospr", "prone_idle_ospr_relaxed", "prone_idle_ospr_angry",
-	"stances_down01", "stances_down02", "stances_down03",
-	"stances_sit01", "stances_sit02", "stances_sit03", "stances_sit04", "stances_sit05", "stances_sit06", "stances_sit07",
-	"stances_sit08", "stances_sit09", "stances_sitwall", "stances_sitground", "stances_check",
-	"stances_stand01", "stances_stand02", "stances_stand03", "stances_lean01", "stances_lean02"
-}) do
-	PLUGIN.customSequences[name] = true
-end
+-- Hands are resolved by GM:PlayerSetHandsModel through player_manager, keyed by the model
+-- path. The Workshop addon registers only its own player/assassin.mdl (shortname
+-- "assassin_cellar") and addons/arccw_cellar registers the bespoke assassin.mdl
+-- (shortname "assassin"), so the patched rig is the one path with no entry and fell back
+-- to citizen hands. A distinct shortname is used because reusing either of theirs would
+-- repoint that entry at this model.
+player_manager.AddValidModel("assassin_cellar_rig", PLUGIN.model)
+player_manager.AddValidHands("assassin_cellar_rig", PLUGIN.handsModel, 0, "0000000")
 
 -- Lowered = bespoke relaxed cycles, raised = the given stock activities.
 local function WithRelaxedLowered(raised)
@@ -159,42 +154,4 @@ function PLUGIN:PlayerModelChanged(client, model)
 	if (string.lower(model or "") == self.model) then
 		self:ResolveProneSequences(client)
 	end
-end
-
---[[
-	Proportion fix. The "proportions" delta in the patched model no longer autoplays, so
-	stock sequences would deform the legs and hands by 1-2 units. Layer it back in on
-	a gesture slot whenever the main sequence is not one of the bespoke ones. Runs on
-	both realms: the client for what is drawn, the server for hitboxes.
-]]
-function PLUGIN:UpdateAnimation(client, velocity, maxSeqGroundSpeed)
-	if (client.ixAnimModelClass != "assassin") then
-		if (client.ixAssassinProportions) then
-			client:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
-			client.ixAssassinProportions = nil
-		end
-
-		return
-	end
-
-	local sequenceName = client:GetSequenceName(client:GetSequence())
-	local wanted = ix.config.Get("assassinProportionFix", true) and !self.customSequences[sequenceName]
-
-	if (wanted == (client.ixAssassinProportions or false)) then
-		return
-	end
-
-	if (wanted) then
-		local sequence = client:LookupSequence("proportions")
-
-		if (sequence < 0) then
-			return
-		end
-
-		client:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, sequence, 0, false)
-	else
-		client:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
-	end
-
-	client.ixAssassinProportions = wanted
 end

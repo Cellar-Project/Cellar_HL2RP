@@ -122,7 +122,10 @@ function GAMEMODE:TranslateActivity(client, act)
 				clientInfo.CalcSeqOverride = client:LookupSequence(glide)
 			else
 				clientInfo.CalcSeqOverride = -1
-				return clientInfo.ixAnimGlide
+				-- Return the resolved entry, not ixAnimGlide: for a {lowered, raised}
+				-- table whose entry is an activity rather than a sequence name, the
+				-- latter handed back the table itself and the model T-posed.
+				return glide
 			end
 		end
 	end
