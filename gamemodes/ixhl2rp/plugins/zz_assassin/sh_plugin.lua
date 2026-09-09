@@ -89,6 +89,10 @@ ix.config.Add("assassinSprintEvasion", 50, "How much an assassin's chance of bei
 	category = "categoryAssassin"
 })
 
+ix.config.Add("assassinNoFallDamage", true, "Whether assassins are immune to fall damage.", nil, {
+	category = "categoryAssassin"
+})
+
 ix.config.Add("assassinRunSpeedBonus", 25, "Extra sprint speed for assassins (%).", nil, {
 	data = {min = 0, max = 100},
 	category = "categoryAssassin"

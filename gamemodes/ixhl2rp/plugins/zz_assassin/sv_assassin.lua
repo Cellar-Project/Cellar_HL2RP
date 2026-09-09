@@ -74,6 +74,21 @@ function PLUGIN:GetHitChanceMultiplier(target, targetCharacter, attacker)
 end
 
 --[[
+	Passive - no fall damage.
+
+	Plugin hooks run before gamemode methods in Helix's hook.Call, so returning 0 here
+	pre-empts the !damagesystem override of GetFallDamage without editing it. Returning
+	nil for everyone else leaves that formula untouched. With no fall damage there is
+	also no DMG_FALL event, so the leg damage the fall branch of CalculatePlayerDamage
+	would normally apply never happens either.
+]]
+function PLUGIN:GetFallDamage(client, velocity)
+	if (client:IsAssassin() and ix.config.Get("assassinNoFallDamage", true)) then
+		return 0
+	end
+end
+
+--[[
 	Ability 3 - faster sprint.
 ]]
 function PLUGIN:GetRunSpeedMultiplier(client)
