@@ -10,6 +10,63 @@ local trailMaterial = "particle/particle_glow_04"
 local HEARTBEAT_PERIOD = 1.1 -- seconds between pulses
 local emitter
 
+-- One controllable sound patch per body rather than fire-and-forget sound.Play
+-- calls: those cannot be stopped, so toggling the ability off would leave every
+-- already-started beat playing to the end of the file. A patch per target also caps
+-- the number of concurrent instances at one per player instead of piling up.
+local heartbeats = {}
+local heartbeatActive = false
+
+local function StopHeartbeat(target)
+	local patch = heartbeats[target]
+
+	if (patch) then
+		patch:Stop()
+		heartbeats[target] = nil
+	end
+end
+
+local function StopAllHeartbeats()
+	for target in pairs(heartbeats) do
+		StopHeartbeat(target)
+	end
+
+	heartbeatActive = false
+end
+
+local function PlayHeartbeat(target, volume, pitch)
+	local patch = heartbeats[target]
+
+	if (!patch) then
+		patch = CreateSound(target, heartbeatSound)
+
+		if (!patch) then
+			return
+		end
+
+		patch:SetSoundLevel(60)
+		heartbeats[target] = patch
+	end
+
+	-- Stop first so each beat is a crisp restart even if the previous one is still
+	-- playing, instead of only adjusting the volume of a sound already in progress.
+	patch:Stop()
+	patch:PlayEx(volume, pitch)
+end
+
+-- Helix fires this on the client whenever a local var changes, so the ability being
+-- switched off - by the command, by death, or by a character switch - stops the audio
+-- immediately instead of waiting for the next HUDPaint.
+function PLUGIN:OnLocalVarSet(key, value)
+	if (key == "assassinPulse" and !value) then
+		StopAllHeartbeats()
+	end
+end
+
+function PLUGIN:OnReloaded()
+	StopAllHeartbeats()
+end
+
 --[[
 	Ability 4 - the cloaked body is not drawn at all. Movement is given away only by
 	the red head trail below, so a stationary assassin is completely invisible.
@@ -39,6 +96,14 @@ timer.Create("ixAssassinTrail", 0.1, 0, function()
 
 	if (!IsValid(localPlayer)) then
 		return
+	end
+
+	-- Players who disconnected never reach the HUDPaint loop again, so their patch
+	-- would otherwise stay behind.
+	for target in pairs(heartbeats) do
+		if (!IsValid(target)) then
+			StopHeartbeat(target)
+		end
 	end
 
 	-- Driven off the broadcast netvar rather than a tracked table, so players who
@@ -87,8 +152,15 @@ function PLUGIN:HUDPaint()
 	local client = LocalPlayer()
 
 	if (!IsValid(client) or !client:GetLocalVar("assassinPulse", false) or !PLUGIN:CanUseAbilities(client)) then
+		-- Covers the cases the local var does not change, such as going into crit.
+		if (heartbeatActive) then
+			StopAllHeartbeats()
+		end
+
 		return
 	end
+
+	heartbeatActive = true
 
 	local range = ix.config.Get("assassinHeartbeatRange", 512)
 	local rangeSquared = range * range
@@ -104,24 +176,26 @@ function PLUGIN:HUDPaint()
 
 	for _, target in ipairs(player.GetAll()) do
 		if (target == client or !target:Alive() or !target:GetCharacter()) then
+			StopHeartbeat(target)
 			continue
 		end
 
 		local distanceSquared = origin:DistToSqr(target:GetPos())
 
 		if (distanceSquared > rangeSquared) then
+			-- Walking out of range has to silence them too.
+			StopHeartbeat(target)
 			continue
 		end
 
 		local fraction = 1 - math.sqrt(distanceSquared) / range
 		local center = target:WorldSpaceCenter()
 
-		-- Each body is its own sound source, so the beat arrives from their direction
-		-- with the engine's own distance falloff. sound.Play is client-only, so nobody
-		-- else hears it, and unlike Entity:EmitSound it cannot take over a sound
-		-- channel on the target and cut off one of their own sounds.
+		-- Each body is its own source, so the beat arrives from their direction with
+		-- the engine's distance falloff. The patch is created client-side, so it is
+		-- audible to this assassin only.
 		if (bPlay) then
-			sound.Play(heartbeatSound, center, 60, 92 + fraction * 22, 0.35 + fraction * 0.4)
+			PlayHeartbeat(target, 0.35 + fraction * 0.4, 92 + fraction * 22)
 		end
 
 		local screen = center:ToScreen()
