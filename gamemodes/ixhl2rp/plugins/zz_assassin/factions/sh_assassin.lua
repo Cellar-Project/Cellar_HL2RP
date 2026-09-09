@@ -2,8 +2,10 @@ FACTION.name = "Ассассин Патруля"
 FACTION.isDefault = false
 FACTION.color = Color(151, 42, 97)
 FACTION.scoreboardClass = "scOTA"
+-- Patched rig built by tools/patch-assassin-model.cjs: bespoke relaxed animations plus
+-- the full stock weapon and prone sets. See plugins/zz_assassin/sh_anims.lua.
 FACTION.models = {
-	[1] = {"models/schwarzkruppzo/assassin.mdl"}
+	[1] = {"models/schwarzkruppzo/player/assassin_cellar.mdl"}
 }
 
 FACTION.genders = {2}

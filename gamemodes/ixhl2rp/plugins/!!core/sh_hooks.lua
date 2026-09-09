@@ -160,10 +160,13 @@ local function UpdateAnimationTable(client, vehicle)
 		if (baseTable.vehicle and baseTable.vehicle[vehicleClass]) then
 			client.ixAnimTable = baseTable.vehicle[vehicleClass]
 		else
-			client.ixAnimTable = baseTable.normal[ACT_MP_CROUCH_IDLE]
+			client.ixAnimTable = (baseTable.normal or {})[ACT_MP_CROUCH_IDLE]
 		end
 	else
-		client.ixAnimTable = baseTable[client.ixAnimHoldType]
+		-- A holdtype the class never defined used to leave this nil, which T-posed the
+		-- model and made DoAnimationEvent index nil on every shot. Fall back to the
+		-- unarmed set instead.
+		client.ixAnimTable = baseTable[client.ixAnimHoldType] or baseTable.normal
 	end
 
 	client.ixAnimGlide = baseTable["glide"]
@@ -236,7 +239,7 @@ function GAMEMODE:DoAnimationEvent(client, event, data)
 				end
 			end
 
-			local animation = client.ixAnimTable
+			local animation = client.ixAnimTable or {}
 
 			if (event == PLAYERANIMEVENT_ATTACK_PRIMARY) then
 				client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
