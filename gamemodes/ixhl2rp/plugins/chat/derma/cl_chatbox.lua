@@ -88,7 +88,7 @@ function PANEL:DraggingInBounds()
 	return mouseY > screenY and mouseY < screenY + self.tabs.buttons:GetTall()
 end
 
-function PANEL:SetActive(bActive)
+function PANEL:SetActive(bActive, bTeamChat)
 	if (bActive) then
 		self:SetAlpha(255)
 		self:MakePopup()
@@ -97,7 +97,18 @@ function PANEL:SetActive(bActive)
 		input.SetCursorPos(self:LocalToScreen(-1, -1))
 
 		hook.Run("StartChat")
-		self.prefix:SetText(hook.Run("GetChatPrefixInfo", ""))
+
+		local prefill = bTeamChat and hook.Run("GetTeamChatPrefill")
+
+		if (isstring(prefill) and prefill != "") then
+			self.entry:SetText(prefill)
+			self.entry:SetCaretPos(prefill:utf8len())
+
+			-- SetText does not fire OnValueChange, so the prefix and command preview need updating by hand
+			self:OnTextChanged(prefill)
+		else
+			self.prefix:SetText(hook.Run("GetChatPrefixInfo", ""))
+		end
 	else
 		self:SetAlpha(0)
 		self:SetMouseInputEnabled(false)

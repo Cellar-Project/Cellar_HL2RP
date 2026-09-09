@@ -7,6 +7,15 @@ function PLUGIN:IsRecognizedChatType(chatType)
 	end
 end
 
+-- opening chat with the team chat bind (U by default) starts a radio message
+function PLUGIN:GetTeamChatPrefill()
+	local client = LocalPlayer()
+
+	if (IsValid(client) and ix.radio:FindByID(client:GetNetVar("radioChannel"))) then
+		return "/r "
+	end
+end
+
 function PLUGIN:PostChatboxDraw(width, height, alpha)
 	local client = LocalPlayer()
 

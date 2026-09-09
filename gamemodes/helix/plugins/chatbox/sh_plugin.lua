@@ -91,7 +91,9 @@ if (CLIENT) then
 		bind = bind:lower()
 
 		if (bind:find("messagemode") and pressed) then
-			self.panel:SetActive(true)
+			local bTeamChat = bind:find("messagemode2") != nil
+
+			self.panel:SetActive(true, bTeamChat)
 
 			return true
 		end
