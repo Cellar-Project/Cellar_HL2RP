@@ -178,6 +178,22 @@ end
 
 function PANEL:Populate()
 	local faction = ix.faction.indices[LocalPlayer():Team()]
+	local title = L("Персонаж и ролевая информация"):utf8upper()
+
+	-- The header is docked before the right column so it spans the whole frame;
+	-- the frame grows to fit the title at the standard header size.
+	surface.SetFont("cellar.derma")
+	local titleW = surface.GetTextSize(title)
+	self:SetWide(math.max(564, titleW + 48))
+
+	self.header = self:Add("Panel")
+	self.header:Dock(TOP)
+	self.header:SetTall(46)
+	self.header:DockMargin(0, 0, 0, 8)
+	self.header.text = title
+	self.header.Paint = function(this, w, h)
+		ix.infoMenu.PaintHeader(this.text, w, h)
+	end
 
 	self.rightContainer = self:Add("DPanel")
 	self.rightContainer:Dock(RIGHT)
@@ -187,15 +203,6 @@ function PANEL:Populate()
 
 	self.limbs = self.rightContainer:Add("ixLimbStatus")
 	self.limbs:SetPos(0, 30)
-
-	self.header = self:Add("Panel")
-	self.header:Dock(TOP)
-	self.header:SetTall(46)
-	self.header:DockMargin(0, 0, 0, 8)
-	self.header.text = L("Персонаж и ролевая информация"):utf8upper()
-	self.header.Paint = function(this, w, h)
-		ix.infoMenu.PaintHeader(this.text, w, h)
-	end
 
 	local format = "%A, %B %d, %Y. %H:%M:%S"
 
