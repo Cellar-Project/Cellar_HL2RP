@@ -214,7 +214,7 @@ function PLUGIN:DoPlayerDeath(client)
 				if !weapon then continue end
 
 				weapon:Unequip(client, false)
-				weapon:Transfer(nil, nil, nil, self)
+				weapon:Transfer(nil, nil, nil, client)
 			end
 		end
 
@@ -1060,10 +1060,12 @@ do
 			end
 		elseif hitgroup == HITGROUP_RIGHTARM or hitgroup == HITGROUP_LEFTARM then
 			local damage = 50 * character:GetLimbDamage(limb, true)
+			local activeWeapon = client:GetActiveWeapon()
+			local heldItem = IsValid(activeWeapon) and activeWeapon.ixItem or nil
 
-			if damage > 0 and weapon then
+			if damage > 0 and heldItem then
 				if math.random(1, 100) < damage then
-					if !StatRoll(math.max(targetCharacter:GetSpecial("ag") - 5, 1)) then
+					if !StatRoll(math.max(character:GetSpecial("ag") - 5, 1)) then
 						client:DropActiveWeaponItem()
 					end
 				end

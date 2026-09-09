@@ -61,25 +61,18 @@ if SERVER then
 		"models/cpassic/cpassic.mdl"
 	}
 
-	do
-		for k, model in ipairs(PLUGIN.CCAModels) do
-			local shortname = string.Explode("/", model)
-			player_manager.AddValidModel(shortname, model)
-			player_manager.AddValidHands(shortname, "models/weapons/c_metrocop_hands.mdl", 0, "0000000")
-		end
+	local function RegisterHands(models, hands, skin, bodygroups)
+		for _, model in ipairs(models) do
+			local shortname = string.StripExtension(string.GetFileFromFilename(model))
 
-		for k, model in ipairs(PLUGIN.OTAModels) do
-			local shortname = string.Explode("/", model)
 			player_manager.AddValidModel(shortname, model)
-			player_manager.AddValidHands(shortname, "models/weapons/c_arms_combine.mdl", 0, "0000000")
-		end
-
-		for k, model in ipairs(PLUGIN.ZombieModels) do
-			local shortname = string.Explode("/", model)
-			player_manager.AddValidModel(shortname, model)
-			player_manager.AddValidHands(shortname, "models/weapons/c_arms_citizen.mdl", 1, "0000000")
+			player_manager.AddValidHands(shortname, hands, skin, bodygroups)
 		end
 	end
+
+	RegisterHands(PLUGIN.CCAModels, "models/weapons/c_metrocop_hands.mdl", 0, "0000000")
+	RegisterHands(PLUGIN.OTAModels, "models/weapons/c_arms_combine.mdl", 0, "0000000")
+	RegisterHands(PLUGIN.ZombieModels, "models/weapons/c_arms_citizen.mdl", 1, "0000000")
 
 	function PLUGIN:PlayerLoadedCharacter(client, character, lastchar)
 		timer.Simple(3, function()

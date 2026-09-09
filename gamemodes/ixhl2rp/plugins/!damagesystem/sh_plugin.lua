@@ -99,6 +99,18 @@ PLUGIN.hitBones = {
 do
 	local clrRed = Color(255, 100, 100, 255)
 
+	-- The message can arrive after the player left, and the anonymity plugin
+	-- that supplies GetAnonID may be disabled.
+	local function Describe(client)
+		if (!IsValid(client)) then
+			return "???"
+		end
+
+		local anonID = isfunction(client.GetAnonID) and client:GetAnonID() or nil
+
+		return anonID and string.format("%s (%s)", client:Name(), anonID) or client:Name()
+	end
+
 	ix.chat.Register("dmgMsg", {
 		OnCanHear = function(self, speaker, listener)
 			return true
@@ -108,7 +120,7 @@ do
 		end,
 		OnChatAdd = function(self, speaker, text, bAnonymous, data)
 			if data.t == 1 then
-				chat.AddText(clrRed, string.format("Вас добивает игрок %s (%s)!", data.attacker:Name(), data.attacker:GetAnonID()))
+				chat.AddText(clrRed, string.format("Вас добивает игрок %s!", Describe(data.attacker)))
 			elseif data.t == 2 then
 				chat.AddText(color_white, "После игровой смерти, Вы потеряли 30% своих вещей и жетонов.")
 			elseif data.t == 3 then
@@ -134,9 +146,9 @@ do
 			end
 
 			if data.t == 1 then
-				chat.AddText(clrRed, string.format("Игрок %s (%s) пытается добить игрока %s (%s)!", data.attacker:Name(), data.attacker:GetAnonID(), data.crit:Name(), data.crit:GetAnonID()))
+				chat.AddText(clrRed, string.format("Игрок %s пытается добить игрока %s!", Describe(data.attacker), Describe(data.crit)))
 			elseif data.t == 2 then
-				chat.AddText(clrRed, string.format("%s (%s) был добит игроком %s (%s)!", data.crit:Name(), data.crit:GetAnonID(), data.attacker:Name(), data.attacker:GetAnonID()))
+				chat.AddText(clrRed, string.format("%s был добит игроком %s!", Describe(data.crit), Describe(data.attacker)))
 			end
 		end
 	})

@@ -67,30 +67,36 @@ function ix.item.New2(baseID, isBaseItem)
 		end
 	}
 
-	local oldBase = ITEM.base
-
-	if (ITEM.base) then
-		local baseTable = ix.item.base[ITEM.base]
-
-		if (baseTable) then
-			for k, v in pairs(baseTable) do
-				if (ITEM[k] == nil) then
-					ITEM[k] = v
-				end
-
-				ITEM.baseTable = baseTable
-			end
-
-			local mergeTable = table.Copy(baseTable)
-			ITEM = table.Merge(mergeTable, ITEM)
-		else
-			ErrorNoHalt("[Helix] Item '"..ITEM.uniqueID.."' has a non-existent base! ("..ITEM.base..")\n")
-		end
-	end
+	ITEM = ix.item.ApplyBase2(ITEM)
 
 	if (PLUGIN) then
 		ITEM.plugin = PLUGIN.uniqueID
 	end
+
+	return ITEM
+end
+
+-- Merges the base referenced by ITEM.base into ITEM and records it in
+-- ITEM.baseTable so later calls can tell whether the base has changed.
+function ix.item.ApplyBase2(ITEM)
+	if (!ITEM.base) then
+		return ITEM
+	end
+
+	local baseTable = ix.item.base[ITEM.base]
+
+	if (!baseTable) then
+		ErrorNoHalt("[Helix] Item '"..tostring(ITEM.uniqueID or ITEM.name).."' has a non-existent base! ("..ITEM.base..")\n")
+		return ITEM
+	end
+
+	if (ITEM.baseTable == baseTable) then
+		return ITEM
+	end
+
+	local mergeTable = table.Copy(baseTable)
+	ITEM = table.Merge(mergeTable, ITEM)
+	ITEM.baseTable = baseTable
 
 	return ITEM
 end
@@ -101,25 +107,7 @@ function ix.item.Register2(ITEM)
 		uniqueID = (ITEM.isBase and "base_" or "")..uniqueID
 
 		ITEM.uniqueID = uniqueID
-
-		if (ITEM.base and oldBase != ITEM.base) then
-			local baseTable = ix.item.base[ITEM.base]
-
-			if (baseTable) then
-				for k, v in pairs(baseTable) do
-					if (ITEM[k] == nil) then
-						ITEM[k] = v
-					end
-
-					ITEM.baseTable = baseTable
-				end
-
-				local mergeTable = table.Copy(baseTable)
-				ITEM = table.Merge(mergeTable, ITEM)
-			else
-				ErrorNoHalt("[Helix] Item '"..ITEM.uniqueID.."' has a non-existent base! ("..ITEM.base..")\n")
-			end
-		end
+		ITEM = ix.item.ApplyBase2(ITEM)
 
 		ITEM.description = ITEM.description or "noDesc"
 		ITEM.width = ITEM.width or 1
@@ -130,7 +118,7 @@ function ix.item.Register2(ITEM)
 			ITEM:OnRegistered()
 		end
 
-		(isBaseItem and ix.item.base or ix.item.list)[ITEM.uniqueID] = ITEM
+		(ITEM.isBase and ix.item.base or ix.item.list)[ITEM.uniqueID] = ITEM
 
 		if (IX_RELOADED) then
 			-- we don't know which item was actually edited, so we'll refresh all of them

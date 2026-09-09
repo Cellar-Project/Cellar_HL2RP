@@ -17,7 +17,12 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]
 
-local plyFlagsPlugin = ix.plugin.Get("sh_playerflags")
+-- Resolved on use rather than at file load: the Player Flags plugin may load
+-- after this file (or not at all), and it is shipped either as a single
+-- sh_playerflags.lua or as a playerflags/ folder.
+local function GetPlayerFlagsPlugin()
+    return ix.plugin.Get("sh_playerflags") or ix.plugin.Get("playerflags")
+end
 
 local constantTable = {
     s = 1,          -- seconds
@@ -38,6 +43,9 @@ end
 
 if SERVER then
     function PLUGIN:CheckTempFlags(client)
+        local plyFlagsPlugin = GetPlayerFlagsPlugin()
+        if not plyFlagsPlugin then return end
+
         local tempFlags = client:GetData("tempFlags", "")
         local timestamp = client:GetData("tempFlagsExpire")
 
@@ -59,13 +67,11 @@ if SERVER then
     end
 
     function PLUGIN:PlayerLoadout(client)
-        if not plyFlagsPlugin then return end
-
         self:CheckTempFlags(client)
     end
 
     function PLUGIN:SaveData()
-        if not plyFlagsPlugin then return end
+        if not GetPlayerFlagsPlugin() then return end
 
         for _, client in ipairs(player.GetAll()) do
             self:CheckTempFlags(client)
@@ -84,6 +90,8 @@ ix.command.Add("PlyGiveTempFlag", {
     },
     syntax = "<player target> <string flags> <string length (number)(s/m/h/d/w/n/y)>",
     OnRun = function(self, client, target, flags, length)
+        local plyFlagsPlugin = GetPlayerFlagsPlugin()
+
         if not plyFlagsPlugin then 
             return "Плагин на флаги выключен либо не установлен!"
         end
