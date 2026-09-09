@@ -9,6 +9,11 @@ PLUGIN.RANGE_MEDIUM = 2
 PLUGIN.RANGE_LONG = 3
 PLUGIN.RANGE_FAR = 4
 
+ix.config.Add("armDisarmChance", 0, "Chance (%) that a hit on a fully damaged arm makes the victim drop the weapon they are holding. Scales down with less arm damage; an agility roll can still save the weapon. 0 disables it.", nil, {
+	data = {min = 0, max = 100, decimals = 1},
+	category = "limb"
+})
+
 ix.char.RegisterVar("shock", {
 	field = "shock",
 	fieldType = ix.type.number,
