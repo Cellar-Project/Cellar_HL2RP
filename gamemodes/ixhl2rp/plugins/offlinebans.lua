@@ -43,12 +43,10 @@ function PLUGIN:GetCharacter(client, character, steamID64, callback)
 		query:Where("steamID", steamID64)
 
 		query:Callback(function(result)
-			if (result) then
-				if (#result == 1) then
-					callback(result[1].data, result[1].id)
-				else
-					client:NotifyLocalized("cmdCharBanOfflineOverloadedResult")
-				end
+			if (istable(result) and #result == 1) then
+				callback(result[1].data, result[1].id)
+			elseif (istable(result) and #result > 1) then
+				client:NotifyLocalized("cmdCharBanOfflineOverloadedResult")
 			else
 				client:NotifyLocalized("cmdCharBanOfflineNoResult")
 			end
