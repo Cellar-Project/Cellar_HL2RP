@@ -43,3 +43,6 @@ luac.out
 *.yml
 *.cfg
 
+
+# Local docs
+/*.md
