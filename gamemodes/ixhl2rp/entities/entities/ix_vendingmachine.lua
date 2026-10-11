@@ -25,7 +25,7 @@ function ENT:GetAllStock()
 end
 
 if (SERVER) then
-	ENT.questCoolDown = {}
+	ENT.questCooldown = {}
 
 	function ENT:Initialize()
 		self:SetModel("models/props_interiors/vendingmachinesoda01a.mdl")
@@ -117,7 +117,7 @@ if (SERVER) then
 			if self.questCooldown[charID] != questStartTime then
 				character:SetData("cwuWater", character:GetData("cwuWater") + 1)
 				client:Notify("Вы зарядили 1 картридж воды в автомат.")
-				self.questCoolDown[charID] = questStartTime
+				self.questCooldown[charID] = questStartTime
 				self:ResetStock()
 			end
 			return
